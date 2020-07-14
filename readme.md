@@ -6,7 +6,7 @@
 
 
 ### Send Text message
-```bot.sendMessage(Channel ID,Message)```
+```sendMessage(Channel ID,Message)```
 ```python
 import discum
 bot = discum.Client('Token')

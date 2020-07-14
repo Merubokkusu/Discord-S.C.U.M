@@ -1,6 +1,14 @@
 ### A Discord Selfbot Api - discum
+
 ![https://files.catbox.moe/3ns003.png](https://files.catbox.moe/3ns003.png)
 
+[![PyPI version](https://badge.fury.io/py/discum.svg)](https://badge.fury.io/py/discum)
+
+
+## Install
+```python
+pip install discum 
+```
 
 # Usage
 

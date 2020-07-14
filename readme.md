@@ -4,7 +4,6 @@
 
 # Usage
 
-
 ### Send Text message
 ```sendMessage(Channel ID,Message)```
 ```python
@@ -20,3 +19,9 @@ import discum
 bot = discum.Client('Token')
 bot.connectionTest()
 ```
+
+# To Do
+- [x] Sending basic text messages
+- [ ] Sending Images
+- [ ] Sending Embeds
+- [ ] Sending Requests (Friends etc)

@@ -33,6 +33,7 @@ bot.connectionTest()
 - [ ] Sending Images
 - [ ] Sending Embeds
 - [ ] Sending Requests (Friends etc)
+- [ ] Everything
 
 # Things That Will Never Be Done
 Due to limitations these features will never happen

@@ -1,6 +1,7 @@
 import requests
 
 from messages.messages import Messages
+from user.user import User
 
 class Client():
     # Define token, headers and create the request session.
@@ -33,6 +34,9 @@ class Client():
         else:
             print("Incorrect Token")
 
+    '''
+    Messages
+    '''
     #get messages
     def getMessage(self,channelID,num=1):
         return Messages(self.headers).getMessage(channelID,num)
@@ -44,3 +48,34 @@ class Client():
     #send files (local or link)
     def sendFile(self,channelID,filelocation,isurl=False,message=""):
         return Messages(self.headers).sendFile(channelID,filelocation,isurl,message)
+
+    '''
+    User
+    '''
+    #get list of DMs (to get Messages use getMessage function above with the DM id)
+    def getDMs(self):
+        return User(self.headers).getDMs()
+
+    #get list of guilds
+    def getGuilds(self):
+        return User(self.headers).getGuilds()
+
+    #get relationships info (1=friend, 2=block, 3=incoming friend request, 4=outgoing friend request)
+    def getRelationships(self):
+        return User(self.headers).getRelationships()
+
+    #create outgoing friend request
+    def requestFriend(self,ID):
+        return User(self.headers).friendRequest(ID)
+
+    #accept incoming friend request
+    def acceptFriend(self,ID):
+        return User(self.headers).acceptFriend(ID)
+
+    #remove friend OR unblock user
+    def removeRelationship(self,ID):
+        return User(self.headers).removeRelationship(ID)
+
+    #block user
+    def blockUser(self,ID):
+        return User(self.headers).blockUser(ID)

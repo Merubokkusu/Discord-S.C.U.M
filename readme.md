@@ -23,6 +23,7 @@ bot.connectionTest()
 ```getMessage(ChannelID,num=1)```
 ```python
 bot.getMessage("383003333751856129")
+```
 
 ### Send Text message
 ```sendMessage(ChannelID,message,tts=False)```

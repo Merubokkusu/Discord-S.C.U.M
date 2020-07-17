@@ -6,9 +6,14 @@
 
 
 ## Install
+from PyPI:
 ```python
 pip install discum 
 ```
+from source:
+`git clone https://github.com/Merubokkusu/Discord-S.C.U.M.git`    
+`cd Discord-S.C.U.M`     
+`cd discum` (now you can use python and import discum)   
 
 # Usage
 
@@ -42,6 +47,7 @@ bot.sendFile("383003333751856129","https://thiscatdoesnotexist.com/",True)
 - [ ] Sending Embeds
 - [ ] Sending Requests (Friends etc)
 - [ ] Everything
+- [ ] Update PyPI
 
 # Things That Will Never Be Done
 Due to limitations these features will never happen

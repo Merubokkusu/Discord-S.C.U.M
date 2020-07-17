@@ -19,9 +19,13 @@ pip install discum
 ```python
 bot.connectionTest()
 ```
+### get message(s)
+```getMessage(ChannelID,num=1)```
+```python
+bot.getMessage("383003333751856129")
 
 ### Send Text message
-```sendMessage(ChannelID,message)```
+```sendMessage(ChannelID,message,tts=False)```
 ```python
 bot.sendMessage("383003333751856129","Hello You :)")
 ```

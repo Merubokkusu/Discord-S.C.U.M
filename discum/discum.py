@@ -1,11 +1,8 @@
 import requests
-import sys 
-import json
 
+from messages.messages import Messages
 
 class Client():
-
-    
     # Define token, headers and create the request session.
     def __init__(self,token):
         self.token = token
@@ -23,28 +20,23 @@ class Client():
         "Cache-Control": "no-cache",
         "Referer": "https://discord.com/channels/@me",
         "Content-Type": "application/json"
-
         }
         self.s = requests.Session()
         self.s.headers.update(self.headers)
         
-
-    #
-    # Test the connection of your token.
-    #
+    #test token
     def connectionTest(self): #,proxy):
         url='https://discord.com/api/v6/users/@me/affinities/users'
         connection = self.s.get(url)
         if(connection.status_code == 200):
             print("Connected")
         else:
-            sys.exit("Incorrect Token")
+            print("Incorrect Token")
 
-    #
-    # Sending Basic Text messages.
-    #
-    def sendMessage(self,channelID,message):
-        url = "https://discord.com/api/v6/channels/"+channelID+"/messages"
-        body = {"content": message, 
-                "tts": "false",}
-        send = self.s.post(url, data=json.dumps(body))
+    #send text messages
+    def sendMessage(self,channelID,message,tts=False):
+        return Messages(self.headers).sendMessage(channelID, message, tts)
+
+    #send files (local or link)
+    def sendFile(self,channelID,filelocation,isurl=False,message=""):
+        return Messages(self.headers).sendFile(channelID,filelocation,isurl,message)

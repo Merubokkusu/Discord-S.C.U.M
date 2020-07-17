@@ -11,6 +11,14 @@ class Messages(object):
 	def __init__(self, headers):
 		self.headers = headers
 
+	#get messages
+	def getMessage(self,channelID,num):
+		true=True
+		false=False
+		null=None
+		url = "https://discord.com/api/v6/channels/"+channelID+"/messages?limit="+str(num)
+		return eval(requests.get(url, headers=self.headers).content)
+
 	#text message
 	def sendMessage(self,channelID,message,tts):
 		url = "https://discord.com/api/v6/channels/"+channelID+"/messages"
@@ -34,7 +42,7 @@ class Messages(object):
 					filename = 'unknown.'+extensiontype
 		else: #local file
 			filename = os.path.basename(os.path.normpath(filelocation))
-		#now time to post the picture
+		#now time to post the file
 		url = 'https://discord.com/api/v6/channels/'+channelID+'/messages'
 		if isurl:
 			req = Request(filelocation, headers={'User-Agent': 'Mozilla/5.0'})

@@ -33,9 +33,13 @@ class Client():
         else:
             print("Incorrect Token")
 
+    #get messages
+    def getMessage(self,channelID,num=1):
+        return Messages(self.headers).getMessage(channelID,num)
+
     #send text messages
     def sendMessage(self,channelID,message,tts=False):
-        return Messages(self.headers).sendMessage(channelID, message, tts)
+        return Messages(self.headers).sendMessage(channelID,message,tts)
 
     #send files (local or link)
     def sendFile(self,channelID,filelocation,isurl=False,message=""):

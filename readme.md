@@ -30,23 +30,63 @@ bot.connectionTest()
 ```python
 bot.getMessage("383003333751856129")
 ```
-
-### Send Text message
+### send text message
 ```sendMessage(ChannelID,message,tts=False)```
 ```python
 bot.sendMessage("383003333751856129","Hello You :)")
 ```
-### Send File
+### send file
 ```sendFile(channelID,filelocation,isurl=False,message="")```
 ```python
 bot.sendFile("383003333751856129","https://thiscatdoesnotexist.com/",True)
+```
+### get list of DMs
+```getDMs()```
+```python
+bot.getDMs()
+```
+### get list of guilds
+```getGuilds()```
+```python
+bot.getGuilds()
+```
+### get list of relationships
+```getRelationships()```
+```python
+bot.getRelationships()
+```
+| Relationship Type | description |
+| ------ | ------ |
+| 1 | friend |
+| 2 | block |
+| 3 | incoming friend request |
+| 4 | outgoing friend request |
+### send friend request
+```requestFriend()```
+```python
+bot.requestFriend(ID)
+```
+### accept friend request
+```acceptFriend()```
+```python
+bot.acceptFriend(ID)
+```
+### remove friend or unblock user
+```removeRelationship()```
+```python
+bot.removeRelationship(ID)
+```
+### send friend request
+```blockUser()```
+```python
+bot.blockUser(ID)
 ```
 
 # To Do
 - [x] Sending basic text messages
 - [X] Sending Images
 - [ ] Sending Embeds
-- [ ] Sending Requests (Friends etc)
+- [X] Sending Requests (Friends etc)
 - [ ] Everything
 - [ ] Update PyPI
 

@@ -12,25 +12,28 @@ pip install discum
 
 # Usage
 
-### Send Text message
-```sendMessage(Channel ID,Message)```
-```python
-import discum
-bot = discum.Client('Token')
-bot.sendMessage("383003333751856129","Hello You :)")
-```
-
+`import discum`      
+`bot = discum.Client('Token')`     
 
 ### Check if token is vaild
 ```python
-import discum
-bot = discum.Client('Token')
 bot.connectionTest()
+```
+
+### Send Text message
+```sendMessage(ChannelID,message)```
+```python
+bot.sendMessage("383003333751856129","Hello You :)")
+```
+### Send File
+```sendFile(channelID,filelocation,isurl=False,message="")```
+```python
+bot.sendFile("383003333751856129","https://thiscatdoesnotexist.com/",True)
 ```
 
 # To Do
 - [x] Sending basic text messages
-- [ ] Sending Images
+- [X] Sending Images
 - [ ] Sending Embeds
 - [ ] Sending Requests (Friends etc)
 - [ ] Everything

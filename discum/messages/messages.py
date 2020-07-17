@@ -20,9 +20,9 @@ class Messages(object):
 		return eval(requests.get(url, headers=self.headers).content)
 
 	#text message
-	def sendMessage(self,channelID,message,tts):
+	def sendMessage(self,channelID,message,embed,tts):
 		url = "https://discord.com/api/v6/channels/"+channelID+"/messages"
-		body = {"content": message, "tts": tts,}
+		body = {"content": message, "tts": tts,'embed':embed}
 		return requests.post(url, headers=self.headers, data=json.dumps(body))
 
 	#send file

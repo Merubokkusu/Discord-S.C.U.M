@@ -42,8 +42,8 @@ class Client():
         return Messages(self.headers).getMessage(channelID,num)
 
     #send text messages
-    def sendMessage(self,channelID,message,tts=False):
-        return Messages(self.headers).sendMessage(channelID,message,tts)
+    def sendMessage(self,channelID,message,embed="",tts=False):
+        return Messages(self.headers).sendMessage(channelID,message,embed,tts)
 
     #send files (local or link)
     def sendFile(self,channelID,filelocation,isurl=False,message=""):

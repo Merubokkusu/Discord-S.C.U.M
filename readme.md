@@ -6,11 +6,12 @@
 
 
 ## Install
-from PyPI:
+from PyPI:      
 ```python
 pip install discum 
 ```
-from source:
+     
+from source:        
 `git clone https://github.com/Merubokkusu/Discord-S.C.U.M.git`    
 `cd Discord-S.C.U.M`     
 `cd discum` (now you can use python and import discum)   

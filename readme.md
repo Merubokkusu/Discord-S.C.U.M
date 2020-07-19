@@ -85,7 +85,7 @@ bot.blockUser(ID)
 # To Do
 - [x] Sending basic text messages
 - [X] Sending Images
-- [ ] Sending Embeds
+- [x] Sending Embeds
 - [X] Sending Requests (Friends etc)
 - [ ] Everything
 - [ ] Update PyPI

@@ -6,6 +6,7 @@ from user.user import User
 class Client():
     # Define token, headers and create the request session.
     def __init__(self,token):
+        self.discord = 'https://discord.com/api/v6/'
         self.token = token
         self.headers = {
         "Host": "discord.com",
@@ -27,7 +28,7 @@ class Client():
         
     #test token
     def connectionTest(self): #,proxy):
-        url='https://discord.com/api/v6/users/@me/affinities/users'
+        url=self.discord+'users/@me/affinities/users'
         connection = self.s.get(url)
         if(connection.status_code == 200):
             print("Connected")
@@ -39,43 +40,43 @@ class Client():
     '''
     #get messages
     def getMessage(self,channelID,num=1):
-        return Messages(self.headers).getMessage(channelID,num)
+        return Messages(self.discord,self.headers).getMessage(channelID,num)
 
     #send text messages
     def sendMessage(self,channelID,message,embed="",tts=False):
-        return Messages(self.headers).sendMessage(channelID,message,embed,tts)
+        return Messages(self.discord,self.headers).sendMessage(channelID,message,embed,tts)
 
     #send files (local or link)
     def sendFile(self,channelID,filelocation,isurl=False,message=""):
-        return Messages(self.headers).sendFile(channelID,filelocation,isurl,message)
+        return Messages(self.discord,self.headers).sendFile(channelID,filelocation,isurl,message)
 
     '''
     User
     '''
     #get list of DMs (to get Messages use getMessage function above with the DM id)
     def getDMs(self):
-        return User(self.headers).getDMs()
+        return User(self.discord,self.headers).getDMs()
 
     #get list of guilds
     def getGuilds(self):
-        return User(self.headers).getGuilds()
+        return User(self.discord,self.headers).getGuilds()
 
     #get relationships info (1=friend, 2=block, 3=incoming friend request, 4=outgoing friend request)
     def getRelationships(self):
-        return User(self.headers).getRelationships()
+        return User(self.discord,self.headers).getRelationships()
 
     #create outgoing friend request
     def requestFriend(self,ID):
-        return User(self.headers).friendRequest(ID)
+        return User(self.discord,self.headers).friendRequest(ID)
 
     #accept incoming friend request
     def acceptFriend(self,ID):
-        return User(self.headers).acceptFriend(ID)
+        return User(self.discord,self.headers).acceptFriend(ID)
 
     #remove friend OR unblock user
     def removeRelationship(self,ID):
-        return User(self.headers).removeRelationship(ID)
+        return User(self.discord,self.headers).removeRelationship(ID)
 
     #block user
     def blockUser(self,ID):
-        return User(self.headers).blockUser(ID)
+        return User(self.discord,self.headers).blockUser(ID)

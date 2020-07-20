@@ -16,14 +16,14 @@ class Messages(object):
 		true=True
 		false=False
 		null=None
-		url = "https://discord.com/api/v6/channels/"+channelID+"/messages?limit="+str(num)
+		url = self.discord+"channels/"+channelID+"/messages?limit="+str(num)
 		return eval(requests.get(url, headers=self.headers).content)
 
 	#text message
 	def sendMessage(self,channelID,message,embed,tts):
-		url = "https://discord.com/api/v6/channels/"+channelID+"/messages"
+		url = self.discord+"channels/"+channelID+"/messages"
 		body = {"content": message, "tts": tts,'embed':embed}
-		return requests.post(url, headers=self.headers, data=json.dumps(body))
+		return requests.post(url, headers=self.headers, data=json.dumps(body)).content
 
 	#send file
 	def sendFile(self,channelID,filelocation,isurl,message):
@@ -43,7 +43,7 @@ class Messages(object):
 		else: #local file
 			filename = os.path.basename(os.path.normpath(filelocation))
 		#now time to post the file
-		url = 'https://discord.com/api/v6/channels/'+channelID+'/messages'
+		url = self.discord+'channels/'+channelID+'/messages'
 		if isurl:
 			req = Request(filelocation, headers={'User-Agent': 'Mozilla/5.0'})
 			fd = urlopen(req).read()
@@ -53,4 +53,4 @@ class Messages(object):
 		m=MultipartEncoder(fields=fields,boundary='----WebKitFormBoundary'+''.join(random.sample(string.ascii_letters+string.digits,16)))
 		sendfileheaders = self.headers
 		sendfileheaders['Content-Type']=m.content_type
-		return requests.post(url, headers=sendfileheaders, data=m)
+		return requests.post(url, headers=sendfileheaders, data=m).content

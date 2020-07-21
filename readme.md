@@ -22,7 +22,7 @@ from source (this is up-to-date with recent changes):
 # Example
 ```python
 import discum     
-bot = discum.Client('Token')  
+bot = discum.Client(email,password) #if you want to input your token instead, read discum.py for a how-to
 bot.sendMessage("383003333751856129","Hello You :)")
 ```
 # To Do

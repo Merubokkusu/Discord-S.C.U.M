@@ -1,13 +1,30 @@
-import requests
+'''
+DISCUM: A SELFBOT DISCORD API. 
+developed by Merubokkusu and arandomnewaccount
+does not use any premade discord libraries, made to be simple (sorta) and expandable
+'''
+import requests,json
 
 from messages.messages import Messages
+from messages.embed import Embedder
 from user.user import User
 
-class Client():
+class LoginError(Exception):
+    pass
+
+class Client(object):
     # Define token, headers and create the request session.
-    def __init__(self,token):
+    def __init__(self,email,password): # if you'd like to input your token instead, change this line to def __init__(self,token): and replace lines 18-26 with self.token = token
+        self.email = email
+        self.password = password
+        logindata = json.dumps({'email': self.email, 'password':self.password}).encode('utf-8')
+        req = requests.post(self.discord+'/auth/login', data=logindata, headers={'Content-Type':'application/json'})
+        if req.status_code == 200:
+            self.token = req.json()['token']
+            print('Connected.')
+        else:
+            raise LoginError("Incorrect email and/or password.")
         self.discord = 'https://discord.com/api/v6/'
-        self.token = token
         self.headers = {
         "Host": "discord.com",
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) discord/0.0.306 Chrome/78.0.3904.130 Electron/7.1.11 Safari/537.36",
@@ -42,7 +59,7 @@ class Client():
     def getMessage(self,channelID,num=1):
         return Messages(self.discord,self.headers).getMessage(channelID,num)
 
-    #send text messages
+    #send text or embed messages
     def sendMessage(self,channelID,message,embed="",tts=False):
         return Messages(self.discord,self.headers).sendMessage(channelID,message,embed,tts)
 

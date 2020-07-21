@@ -5,7 +5,8 @@ false=False
 null=None
 
 class User(object):
-	def __init__(self, headers):
+	def __init__(self, discord, headers):
+		self.discord = discord
 		self.headers = headers
 		
 	def getDMs(self):

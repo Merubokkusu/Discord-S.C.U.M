@@ -32,7 +32,3 @@ bot.sendMessage("383003333751856129","Hello You :)")
 - [X] Sending Requests (Friends etc)
 - [ ] Everything
 - [ ] Update PyPI
-
-# Things That Will Never Be Done
-Due to limitations these features will never happen
-* User profile edits

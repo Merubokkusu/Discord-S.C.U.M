@@ -8,7 +8,8 @@ import random,string
 import os
 
 class Messages(object):
-	def __init__(self, headers):
+	def __init__(self, discord, headers):
+		self.discord = discord
 		self.headers = headers
 
 	#get messages

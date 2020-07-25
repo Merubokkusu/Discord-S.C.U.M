@@ -1,6 +1,6 @@
 import requests
 import json
-from fileparse.fileparse import Fileparse
+from ..fileparse.fileparse import Fileparse
 from urllib.parse import urlparse
 from urllib.request import Request, urlopen
 from requests_toolbelt import MultipartEncoder

@@ -31,5 +31,5 @@ bot.sendMessage("383003333751856129","Hello You :)")
 - [X] Sending Images
 - [x] Sending Embeds
 - [X] Sending Requests (Friends etc)
+- [X] Profile Editing (Name,Status,Avatar)
 - [ ] Everything
-- [ ] Update PyPI

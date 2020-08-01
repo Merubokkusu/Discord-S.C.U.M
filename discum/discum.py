@@ -30,7 +30,6 @@ class Client(object):
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) discord/0.0.306 Chrome/78.0.3904.130 Electron/7.1.11 Safari/537.36",
         "Accept": "*/*",
         "Accept-Language": "en-US",
-        "Accept-Encoding": "gzip, deflate, br",
         "Authorization": self.token,
         "Connection": "keep-alive",
         "keep-alive" : "timeout=10, max=1000",

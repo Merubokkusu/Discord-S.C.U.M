@@ -14,17 +14,14 @@ class Messages(object):
 
 	#get messages
 	def getMessage(self,channelID,num):
-		true=True
-		false=False
-		null=None
 		url = self.discord+"channels/"+channelID+"/messages?limit="+str(num)
-		return eval(requests.get(url, headers=self.headers).content)
+		return requests.get(url, headers=self.headers)
 
 	#text message
 	def sendMessage(self,channelID,message,embed,tts):
 		url = self.discord+"channels/"+channelID+"/messages"
 		body = {"content": message, "tts": tts,'embed':embed}
-		return requests.post(url, headers=self.headers, data=json.dumps(body)).content
+		return requests.post(url, headers=self.headers, data=json.dumps(body))
 
 	#send file
 	def sendFile(self,channelID,filelocation,isurl,message):
@@ -54,4 +51,4 @@ class Messages(object):
 		m=MultipartEncoder(fields=fields,boundary='----WebKitFormBoundary'+''.join(random.sample(string.ascii_letters+string.digits,16)))
 		sendfileheaders = self.headers
 		sendfileheaders['Content-Type']=m.content_type
-		return requests.post(url, headers=sendfileheaders, data=m).content
+		return requests.post(url, headers=sendfileheaders, data=m)

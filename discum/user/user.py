@@ -1,9 +1,6 @@
 import requests
 import json
 import base64
-true=True
-false=False
-null=None
 
 class User(object):
 	def __init__(self, discord, headers):
@@ -12,15 +9,15 @@ class User(object):
 		
 	def getDMs(self):
 		url = self.discord+"users/@me/channels"
-		return eval(requests.get(url,headers=self.headers).content)
+		return requests.get(url,headers=self.headers)
 
 	def getGuilds(self):
 		url = self.discord+"users/@me/guilds"
-		return eval(requests.get(url,headers=self.headers).content)
+		return requests.get(url,headers=self.headers)
 
 	def getRelationships(self):
 		url = self.discord+"users/@me/relationships"
-		return eval(requests.get(url,headers=self.headers).content)
+		return requests.get(url,headers=self.headers)
 
 	def requestFriend(self,ID):
 		url = self.discord+"users/@me/relationships/"+ID

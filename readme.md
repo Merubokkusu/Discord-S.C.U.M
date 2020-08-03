@@ -32,4 +32,5 @@ bot.sendMessage("383003333751856129","Hello You :)")
 - [x] Sending Embeds
 - [X] Sending Requests (Friends etc)
 - [X] Profile Editing (Name,Status,Avatar)
+- [ ] Making phone calls, sending audio/video data thru those calls
 - [ ] Everything

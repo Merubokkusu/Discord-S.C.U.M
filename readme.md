@@ -38,3 +38,97 @@ bot.sendMessage("383003333751856129","Hello You :)")
 - [X] Profile Editing (Name,Status,Avatar)
 - [ ] Making phone calls, sending audio/video data thru those calls
 - [ ] Everything
+
+# list of all functions (click thru these and github should show their location in discum.py)
+```
+__init__(email="none", password="none", token="none", proxy_host=False, proxy_port=False)
+read(update=True)
+getAnalyticsToken(update=True)
+getConnectedAccounts(update=True)
+getConsents(update=True)
+getExperiments(update=True)
+getFriendSuggestingCount(update=True)
+getGuildExperiments(update=True)
+getGuilds(update=True)
+getGuildIDs(update=True)
+getGuildData(guildID,update=True)
+getGuildOwner(guildID,update=True)
+getGuildBoostLvl(guildID,update=True)
+getGuildEmojis(guildID,update=True)
+getGuildBanner(guildID,update=True)
+getGuildDiscoverySplash(guildID,update=True): #not sure what this is about, something about server discoverability i guess (https
+getGuildUserPresences(guildID,update=True)
+getGuildMsgNotificationSettings(guildID,update=True): #returns an int, 0=all messages, 1=only mentions (https
+getGuildRulesChannelID(guildID,update=True)
+getGuildVerificationLvl(guildID,update=True): #returns an int, 0-4 (https
+getGuildFeatures(guildID,update=True): #returns a list of strings (https
+getGuildJoinTime(guildID,update=True)
+getGuildRegion(guildID,update=True)
+getGuildApplicationID(GuildID,update=True): #returns application id of the guild creator if it is bot-created (https
+getGuildAfkChannelID(guildID,update=True)
+getGuildIcon(guildID,update=True): #https
+getGuildName(guildID,update=True)
+getGuildMaxVideoChannelUsers(guildID,update=True)
+getGuildRoles(guildID,update=True): #https
+getGuildPublicUpdatesChannelID(guildID,update=True)
+getGuildSystemChannelFlags(guildID,update=True): #https
+getGuildMfaLvl(guildID,update=True): #https
+getGuildAfkTimeout(guildID,update=True): #returns type int, unit seconds, https
+getGuildHashes(guildID,update=True): #https
+getGuildSystemChannelID(guildID,update=True)
+isGuildLazy(guildID,update=True): #slightly different naming format since it returns a boolean (https
+getGuildNumBoosts(guildID,update=True)
+isGuildLarge(guildID,update=True)
+getGuildExplicitContentFilter(guildID,update=True): #https
+getGuildSplashHash(guildID,update=True)
+getGuildVoiceStates(guildID,update=True): #https
+getGuildMemberCount(guildID,update=True)
+getGuildDescription(guildID,update=True)
+getGuildVanityUrlCode(guildID,update=True)
+getGuildPreferredLocale(guildID,update=True)
+getGuildAllChannels(guildID,update=True)
+getGuildCategories(guildID,update=True)
+getGuildCategoryIDs(guildID,update=True)
+getGuildCategoryData(guildID,categoryID,update=True)
+getGuildChannels(guildID,update=True)
+getGuildChannelIDs(guildID,update=True)
+getGuildChannelData(guildID,channelID,update=True)
+getGuildMembers(guildID,update=True)
+getGuildMemberIDs(guildID,update=True)
+getGuildMemberData(guildID,memberID,update=True)
+getNotes(update=True)
+getOnlineFriends(update=True)
+getDMs(update=True)
+getDMIDs(update=True)
+getDMData(DMID,update=True)
+getDMRecipients(DMID,update=True)
+getReadStates(update=True): #another advantage of using websockets instead of requests (see https
+getRelationships(update=True)
+getRelationshipIDs(update=True)
+getRelationshipData(RelationshipID,update=True)
+getFriends(update=True)
+getFriendIDs(update=True)
+getBlocked(update=True)
+getBlockedIDs(update=True)
+getIncomingFriendRequests(update=True)
+getIncomingFriendRequestIDs(update=True)
+getOutgoingFriendRequests(update=True)
+getOutgoingFriendRequestIDs(update=True)
+getSessionID(update=True)
+getTutorial(update=True)
+getUserData(update=True)
+getUserGuildSettings(update=True,guildID=None)
+getUserSettings(update=True)
+getOptionsForUserSettings(update=True)
+getWebsocketVersion(update=True)
+getMessage(channelID,num=1)
+sendMessage(channelID,message,embed="",tts=False)
+sendFile(channelID,filelocation,isurl=False,message="")
+requestFriend(userID)
+acceptFriend(userID)
+removeRelationship(userID)
+blockUser(userID)
+changeName(name)
+setStatus(status)
+setAvatar(imagePath)
+```

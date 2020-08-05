@@ -11,7 +11,7 @@ from PyPI:
 pip install discum 
 ```
      
-from source (this is up-to-date with recent changes):        
+from source (this is up-to-date with recent changes)(currently on version 0.2.0):        
 `git clone https://github.com/Merubokkusu/Discord-S.C.U.M.git`    
 `cd Discord-S.C.U.M`     
 `python3 setup.py install`            

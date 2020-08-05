@@ -14,8 +14,7 @@ pip install discum
 from source (this is up-to-date with recent changes):        
 `git clone https://github.com/Merubokkusu/Discord-S.C.U.M.git`    
 `cd Discord-S.C.U.M`     
-`cd discum`       
-(now you can use python and import discum)       
+`python3 setup.py install`            
 
 # Usage
 ## [Read the Wiki](https://github.com/Merubokkusu/Discord-S.C.U.M/wiki)

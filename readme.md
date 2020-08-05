@@ -40,7 +40,7 @@ bot.sendMessage("383003333751856129","Hello You :)")
 - [ ] Everything
 
 # list of all functions (click thru these and github should show their location in discum.py)
-```
+```python
 __init__(email="none", password="none", token="none", proxy_host=False, proxy_port=False)
 read(update=True)
 getAnalyticsToken(update=True)

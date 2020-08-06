@@ -1,6 +1,7 @@
 import requests
 import json
 import base64
+from ..Logger import *
 
 class User(object):
 	def __init__(self, discord, s): #s is the requests session object
@@ -19,47 +20,95 @@ class User(object):
 	#	url = self.discord+"users/@me/relationships"
 	#	return self.s.get(url)
 
-	def requestFriend(self,userID):
-		url = self.discord+"users/@me/relationships/"+userID
-		return self.s.put(url, data=json.dumps({}))
+	def requestFriend(self,user):
+		if "#" in user:
+			url = self.discord+"users/@me/relationships"
+			body = {"username": user.split("#")[0], "discriminator": int(user.split("#")[1])}
+			Logger.LogMessage('Post -> {}'.format(url))
+			Logger.LogMessage('{}'.format(str(body)))
+			response = self.s.post(url, data=json.dumps(body))
+			Logger.LogMessage('Response <- {}'.format(response.text), log_level=LogLevel.OK)
+			return response
+		url = self.discord+"users/@me/relationships/"+user
+		Logger.LogMessage('Put -> {}'.format(url))
+		response = self.s.put(url, data=json.dumps({}))
+		Logger.LogMessage('Response <- {}'.format(response.text), log_level=LogLevel.OK)
+		return response
 
 	def acceptFriend(self,userID):
 		url = self.discord+"users/@me/relationships/"+userID
-		return self.s.put(url, data=json.dumps({}))
+		Logger.LogMessage('Put -> {}'.format(url))
+		response = self.s.put(url, data=json.dumps({}))
+		Logger.LogMessage('Response <- {}'.format(response.text), log_level=LogLevel.OK)
+		return response
 
 	def removeRelationship(self,userID): #for removing friends, unblocking people
 		url = self.discord+"users/@me/relationships/"+userID
-		return self.s.delete(url)
+		Logger.LogMessage('Delete -> {}'.format(url))
+		response = self.s.delete(url)
+		Logger.LogMessage('Response <- {}'.format(response.text), log_level=LogLevel.OK)
+		return response
 
 	def blockUser(self,userID):
 		url = self.discord+"users/@me/relationships/"+userID
-		return self.s.put(url, data=json.dumps({"type":2}))
+		Logger.LogMessage('Put -> {}'.format(url))
+		Logger.LogMessage('{}'.format(str({"type":2})))
+		response = self.s.put(url, data=json.dumps({"type":2}))
+		Logger.LogMessage('Response <- {}'.format(response.text), log_level=LogLevel.OK)
+		return response
 
 	'''
 	Profile Edits
 	'''
 	def changeName(self,email,password,name):
 		url = self.discord+"users/@me"
-		return self.s.patch(url, data=json.dumps({"username":name,"email":email,"password":password}))
+		Logger.LogMessage('Patch -> {}'.format(url))
+		Logger.LogMessage('{}'.format(str({"username":name,"email":email,"password":password})))
+		response = self.s.patch(url, data=json.dumps({"username":name,"email":email,"password":password}))
+		Logger.LogMessage('Response <- {}'.format(response.text), log_level=LogLevel.OK)
+		return response
 	
 	def setStatus(self,status):
 		url = self.discord+"users/@me/settings"
+		Logger.LogMessage('Patch -> {}'.format(url))
 		if(status == 0): # Online
-			return self.s.patch(url, data=json.dumps({"status":"online"}))
+			Logger.LogMessage('{}'.format(str({"status":"online"})))
+			response = self.s.patch(url, data=json.dumps({"status":"online"}))
+			Logger.LogMessage('Response <- {}'.format(response.text), log_level=LogLevel.OK)
+			return response
 		elif(status == 1): # Idle
-			return self.s.patch(url, data=json.dumps({"status":"idle"}))
+			Logger.LogMessage('{}'.format(str({"status":"idle"})))
+			response = self.s.patch(url, data=json.dumps({"status":"idle"}))
+			Logger.LogMessage('Response <- {}'.format(response.text), log_level=LogLevel.OK)
+			return response
 		elif(status == 2): #Do Not Disturb
-			return self.s.patch(url, data=json.dumps({"status":"dnd"}))
+			Logger.LogMessage('{}'.format(str({"status":"dnd"})))
+			response = self.s.patch(url, data=json.dumps({"status":"dnd"}))
+			Logger.LogMessage('Response <- {}'.format(response.text), log_level=LogLevel.OK)
+			return response
 		elif (status == 3): #Invisible
-			return self.s.patch(url, data=json.dumps({"status":"invisible"}))
+			Logger.LogMessage('{}'.format(str({"status":"invisible"})))
+			response = self.s.patch(url, data=json.dumps({"status":"invisible"}))
+			Logger.LogMessage('Response <- {}'.format(response.text), log_level=LogLevel.OK)
+			return response
 		elif (status == ''):
-			return self.s.patch(url, data=json.dumps({"custom_status":null}))
+			Logger.LogMessage('{}'.format(str({"custom_status":None})))
+			response = self.s.patch(url, data=json.dumps({"custom_status":None}))
+			Logger.LogMessage('Response <- {}'.format(response.text), log_level=LogLevel.OK)
+			return response
 		else:
-			return self.s.patch(url, data=json.dumps({"custom_status":{"text":status}}))
+			Logger.LogMessage('{}'.format(str({"custom_status":{"text":status}})))
+			response = self.s.patch(url, data=json.dumps({"custom_status":{"text":status}}))
+			Logger.LogMessage('Response <- {}'.format(response.text), log_level=LogLevel.OK)
+			return response
 
-	def setAvatar(self,email,password,imagePath):
+	def setAvatar(self,email,password,imagePath): #local image path
 		url = self.discord+"users/@me"
+		Logger.LogMessage('Patch -> {}'.format(url))
+		Logger.LogMessage('{}'.format(str({"email":email,"password":password,"avatar":"data:image/png;base64,<encoded image data>","discriminator":None,"new_password":None})))
 		with open(imagePath, "rb") as image:
 			encodedImage = base64.b64encode(image.read()).decode('utf-8')
-		return self.s.patch(url, data=json.dumps({"email":email,"password":password,"avatar":"data:image/png;base64,"+encodedImage,"discriminator":null,"new_password":null}))
+		response = self.s.patch(url, data=json.dumps({"email":email,"password":password,"avatar":"data:image/png;base64,"+encodedImage,"discriminator":None,"new_password":None}))
+		Logger.LogMessage('Response <- {}'.format(response.text), log_level=LogLevel.OK)
+		return response
 		

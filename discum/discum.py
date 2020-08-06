@@ -559,7 +559,7 @@ class Client:
 
 
     '''
-    userdiscriminator to snowflake and back
+    username to snowflake and back
     '''
     def username_to_snowflake(self,userdiscriminator): #userdiscriminator is "username#discriminator"
         getthatdata = self.read() #might as well get current session settings

@@ -458,18 +458,22 @@ class Client:
     	getthatdata = self.read(update) #refreshes session settings if update is True
     	return [self.read(False).relationships[i] for i in range(len(self.read(False).relationships)) if i%2==0]
 
-    def getRelationshipIDs(self,update=True):
+    def getRelationshipIDs(self,update=True): #gets userIDs that are in a "relationship" with your account
     	getthatdata = self.read(update) #refreshes session settings if update is True
     	return [self.getRelationships(False)[i]['id'] for i in range(len(self.getRelationships(False)))]
 
     def getRelationshipData(self,RelationshipID,update=True):
-    	getthatdata = self.read(update) #refreshes session settings if update is True
-    	if isinstance(RelationshipID,str):
-    		RelationshipID = int(RelationshipID)
-    	for i in range(len(self.getRelationships(False))):
-    		if self.getRelationships(False)[i]['id'] == RelationshipID:
-    			return self.getRelationships(False)[i]
-    	return None
+        getthatdata = self.read(update) #refreshes session settings if update is True
+        if isinstance(RelationshipID,str) and "#" in RelationshipID: #if in username discriminator format
+            for i in range(len(self.getRelationships(False))):
+                if self.getRelationships(False)[i]['user']['username'] == RelationshipID.split("#")[0] and self.getRelationships(False)[i]['user']['discriminator'] == RelationshipID.split("#")[1]:
+                    return self.getRelationships(False)[i]
+        elif isinstance(RelationshipID,str): #if in ID format, but is a string instead of an int
+            RelationshipID = int(RelationshipID)
+        for i in range(len(self.getRelationships(False))):
+            if self.getRelationships(False)[i]['id'] == RelationshipID:
+                return self.getRelationships(False)[i]
+        return None
 
     def getFriends(self,update=True): #yay, no this will not give you friends, it returns data about the users you have a friends
     	getthatdata = self.read(update) #refreshes session settings if update is True
@@ -553,6 +557,35 @@ class Client:
 
     # oof end of reading session settings
 
+
+    '''
+    userdiscriminator to snowflake and back
+    '''
+    def username_to_snowflake(self,userdiscriminator): #userdiscriminator is "username#discriminator"
+        getthatdata = self.read() #might as well get current session settings
+        if type(self.getRelationshipData(userdiscriminator,False)).__name__ != 'NoneType': #testing our luck to see if user is in a "relationship" with our user
+            return self.getRelationshipData(userdiscriminator,False)['id'] #returns type int
+        User(self.discord,self.s).requestFriend(userdiscriminator) #this puts you in a "relationship" with that user
+        if type(self.getRelationshipData(userdiscriminator,True)).__name__ != 'NoneType': #if you sent a request to a bot or to yourself then this becomes False
+            User(self.discord,self.s).removeRelationship(self.getRelationshipData(userdiscriminator,False)['id'])
+            return self.getRelationshipData(userdiscriminator,False)['id'] #returns type int
+        return None #happens if other user is a bot, is yourself, does not exist, or something wrong with your account
+
+    def snowflake_to_username(self,snowflake): #snowflake aka userID
+        getthatdata = self.read() #might as well get current session settings
+        if type(self.getRelationshipData(snowflake,False)).__name__ != 'NoneType': #testing our luck to see if user is in a "relationship" with our user
+            userdiscriminator = self.getRelationshipData(snowflake,False)['user']['username'] + "#" + self.getRelationshipData(snowflake,False)['user']['discriminator']
+            return userdiscriminator
+        if isinstance(snowflake,int):
+            snowflake = str(snowflake)
+        User(self.discord,self.s).requestFriend(snowflake) #this puts you in a "relationship" with that user
+        if type(self.getRelationshipData(snowflake,True)).__name__ != 'NoneType': #if you sent a request to a bot or to yourself then this becomes False
+            User(self.discord,self.s).removeRelationship(snowflake)
+            userdiscriminator = self.getRelationshipData(snowflake,False)['user']['username'] + "#" + self.getRelationshipData(snowflake,False)['user']['discriminator']
+            return userdiscriminator
+        return None #happens if other user is a bot, is yourself, does not exist, or something wrong with your account
+
+
     '''
     Messages
     '''
@@ -578,10 +611,10 @@ class Client:
     User relationships
     '''
     #create outgoing friend request
-    def requestFriend(self,userID):
-        if isinstance(userID,int):
-            userID = str(userID)
-        return User(self.discord,self.s).requestFriend(userID)
+    def requestFriend(self,user): #you can input a userID(snowflake) or a user discriminator
+        if isinstance(user,int): #only affects userIDs cause...well...strings...
+            user = str(user)
+        return User(self.discord,self.s).requestFriend(user)
 
     #accept incoming friend request
     def acceptFriend(self,userID):

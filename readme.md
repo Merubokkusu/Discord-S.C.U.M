@@ -14,7 +14,7 @@ pip install discum
 from source (this is up-to-date with recent changes)(currently on version 0.2.0):        
 `git clone https://github.com/Merubokkusu/Discord-S.C.U.M.git`    
 `cd Discord-S.C.U.M`     
-`python3 setup.py install`            
+`python3 setup.py install`                   
 
 # Usage
 ## [Read the Wiki](https://github.com/Merubokkusu/Discord-S.C.U.M/wiki)
@@ -30,6 +30,11 @@ bot.read(update=False).__dict__
 bot.getGuildIDs(update=False)
 bot.sendMessage("383003333751856129","Hello You :)")
 ```
+
+### bonus feature: convert username to snowflake and back
+`bot.username_to_snowflake(userdiscriminator) #input is "username#discriminator". you cannot input bot accounts or yourself`         
+`bot.snowflake_to_username(snowflake) #input is snowflake(aka userID). you cannot input bot accounts or yourself`  
+
 # To Do
 - [x] Sending basic text messages
 - [X] Sending Images

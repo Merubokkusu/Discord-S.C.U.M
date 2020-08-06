@@ -21,7 +21,7 @@ class User(object):
 	#	return self.s.get(url)
 
 	def requestFriend(self,user):
-		if isinstance(user,str) and "#" in user:
+		if "#" in user:
 			url = self.discord+"users/@me/relationships"
 			body = {"username": user.split("#")[0], "discriminator": int(user.split("#")[1])}
 			Logger.LogMessage('Post -> {}'.format(url))

@@ -587,7 +587,7 @@ class Client:
     def acceptFriend(self,userID):
         if isinstance(userID,int):
             userID = str(userID)
-        return User(self.discord,self.ss).acceptFriend(userID)
+        return User(self.discord,self.s).acceptFriend(userID)
 
     #remove friend OR unblock user
     def removeRelationship(self,userID):

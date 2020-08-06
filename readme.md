@@ -32,8 +32,10 @@ bot.sendMessage("383003333751856129","Hello You :)")
 ```
 
 ### bonus feature: convert username to snowflake and back
-`bot.username_to_snowflake(usernamediscriminator) #input is "username#discriminator". you cannot input bot accounts or yourself`         
-`bot.snowflake_to_username(snowflake) #input is snowflake(aka userID). you cannot input bot accounts or yourself`  
+```python
+bot.username_to_snowflake(usernamediscriminator) #input is "username#discriminator". you cannot input bot accounts or yourself
+bot.snowflake_to_username(snowflake) #input is snowflake(aka userID). you cannot input bot accounts or yourself
+```
 
 # To Do
 - [x] Sending basic text messages

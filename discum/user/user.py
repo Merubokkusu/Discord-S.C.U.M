@@ -7,17 +7,17 @@ class User(object):
 		self.discord = discord
 		self.s = s
 		
-	def getDMs(self):
-		url = self.discord+"users/@me/channels"
-		return self.s.get(url)
+	#def getDMs(self): #websockets does this now
+	#	url = self.discord+"users/@me/channels"
+	#	return self.s.get(url)
 
-	def getGuilds(self):
-		url = self.discord+"users/@me/guilds"
-		return self.s.get(url)
+	#def getGuilds(self): #websockets does this now
+	#	url = self.discord+"users/@me/guilds"
+	#	return self.s.get(url)
 
-	def getRelationships(self):
-		url = self.discord+"users/@me/relationships"
-		return self.s.get(url)
+	#def getRelationships(self): #websockets does this now
+	#	url = self.discord+"users/@me/relationships"
+	#	return self.s.get(url)
 
 	def requestFriend(self,userID):
 		url = self.discord+"users/@me/relationships/"+userID

@@ -121,10 +121,12 @@ getUserGuildSettings(update=True,guildID=None)
 getUserSettings(update=True)
 getOptionsForUserSettings(update=True)
 getWebsocketVersion(update=True)
+username_to_snowflake(userdiscriminator) #input is "username#discriminator". you cannot input bot accounts or yourself
+snowflake_to_username(snowflake) #input is snowflake(aka userID). you cannot input bot accounts or yourself
 getMessage(channelID,num=1)
 sendMessage(channelID,message,embed="",tts=False)
 sendFile(channelID,filelocation,isurl=False,message="")
-requestFriend(userID)
+requestFriend(user) #accepts userID or username#discriminator input
 acceptFriend(userID)
 removeRelationship(userID)
 blockUser(userID)

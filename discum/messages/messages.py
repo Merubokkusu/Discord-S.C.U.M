@@ -13,7 +13,7 @@ class Messages(object):
 		self.s = s
 
 	#get messages
-	def getMessage(self,channelID,num):
+	def getMessage(self,channelID,num): # num <= 100
 		url = self.discord+"channels/"+channelID+"/messages?limit="+str(num)
 		Logger.LogMessage('Get -> {}'.format(url))
 		response = self.s.get(url)

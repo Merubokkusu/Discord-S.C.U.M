@@ -561,7 +561,7 @@ class Client:
     '''
     username to snowflake and back
     '''
-    def username_to_snowflake(self,userdiscriminator): #userdiscriminator is "username#discriminator"
+    def username_to_userID(self,userdiscriminator): #userdiscriminator is "username#discriminator"
         getthatdata = self.read() #might as well get current session settings
         if type(self.getRelationshipData(userdiscriminator,False)).__name__ != 'NoneType': #testing our luck to see if user is in a "relationship" with our user
             return self.getRelationshipData(userdiscriminator,False)['id'] #returns type int
@@ -571,7 +571,7 @@ class Client:
             return self.getRelationshipData(userdiscriminator,False)['id'] #returns type int
         return None #happens if other user is a bot, is yourself, does not exist, or something wrong with your account
 
-    def snowflake_to_username(self,snowflake): #snowflake aka userID
+    def userID_to_username(self,userID): #userID aka snowflake
         getthatdata = self.read() #might as well get current session settings
         if type(self.getRelationshipData(snowflake,False)).__name__ != 'NoneType': #testing our luck to see if user is in a "relationship" with our user
             userdiscriminator = self.getRelationshipData(snowflake,False)['user']['username'] + "#" + self.getRelationshipData(snowflake,False)['user']['discriminator']

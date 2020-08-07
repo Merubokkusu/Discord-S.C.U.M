@@ -31,10 +31,10 @@ bot.getGuildIDs(update=False)
 bot.sendMessage("383003333751856129","Hello You :)")
 ```
 
-### bonus feature: convert username to snowflake and back
+### bonus feature: convert username to userID and back
 ```python
-bot.username_to_snowflake(userdiscriminator) #input is "username#discriminator". you cannot input bot accounts or yourself
-bot.snowflake_to_username(snowflake) #input is snowflake(aka userID). you cannot input bot accounts or yourself
+bot.username_to_userID(userdiscriminator) #input is "username#discriminator". you cannot input bot accounts or yourself
+bot.userID_to_username(snowflake) #input is userID (aka snowflake). you cannot input bot accounts or yourself
 ```
 
 # To Do
@@ -128,8 +128,8 @@ getUserGuildSettings(update=True,guildID=None)
 getUserSettings(update=True)
 getOptionsForUserSettings(update=True)
 getWebsocketVersion(update=True)
-username_to_snowflake(userdiscriminator) #input is "username#discriminator". you cannot input bot accounts or yourself
-snowflake_to_username(snowflake) #input is snowflake(aka userID). you cannot input bot accounts or yourself
+username_to_userID(userdiscriminator) #input is "username#discriminator". you cannot input bot accounts or yourself
+userID_to_username(userID) #input is userID(aka snowflake). you cannot input bot accounts or yourself
 getMessage(channelID,num=1)
 sendMessage(channelID,message,embed="",tts=False)
 sendFile(channelID,filelocation,isurl=False,message="")

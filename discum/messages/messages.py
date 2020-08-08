@@ -116,8 +116,10 @@ class Messages(object):
 			return actualresponse
 
 	#get recent messages (up to 100)
-	def getRecentMessage(self,channelID,num): # num <= 100
+	def getRecentMessage(self,channelID,num,beforeDate): # num <= 100, beforeDate is a snowflake
 		url = self.discord+"channels/"+channelID+"/messages?limit="+str(num)
+		if beforeDate != None:
+			url += "&before="+str(beforeDate)
 		Logger.LogMessage('Get -> {}'.format(url))
 		response = self.s.get(url)
 		Logger.LogMessage('Response <- {}'.format(response.text), log_level=LogLevel.OK)

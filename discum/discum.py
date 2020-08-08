@@ -76,7 +76,6 @@ class Client:
     def unixts_to_snowflake(self,unixts):
         return int((unixts*1000-1420070400000)*4194304)
 
-
     '''
     (get) and/or read session settings/data
     '''
@@ -607,10 +606,10 @@ class Client:
         return Messages(self.discord,self.s).getMessages(guildID,channelID,userID,mentionsUserID,has,beforeDate,afterDate,textSearch,waitTime)
 
     #get recent messages
-    def getRecentMessage(self,channelID,num=1): # num <= 100
+    def getRecentMessage(self,channelID,num=1,beforeDate=None): # num <= 100, beforeDate is a snowflake
         if isinstance(channelID,int):
             channelID = str(channelID)
-        return Messages(self.discord,self.s).getRecentMessage(channelID,num)
+        return Messages(self.discord,self.s).getRecentMessage(channelID,num,beforeDate)
 
     #send text or embed messages
     def sendMessage(self,channelID,message,embed="",tts=False):

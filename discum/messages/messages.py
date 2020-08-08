@@ -15,7 +15,7 @@ class Messages(object):
 		self.s = s
 
 	#search messages (can load all messages or search thru them), talk about mining some data lol
-	def getMessages(self,guildID,channelID,userID,mentionsUserID,has,beforeDate,afterDate,textSearch):
+	def getMessages(self,guildID,channelID,userID,mentionsUserID,has,beforeDate,afterDate,textSearch,waitTime):
 		url = self.discord+"guilds/"+guildID+"/messages/search?"
 		queryparams = ""
 		if not all(v is None for v in [channelID,userID,mentionsUserID,has,beforeDate,afterDate,textSearch]):
@@ -59,6 +59,7 @@ class Messages(object):
 				total_pages = math.ceil(response.json()['total_results']/25) #this changes...............
 				n=0 #page num
 				while n<total_pages:
+					time.sleep(waitTime)
 					nextpageurl = url + "&offset="+str(n*25)
 					Logger.LogMessage('Get -> {}'.format(nextpageurl))
 					nextpageresponse = self.s.get(nextpageurl)
@@ -91,6 +92,7 @@ class Messages(object):
 			total_pages = math.ceil(response.json()['total_results']/25) #this changes
 			n=0 #page num
 			while n<total_pages:
+				time.sleep(waitTime)
 				nextpageurl = url + "&offset="+str(n*25)
 				Logger.LogMessage('Get -> {}'.format(nextpageurl))
 				nextpageresponse = self.s.get(nextpageurl)

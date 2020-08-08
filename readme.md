@@ -47,7 +47,7 @@ bot.snowflake_to_unixts(snowflake) #snowflake is of type int
 ```python
 bot.getMessages(GUILDID) #returns type dict
 ```
-\*note: dont run this in really active servers (~200 msgs per 15 seconds) because this command might never finish running
+\*note: wouldn't recommend running this on really active servers (~200 msgs per 15 seconds) because this command might never finish running
 
 
 # To Do

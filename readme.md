@@ -48,7 +48,8 @@ bot.snowflake_to_unixts(snowflake) #snowflake is of type int
 bot.getMessages(guildID) #returns type dict
 ```
 - \*note: wouldn't recommend running this on really active servers (~200 msgs per 15 seconds) because this command might never finish running.    
-- time between each request defaults to 1 second, if you want to change this do `bot.getMessages(guildID,waitTime=0)` or whatever other number of seconds you want.  - if you set waitTime to 0 you will get rate limited (every 40 or so requests) and you'll have to wait about 40 seconds.      
+- time between each request defaults to 1 second, if you want to change this do `bot.getMessages(guildID,waitTime=0)` or whatever other number of seconds you want.       
+- if you set waitTime to 0 you will get rate limited (every 40 or so requests) and you'll have to wait about 40 seconds.      
 
 # To Do
 - [x] Sending basic text messages

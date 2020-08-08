@@ -45,7 +45,7 @@ bot.snowflake_to_unixts(snowflake) #snowflake is of type int
 
 ### want to extract all messages ever sent in a server?
 ```python
-bot.getMessages(GUILDID) #returns type dict
+bot.getMessages(guildID) #returns type dict
 ```
 \*note: wouldn't recommend running this on really active servers (~200 msgs per 15 seconds) because this command might never finish running
 

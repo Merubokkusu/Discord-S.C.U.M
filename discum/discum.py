@@ -67,6 +67,17 @@ class Client:
             self.s.proxies.update(proxies)
 
     '''
+    discord snowflake to unix timestamp and back
+
+    '''
+    def snowflake_to_unixts(self,snowflake):
+        return int((snowflake/4194304+1420070400000)/1000)
+
+    def unixts_to_snowflake(self,unixts):
+        return int((unixts*1000-1420070400000)*4194304)
+
+
+    '''
     (get) and/or read session settings/data
     '''
     def read(self,update=True): #returns a class, this is the main function, if you want ALL the session data (wall of data), then call this (or bot.read().__dict__). if update=False session_settings will not be updated
@@ -590,10 +601,16 @@ class Client:
     Messages
     '''
     #get messages
-    def getMessage(self,channelID,num=1):
+    def getMessages(self,guildID,channelID=None,userID=None,mentionsUserID=None,has=None,beforeDate=None,afterDate=None,textSearch=None): #channelID,userID,mentionsUserID are lists of either ints or strings; has and textSearch are lists of strings, beforeDate and afterDate are ints
+        if isinstance(guildID,int):
+            guildID = str(guildID)
+        return Messages(self.discord,self.s).getMessages(guildID,channelID,userID,mentionsUserID,has,beforeDate,afterDate,textSearch)
+
+    #get recent messages
+    def getRecentMessage(self,channelID,num=1): # num <= 100
         if isinstance(channelID,int):
             channelID = str(channelID)
-        return Messages(self.discord,self.s).getMessage(channelID,num)
+        return Messages(self.discord,self.s).getRecentMessage(channelID,num)
 
     #send text or embed messages
     def sendMessage(self,channelID,message,embed="",tts=False):

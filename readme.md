@@ -31,11 +31,24 @@ bot.getGuildIDs(update=False)
 bot.sendMessage("383003333751856129","Hello You :)")
 ```
 
-### bonus feature: convert username to userID and back
+### bonus features: 
+convert username to userID and back:
 ```python
 bot.username_to_userID(userdiscriminator) #input is "username#discriminator". you cannot input bot accounts or yourself
 bot.userID_to_username(snowflake) #input is userID (aka snowflake). you cannot input bot accounts or yourself
 ```
+convert unix timestamp to snowflake and back:
+```python
+bot.unixts_to_snowflake(unixts) #unixts is of type int
+bot.snowflake_to_unixts(snowflake) #snowflake is of type int
+```
+
+### want to extract all messages ever sent in a server?
+```python
+bot.getMessages(GUILDID)
+```
+\*note: dont run this in really active servers (~200 msgs per 30 seconds) because this command might never finish running
+
 
 # To Do
 - [x] Sending basic text messages

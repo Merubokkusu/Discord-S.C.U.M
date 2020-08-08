@@ -53,7 +53,7 @@ bot.getMessages(guildID) #returns type dict
 
 ##### on that note, the normal way to get messages (at most last 100 messages in a specific channel):
 ```python
-bot.getRecentMessage(channelID)
+bot.getRecentMessage(channelID,num=100)
 ```
 
 # To Do

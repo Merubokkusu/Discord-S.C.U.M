@@ -601,10 +601,10 @@ class Client:
     Messages
     '''
     #get messages
-    def getMessages(self,guildID,channelID=None,userID=None,mentionsUserID=None,has=None,beforeDate=None,afterDate=None,textSearch=None): #channelID,userID,mentionsUserID are lists of either ints or strings; has and textSearch are lists of strings, beforeDate and afterDate are ints
+    def getMessages(self,guildID,channelID=None,userID=None,mentionsUserID=None,has=None,beforeDate=None,afterDate=None,textSearch=None,waitTime=1): #channelID,userID,mentionsUserID are lists of either ints or strings; has and textSearch are lists of strings, beforeDate and afterDate are ints
         if isinstance(guildID,int):
             guildID = str(guildID)
-        return Messages(self.discord,self.s).getMessages(guildID,channelID,userID,mentionsUserID,has,beforeDate,afterDate,textSearch)
+        return Messages(self.discord,self.s).getMessages(guildID,channelID,userID,mentionsUserID,has,beforeDate,afterDate,textSearch,waitTime)
 
     #get recent messages
     def getRecentMessage(self,channelID,num=1): # num <= 100

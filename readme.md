@@ -52,8 +52,9 @@ bot.getMessages(guildID) #returns type dict
 * if you set waitTime to 0 you will get rate limited (every 40 or so requests) and you'll have to wait about 40 seconds.      
 * input types for the search feature: 
   * channelID,userID,mentionsUserID are lists of either ints or strings
-  * has and textSearch are lists of strings
+  * has is a list of strings
   * beforeDate and afterDate are ints
+  * textSearch is a string
   * waitTime is an int or double
 
 ##### on that note, the normal way to get messages (at most last 100 messages in a specific channel):

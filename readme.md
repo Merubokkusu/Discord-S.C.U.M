@@ -71,7 +71,7 @@ bot.getRecentMessage(channelID,num=100)
 - [ ] Making phone calls, sending audio/video data thru those calls
 - [ ] Everything
 
-# list of all functions (click thru these and github should show their location in discum.py)
+# list of all 101 functions (click thru these and github should show their location in discum.py)
 ```python
 discum.Client(email="none", password="none", token="none", proxy_host=False, proxy_port=False) #look at __init__
 snowflake_to_unixts(snowflake)

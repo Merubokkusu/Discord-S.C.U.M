@@ -43,7 +43,7 @@ bot.unixts_to_snowflake(unixts) #unixts is of type int
 bot.snowflake_to_unixts(snowflake) #snowflake is of type int
 ```
 
-### want to extract all messages ever sent in a server (includes search function)?
+### want to extract all messages ever sent in a server? (includes search function)
 ```python
 bot.getMessages(guildID) #returns type dict
 ```

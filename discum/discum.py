@@ -623,6 +623,48 @@ class Client:
             channelID = str(channelID)
         return Messages(self.discord,self.s).sendFile(channelID,filelocation,isurl,message)
 
+    #search messages, this is just the plain search message function
+    def searchMessages(self,guildID,channelID=None,userID=None,mentionsUserID=None,has=None,beforeDate=None,afterDate=None,textSearch=None,afterNumResults=None):
+        if isinstance(guildID,int):
+            guildID = str(guildID)
+        return Messages(self.discord,self.s).searchMessages(guildID,channelID,userID,mentionsUserID,has,beforeDate,afterDate,textSearch,afterNumResults)
+
+    #sends the typing action for 10 seconds (or technically until you change the page)
+    def typingAction(self,channelID):
+        if isinstance(channelID,int):
+            channelID = str(channelID)
+        return Messages(self.discord,self.s).typingAction(channelID)
+
+    #delete message
+    def deleteMessage(self,channelID,messageID):
+        if isinstance(channelID,int):
+            channelID = str(channelID)
+        if isinstance(messageID,int):
+            messageID = str(messageID)
+        return Messages(self.discord,self.s).deleteMessage(channelID,messageID)
+
+    #pin message
+    def pinMessage(self,channelID,messageID):
+        if isinstance(channelID,int):
+            channelID = str(channelID)
+        if isinstance(messageID,int):
+            messageID = str(messageID)
+        return Messages(self.discord,self.s).pinMessage(channelID,messageID)
+
+    #un-pin message
+    def unPinMessage(self,channelID,messageID):
+        if isinstance(channelID,int):
+            channelID = str(channelID)
+        if isinstance(messageID,int):
+            messageID = str(messageID)
+        return Messages(self.discord,self.s).unPinMessage(channelID,messageID)
+
+    #get pinned messages
+    def getPins(self,channelID):
+        if isinstance(channelID,int):
+            channelID = str(channelID)
+        return Messages(self.discord,self.s).getPins(channelID)
+
     '''
     User relationships
     '''

@@ -57,7 +57,7 @@ bot.getMessages(guildID) #returns type dict
   * textSearch is a string
   * waitTime is an int or double
 
-##### on that note, the normal way to get messages (at most last 100 messages in a specific channel):
+##### on that note, the normal way to get messages (≤ last 100 messages, before a date, in a channel):
 ```python
 bot.getRecentMessage(channelID,num=100)
 ```

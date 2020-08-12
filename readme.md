@@ -6,7 +6,7 @@
 
 
 ## Install
-from PyPI:      
+from PyPI (OUTDATED):      
 ```python
 pip install discum 
 ```

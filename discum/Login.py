@@ -7,7 +7,7 @@ class Login:
     '''
     Manages HTTP authentication
     '''
-    URL = "https://discordapp.com/api/v6/auth/login" #self.URL
+    URL = "https://discordapp.com/api/v8/auth/login" #self.URL
 
     def __init__(self, user_email, user_password,proxy_host,proxy_port):
         self.__user_email = user_email

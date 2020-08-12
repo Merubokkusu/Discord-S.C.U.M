@@ -42,7 +42,7 @@ class Client:
         	self.__login = Login(self.__user_email, self.__user_password,self.__proxy_host,self.__proxy_port)
         	self.__gateway_server = GatewayServer(self.__proxy_host,self.__proxy_port)
         	self.__user_token = self.__login.GetToken() #update token from "none" to true string value
-        self.discord = 'https://discord.com/api/v6/'
+        self.discord = 'https://discord.com/api/v8/'
         self.headers = {
         "Host": "discord.com",
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) discord/0.0.306 Chrome/78.0.3904.130 Electron/7.1.11 Safari/537.36",

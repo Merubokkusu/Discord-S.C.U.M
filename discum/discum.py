@@ -599,14 +599,8 @@ class Client:
     '''
     Messages
     '''
-    #get messages
-    def getMessages(self,guildID,channelID=None,userID=None,mentionsUserID=None,has=None,beforeDate=None,afterDate=None,textSearch=None,waitTime=1): #channelID,userID,mentionsUserID are lists of either ints or strings; has and textSearch are lists of strings, beforeDate and afterDate are ints
-        if isinstance(guildID,int):
-            guildID = str(guildID)
-        return Messages(self.discord,self.s).getMessages(guildID,channelID,userID,mentionsUserID,has,beforeDate,afterDate,textSearch,waitTime)
-
     #get recent messages
-    def getRecentMessage(self,channelID,num=1,beforeDate=None): # num <= 100, beforeDate is a snowflake
+    def getMessages(self,channelID,num=1,beforeDate=None): # num <= 100, beforeDate is a snowflake
         if isinstance(channelID,int):
             channelID = str(channelID)
         return Messages(self.discord,self.s).getRecentMessage(channelID,num,beforeDate)
@@ -623,11 +617,15 @@ class Client:
             channelID = str(channelID)
         return Messages(self.discord,self.s).sendFile(channelID,filelocation,isurl,message)
 
-    #search messages, this is just the plain search message function
+    #search messages
     def searchMessages(self,guildID,channelID=None,userID=None,mentionsUserID=None,has=None,beforeDate=None,afterDate=None,textSearch=None,afterNumResults=None):
         if isinstance(guildID,int):
             guildID = str(guildID)
         return Messages(self.discord,self.s).searchMessages(guildID,channelID,userID,mentionsUserID,has,beforeDate,afterDate,textSearch,afterNumResults)
+
+    #filter searchMessages, takes in the output of searchMessages (a requests response object) and outputs a list of target messages
+    def filterSearchResults(self,searchResponse):
+        return Messages(self.discord,self.s).filterSearchResults(searchResponse)
 
     #sends the typing action for 10 seconds (or technically until you change the page)
     def typingAction(self,channelID):

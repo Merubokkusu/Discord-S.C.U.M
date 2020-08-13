@@ -8,7 +8,7 @@ class GatewayServer():
     '''
     Manages authentication and data transfer to/from http://gateway.discord.gg
     '''
-    URL = "wss://gateway.discord.gg/?encoding=etf&v=8"
+    URL = "wss://gateway.discord.gg/?encoding=etf&v=6"
 
     class OPCODE:
         '''

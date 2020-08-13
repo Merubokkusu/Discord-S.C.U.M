@@ -43,25 +43,6 @@ bot.unixts_to_snowflake(unixts) #unixts is of type int
 bot.snowflake_to_unixts(snowflake) #snowflake is of type int
 ```
 
-### want to extract all messages ever sent in a server? (includes search function)
-```python
-bot.getMessages(guildID) #returns type dict
-```
-* \*note: for highly active servers (>500 messages every 30 seconds or so) you might need to set the beforeDate so that getMessages doesnt run literally forever
-* time between each request defaults to 1 second, if you want to change this do `bot.getMessages(guildID,waitTime=0)` or whatever other number of seconds you want.       
-* if you set waitTime to 0 you will get rate limited (every 40 or so requests) and you'll have to wait about 40 seconds.      
-* input types for the search feature: 
-  * channelID,userID,mentionsUserID are lists of either ints or strings
-  * has is a list of strings
-  * beforeDate and afterDate are ints
-  * textSearch is a string
-  * waitTime is an int or double
-
-##### on that note, the normal way to get messages (≤ last 100 messages, before a date, in a channel):
-```python
-bot.getRecentMessage(channelID,num=100)
-```
-
 # To Do
 - [x] Sending basic text messages
 - [X] Sending Images

@@ -40,8 +40,8 @@ class Client:
         self.classsession_settings = {} #look at function read()
         if self.__user_token == "none": #assuming email and pass are given...
         	self.__login = Login(self.__user_email, self.__user_password,self.__proxy_host,self.__proxy_port)
-        	self.__gateway_server = GatewayServer(self.__proxy_host,self.__proxy_port)
         	self.__user_token = self.__login.GetToken() #update token from "none" to true string value
+        self.__gateway_server = GatewayServer(self.__proxy_host,self.__proxy_port)
         self.discord = 'https://discord.com/api/v8/'
         self.headers = {
         "Host": "discord.com",

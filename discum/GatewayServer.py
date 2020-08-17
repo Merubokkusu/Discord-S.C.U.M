@@ -77,7 +77,7 @@ class GatewayServer():
         self.__ws.send_binary(gateway_auth_data)
         Logger.LogMessage('Gateway_wss data sent -> \r\n', to_file=False, to_console=False, hex_data=gateway_auth_data)
 
-        # Receive media_token
+        # Receive session settings
         response = self.__ws.recv()
         etf_data = binary_to_term(response)
         Logger.LogMessage('Gateway_wss received <- {} bytes'.format(len(response)))

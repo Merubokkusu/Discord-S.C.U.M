@@ -102,7 +102,7 @@ class Client:
     def getExperiments(self,update=True):
     	return self.read(update).experiments
 
-    def getFriendSuggestingCount(self,update=True): #no idea what this is but it's here so whatever
+    def getFriendSuggestionCount(self,update=True): #no idea what this is but it's here so whatever
     	return self.read(update).friend_suggestion_count
 
     def getGuildExperiments(self,update=True):

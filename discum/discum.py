@@ -603,7 +603,7 @@ class Client:
     def getMessages(self,channelID,num=1,beforeDate=None): # num <= 100, beforeDate is a snowflake
         if isinstance(channelID,int):
             channelID = str(channelID)
-        return Messages(self.discord,self.s).getRecentMessage(channelID,num,beforeDate)
+        return Messages(self.discord,self.s).getMessages(channelID,num,beforeDate)
 
     #send text or embed messages
     def sendMessage(self,channelID,message,embed="",tts=False):

@@ -1,3 +1,4 @@
+#influence for much of this code came from here: https://github.com/Gehock/discord-ws
 import asyncio
 import websockets
 import json

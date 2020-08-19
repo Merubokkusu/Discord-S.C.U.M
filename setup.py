@@ -24,7 +24,8 @@ VERSION = '0.2.2'
 REQUIRED = [
     'requests',
     'requests_toolbelt',
-    'filetype'
+    'filetype',
+    'websockets'
 ]
 
 # What packages are optional?

@@ -82,7 +82,7 @@ class Client:
         if update == False: #if read() hasnt been called yet this will just return an empty dict
             return self.classsession_settings
         self.__gateway_server.runIt('get session data')
-        session_settings = self._Client__gateway_server.session_settings["d"]
+        session_settings = self._Client__gateway_server.session_data["d"]
         strsession_settings = self.convert(session_settings)
         self.classsession_settings = Settings(strsession_settings)
         return self.classsession_settings

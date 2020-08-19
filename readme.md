@@ -68,7 +68,7 @@ The input for \_\_gateway_server.runIt is formatted like such:
 ```
 tasks are placed in sequencial order (note the 1 and the 2) and are run as such. The 2nd task does not start running until the 1st task has been completed. Each task has "send" and "recieve" sections.      
 The send section denotes what data to send to the server, and it's value is a list of dicts (https://discord.com/developers/docs/topics/gateway). If there are multiple messages to send to the server, each message will be sent before the "receive" section is checked.     
-The receive section (a list of dicts) acts like a search function and each dict looks like this: 
+The receive section (a list of dicts) acts like a search function and each dict is formatted like this: 
 ```
 {
   "op": (optional; type int),

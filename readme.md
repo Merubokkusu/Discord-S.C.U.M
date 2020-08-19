@@ -81,7 +81,7 @@ The receive section (a list of dicts) acts like a search function and each dict 
   "t": (optional; type str)
 }
 ```
-As an example, if you'd like to connect to Discord via websockets and never disconnect, run the following:
+As an example, if you'd like to connect to Discord via websockets and never disconnect (until ctrl+c), run the following:
 ```
 bot._Client__gateway_server.runIt({
   1: {

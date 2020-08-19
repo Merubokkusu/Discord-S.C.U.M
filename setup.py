@@ -18,14 +18,13 @@ URL = 'https://github.com/Merubokkusu/Discord-S.C.U.M'
 EMAIL = 'loser@merubokkusu.com'
 AUTHOR = 'Merubokkusu'
 REQUIRES_PYTHON = '>=3.6.0'
-VERSION = '0.2.1'
+VERSION = '0.2.2'
 
 # What packages are required for this module to be executed?
 REQUIRED = [
     'requests',
     'requests_toolbelt',
-    'filetype',
-    'websocket_client'
+    'filetype'
 ]
 
 # What packages are optional?

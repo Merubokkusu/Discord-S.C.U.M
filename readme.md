@@ -35,7 +35,7 @@ bot.sendMessage("383003333751856129","Hello You :)")
 greatly simplified and improved GatewayServer protocol & ability to send custom data to Discord via websockets:    
 The following initiates a call with a friend and stops the asyncio loop once a message is recieved with event name VOICE_SERVER_UPDATE. Note that you'll need to send a different message to the server to hang up the call.
 ```python
-bot.__gateway_server.runIt({
+bot._Client__gateway_server.runIt({
   1: {
     "send": [{
       "op": 4,
@@ -53,7 +53,7 @@ bot.__gateway_server.runIt({
   }
 })
 ```
-The input for \_\_gateway_server.runIt is formatted like such:
+The input for \_Client__gateway_server.runIt is formatted like such:
 ```
 {
   1: {
@@ -83,7 +83,7 @@ The receive section (a list of dicts) acts like a search function and each dict 
 ```
 As an example, if you'd like to connect to Discord via websockets and never disconnect, run the following:
 ```
-bot.__gateway_server.runIt({
+bot._Client__gateway_server.runIt({
   1: {
     "send": [],
     "receive": []

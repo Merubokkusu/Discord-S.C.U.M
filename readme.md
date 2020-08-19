@@ -31,6 +31,66 @@ bot.getGuildIDs(update=False)
 bot.sendMessage("383003333751856129","Hello You :)")
 ```
 
+## What's new in v 0.2.2:
+greatly simplified and improved GatewayServer protocol & ability to send custom data to Discord via websockets:    
+The following initiates a call with a friend and stops the asyncio loop once a message is recieved with event name VOICE_SERVER_UPDATE. Note that you'll need to send a different message to the server to hang up the call.
+```python
+bot.__gateway_server.runIt({
+  1: {
+    "send": [{
+      "op": 4,
+      "d": {
+        "guild_id": None,
+        "channel_id": 21154535154122752,
+        "self_mute": False,
+        "self_deaf": False,
+        "self_video": False
+      }
+    }],
+    "receive": [{
+      "t": "VOICE_SERVER_UPDATE"
+    }]
+  }
+})
+```
+The input for \_\_gateway_server.runIt is formatted like such:
+```
+{
+  1: {
+    "send": [{}, {}, {}],
+    "receive": [{}]
+  },
+  2: {
+    "send": [{}],
+    "receive": [{}, {}]
+  }
+}
+```
+tasks are placed in sequencial order (note the 1 and the 2) and are run as such. The 2nd task does not start running until the 1st task has been completed. Each task has "send" and "recieve" sections.      
+The send section denotes what data to send to the server, and it's value is a list of dicts (https://discord.com/developers/docs/topics/gateway). If there are multiple messages to send to the server, each message will be sent before the "receive" section is checked.     
+The receive section (a list of dicts) acts like a search function and looks like this: 
+```
+{
+  "op": (optional; type int),
+  "d": {
+    "key": (optional; type str or int),
+    "value": (optional; no set type),
+    "text": (optional; type str)
+  },
+  "s": (optional; type int),
+  "t": (optional; type str)
+}
+```
+As an example, if you'd like to connect to Discord via websockets and never disconnect, run the following:
+```
+bot.__gateway_server.runIt({
+  1: {
+    "send": [],
+    "receive": []
+  }
+})
+```
+
 ### bonus features: 
 convert username to userID and back:
 ```python

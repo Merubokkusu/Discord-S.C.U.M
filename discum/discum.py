@@ -67,6 +67,17 @@ class Client:
         self.__gateway_server = GatewayServer(self.__user_token,self.__proxy_host,self.__proxy_port)
 
     '''
+    test connection (this function was originally in discum and was created by Merubokkusu)
+    '''
+    def connectionTest(self): #,proxy):
+        url='https://discord.com/api/v6/users/@me/affinities/users'
+        connection = self.s.get(url)
+        if(connection.status_code == 200):
+            print("Connected")
+        else:
+            print("Incorrect Token")
+
+    '''
     discord snowflake to unix timestamp and back
     '''
     def snowflake_to_unixts(self,snowflake):

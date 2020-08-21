@@ -60,12 +60,12 @@ The input for \_Client__gateway_server.runIt is formatted like such:
 ```
 {
   1: {
-    "send": [{}, {}, {}],
-    "receive": [{}]
+    "send": [{...}, {...}, {...}],
+    "receive": [{...}]
   },
   2: {
-    "send": [{}],
-    "receive": [{}, {}]
+    "send": [{...}],
+    "receive": [{...}, {...}]
   }
 }
 ```

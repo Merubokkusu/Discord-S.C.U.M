@@ -1,4 +1,4 @@
-[![python versions](https://img.shields.io/badge/python-3.7%20%7C%203.8-blue)](https://pypi.org/project/discum/0.2.1/) [![PyPI download week](https://img.shields.io/pypi/dw/ansicolortags.svg)](https://pypi.python.org/pypi/ansicolortags/)
+[![python versions](https://img.shields.io/badge/python-3.7%20%7C%203.8-blue)](https://pypi.org/project/discum/0.2.1/) [![PyPI download week](https://img.shields.io/pypi/dw/discum.svg)](https://pypi.python.org/pypi/discum/)
 
 
 ### A Discord Selfbot Api - discum

@@ -112,7 +112,7 @@ bot.snowflake_to_unixts(snowflake) #snowflake is of type int
 - [ ] Making phone calls, sending audio/video data thru those calls
 - [ ] Everything
 
-# list of all 102 functions (click thru these and github should show their location in discum.py)
+# list of all 103 functions (click thru these and github should show their location in discum.py)
 ```python
 discum.Client(email="none", password="none", token="none", proxy_host=False, proxy_port=False) #look at __init__
 connectionTest()
@@ -286,4 +286,5 @@ blockUser(userID)
 changeName(name)
 setStatus(status)
 setAvatar(imagePath)
+_Client__gateway_server.runIt
 ```

@@ -1,4 +1,5 @@
 ### A Discord Selfbot Api - discum
+[![python versions](https://img.shields.io/badge/python-3.7%20%7C%203.8-blue)](https://pypi.org/project/discum/0.2.1/)
 
 ![https://files.catbox.moe/3ns003.png](https://files.catbox.moe/3ns003.png)
 

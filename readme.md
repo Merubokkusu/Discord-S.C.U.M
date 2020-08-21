@@ -8,7 +8,7 @@
 [![PyPI version](https://badge.fury.io/py/discum.svg)](https://badge.fury.io/py/discum)
 
 
-## Install
+## Install (installation should be the same on Mac, Ubuntu, and Windows; just make sure you're using python 3.7 or 3.8)
 from PyPI:      
 ```python
 pip install discum 
@@ -291,3 +291,6 @@ setStatus(status)
 setAvatar(imagePath)
 _Client__gateway_server.runIt(data) #for websocket connections
 ```
+
+### notes:
+arandomnewaccount here - my profile is invisible because this isn't my only github account and therefore I've been marked as spam by github. I'll still be commiting onto the repo from time to time but I won't be able to answer issues on the issue page. If you want to contact me about discum (issues, questions, etc) you can send an email to discordtehe@gmail.com.

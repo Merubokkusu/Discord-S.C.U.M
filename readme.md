@@ -286,5 +286,5 @@ blockUser(userID)
 changeName(name)
 setStatus(status)
 setAvatar(imagePath)
-_Client__gateway_server.runIt
+_Client__gateway_server.runIt(data) #for websocket connections
 ```

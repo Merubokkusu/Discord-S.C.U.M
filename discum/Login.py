@@ -18,7 +18,7 @@ class Login:
 
     def Connect(self):
         session = requests.Session()
-        if self.__proxy_host != False and self.__proxy_port != False:
+        if self.__proxy_host != None:
             proxies = {
             'http': self.__proxy_host+':'+self.__proxy_port,
             'https': self.__proxy_host+':'+self.__proxy_port

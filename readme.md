@@ -1,11 +1,9 @@
-[![python versions](https://img.shields.io/badge/python-3.7%20%7C%203.8-blue)](https://pypi.org/project/discum/0.2.1/) [![PyPI download week](https://img.shields.io/pypi/dw/discum.svg)](https://pypi.python.org/pypi/discum/)
+[![python versions](https://img.shields.io/badge/python-3.7%20%7C%203.8-blue)](https://pypi.org/project/discum/0.2.1/) [![PyPI download week](https://img.shields.io/pypi/dw/discum.svg)](https://pypi.python.org/pypi/discum/) [![PyPI version](https://badge.fury.io/py/discum.svg)](https://badge.fury.io/py/discum)
 
 
 ### A Discord Selfbot Api - discum
 
 ![https://files.catbox.moe/3ns003.png](https://files.catbox.moe/3ns003.png)
-
-[![PyPI version](https://badge.fury.io/py/discum.svg)](https://badge.fury.io/py/discum)
 
 
 ## Install (installation should be the same on Mac, Linux, and Windows; just make sure you're using python 3.7 or 3.8)

@@ -1,4 +1,4 @@
-[![python versions](https://img.shields.io/badge/python-3.7%20%7C%203.8-blue)](https://pypi.org/project/discum/0.2.1/) [![PyPI download week](https://img.shields.io/pypi/dw/discum.svg)](https://pypi.python.org/pypi/discum/) [![PyPI version](https://badge.fury.io/py/discum.svg)](https://badge.fury.io/py/discum) ![version](https://img.shields.io/badge/version-0.2.2-blue) [![Gitter chat](https://badges.gitter.im/discum/gitter.png)](https://gitter.im/discum/community)
+![version](https://img.shields.io/badge/version-0.2.2-blue) [![python versions](https://img.shields.io/badge/python-3.7%20%7C%203.8-blue)](https://pypi.org/project/discum/0.2.1/) [![PyPI download week](https://img.shields.io/pypi/dw/discum.svg)](https://pypi.python.org/pypi/discum/) [![PyPI version](https://badge.fury.io/py/discum.svg)](https://badge.fury.io/py/discum) [![Gitter chat](https://badges.gitter.im/discum/gitter.png)](https://gitter.im/discum/community)
 
 
 ### A Discord Selfbot Api - discum

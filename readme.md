@@ -23,9 +23,10 @@ from source (this is up-to-date with recent changes)(currently on version 0.2.2)
 # Example
 ```python
 import discum     
-bot = discum.Client(email=,password=)
+bot = discum.Client(email=,password=) #note, this will not work if you have a MFA account
 #bot = discum.Client(email=,password=,proxy_host=,proxy_port=)
-#bot = discum.Client(token=)
+#bot = discum.Client(token=) #works for all types of accounts
+#bot = discum.Client(token=,proxy_host=,proxy_port=)
 bot.read()
 bot.read(update=False).__dict__
 bot.getGuildIDs(update=False)

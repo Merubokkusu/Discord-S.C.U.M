@@ -95,7 +95,7 @@ class GatewayServer():
                 await self.addTask(self.all_tasks[index])
                 while self.mainTaskCompleted == False:
                     await asyncio.sleep(1)
-                self.mainTaskCompleted = True #reset mainTaskCompleted
+                self.mainTaskCompleted = False #reset mainTaskCompleted
                 self.mainTaskComplete[index] = "complete"
         else:
             while self.session_data is None:

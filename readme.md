@@ -84,6 +84,7 @@ The receive section (a list of dicts) acts like a search function and each dict 
   "t": (optional; type str)
 }
 ```
+An important note about the receive section: if discord sends you multiple messages at once (that is, one after the other without you sending anything), the receive can only check for the last-sent-message. For example, if discord sends a MESSAGE_UPDATE and then a MESSAGE_CREATE, you can only check for the MESSAGE_CREATE.
 As an example, if you'd like to connect to Discord via websockets and never disconnect (until ctrl+c), run the following:
 ```python
 bot._Client__gateway_server.runIt({

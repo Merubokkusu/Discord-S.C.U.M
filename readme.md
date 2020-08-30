@@ -237,6 +237,45 @@ _Client__gateway_server.runIt(data) #for websocket connections
 arandomnewaccount here - my profile is invisible because this isn't my only github account and therefore I've been marked as spam by github. I'll still be commiting onto the repo from time to time but I won't be able to answer issues on the issue page. If you want to contact me about discum (issues, questions, etc) you can send an email to discordtehe@gmail.com.
 
 # Changelog
+# 0.2.3
+### Changed
+- structure of code: all gateway comms are now in the gateway folder, Login.py is now in the login folder
+- variable names in gateway/GatewayServer.py to improve code readability (+ added more comments)
+- task receive checking (in gateway/GatewayServer.py) to allow more flexibility (you don't have to search for the last received message in a batch of messages anymore. now you just search messages. like normal.). Here's an example use case:
+  ```python
+  bot._Client__gateway_server.runIt({
+    1: {
+      "send": [{
+        "op": 4,
+        "d": {
+          "guild_id": None,
+          "channel_id": CHANNEL_ID,
+          "self_mute": False,
+          "self_deaf": False,
+          "self_video": False
+        }
+      }],
+      "receive": [
+        {"t": "VOICE_SERVER_UPDATE"}, 
+        {"t": "VOICE_STATE_UPDATE"}
+      ]
+    }
+  })
+  ```
+  note that the order of the receive values do not matter. Whether or not VOICE_STATE_UPDATE comes second (it actually comes first) doesn't matter.
+- receive inputs slightly changed to allow for more checking possibilities. Now the format is like such:
+  ```
+  {
+  "op": (optional; type int),
+  "d": {
+    "keys": (optional; type list of strings),
+    "values": (optional; list of no set types),
+    "texts": (optional; type list of strings)
+  },
+  "s": (optional; type int),
+  "t": (optional; type str)
+  }
+  ```
 # 0.2.2
 ### Added
 - connectionTest() added back

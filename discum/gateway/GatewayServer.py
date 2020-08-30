@@ -247,7 +247,7 @@ class GatewayServer():
 # although calling is not supported yet on discum, you can still initial calls with this program (and send data if you get creative). below lies an example code for calling another user (just input your token and the channel id)
 if __name__ == "__main__":
     gateway = GatewayServer(your_token_here,None,None) #lol id accidently posted my token online. deleted that account
-    gateway.runIt({1:{"send":[{"op":4,"d":{"guild_id":None,"channel_id":'745427469607108671',"self_mute":False,"self_deaf":False,"self_video":False}}],"receive":[{"t":"VOICE_SERVER_UPDATE"},{"t":"VOICE_STATE_UPDATE"}]},2:{"send":[],"receive":[]}}) #loop stops a few seconds after allTasksCompleted == True
+    gateway.runIt({1:{"send":[{"op":4,"d":{"guild_id":None,"channel_id":CHANNEL_ID,"self_mute":False,"self_deaf":False,"self_video":False}}],"receive":[{"t":"VOICE_SERVER_UPDATE"},{"t":"VOICE_STATE_UPDATE"}]},2:{"send":[],"receive":[]}}) #loop stops a few seconds after allTasksCompleted == True
     #gateway.runIt('get session data')
     #gateway.runIt({1:{"send":[],"receive":[]}})
 '''

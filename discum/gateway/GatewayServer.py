@@ -2,6 +2,7 @@
 import asyncio
 import websockets
 import json
+from collections import Counter
 
 class TaskCompleted(Exception):
     pass
@@ -29,17 +30,23 @@ class GatewayServer():
         self.proxy_port = proxy_port
         self.interval = None
         self.sequence = None
+
         self.session_id = None
         self.session_data = None
-        self.checkit = {} #see receive function
-        self.task_data = []
-        self.taskCompleted = False
-        self.mainTaskCompleted = False
-        self.taskCompleteConstant = {}
-        self.stopIt = False
-        self.taskComplete = {}
-        self.mainTaskComplete = {}
-        self.all_tasks = {}
+
+        self.all_tasks = {} #just the task input. all of it
+        self.receiveData = [] #the receive value input
+        #self.response_data = [] #lists incoming batches of data
+
+        #as far as checklists go, allTasks variables have values looking like None or "complete" which subtasks have values looking like [None] or ["complete"]. The exception is in the mailSent subtask, which has a value of either True or False.
+        self.receiveChecklist = [] #acts as a checklist for receive, looks at the current task
+        self.mailSent = False #just checks whether or not data has finished sending, looks at the current task
+        self.allTasksChecklist = {} #checklist for all tasks
+
+        self.taskCompleted = False #is current task completed?
+        self.allTasksCompleted = False #are all tasks completed?, technically unnecessary, but it's here in case youre confused about how the code works
+        #self.taskCompleteConstant = {}
+
 
         self.auth = {
                 "token": token,
@@ -69,7 +76,7 @@ class GatewayServer():
         self.call_session_id = None
 
 
-    def NestedDictValues(self,d):
+    def NestedDictValues(self,d): #gets all values of a nested dict
         for v in d.values():
             if isinstance(v, dict):
                 yield from self.NestedDictValues(v)
@@ -79,10 +86,9 @@ class GatewayServer():
     def runIt(self,tasks):
         self.all_tasks = tasks
         if self.all_tasks != 'get session data':
-            self.mainTaskComplete = {key: None for key in self.all_tasks.keys()}
+            self.allTasksChecklist = {key: None for key in self.all_tasks.keys()} #looks like {1:None,2:None,etc}
         else:
-        	self.mainTaskComplete = {1:'get session data'}
-
+        	self.allTasksChecklist = {1:'get session data'}
         try:
             asyncio.run(self.main())
         except TaskCompleted:
@@ -90,17 +96,19 @@ class GatewayServer():
 
     async def taskManager(self):
         if self.all_tasks != 'get session data':
+            self.taskCompleted = True #necessary for first task to begin
             for index in self.all_tasks:
                 print('task num: '+str(index))
                 await self.addTask(self.all_tasks[index])
-                while self.mainTaskCompleted == False:
+                while self.taskCompleted == False:
                     await asyncio.sleep(1)
-                self.mainTaskCompleted = False #reset mainTaskCompleted
-                self.mainTaskComplete[index] = "complete"
+                self.taskCompleted = False #reset
+                self.allTasksChecklist[index] = "complete"
+                print(self.allTasksChecklist)
         else:
             while self.session_data is None:
                 await asyncio.sleep(1)
-            self.mainTaskComplete[1] = 'complete'
+            self.allTasksChecklist[1] = "complete" #the index might seem wrong, but remember that the format of this dict is {1:value,2:value,etc}
 
     async def main(self): # http_proxy_host=self.proxy_host, http_proxy_port=self.proxy_port
         if self.proxy_host == None:
@@ -125,10 +133,9 @@ class GatewayServer():
     async def receive(self):
         print("Entering receive")
         async for message in self.websocket:
-            self.taskComplete = self.taskCompleteConstant
             print("<", message)
-            #print("Recieved message from server.")
             data = json.loads(message)
+            #the following lines are technically optional if youre using GatewayServer separately, I simply have them here for convenience
             if data["op"] == self.OPCODE.DISPATCH:
                 self.sequence = int(data["s"])
                 event_type = data["t"]
@@ -146,30 +153,27 @@ class GatewayServer():
                         self.userID = data["d"]["user_id"]
                     if "session_id" in data["d"]:
                         self.call_session_id = data["d"]["session_id"]
-            if "op" in self.taskComplete and self.task["op"] == data["op"]:
-                self.taskComplete["op"] = "complete"
-            if "d" in self.taskComplete:
-                if "key" in self.taskComplete["d"] and self.task["d"]["key"] in data["d"]:
-                    self.taskComplete["d"]["key"] = "complete"
-                if "value" in self.taskComplete["d"] and self.task["d"]["value"] in data["d"].values():
-                    self.taskComplete["d"]["value"] = "complete"
-                if "text" in self.taskComplete["d"] and self.task["d"]["text"] in str(data["d"]):
-                    self.taskComplete["d"]["text"] = "complete"
-            if "s" in self.taskComplete and self.task["s"] == data["s"]:
-                self.taskComplete["s"] = "complete"
-            if "t" in self.taskComplete and self.task["t"] == data["t"]:
-                self.taskComplete["t"] = "complete"
-            if "count" in self.taskComplete and "complete" in list(self.taskComplete.values()):
-                self.current_count+=1
-                if self.current_count == self.task["count"]:
-                    self.taskComplete["count"] = "complete"
-            if all(value == "complete" for value in list(self.NestedDictValues(self.taskComplete))):
-                self.current_count = 0 #reset count
-                self.task_data.append(data) #this is only accurate for checking len(self.task_data). the data itself can be inaccurate if there are multiple simultaneous responses
-                print(self.task_data)
-                self.taskCompleted = True 
-                if len(self.task_data) == len(self.checkit):
-                    self.mainTaskCompleted = True
+            #onto updating self.receiveChecklist
+            for checklistIndex in range(len(self.receiveChecklist)): #for each message, every receive is checked just in case
+                if self.receiveChecklist[checklistIndex] != ["complete"]:
+                    if "op" in self.receiveChecklist[checklistIndex] and data["op"] == self.receiveData[checklistIndex]["op"]:
+                        self.receiveChecklist[checklistIndex]["op"] = ["complete"]
+                    if "d" in self.receiveChecklist[checklistIndex]:
+                        if "keys" in self.receiveChecklist[checklistIndex]["d"] and set(self.receiveData[checklistIndex]["d"]["keys"]).issubset(list(data["d"].keys())): #using set because duplicate keys dont exist in dictionaries
+                            self.receiveChecklist[checklistIndex]["d"]["keys"] = ["complete"]
+                        if "values" in self.receiveChecklist[checklistIndex]["d"] and not Counter(self.receiveData[checklistIndex]["d"]["values"]) - Counter(list(data["d"].values())): #example (checks if one list is in another, diregarding order or duplicates): not Counter([2,1,2]) - Counter([1,2,2,3])
+                            self.receiveChecklist[checklistIndex]["d"]["values"] = ["complete"]
+                        if "texts" in self.receiveChecklist[checklistIndex]["d"] and all(x in str(data["d"]) for x in self.receiveData[checklistIndex]["d"]["texts"]): #all(x in a_string for x in matches)
+                            self.receiveChecklist[checklistIndex]["d"]["texts"] = ["complete"]
+                    if "s" in self.receiveChecklist[checklistIndex] and data["s"] == self.receiveData[checklistIndex]["s"]:
+                        self.receiveChecklist[checklistIndex]["s"] = ["complete"]
+                    if "t" in self.receiveChecklist[checklistIndex] and data["t"] == self.receiveData[checklistIndex]["t"]:
+                        self.receiveChecklist[checklistIndex]["t"] = ["complete"]
+                    if all(value == ["complete"] for value in list(self.NestedDictValues(self.receiveChecklist[checklistIndex]))): # and self.mailSent check mail sent later...
+                        self.receiveChecklist[checklistIndex] = ["complete"] #middle sub task? idk this is getting a bit confusing but i suppose ill move on
+                        break #after first match is found, break
+            if len(self.receiveChecklist)>0 and all(item == ["complete"] for item in self.receiveChecklist) and self.mailSent:
+                self.taskCompleted = True #current task is completed
 
     async def send(self, opcode, payload):
         data = self.opcode(opcode, payload)
@@ -207,49 +211,42 @@ class GatewayServer():
         return json.dumps(data)
 
     async def addTask(self,data):
-        while self.taskCompleted == False:
-            await asyncio.sleep(1)
+        self.mailSent = False #reset
         self.taskCompleted = False #reset
-        sendData = data["send"]
+        self.receiveChecklist = [] #reset
+        self.receiveData = data["receive"]
+        for searchIndex in range(len(self.receiveData)):
+            self.receiveChecklist.append({})
+            if "op" in self.receiveData[searchIndex]:
+                self.receiveChecklist[searchIndex]["op"] = [None]
+            if "d" in self.receiveData[searchIndex]:
+                self.receiveChecklist[searchIndex]["d"] = {}
+                if "keys" in self.receiveData[searchIndex]["d"]:
+                    self.receiveChecklist[searchIndex]["d"]["keys"] = [None]
+                if "values" in self.receiveData[searchIndex]["d"]:
+                    self.receiveChecklist[searchIndex]["d"]["values"] = [None]
+                if "texts" in self.receiveData[searchIndex]["d"]:
+                    self.receiveChecklist[searchIndex]["d"]["texts"] = [None]
+            if "s" in self.receiveData[searchIndex]:
+                self.receiveChecklist[searchIndex]["s"] = [None]
+            if "t" in self.receiveData[searchIndex]:
+                self.receiveChecklist[searchIndex]["t"] = [None]
+        sendData = data["send"] #have to also check if all data has been sent.............
         for mail in sendData: #send data if theres data to send
             #if you want to make changes to mail make that here
             await self.send(mail["op"],mail["d"])
-        receiveData = data["receive"]
-        self.checkit = receiveData
-        self.task_data = [] #clear it
-        for search in receiveData: #receive data is essentially a search function (look at async def receive)
-            self.taskCompleted = False
-            #task processing
-            self.task = search
-            self.keylist = self.task.keys()
-            self.taskComplete = {}
-            self.current_count = 0
-            if "op" in self.task:
-                self.taskComplete["op"] = None
-            if "d" in self.task:
-                self.taskComplete["d"] = {}
-                if "key" in self.task["d"]:
-                    self.taskComplete["d"]["key"] = None
-                if "value" in self.task["d"]:
-                    self.taskComplete["d"]["value"] = None
-                if "text" in self.task["d"]:
-                    self.taskComplete["d"]["text"] = None
-            if "s" in self.task:
-                self.taskComplete["s"] = None
-            if "t" in self.task:
-                self.taskComplete["t"] = None
-            if "count" in self.task:
-                self.taskComplete["count"] = None
-            self.taskCompleteConstant = self.taskComplete
+        self.mailSent = True
 
     async def stopLoop(self):
-        while not all(value == "complete" for value in self.mainTaskComplete.values()):
+        while not all(value == "complete" for value in self.allTasksChecklist.values()):
             await asyncio.sleep(1)
+        self.allTasksCompleted = True
         raise TaskCompleted(self.all_tasks)
 
 # although calling is not supported yet on discum, you can still initial calls with this program (and send data if you get creative). below lies an example code for calling another user (just input your token and the channel id)
-'''
+
 if __name__ == "__main__":
-    gateway = GatewayServer(your_token_here,None,None)
-    gateway.runIt({1:{"send":[{"op":4,"d":{"guild_id":None,"channel_id":CHANNEL_ID_HERE,"self_mute":False,"self_deaf":False,"self_video":False}}],"receive":[{"t":"VOICE_SERVER_UPDATE"}]}})
-'''
+    gateway = GatewayServer('NzQzMTkzNjQyNTM3MTg5Mzk3.X0vZUg.tXQSxxXAp9cFRv0eBL-jz_ayxpA',None,None)
+    gateway.runIt({1:{"send":[{"op":4,"d":{"guild_id":None,"channel_id":'745427469607108671',"self_mute":False,"self_deaf":False,"self_video":False}}],"receive":[{"t":"VOICE_SERVER_UPDATE"},{"t":"VOICE_STATE_UPDATE"}]},2:{"send":[],"receive":[]}}) #loop stops a few seconds after allTasksCompleted == True
+    #gateway.runIt('get session data')
+    #gateway.runIt({1:{"send":[],"receive":[]}})

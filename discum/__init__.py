@@ -1,4 +1,4 @@
 from .discum import *
-from .GatewayServer import *
+from .gateway.GatewayServer import *
 from .Logger import *
-from .Login import *
+from .login.Login import *

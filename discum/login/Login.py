@@ -1,4 +1,4 @@
-from .Logger import *
+from ..Logger import *
 import requests
 #import requests[socks] #youll need to pip install requests[socks] (this is only if youre using socks)
 import json

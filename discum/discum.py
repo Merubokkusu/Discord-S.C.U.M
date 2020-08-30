@@ -2,8 +2,8 @@ from .messages.messages import Messages
 from .messages.embed import Embedder
 from .user.user import User
 
-from .Login import *
-from .GatewayServer import *
+from .login.Login import *
+from .gateway.GatewayServer import *
 
 import time
 import random

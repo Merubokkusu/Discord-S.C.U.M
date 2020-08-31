@@ -13,10 +13,12 @@ from PyPI:
 pip install discum 
 ```
      
-from source (this is up-to-date with recent changes)(currently on version 0.2.3):        
-`git clone https://github.com/Merubokkusu/Discord-S.C.U.M.git`    
-`cd Discord-S.C.U.M`     
-`python3 setup.py install`                   
+from source (this is up-to-date with recent changes)(currently on version 0.2.3):      
+```
+git clone https://github.com/Merubokkusu/Discord-S.C.U.M.git
+cd Discord-S.C.U.M
+python3 setup.py install               
+```
 
 # Usage
 ## [Read the Wiki](https://github.com/Merubokkusu/Discord-S.C.U.M/wiki)

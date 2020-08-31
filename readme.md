@@ -7,7 +7,7 @@
 
 \* scroll to the bottom for changelog
 
-## Install (installation should be the same on Mac, Linux, and Windows; just make sure you're using python 3.7 or 3.8)
+## Install (installation should be the same on Mac, Linux, Windows, etc; just make sure you're using python 3.7 or 3.8)
 from PyPI:      
 ```python
 pip install discum 

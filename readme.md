@@ -56,7 +56,6 @@ bot.snowflake_to_unixts(snowflake) #snowflake is of type int
 - [X] Sending Requests (Friends etc)
 - [X] Profile Editing (Name,Status,Avatar)
 - [ ] Making phone calls, sending audio/video data thru those calls
-- [ ] Getting guild members efficiently without getting flagged
 - [ ] Everything
 
 # list of all 103 functions (click thru these and github should show their location in discum.py)

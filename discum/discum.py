@@ -535,6 +535,10 @@ class Client:
     def deleteMessage(self,channelID,messageID):
         return Messages(self.discord,self.s).deleteMessage(channelID,messageID)
 
+    #edit message
+    def editMessage(self,channelID,messageID,newMessage):
+        return Messages(self.discord,self.s).editMessage(channelID, messageID, newMessage)
+
     #pin message
     def pinMessage(self,channelID,messageID):
         return Messages(self.discord,self.s).pinMessage(channelID,messageID)

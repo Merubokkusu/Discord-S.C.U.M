@@ -7,8 +7,10 @@
 
 \* scroll to the bottom for changelog
 ## Info
-  Discum is a Discord selfbot api wrapper (in case you didn't know, selfbotting = automating a user account). Whenever you login to discord, your client automatically communicates with Discord's servers using Discord's http api (http(s) requests) and gateway server (websockets). Discum allows you communicate with Discord using python.          
-  The main difference between Discum and other Discord api wrapper libraries is that discum is written and maintained to work on user accounts (so, perfect for selfbots). We thoroughly test all code on here and develop discum to be readable, expandable, and useable.       
+  Discum is a Discord selfbot api wrapper (in case you didn't know, selfbotting = automating a user account). Whenever you login to discord, your client automatically communicates with Discord's servers using Discord's http api (http(s) requests) and gateway server (websockets). Discum allows you communicate with Discord using python. 
+  
+  The main difference between Discum and other Discord api wrapper libraries is that discum is written and maintained to work on user accounts (so, perfect for selfbots). We thoroughly test all code on here and develop discum to be readable, expandable, and useable.     
+  
   Note, using a selfbot is against Discord's Terms of Service and you could get banned for using one if you're not careful. We (Merubokkusu and anewrandomaccount) do not take any responsibility for any consequences you might face while using discum.       
 
 ## Install (installation should be the same on Mac, Linux, Windows, etc; just make sure you're using python 3.7 or 3.8)

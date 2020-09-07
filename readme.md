@@ -1,11 +1,15 @@
 ![version](https://img.shields.io/badge/version-0.2.3-blue) [![PyPI version](https://badge.fury.io/py/discum.svg)](https://badge.fury.io/py/discum) [![python versions](https://img.shields.io/badge/python-3.7%20%7C%203.8-blue)](https://pypi.org/project/discum/0.2.1/) [![Downloads](https://pepy.tech/badge/discum/month)](https://pepy.tech/project/discum/month) [![Gitter chat](https://badges.gitter.im/discum/gitter.png)](https://gitter.im/discum/community)
 
 
-### A Discord Selfbot Api - discum
+### A Discord Selfbot Api Wrapper - discum
 
 ![https://files.catbox.moe/3ns003.png](https://files.catbox.moe/3ns003.png)
 
 \* scroll to the bottom for changelog
+## Info
+Discum is a Discord selfbot api wrapper (in case you didn't know, selfbotting = automating a user account). Whenever you login to discord, your client automatically communicates with Discord's servers using Discord's http api (http(s) requests) and gateway server (websockets). Discum allows you communicate with Discord using python. 
+The main difference between Discum and other Discord api wrapper libraries is that discum is written and maintained to work on user accounts (so, perfect for selfbots). We thoroughly test all code on here and develop discum to be readable, expandable, and useable. 
+Note, using a selfbot is against Discord's Terms of Service and you could get banned for using one if you're not careful. We (Merubokkusu and anewrandomaccount) do not take any responsibility for any consequences you might face while using discum.
 
 ## Install (installation should be the same on Mac, Linux, Windows, etc; just make sure you're using python 3.7 or 3.8)
 from PyPI:      

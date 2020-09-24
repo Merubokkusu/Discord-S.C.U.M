@@ -26,9 +26,6 @@ cd Discord-S.C.U.M
 python3 setup.py install               
 ```
 
-~~v0.2.4 coming out soon! Gateway server is being modified to allow live interaction thru the python interpreter without disconnecting from the current session. This will allow a more practical use of gatewayserver.py :).~~       
-got busy and rn the code is just sitting on my desktop waiting to be debugged. will get to it when I've got the time
-
 # Usage
 ## [Read the Wiki](https://github.com/Merubokkusu/Discord-S.C.U.M/wiki)
 

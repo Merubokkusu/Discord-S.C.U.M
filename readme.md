@@ -245,6 +245,81 @@ _Client__gateway_server.runIt(data) #for websocket connections
 arandomnewaccount here - my profile is invisible because this isn't my only github account and therefore I've been marked as spam by github. I'll still be commiting onto the repo from time to time but I won't be able to answer issues on the issue page. If you want to contact me about discum (issues, questions, etc) you can send an email to discordtehe@gmail.com.
 
 # Changelog
+# 0.2.4
+### Changed
+- task receive checking (in gateway/GatewayServer.py) for better searching thru nested dictionaries. see the following example for getting the members of a server that has a little over 300 members:
+  ```python
+  bot._Client__gateway_server.runIt({
+    1: {
+      "send": [{
+        "op": 14,
+        "d": {
+          "guild_id": "705058712922095646",
+          "channels": {
+            "705060010111139860": [
+              [0, 99],
+              [100, 199]
+            ]
+          }
+        }
+      }],
+      "receive": [{
+        "keyvaluechecker": [
+          ['d', 'ops', 0, 'range'],
+          [100, 199]
+        ]
+      }]
+    },
+    2: {
+      "send": [{
+        "op": 14,
+        "d": {
+          "guild_id": "705058712922095646",
+          "channels": {
+            "705060010111139860": [
+              [200, 299],
+              [300, 399]
+            ]
+          }
+        }
+      }],
+      "receive": [{
+        "keychecker": ['d', 'ops', 0, 'range']
+      }]
+    }
+  })
+  ```
+  As you can see above, the receive format has changed to allow this. This is the new receive format:
+  ```
+  {
+  "op": (optional; type int),
+  "d": {
+    "keys": (optional; type list of strings),
+    "values": (optional; list of no set types),
+    "texts": (optional; type list of strings)
+  },
+  "s": (optional; type int),
+  "t": (optional; type str),
+  "keychecker": (optional; type list),
+  "keyvaluechecker": (optional; type list)
+  }
+  ```
+  And...here's how to use the receive format above:
+  ```
+  {
+  "op": integer,
+  "d": {
+    "keys": [depth 1 keys (in any order) of receivedmessage["d"]],
+    "values": [depth 1 values (in any order) of receivedmessage["d"]],
+    "texts": [a bunch of strings looks through str(receivedmessage["d"])]
+  },
+  "s": integer,
+  "t": string,
+  "keychecker": ["list","of","keys","in","the","order","which","they","are","nested","in"],
+  "keyvaluechecker": [["list","of","keys","in","the","order","which","they","are","nested","in"],"value to check for"]
+  }
+  ```
+  Note, both keychecker and keyvaluechecker accept integers in certain situations. For example, if the received dictionary had a list of dictionaries as one of its values. See the example for getting members above.
 # 0.2.3
 ### Changed
 - structure of code: all gateway comms are now in the gateway folder, Login.py is now in the login folder

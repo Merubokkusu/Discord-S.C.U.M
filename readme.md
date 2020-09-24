@@ -316,7 +316,7 @@ arandomnewaccount here - my profile is invisible because this isn't my only gith
   "s": integer,
   "t": string,
   "keychecker": ["list","of","keys","in","the","order","which","they","are","nested","in"],
-  "keyvaluechecker": [["list","of","keys","in","the","order","which","they","are","nested","in"],"value to check for"]
+  "keyvaluechecker": [["list","of","keys","in","the","order","which","they","are","nested","in"],value_to_check_for]
   }
   ```
   Note, both keychecker and keyvaluechecker accept integers in certain situations. For example, if the received dictionary had a list of dictionaries as one of its values. See the example for getting members above.

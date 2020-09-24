@@ -254,9 +254,9 @@ arandomnewaccount here - my profile is invisible because this isn't my only gith
       "send": [{
         "op": 14,
         "d": {
-          "guild_id": "705058712922095646",
+          "guild_id": GUILD_ID,
           "channels": {
-            "705060010111139860": [
+            TEXT_CHANNEL_ID: [
               [0, 99],
               [100, 199]
             ]
@@ -274,9 +274,9 @@ arandomnewaccount here - my profile is invisible because this isn't my only gith
       "send": [{
         "op": 14,
         "d": {
-          "guild_id": "705058712922095646",
+          "guild_id": GUILD_ID,
           "channels": {
-            "705060010111139860": [
+            TEXT_CHANNEL_ID: [
               [200, 299],
               [300, 399]
             ]

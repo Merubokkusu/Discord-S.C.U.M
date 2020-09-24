@@ -75,6 +75,25 @@ class GatewayServer():
         self.call_endpoint = None
         self.call_session_id = None
 
+    def key_checker(self, element, keys):
+        _element = element
+        for key in keys:
+            try:
+                _element = _element[key]
+            except (KeyError, TypeError) as e:
+                return False
+        return True
+
+    def value_checker(self, element, keys, valuetest):
+        _element = element
+        for index,key in enumerate(keys):
+            try:
+                _element = _element[key]
+                if index==len(keys)-1 and _element != valuetest:
+                   return False
+            except (KeyError, TypeError) as e:
+                return False
+        return True
 
     def NestedDictValues(self,d): #gets all values of a nested dict
         for v in d.values():
@@ -169,6 +188,10 @@ class GatewayServer():
                         self.receiveChecklist[checklistIndex]["s"] = ["complete"]
                     if "t" in self.receiveChecklist[checklistIndex] and data["t"] == self.receiveData[checklistIndex]["t"]:
                         self.receiveChecklist[checklistIndex]["t"] = ["complete"]
+                    if "keychecker" in self.receiveChecklist[checklistIndex] and self.key_checker(data,self.receiveData[checklistIndex]["keychecker"]):
+                        self.receiveChecklist[checklistIndex]["keychecker"] = ["complete"]
+                    if "keyvaluechecker" in self.receiveChecklist[checklistIndex] and self.value_checker(data,self.receiveData[checklistIndex]["keyvaluechecker"][0],self.receiveData[checklistIndex]["keyvaluechecker"][1]):
+                        self.receiveChecklist[checklistIndex]["keyvaluechecker"] = ["complete"]
                     if all(value == ["complete"] for value in list(self.NestedDictValues(self.receiveChecklist[checklistIndex]))): # and self.mailSent check mail sent later...
                         self.receiveChecklist[checklistIndex] = ["complete"] #middle sub task? idk this is getting a bit confusing but i suppose ill move on
                         break #after first match is found, break
@@ -231,6 +254,10 @@ class GatewayServer():
                 self.receiveChecklist[searchIndex]["s"] = [None]
             if "t" in self.receiveData[searchIndex]:
                 self.receiveChecklist[searchIndex]["t"] = [None]
+            if "keychecker" in self.receiveData[searchIndex]:
+                self.receiveChecklist[searchIndex]["keychecker"] = [None]
+            if "keyvaluechecker" in self.receiveData[searchIndex]:
+                self.receiveChecklist[searchIndex]["keyvaluechecker"] = [None]
         sendData = data["send"] #have to also check if all data has been sent.............
         for mail in sendData: #send data if theres data to send
             #if you want to make changes to mail make that here

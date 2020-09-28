@@ -19,10 +19,10 @@ python3 setup.py install
 'Discord is currently on build number 68015'
 ```
 ## Commands
-- [Read User Data](#Read_User_Data)
+- [Read User Data](#read-user-data)
 - [Messages](#Messages)
-- [User Actions](#User_Actions)
-- [Gateway Server](#Gateway_Server)
+- [User Actions](#User-Actions)
+- [Gateway Server](#Gateway-Server)
 #### Read User Data:
 \* this connects to discord's gateway server and returns your current session settings. It's recommended that you set update to False after you run a command since you can only connect so many times to the gateway until discord gets suspicious (maximum recommended connections per day is 1000)
 ```bot.read(update=True)```

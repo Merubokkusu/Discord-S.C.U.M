@@ -27,7 +27,7 @@ python3 setup.py install
 ```
 
 # Usage
-## [Read the Wiki](https://github.com/Merubokkusu/Discord-S.C.U.M/wiki)
+### [Read the Wiki](https://github.com/Merubokkusu/Discord-S.C.U.M/blob/master/wiki.md)
 
 # Example
 ```python

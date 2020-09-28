@@ -253,7 +253,7 @@ bot._Client__gateway_server.runIt({
   }
 })
 ```
-input format:
+the input consists of "send" and "receive" data:
 ```
 {
   1: {

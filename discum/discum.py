@@ -7,6 +7,8 @@ from .gateway.GatewayServer import *
 
 import time
 import random
+import re
+import user_agents
 
 class Settings:
 	def __init__(self, obj):
@@ -31,20 +33,30 @@ class Client:
     	if isinstance(data, list):
     		return list(map(self.convert, data))
     	return data
-    def __init__(self, email="none", password="none", token="none", proxy_host=None, proxy_port=None): #not using None on email pass and token since that could get flagged by discord...
+    def __init__(self, email="none", password="none", token="none", proxy_host=None, proxy_port=None, user_agent="random"): #not using None on email pass and token since that could get flagged by discord...
         self.__user_token = token
         self.__user_email = email
         self.__user_password = password
         self.__proxy_host = proxy_host
         self.__proxy_port = proxy_port
         self.classsession_settings = {} #look at function read()
-        if self.__user_token == "none": #assuming email and pass are given...
-        	self.__login = Login(self.__user_email, self.__user_password,self.__proxy_host,self.__proxy_port) ##
-        	self.__user_token = self.__login.GetToken() #update token from "none" to true string value
         self.discord = 'https://discord.com/api/v8/'
+        self.websocketurl = 'wss://gateway.discord.gg/?encoding=json&v=8'
+        if user_agent != "random":
+            self.__user_agent = user_agent
+        else:
+            from random_user_agent.user_agent import UserAgent #only really want to import this if needed...which is why it's down here
+            self.__user_agent = UserAgent(limit=100).get_random_user_agent()
+            print('Randomly generated user agent: '+self.__user_agent)
+        parseduseragent = user_agents.parse(self.__user_agent)
+        self.ua_data = {'os':parseduseragent.os.family,'browser':parseduseragent.browser.family,'device':parseduseragent.device.family if parseduseragent.is_mobile else '','browser_user_agent':self.__user_agent,'browser_version':parseduseragent.browser.version_string,'os_version':parseduseragent.os.version_string}
+        if self.__user_token == "none": #assuming email and pass are given...
+            self.__login = Login(self.discord,self.__user_email,self.__user_password,self.__user_agent,self.__proxy_host,self.__proxy_port)
+            self.__user_token = self.__login.GetToken() #update token from "none" to true string value
+            time.sleep(1)
         self.headers = {
         "Host": "discord.com",
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) discord/0.0.306 Chrome/78.0.3904.130 Electron/7.1.11 Safari/537.36",
+        "User-Agent": self.__user_agent,
         "Accept": "*/*",
         "Accept-Language": "en-US",
         "Authorization": self.__user_token,
@@ -64,13 +76,25 @@ class Client:
             'https': self.__proxy_host+':'+self.__proxy_port
             }
             self.s.proxies.update(proxies)
-        self.__gateway_server = GatewayServer(self.__user_token,self.__proxy_host,self.__proxy_port)
+        print("Retrieving Discord's build number...")
+        discord_login_page_exploration = self.s.get('https://discord.com/login').text
+        time.sleep(1)
+        try: #getting the build num is kinda experimental
+        	file_with_build_num = 'https://discord.com/assets/'+re.compile(r'assets/+([a-z0-9]+)\.js').findall(discord_login_page_exploration)[-2]+'.js' #fastest solution I could find since the last js file is huge in comparison to 2nd from last
+        	req_file_build = self.s.get(file_with_build_num).text
+        	index_of_build_num = req_file_build.find('buildNumber')+14
+        	self.discord_build_num = int(req_file_build[index_of_build_num:index_of_build_num+5])
+        	self.ua_data['build_num'] = self.discord_build_num #putting this onto ua_data since getting the build num won't necessarily work
+        	print('Discord is currently on build number '+str(self.discord_build_num))
+        except:
+        	print('Could not retrieve discord build number.')
+        self.__gateway_server = GatewayServer(self.websocketurl,self.__user_token,self.ua_data,self.__proxy_host,self.__proxy_port)
 
     '''
     test connection (this function was originally in discum and was created by Merubokkusu)
     '''
     def connectionTest(self): #,proxy):
-        url='https://discord.com/api/v6/users/@me/affinities/users'
+        url=self.discord+'users/@me/affinities/users'
         connection = self.s.get(url)
         if(connection.status_code == 200):
             print("Connected")

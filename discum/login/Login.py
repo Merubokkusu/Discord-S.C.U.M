@@ -7,11 +7,11 @@ class Login:
     '''
     Manages HTTP authentication
     '''
-    URL = "https://discordapp.com/api/v8/auth/login" #self.URL
-
-    def __init__(self, user_email, user_password,proxy_host,proxy_port):
+    def __init__(self, discordurlstart, user_email, user_password,user_agent,proxy_host,proxy_port):
+        self.URL = discordurlstart + "auth/login"
         self.__user_email = user_email
         self.__user_password = user_password
+        self.__user_agent = user_agent
         self.__proxy_host = proxy_host
         self.__proxy_port = proxy_port
         self.__token = None
@@ -24,7 +24,7 @@ class Login:
             'https': self.__proxy_host+':'+self.__proxy_port
             }
             session.proxies.update(proxies)
-        session.headers.update({"User-Agent": "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) discord/0.0.305 Chrome/69.0.3497.128 Electron/4.0.8 Safari/537.36"})
+        session.headers.update({"User-Agent": self.__user_agent})
         session.headers.update({'X-Super-Properties': ''})
         session.headers.update({"Content-Type": "application/json"})
         http_auth_data = '{{"email": "{}", "password": "{}", "undelete": false, "captcha_key": null, "login_source": null, "gift_code_sku_id": null}}'.format(self.__user_email, self.__user_password)

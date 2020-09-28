@@ -9,6 +9,12 @@ class TaskCompleted(Exception):
 
 class GatewayServer():
 
+    class LogLevel:
+        SEND = '\033[94m'
+        RECEIVE = '\033[92m'
+        WARNING = '\033[93m'
+        DEFAULT = '\033[m'
+
     class OPCODE: #https://discordapp.com/developers/docs/topics/opcodes-and-status-codes
         # Name                  Code    Client Action   Description
         DISPATCH =              0  #    Receive         dispatches an event
@@ -25,7 +31,10 @@ class GatewayServer():
         HEARTBEAT_ACK =         11 #    Sent immediately following a client heartbeat that was received
         GUILD_SYNC =            12 #    ???             ???
 
-    def __init__(self, token, proxy_host, proxy_port):
+    def __init__(self, websocketurl, token, ua_data, proxy_host, proxy_port):
+        self.websocketurl = websocketurl
+        self.token = token
+        self.ua_data = ua_data
         self.proxy_host = proxy_host
         self.proxy_port = proxy_port
         self.interval = None
@@ -49,22 +58,39 @@ class GatewayServer():
 
 
         self.auth = {
-                "token": token,
+                "token": self.token,
+                "capabilities": 61,
                 "properties": {
-                    "os": "Windows",
-                    "browser": "Chrome",
-                    "device": "",
+                    "os": self.ua_data["os"],
+                    "browser": self.ua_data["browser"],
+                    "device": self.ua_data["device"],
+                    "browser_user_agent": self.ua_data["browser_user_agent"],
+                    "browser_version": self.ua_data["browser_version"],
+                    "os_version": self.ua_data["os_version"],
+                    "referrer": "",
+                    "referring_domain": "",
+                    "referrer_current": "",
+                    "referring_domain_current": "",
+                    "release_channel": "stable",
+                    "client_build_number": 68015,
+                    "client_event_source": None
                 },
-                "large_threshold": 150,
-                "synced_guilds": [],
                 "presence": {
                     "status": "online",
                     "since": 0,
-                    "afk": False,
-                    "game": None
+                    "activities": [],
+                    "afk": False
                 },
-                "compress": False
+                "compress": False,
+                "client_state": {
+                    "guild_hashes": {},
+                    "highest_last_message_id": "0",
+                    "read_state_version": 0,
+                    "user_guild_settings_version": -1
+                }
             }
+        if 'build_num' in self.ua_data and self.ua_data['build_num']!=68015:
+            self.auth['properties']['client_build_number'] = self.ua_data['build_num']
 
         self.loop = asyncio.get_event_loop()
 
@@ -74,6 +100,7 @@ class GatewayServer():
         self.media_token = None
         self.call_endpoint = None
         self.call_session_id = None
+
 
     def key_checker(self, element, keys):
         _element = element
@@ -132,31 +159,36 @@ class GatewayServer():
     async def main(self): # http_proxy_host=self.proxy_host, http_proxy_port=self.proxy_port
         if self.proxy_host == None:
             async with websockets.connect(
-                    'wss://gateway.discord.gg/?v=6&encoding=json', origin="https://discordapp.com") \
+                    self.websocketurl, origin="https://discordapp.com") \
                     as self.websocket:
+                print("Connected to "+self.websocketurl)
                 await self.hello()
                 if self.interval is None:
-                    print("Hello failed, exiting")
+                    print(self.LogLevel.WARNING + "Hello failed, exiting")
+                    print(self.LogLevel.DEFAULT)
                     return
                 await asyncio.gather(self.heartbeat(), self.receive(),self.stopLoop(),self.taskManager())
         else:
             async with websockets.connect(
-                    'wss://gateway.discord.gg/?v=6&encoding=json', origin="https://discordapp.com", host=self.proxy_host, port=self.proxy_port) \
+                    self.websocketurl, origin="https://discordapp.com", host=self.proxy_host, port=self.proxy_port) \
                     as self.websocket:
+                print("Connected to "+self.websocketurl)
                 await self.hello()
                 if self.interval is None:
-                    print("Hello failed, exiting")
+                    print(self.LogLevel.WARNING + "Hello failed, exiting")
+                    print(self.LogLevel.DEFAULT)
                     return
                 await asyncio.gather(self.heartbeat(), self.receive(),self.stopLoop(),self.taskManager())
 
     async def receive(self):
         print("Entering receive")
         async for message in self.websocket:
-            print("<", message)
+            print(self.LogLevel.RECEIVE + "<", message)
+            print(self.LogLevel.DEFAULT)
             data = json.loads(message)
             #the following lines are technically optional if youre using GatewayServer separately, I simply have them here for convenience
             if data["op"] == self.OPCODE.DISPATCH:
-                self.sequence = int(data["s"])
+                self.sequence = int(data["s"]) #necessary
                 event_type = data["t"]
                 if event_type == "READY":
                     self.session_id = data["d"]["session_id"]
@@ -175,32 +207,20 @@ class GatewayServer():
             #onto updating self.receiveChecklist
             for checklistIndex in range(len(self.receiveChecklist)): #for each message, every receive is checked just in case
                 if self.receiveChecklist[checklistIndex] != ["complete"]:
-                    if "op" in self.receiveChecklist[checklistIndex] and data["op"] == self.receiveData[checklistIndex]["op"]:
-                        self.receiveChecklist[checklistIndex]["op"] = ["complete"]
-                    if "d" in self.receiveChecklist[checklistIndex]:
-                        if "keys" in self.receiveChecklist[checklistIndex]["d"] and set(self.receiveData[checklistIndex]["d"]["keys"]).issubset(list(data["d"].keys())): #using set because duplicate keys dont exist in dictionaries
-                            self.receiveChecklist[checklistIndex]["d"]["keys"] = ["complete"]
-                        if "values" in self.receiveChecklist[checklistIndex]["d"] and not Counter(self.receiveData[checklistIndex]["d"]["values"]) - Counter(list(data["d"].values())): #example (checks if one list is in another, diregarding order or duplicates): not Counter([2,1,2]) - Counter([1,2,2,3])
-                            self.receiveChecklist[checklistIndex]["d"]["values"] = ["complete"]
-                        if "texts" in self.receiveChecklist[checklistIndex]["d"] and all(x in str(data["d"]) for x in self.receiveData[checklistIndex]["d"]["texts"]): #all(x in a_string for x in matches)
-                            self.receiveChecklist[checklistIndex]["d"]["texts"] = ["complete"]
-                    if "s" in self.receiveChecklist[checklistIndex] and data["s"] == self.receiveData[checklistIndex]["s"]:
-                        self.receiveChecklist[checklistIndex]["s"] = ["complete"]
-                    if "t" in self.receiveChecklist[checklistIndex] and data["t"] == self.receiveData[checklistIndex]["t"]:
-                        self.receiveChecklist[checklistIndex]["t"] = ["complete"]
-                    if "keychecker" in self.receiveChecklist[checklistIndex] and self.key_checker(data,self.receiveData[checklistIndex]["keychecker"]):
-                        self.receiveChecklist[checklistIndex]["keychecker"] = ["complete"]
-                    if "keyvaluechecker" in self.receiveChecklist[checklistIndex] and self.value_checker(data,self.receiveData[checklistIndex]["keyvaluechecker"][0],self.receiveData[checklistIndex]["keyvaluechecker"][1]):
-                        self.receiveChecklist[checklistIndex]["keyvaluechecker"] = ["complete"]
+                    if "key" in self.receiveChecklist[checklistIndex] and all([self.key_checker(data,i) for i in self.receiveData[checklistIndex]["key"]]): #just looping thru the tuples
+                        self.receiveChecklist[checklistIndex]["key"] = ["complete"]
+                    if "keyvalue" in self.receiveChecklist[checklistIndex] and all([self.value_checker(data,i[0],i[1]) for i in self.receiveData[checklistIndex]["keyvalue"]]): #just looping thru the tuples
+                        self.receiveChecklist[checklistIndex]["keyvalue"] = ["complete"]
                     if all(value == ["complete"] for value in list(self.NestedDictValues(self.receiveChecklist[checklistIndex]))): # and self.mailSent check mail sent later...
-                        self.receiveChecklist[checklistIndex] = ["complete"] #middle sub task? idk this is getting a bit confusing but i suppose ill move on
+                        self.receiveChecklist[checklistIndex] = ["complete"]
                         break #after first match is found, break
             if len(self.receiveChecklist)>0 and all(item == ["complete"] for item in self.receiveChecklist) and self.mailSent:
                 self.taskCompleted = True #current task is completed
 
     async def send(self, opcode, payload):
         data = self.opcode(opcode, payload)
-        print(">", data)
+        print(self.LogLevel.SEND + ">", data)
+        print(self.LogLevel.DEFAULT)
         await self.websocket.send(data)
 
     async def heartbeat(self):
@@ -212,16 +232,19 @@ class GatewayServer():
 
     async def hello(self):
         await self.send(self.OPCODE.IDENTIFY, self.auth)
-        print(f"hello > auth")
+        print(self.LogLevel.SEND + "hello > auth")
+        print(self.LogLevel.DEFAULT)
 
         ret = await self.websocket.recv()
-        print(f"hello < {ret}")
+        print("{}hello < {}".format(self.LogLevel.RECEIVE,ret))
+        print(self.LogLevel.DEFAULT)
 
         data = json.loads(ret)
         opcode = data["op"]
         if opcode != 10:
-            print("Unexpected reply")
+            print(self.LogLevel.WARNING + "Unexpected reply")
             print(ret)
+            print(self.LogLevel.DEFAULT)
             return
         self.interval = (data["d"]["heartbeat_interval"] - 2000) / 1000
         print("interval:", self.interval)
@@ -240,24 +263,10 @@ class GatewayServer():
         self.receiveData = data["receive"]
         for searchIndex in range(len(self.receiveData)):
             self.receiveChecklist.append({})
-            if "op" in self.receiveData[searchIndex]:
-                self.receiveChecklist[searchIndex]["op"] = [None]
-            if "d" in self.receiveData[searchIndex]:
-                self.receiveChecklist[searchIndex]["d"] = {}
-                if "keys" in self.receiveData[searchIndex]["d"]:
-                    self.receiveChecklist[searchIndex]["d"]["keys"] = [None]
-                if "values" in self.receiveData[searchIndex]["d"]:
-                    self.receiveChecklist[searchIndex]["d"]["values"] = [None]
-                if "texts" in self.receiveData[searchIndex]["d"]:
-                    self.receiveChecklist[searchIndex]["d"]["texts"] = [None]
-            if "s" in self.receiveData[searchIndex]:
-                self.receiveChecklist[searchIndex]["s"] = [None]
-            if "t" in self.receiveData[searchIndex]:
-                self.receiveChecklist[searchIndex]["t"] = [None]
-            if "keychecker" in self.receiveData[searchIndex]:
-                self.receiveChecklist[searchIndex]["keychecker"] = [None]
-            if "keyvaluechecker" in self.receiveData[searchIndex]:
-                self.receiveChecklist[searchIndex]["keyvaluechecker"] = [None]
+            if "key" in self.receiveData[searchIndex]:
+                self.receiveChecklist[searchIndex]["key"] = [None]
+            if "keyvalue" in self.receiveData[searchIndex]:
+                self.receiveChecklist[searchIndex]["keyvalue"] = [None]
         sendData = data["send"] #have to also check if all data has been sent.............
         for mail in sendData: #send data if theres data to send
             #if you want to make changes to mail make that here
@@ -274,7 +283,7 @@ class GatewayServer():
 # although calling is not supported yet on discum, you can still initial calls with this program (and send data if you get creative). below lies an example code for calling another user (just input your token and the channel id)
 if __name__ == "__main__":
     gateway = GatewayServer(your_token_here,None,None) #lol id accidently posted my token online. deleted that account
-    gateway.runIt({1:{"send":[{"op":4,"d":{"guild_id":None,"channel_id":CHANNEL_ID,"self_mute":False,"self_deaf":False,"self_video":False}}],"receive":[{"t":"VOICE_SERVER_UPDATE"},{"t":"VOICE_STATE_UPDATE"}]},2:{"send":[],"receive":[]}}) #loop stops a few seconds after allTasksCompleted == True
+    gateway.runIt(taskdata) #loop stops a few seconds after allTasksCompleted == True
     #gateway.runIt('get session data')
     #gateway.runIt({1:{"send":[],"receive":[]}})
 '''

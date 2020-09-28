@@ -269,17 +269,17 @@ the input consists of "send" and "receive" data:
 the "send" data is a list of what you send, op code and all.
 the "receive" data is formatted like so:
 ```
-{
+[{
   "key":(optional; type list of tuples of strings/ints),
   "keyvalue": (optional; type list of tuples of key&value)
-}
+}]
 ```
 and here's a closer look at the values in the "receive" data:
 ```
-{
+[{
   "key": [("keys","in","nesting","order"),("keys2","in2","nesting2","order2"),...]
   "keyvalue": [(("keys","in","nesting","order"),value_to_check_for2),(("keys2","in2","nesting2","order2"),value_to_check_for2),...]
-}
+}]
 ```
 and to clear up any confusion, key looks for the existence of keys and keyvalue looks to see if a specific key has a specific value. Since you can check multiple keys and/or multiple key-value pairs per task, the possibilities are literally endless for what you can look for :)
 simple example: here's the minimum amount of data a task can have (the command below simply connects to the gateway server and listens for messages from discord):

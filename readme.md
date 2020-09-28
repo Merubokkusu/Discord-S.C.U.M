@@ -245,6 +245,54 @@ _Client__gateway_server.runIt(data) #for websocket connections
 arandomnewaccount here - my profile is invisible because this isn't my only github account and therefore I've been marked as spam by github. I'll still be commiting onto the repo from time to time but I won't be able to answer issues on the issue page. If you want to contact me about discum (issues, questions, etc) you can send an email to discordtehe@gmail.com.
 
 # Changelog
+# 0.2.5
+### Added
+- ability to set custom user agent (or randomly generate a user agent). This user agent is then used for both http api requests and websocket connections
+- colorful GatewayServer outputs
+### Changed
+- discum.Client input:
+  ```python
+  bot = discum.Client(email='', password='', token='', proxy_host=None, proxy_port=None, user_agent="random")
+  ```
+- gateway version from v6 to v8
+- task receive checking, again. made it a lot simpler and better. See following example for getting members of a server with a little under 200 members:
+  ```python
+  bot._Client__gateway_server.runIt({
+    1: {
+      "send": [{
+        "op": 14,
+        "d": {
+          "guild_id": GUILD_ID,
+          "channels": {
+            TEXT_CHANNEL_ID: [
+              [0, 99],
+              [100, 199]
+            ]
+          }
+        }
+      }],
+      "receive": [{
+        "key": [('d', 'ops', 0, 'range'), ('d', 'ops', 1, 'range')],
+        "keyvalue": [(('d', 'ops', 0, 'op'), 'SYNC'), (('d', 'ops', 1, 'op'), 'SYNC')]
+      }]
+    }
+  })
+  ```
+  the receive format is greatly simplified :)
+  ```
+  {
+  "key":(optional; type list of tuples of strings/ints),
+  "keyvalue": (optional; type list of tuples of key&value)
+  }
+  ```
+  this might be more helpful: how to use the receive format:
+  ```
+  {
+  "key": [("keys","in","nesting","order"),("keys2","in2","nesting2","order2"),...]
+  "keyvalue": [(("keys","in","nesting","order"),value_to_check_for2),(("keys2","in2","nesting2","order2"),value_to_check_for2),...]
+  }
+  ```
+  and to clear up any confusion, key looks for the existence of keys and keyvalue looks to see if a specific key has a specific value. Since you can check multiple keys and/or multiple key-value pairs per task, the possibilities are literally endless for what you can look for :)
 # 0.2.4
 ### Changed
 - task receive checking (in gateway/GatewayServer.py) for better searching thru nested dictionaries. see the following example for getting the members of a server that has a little over 300 members:

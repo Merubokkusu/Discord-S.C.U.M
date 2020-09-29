@@ -8,12 +8,13 @@ cd Discord-S.C.U.M
 python3 setup.py install
 ```
 #### Initiate client
+```discum.Client(email="none", password="none", token="none", proxy_host=False, proxy_port=False, user_agent="random")```
 ```python
 >>> import discum
 >>> bot = discum.Client(email='email@email.com',password='password')
 'Randomly generated user agent: Mozilla/5.0 (iPhone; CPU iPhone OS 6_1_4 like Mac OS X) AppleWebKit/536.26 (KHTML, like Gecko) CriOS/32.0.1700.20 Mobile/10B350 Safari/8536.25'
  [+] (<discum.login.Login.Login->Connect) Post -> https://discord.com/api/v8/auth/login
- [+] (<discum.login.Login.Login->Connect) {"email": "email@email.com", "password": "passwrod", "undelete": false, "captcha_key": null, "login_source": null, "gift_code_sku_id": null}
+ [+] (<discum.login.Login.Login->Connect) {"email": "email@email.com", "password": "password", "undelete": false, "captcha_key": null, "login_source": null, "gift_code_sku_id": null}
  [+] (<discum.login.Login.Login->Connect) Response <- {"token": "420tokentokentokentoken.token.tokentokentokentokentoken", "user_settings": {"locale": "en-US", "theme": "dark"}}
 'Retrieving Discord's build number...'
 'Discord is currently on build number 68015'

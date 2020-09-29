@@ -66,7 +66,7 @@ bot.snowflake_to_unixts(snowflake) #snowflake is of type int
 
 # list of all 103 functions (click thru these and github should show their location in discum.py)
 ```python
-discum.Client(email="none", password="none", token="none", proxy_host=False, proxy_port=False) #look at __init__
+discum.Client(email="none", password="none", token="none", proxy_host=False, proxy_port=False, user_agent="random") #look at __init__
 connectionTest()
 snowflake_to_unixts(snowflake)
 unixts_to_snowflake(unixts)

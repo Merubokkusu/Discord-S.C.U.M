@@ -5,7 +5,7 @@
 
 ![https://files.catbox.moe/3ns003.png](https://files.catbox.moe/3ns003.png)
 
-\* [changelog](https://github.com/Merubokkusu/Discord-S.C.U.M/blob/master/changelog.md)
+\* [#### changelog](https://github.com/Merubokkusu/Discord-S.C.U.M/blob/master/changelog.md)
 ## Info
   Discum is a Discord selfbot api wrapper (in case you didn't know, selfbotting = automating a user account). Whenever you login to discord, your client communicates with Discord's servers using Discord's http api (http(s) requests) and gateway server (websockets). Discum allows you have this communication with Discord with python. 
   

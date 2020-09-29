@@ -92,7 +92,8 @@ python3 setup.py install
 | 1 | friend |
 | 2 | block |
 | 3 | incoming friend request |
-| 4 | outgoing friend request |
+| 4 | outgoing friend request |      
+   
 ```bot.getRelationshipIDs(update=True)```     
 ```bot.getRelationshipData(RelationshipID,update=True)```     
 ```bot.getFriends(update=True)```     

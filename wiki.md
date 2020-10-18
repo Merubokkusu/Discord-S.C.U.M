@@ -115,9 +115,9 @@ python3 setup.py install
 
 #### Messages
 ##### get messages in a channel
-```getRecentMessage(ChannelID,num=1,beforeDate=None)```
+```getMessages(ChannelID,num=1,beforeDate=None)```
 ```python
-bot.getRecentMessage("383003333751856129") #if beforeDate not given, then most recent message(s) will be returned
+bot.getMessages("383003333751856129") #if beforeDate not given, then most recent message(s) will be returned
 ```
 ##### send text message
 ```sendMessage(ChannelID,message,embed='',tts=False)```

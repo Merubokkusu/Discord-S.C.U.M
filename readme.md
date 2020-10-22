@@ -64,7 +64,7 @@ bot.snowflake_to_unixts(snowflake) #snowflake is of type int
 - [ ] Making phone calls, sending audio/video data thru those calls
 - [ ] Everything
 
-# list of all 103 functions (click thru these and github should show their location in discum.py)
+# list of all 100 functions (click thru these and github should show their location in discum.py)
 ```python
 discum.Client(email="none", password="none", token="none", proxy_host=False, proxy_port=False, user_agent="random") #look at __init__
 connectionTest()
@@ -191,9 +191,6 @@ getGuildCategoryData(guildID,categoryID,update=True)
 getGuildChannels(guildID,update=True)
 getGuildChannelIDs(guildID,update=True)
 getGuildChannelData(guildID,channelID,update=True)
-getGuildMembers(guildID,update=True)
-getGuildMemberIDs(guildID,update=True)
-getGuildMemberData(guildID,memberID,update=True)
 getNotes(update=True)
 getOnlineFriends(update=True)
 getDMs(update=True)

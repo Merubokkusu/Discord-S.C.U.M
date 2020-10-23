@@ -14,6 +14,16 @@ class Messages(object):
 		self.discord = discord
 		self.s = s
 
+	#add DM
+	def createDM(self,recipients):
+		url = self.discord+"users/@me/channels"
+		body = {"recipients": recipients}
+		Logger.LogMessage('Post -> {}'.format(url))
+		Logger.LogMessage('{}'.format(str(body)))
+		response = self.s.post(url, data=json.dumps(body))
+		Logger.LogMessage('Response <- {}'.format(response.text), log_level=LogLevel.OK)
+		return response
+
 	#get Message
 	def getMessages(self,channelID,num,beforeDate): # 1 ≤ num ≤ 100, beforeDate is a snowflake
 		url = self.discord+"channels/"+channelID+"/messages?limit="+str(num)

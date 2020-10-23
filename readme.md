@@ -64,7 +64,7 @@ bot.snowflake_to_unixts(snowflake) #snowflake is of type int
 - [ ] Making phone calls, sending audio/video data thru those calls
 - [ ] Everything
 
-# list of all 100 functions (click thru these and github should show their location in discum.py)
+# list of all 101 functions (click thru these and github should show their location in discum.py)
 ```python
 discum.Client(email="none", password="none", token="none", proxy_host=False, proxy_port=False, user_agent="random") #look at __init__
 connectionTest()
@@ -220,6 +220,7 @@ username_to_userID(userdiscriminator)
 userID_to_username(userID)
 getMessages(guildID,channelID=None,userID=None,mentionsUserID=None,has=None,beforeDate=None,afterDate=None,textSearch=None,waitTime=1)
 getMessages(channelID,num=1,beforeDate=None)
+createDM(userIDs) #userIDs is a list of (str) user IDs. Even if it's just 1 user id, it's still in list format.
 sendMessage(channelID,message,embed="",tts=False)
 sendFile(channelID,filelocation,isurl=False,message="")
 searchMessages(guildID,channelID=None,userID=None,mentionsUserID=None,has=None,beforeDate=None,afterDate=None,textSearch=None,afterNumResults=None)

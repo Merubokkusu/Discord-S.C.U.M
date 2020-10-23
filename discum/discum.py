@@ -531,6 +531,10 @@ class Client:
     '''
     Messages
     '''
+    #create DM
+    def createDM(self,recipients):
+        return Messages(self.discord,self.s).createDM(recipients)
+
     #get recent messages
     def getMessages(self,channelID,num=1,beforeDate=None): # num <= 100, beforeDate is a snowflake
         return Messages(self.discord,self.s).getMessages(channelID,num,beforeDate)

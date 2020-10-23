@@ -114,6 +114,12 @@ python3 setup.py install
 ```bot.getWebsocketVersion(update=True)```     
 
 #### Messages
+##### create DM
+```createDM(userIDs)```
+```python
+bot.createDM(['444444444444444444'])
+bot.createDM(['222222222222222222','000000000000000000'])
+```
 ##### get messages in a channel
 ```getMessages(ChannelID,num=1,beforeDate=None)```
 ```python

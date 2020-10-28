@@ -1,3 +1,4 @@
+from .guild.guild import Guild
 from .messages.messages import Messages
 from .messages.embed import Embedder
 from .user.user import User
@@ -610,3 +611,23 @@ class Client:
     # set avatar
     def setAvatar(self,imagePath):
         return User(self.discord,self.s).setAvatar(self.email,self.password,imagePath)
+
+    '''
+    Guild/Server stuff
+    '''
+    #get guild info from invite code
+    def getInfoFromInviteCode(self,inviteCode):
+        return Guild(self.discord,self.s).getInfoFromInviteCode(inviteCode)
+
+    #join guild with invite code
+    def joinGuild(self,inviteCode):
+        return Guild(self.discord,self.s).joinGuild(inviteCode)
+
+    #kick a user
+    def kickUser(self,guildID,userID,reason):
+        return Guild(self.discord,self.s).kickUser(guildID,userID,reason="")
+
+    #ban a user
+    def banUser(self,guildID,userID,deleteMessagesDays=0,reason=""):
+        return Guild(self.discord,self.s).banUser(guildID,userID,deleteMessagesDays,reason="")
+

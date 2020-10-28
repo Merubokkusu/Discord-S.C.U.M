@@ -624,10 +624,10 @@ class Client:
         return Guild(self.discord,self.s).joinGuild(inviteCode)
 
     #kick a user
-    def kickUser(self,guildID,userID,reason):
-        return Guild(self.discord,self.s).kickUser(guildID,userID,reason="")
+    def kickUser(self,guildID,userID,reason=""):
+        return Guild(self.discord,self.s).kickUser(guildID,userID,reason)
 
     #ban a user
     def banUser(self,guildID,userID,deleteMessagesDays=0,reason=""):
-        return Guild(self.discord,self.s).banUser(guildID,userID,deleteMessagesDays,reason="")
+        return Guild(self.discord,self.s).banUser(guildID,userID,deleteMessagesDays,reason)
 

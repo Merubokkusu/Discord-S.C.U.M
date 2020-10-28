@@ -237,6 +237,10 @@ changeName(name)
 setStatus(status)
 setAvatar(imagePath)
 _Client__gateway_server.runIt(data) #for websocket connections
+getInfoFromInviteCode(inviteCode)
+joinGuild(inviteCode)
+kickUser(guildID,userID,reason="")
+banUser(guildID,userID,deleteMessagesDays,reason="")
 ```
 
 ### notes:

@@ -23,6 +23,7 @@ python3 setup.py install
 - [Read User Data](#read-user-data)
 - [Messages](#Messages)
 - [User Actions](#User-Actions)
+- [Guilds](#Guilds)
 - [Gateway Server](#Gateway-Server)
 #### Read User Data:
 \* this connects to discord's gateway server and returns your current session settings. It's recommended that you set update to False after you run a command since you can only connect so many times to the gateway until discord gets suspicious (maximum recommended connections per day is 1000)      
@@ -237,6 +238,32 @@ bot.setStatus(status)
 ```python
 bot.setAvatar(email,password,imagePath)
 ```
+#### Guilds
+##### get guild info from invite code
+```getInfoFromInviteCode(inviteCode)```
+```python
+bot.getInfoFromInviteCode('1a1a1')
+```
+##### join guild using invite code
+```joinGuild(inviteCode)```
+```python
+bot.joinGuild('1a1a1')
+```
+##### kick user
+```kick(guildID,userID,reason="")```
+```python
+bot.kick('guildID00000000000','userID11111111111','weeeee')
+bot.kick('guildID00000000000','userID11111111111')
+```
+##### ban user
+```ban(guildID,userID,deleteMessagesDays=0,reason="")```
+```python
+bot.ban('guildID00000000000','userID11111111111',7,'weeeee')
+bot.ban('guildID00000000000','userID11111111111',7)
+bot.ban('guildID00000000000','userID11111111111',reason='weeeee')
+bot.ban('guildID00000000000','userID11111111111')
+```
+
 #### Gateway Server
 ```_Client__gateway_server.runIt(taskdata)```
 ```python

@@ -240,7 +240,7 @@ _Client__gateway_server.runIt(data) #for websocket connections
 getInfoFromInviteCode(inviteCode)
 joinGuild(inviteCode)
 kick(guildID,userID,reason="")
-ban(guildID,userID,deleteMessagesDays,reason="")
+ban(guildID,userID,deleteMessagesDays=0,reason="")
 ```
 
 ### notes:

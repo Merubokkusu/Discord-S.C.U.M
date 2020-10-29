@@ -31,7 +31,7 @@ class Guild(object):
 	server moderation
 	'''
 	#kick a user
-	def kickUser(self,guildID,userID,reason):
+	def kick(self,guildID,userID,reason):
 		url = self.discord+f"guilds/{guildID}/members/{userID}?reason={urllib.parse.quote(reason)}"
 		Logger.LogMessage('Delete -> {}'.format(url))
 		response = self.s.delete(url)
@@ -39,7 +39,7 @@ class Guild(object):
 		return response
 
 	#ban a user
-	def banUser(self,guildID,userID,deleteMessagesDays,reason):
+	def ban(self,guildID,userID,deleteMessagesDays,reason):
 		url = self.discord+f"guilds/{guildID}/bans/{userID}"
 		body = {"delete_message_days": str(deleteMessagesDays), "reason": reason}
 		Logger.LogMessage('Put -> {}'.format(url))

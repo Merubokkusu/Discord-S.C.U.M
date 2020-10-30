@@ -32,14 +32,15 @@ python3 setup.py install
 # Example
 ```python
 import discum     
-bot = discum.Client(email=,password=) #note, this will not work if you have a MFA account
-#bot = discum.Client(email=,password=,proxy_host=,proxy_port=,user_agent=)
-#bot = discum.Client(email=,password=,token=) #works for all types of accounts
-#bot = discum.Client(token=) #works for all types of accounts, no profile editing however
+bot = discum.Client(email=,password=,log=True) #note, this will not work if you have a MFA account
+#bot = discum.Client(email=,password=,proxy_host=,proxy_port=,user_agent=,log=False)
+#bot = discum.Client(email=,password=,token=,log=False) #works for all types of accounts
+#bot = discum.Client(token=,log=True) #works for all types of accounts, no profile editing however
 #bot = discum.Client(token=,proxy_host=,proxy_port=) #works for all types of accounts, no profile editing however
 bot.read()
 bot.read(update=False).__dict__
 bot.getGuildIDs(update=False)
+log=False
 bot.sendMessage("383003333751856129","Hello You :)")
 ```
 
@@ -66,7 +67,7 @@ bot.snowflake_to_unixts(snowflake) #snowflake is of type int
 
 # list of all 175 functions (click thru these and github should show their location in discum.py)
 ```python
-discum.Client(email="none", password="none", token="none", proxy_host=False, proxy_port=False, user_agent="random") #look at __init__
+discum.Client(email="none", password="none", token="none", proxy_host=False, proxy_port=False, user_agent="random",log=True) #look at __init__
 connectionTest()
 snowflake_to_unixts(snowflake)
 unixts_to_snowflake(unixts)
@@ -236,7 +237,7 @@ blockUser(userID)
 changeName(name)
 setStatus(status)
 setAvatar(imagePath)
-_Client__gateway_server.runIt(data) #for websocket connections
+_Client__gateway_server.runIt(data,log) #for websocket connections
 getInfoFromInviteCode(inviteCode)
 joinGuild(inviteCode)
 kick(guildID,userID,reason="")

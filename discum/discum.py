@@ -34,7 +34,8 @@ class Client:
     	if isinstance(data, list):
     		return list(map(self.convert, data))
     	return data
-    def __init__(self, email="none", password="none", token="none", proxy_host=None, proxy_port=None, user_agent="random"): #not using None on email pass and token since that could get flagged by discord...
+    def __init__(self, email="none", password="none", token="none", proxy_host=None, proxy_port=None, user_agent="random", log=True): #not using None on email pass and token since that could get flagged by discord...
+        self.log = log
         self.__user_token = token
         self.__user_email = email
         self.__user_password = password
@@ -48,11 +49,11 @@ class Client:
         else:
             from random_user_agent.user_agent import UserAgent #only really want to import this if needed...which is why it's down here
             self.__user_agent = UserAgent(limit=100).get_random_user_agent()
-            print('Randomly generated user agent: '+self.__user_agent)
+            if self.log: print('Randomly generated user agent: '+self.__user_agent)
         parseduseragent = user_agents.parse(self.__user_agent)
         self.ua_data = {'os':parseduseragent.os.family,'browser':parseduseragent.browser.family,'device':parseduseragent.device.family if parseduseragent.is_mobile else '','browser_user_agent':self.__user_agent,'browser_version':parseduseragent.browser.version_string,'os_version':parseduseragent.os.version_string}
         if self.__user_token == "none": #assuming email and pass are given...
-            self.__login = Login(self.discord,self.__user_email,self.__user_password,self.__user_agent,self.__proxy_host,self.__proxy_port)
+            self.__login = Login(self.discord,self.__user_email,self.__user_password,self.__user_agent,self.__proxy_host,self.__proxy_port,self.log)
             self.__user_token = self.__login.GetToken() #update token from "none" to true string value
             time.sleep(1)
         self.headers = {
@@ -77,7 +78,7 @@ class Client:
             'https': self.__proxy_host+':'+self.__proxy_port
             }
             self.s.proxies.update(proxies)
-        print("Retrieving Discord's build number...")
+        if self.log: print("Retrieving Discord's build number...")
         discord_login_page_exploration = self.s.get('https://discord.com/login').text
         time.sleep(1)
         try: #getting the build num is kinda experimental
@@ -86,10 +87,10 @@ class Client:
         	index_of_build_num = req_file_build.find('buildNumber')+14
         	self.discord_build_num = int(req_file_build[index_of_build_num:index_of_build_num+5])
         	self.ua_data['build_num'] = self.discord_build_num #putting this onto ua_data since getting the build num won't necessarily work
-        	print('Discord is currently on build number '+str(self.discord_build_num))
+        	if self.log: print('Discord is currently on build number '+str(self.discord_build_num))
         except:
-        	print('Could not retrieve discord build number.')
-        self.__gateway_server = GatewayServer(self.websocketurl,self.__user_token,self.ua_data,self.__proxy_host,self.__proxy_port)
+        	if self.log: print('Could not retrieve discord build number.')
+        self.__gateway_server = GatewayServer(self.websocketurl,self.__user_token,self.ua_data,self.__proxy_host,self.__proxy_port,self.log)
 
     '''
     test connection (this function was originally in discum and was created by Merubokkusu)
@@ -98,9 +99,10 @@ class Client:
         url=self.discord+'users/@me/affinities/users'
         connection = self.s.get(url)
         if(connection.status_code == 200):
-            print("Connected")
+            if self.log: print("Connected")
         else:
-            print("Incorrect Token")
+            if self.log: print("Incorrect Token")
+        return connection
 
     '''
     discord snowflake to unix timestamp and back
@@ -117,7 +119,7 @@ class Client:
     def read(self,update=True): #returns a class, this is the main function, if you want ALL the session data (wall of data), then call this (or bot.read().__dict__). if update=False session_settings will not be updated
         if update == False: #if read() hasnt been called yet this will just return an empty dict
             return self.classsession_settings
-        self.__gateway_server.runIt('get session data')
+        self.__gateway_server.runIt('get session data',log=self.log)
         session_settings = self._Client__gateway_server.session_data["d"]
         strsession_settings = self.convert(session_settings)
         self.classsession_settings = Settings(strsession_settings)
@@ -534,100 +536,100 @@ class Client:
     '''
     #create DM
     def createDM(self,recipients):
-        return Messages(self.discord,self.s).createDM(recipients)
+        return Messages(self.discord,self.s,self.log).createDM(recipients)
 
     #get recent messages
     def getMessages(self,channelID,num=1,beforeDate=None): # num <= 100, beforeDate is a snowflake
-        return Messages(self.discord,self.s).getMessages(channelID,num,beforeDate)
+        return Messages(self.discord,self.s,self.log).getMessages(channelID,num,beforeDate)
 
     #send text or embed messages
     def sendMessage(self,channelID,message,embed="",tts=False):
-        return Messages(self.discord,self.s).sendMessage(channelID,message,embed,tts)
+        return Messages(self.discord,self.s,self.log).sendMessage(channelID,message,embed,tts)
 
     #send files (local or link)
     def sendFile(self,channelID,filelocation,isurl=False,message=""):
-        return Messages(self.discord,self.s).sendFile(channelID,filelocation,isurl,message)
+        return Messages(self.discord,self.s,self.log).sendFile(channelID,filelocation,isurl,message)
 
     #search messages
     def searchMessages(self,guildID,channelID=None,userID=None,mentionsUserID=None,has=None,beforeDate=None,afterDate=None,textSearch=None,afterNumResults=None):
-        return Messages(self.discord,self.s).searchMessages(guildID,channelID,userID,mentionsUserID,has,beforeDate,afterDate,textSearch,afterNumResults)
+        return Messages(self.discord,self.s,self.log).searchMessages(guildID,channelID,userID,mentionsUserID,has,beforeDate,afterDate,textSearch,afterNumResults)
 
     #filter searchMessages, takes in the output of searchMessages (a requests response object) and outputs a list of target messages
     def filterSearchResults(self,searchResponse):
-        return Messages(self.discord,self.s).filterSearchResults(searchResponse)
+        return Messages(self.discord,self.s,self.log).filterSearchResults(searchResponse)
 
     #sends the typing action for 10 seconds (or technically until you change the page)
     def typingAction(self,channelID):
-        return Messages(self.discord,self.s).typingAction(channelID)
+        return Messages(self.discord,self.s,self.log).typingAction(channelID)
 
     #delete message
     def deleteMessage(self,channelID,messageID):
-        return Messages(self.discord,self.s).deleteMessage(channelID,messageID)
+        return Messages(self.discord,self.s,self.log).deleteMessage(channelID,messageID)
 
     #edit message
     def editMessage(self,channelID,messageID,newMessage):
-        return Messages(self.discord,self.s).editMessage(channelID, messageID, newMessage)
+        return Messages(self.discord,self.s,self.log).editMessage(channelID, messageID, newMessage)
 
     #pin message
     def pinMessage(self,channelID,messageID):
-        return Messages(self.discord,self.s).pinMessage(channelID,messageID)
+        return Messages(self.discord,self.s,self.log).pinMessage(channelID,messageID)
 
     #un-pin message
     def unPinMessage(self,channelID,messageID):
-        return Messages(self.discord,self.s).unPinMessage(channelID,messageID)
+        return Messages(self.discord,self.s,self.log).unPinMessage(channelID,messageID)
 
     #get pinned messages
     def getPins(self,channelID):
-        return Messages(self.discord,self.s).getPins(channelID)
+        return Messages(self.discord,self.s,self.log).getPins(channelID)
 
     '''
     User relationships
     '''
     #create outgoing friend request
     def requestFriend(self,user): #you can input a userID(snowflake) or a user discriminator
-        return User(self.discord,self.s).requestFriend(user)
+        return User(self.discord,self.s,self.log).requestFriend(user)
 
     #accept incoming friend request
     def acceptFriend(self,userID):
-        return User(self.discord,self.s).acceptFriend(userID)
+        return User(self.discord,self.s,self.log).acceptFriend(userID)
 
     #remove friend OR unblock user
     def removeRelationship(self,userID):
-        return User(self.discord,self.s).removeRelationship(userID)
+        return User(self.discord,self.s,self.log).removeRelationship(userID)
 
     #block user
     def blockUser(self,userID):
-        return User(self.discord,self.s).blockUser(userID)
+        return User(self.discord,self.s,self.log).blockUser(userID)
 
     '''
     Profile edits
     '''
     # change name
     def changeName(self,name):
-        return User(self.discord,self.s).changeName(self.email,self.password,name)
+        return User(self.discord,self.s,self.log).changeName(self.email,self.password,name)
     # set status
     def setStatus(self,status):
-        return User(self.discord,self.s).setStatus(status)
+        return User(self.discord,self.s,self.log).setStatus(status)
     # set avatar
     def setAvatar(self,imagePath):
-        return User(self.discord,self.s).setAvatar(self.email,self.password,imagePath)
+        return User(self.discord,self.s,self.log).setAvatar(self.email,self.password,imagePath)
 
     '''
     Guild/Server stuff
     '''
     #get guild info from invite code
     def getInfoFromInviteCode(self,inviteCode):
-        return Guild(self.discord,self.s).getInfoFromInviteCode(inviteCode)
+        return Guild(self.discord,self.s,self.log).getInfoFromInviteCode(inviteCode)
 
     #join guild with invite code
     def joinGuild(self,inviteCode):
-        return Guild(self.discord,self.s).joinGuild(inviteCode)
+        return Guild(self.discord,self.s,self.log).joinGuild(inviteCode)
 
     #kick a user
     def kick(self,guildID,userID,reason=""):
-        return Guild(self.discord,self.s).kick(guildID,userID,reason)
+        return Guild(self.discord,self.s,self.log).kick(guildID,userID,reason)
 
     #ban a user
     def ban(self,guildID,userID,deleteMessagesDays=0,reason=""):
-        return Guild(self.discord,self.s).ban(guildID,userID,deleteMessagesDays,reason)
+        return Guild(self.discord,self.s,self.log).ban(guildID,userID,deleteMessagesDays,reason)
 

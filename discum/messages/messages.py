@@ -10,18 +10,19 @@ import os
 import time
 
 class Messages(object):
-	def __init__(self, discord, s): #s is the requests session object
+	def __init__(self, discord, s, log): #s is the requests session object
 		self.discord = discord
 		self.s = s
+		self.log = log
 
 	#add DM
 	def createDM(self,recipients):
 		url = self.discord+"users/@me/channels"
 		body = {"recipients": recipients}
-		Logger.LogMessage('Post -> {}'.format(url))
-		Logger.LogMessage('{}'.format(str(body)))
+		if self.log: Logger.LogMessage('Post -> {}'.format(url))
+		if self.log: Logger.LogMessage('{}'.format(str(body)))
 		response = self.s.post(url, data=json.dumps(body))
-		Logger.LogMessage('Response <- {}'.format(response.text), log_level=LogLevel.OK)
+		if self.log: Logger.LogMessage('Response <- {}'.format(response.text), log_level=LogLevel.OK)
 		return response
 
 	#get Message
@@ -29,24 +30,24 @@ class Messages(object):
 		url = self.discord+"channels/"+channelID+"/messages?limit="+str(num)
 		if beforeDate != None:
 			url += "&before="+str(beforeDate)
-		Logger.LogMessage('Get -> {}'.format(url))
+		if self.log: Logger.LogMessage('Get -> {}'.format(url))
 		response = self.s.get(url)
-		Logger.LogMessage('Response <- {}'.format(response.text), log_level=LogLevel.OK)
+		if self.log: Logger.LogMessage('Response <- {}'.format(response.text), log_level=LogLevel.OK)
 		return response
 
 	#text message
 	def sendMessage(self,channelID,message,embed,tts):
 		url = self.discord+"channels/"+channelID+"/messages"
 		body = {"content": message, "tts": tts,"embed":embed}
-		Logger.LogMessage('Post -> {}'.format(url))
-		Logger.LogMessage('{}'.format(str(body)))
+		if self.log: Logger.LogMessage('Post -> {}'.format(url))
+		if self.log: Logger.LogMessage('{}'.format(str(body)))
 		response = self.s.post(url, data=json.dumps(body))
-		Logger.LogMessage('Response <- {}'.format(response.text), log_level=LogLevel.OK)
+		if self.log: Logger.LogMessage('Response <- {}'.format(response.text), log_level=LogLevel.OK)
 		return response
 
 	#send file
 	def sendFile(self,channelID,filelocation,isurl,message):
-		mimetype, extensiontype, fd = Fileparse(self.s).parse(filelocation,isurl) #guess extension from file data
+		mimetype, extensiontype, fd = Fileparse(self.s,self.log).parse(filelocation,isurl) #guess extension from file data
 		if mimetype == 'invalid': #error out
 			print('ERROR: File does not exist.')
 			return
@@ -69,10 +70,10 @@ class Messages(object):
 			fields={"file":(filename,open(filelocation,'rb').read(),mimetype),"file_id":"0", "content":message}
 		m=MultipartEncoder(fields=fields,boundary='----WebKitFormBoundary'+''.join(random.sample(string.ascii_letters+string.digits,16)))
 		self.s.headers.update({"Content-Type":m.content_type})
-		Logger.LogMessage('Post -> {}'.format(url))
-		Logger.LogMessage('{}'.format(str(MultipartEncoder(fields={"file":(filename,"<file data here>",mimetype),"file_id":"0", "content":message},boundary='----WebKitFormBoundary'+''.join(random.sample(string.ascii_letters+string.digits,16))))))
+		if self.log: Logger.LogMessage('Post -> {}'.format(url))
+		if self.log: Logger.LogMessage('{}'.format(str(MultipartEncoder(fields={"file":(filename,"<file data here>",mimetype),"file_id":"0", "content":message},boundary='----WebKitFormBoundary'+''.join(random.sample(string.ascii_letters+string.digits,16))))))
 		response = self.s.post(url, data=m)
-		Logger.LogMessage('Response <- {}'.format(response.text), log_level=LogLevel.OK)
+		if self.log: Logger.LogMessage('Response <- {}'.format(response.text), log_level=LogLevel.OK)
 		return response
 
 	def searchMessages(self,guildID,channelID,userID,mentionsUserID,has,beforeDate,afterDate,textSearch,afterNumResults): #classic discord search function, results with key "hit" are the results you searched for, afterNumResults (aka offset) is multiples of 25 and indicates after which messages (type int), filterResults defaults to False
@@ -110,13 +111,13 @@ class Messages(object):
 			if afterNumResults != None and isinstance(afterNumResults,int):
 				queryparams += "offset="+str(afterNumResults)
 			url += queryparams
-			Logger.LogMessage('Get -> {}'.format(url))
+			if self.log: Logger.LogMessage('Get -> {}'.format(url))
 			response = self.s.get(url)
-			Logger.LogMessage('Response <- {}'.format(response.text), log_level=LogLevel.OK)
+			if self.log: Logger.LogMessage('Response <- {}'.format(response.text), log_level=LogLevel.OK)
 			return response
-		Logger.LogMessage('Get -> {}'.format(url))
+		if self.log: Logger.LogMessage('Get -> {}'.format(url))
 		response = self.s.get(url)
-		Logger.LogMessage('Response <- {}'.format(response.text), log_level=LogLevel.OK)
+		if self.log: Logger.LogMessage('Response <- {}'.format(response.text), log_level=LogLevel.OK)
 		return response
 
 	def filterSearchResults(self,searchResponse): #only input is the requests response object outputted from searchMessages, returns type list
@@ -130,44 +131,44 @@ class Messages(object):
 
 	def typingAction(self,channelID): #sends the typing action for 10 seconds (or until you change the page)
 		url = self.discord+"channels/"+channelID+"/typing"
-		Logger.LogMessage('Post -> {}'.format(url))
+		if self.log: Logger.LogMessage('Post -> {}'.format(url))
 		response = self.s.post(url)
-		Logger.LogMessage('Response <- {}'.format(response.text), log_level=LogLevel.OK)
+		if self.log: Logger.LogMessage('Response <- {}'.format(response.text), log_level=LogLevel.OK)
 		return response
 
 	def editMessage(self,channelID,messageID,newMessage):
 		url = self.discord+"channels/"+channelID+"/messages/"+messageID
 		body = {"content": newMessage}
-		Logger.LogMessage('Patch -> {}'.format(url))
-		Logger.LogMessage('{}'.format(str(body)))
+		if self.log: Logger.LogMessage('Patch -> {}'.format(url))
+		if self.log: Logger.LogMessage('{}'.format(str(body)))
 		response = self.s.patch(url, data=json.dumps(body))
-		Logger.LogMessage('Response <- {}'.format(response.text), log_level=LogLevel.OK)
+		if self.log: Logger.LogMessage('Response <- {}'.format(response.text), log_level=LogLevel.OK)
 		return response
 
 	def deleteMessage(self,channelID,messageID):
 		url = self.discord+"channels/"+channelID+"/messages/"+messageID
-		Logger.LogMessage('Delete -> {}'.format(url))
+		if self.log: Logger.LogMessage('Delete -> {}'.format(url))
 		response = self.s.delete(url)
-		Logger.LogMessage('Response <- {}'.format(response.text), log_level=LogLevel.OK)
+		if self.log: Logger.LogMessage('Response <- {}'.format(response.text), log_level=LogLevel.OK)
 		return response
 
 	def pinMessage(self,channelID,messageID):
 		url = self.discord+"channels/"+channelID+"/pins/"+messageID
-		Logger.LogMessage('Put -> {}'.format(url))
+		if self.log: Logger.LogMessage('Put -> {}'.format(url))
 		response = self.s.put(url)
-		Logger.LogMessage('Response <- {}'.format(response.text), log_level=LogLevel.OK)
+		if self.log: Logger.LogMessage('Response <- {}'.format(response.text), log_level=LogLevel.OK)
 		return response
 
 	def unPinMessage(self,channelID,messageID):
 		url = self.discord+"channels/"+channelID+"/pins/"+messageID
-		Logger.LogMessage('Delete -> {}'.format(url))
+		if self.log: Logger.LogMessage('Delete -> {}'.format(url))
 		response = self.s.delete(url)
-		Logger.LogMessage('Response <- {}'.format(response.text), log_level=LogLevel.OK)
+		if self.log: Logger.LogMessage('Response <- {}'.format(response.text), log_level=LogLevel.OK)
 		return response
 
 	def getPins(self,channelID): #get pinned messages
 		url = self.discord+"channels/"+channelID+"/pins"
-		Logger.LogMessage('Get -> {}'.format(url))
+		if self.log: Logger.LogMessage('Get -> {}'.format(url))
 		response = self.s.get(url)
-		Logger.LogMessage('Response <- {}'.format(response.text), log_level=LogLevel.OK)
+		if self.log: Logger.LogMessage('Response <- {}'.format(response.text), log_level=LogLevel.OK)
 		return response

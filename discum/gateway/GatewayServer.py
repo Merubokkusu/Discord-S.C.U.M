@@ -31,7 +31,8 @@ class GatewayServer():
         HEARTBEAT_ACK =         11 #    Sent immediately following a client heartbeat that was received
         GUILD_SYNC =            12 #    ???             ???
 
-    def __init__(self, websocketurl, token, ua_data, proxy_host, proxy_port):
+    def __init__(self, websocketurl, token, ua_data, proxy_host, proxy_port, log):
+        self.log = log
         self.websocketurl = websocketurl
         self.token = token
         self.ua_data = ua_data
@@ -129,7 +130,8 @@ class GatewayServer():
             else:
                 yield v
 
-    def runIt(self,tasks):
+    def runIt(self,tasks,log):
+        self.log = log #update log
         self.all_tasks = tasks
         if self.all_tasks != 'get session data':
             self.allTasksChecklist = {key: None for key in self.all_tasks.keys()} #looks like {1:None,2:None,etc}
@@ -144,13 +146,13 @@ class GatewayServer():
         if self.all_tasks != 'get session data':
             self.taskCompleted = True #necessary for first task to begin
             for index in self.all_tasks:
-                print('task num: '+str(index))
+                if self.log: print('task num: '+str(index))
                 await self.addTask(self.all_tasks[index])
                 while self.taskCompleted == False:
                     await asyncio.sleep(1)
                 self.taskCompleted = False #reset
                 self.allTasksChecklist[index] = "complete"
-                print(self.allTasksChecklist)
+                if self.log: print(self.allTasksChecklist)
         else:
             while self.session_data is None:
                 await asyncio.sleep(1)
@@ -161,30 +163,30 @@ class GatewayServer():
             async with websockets.connect(
                     self.websocketurl, origin="https://discordapp.com") \
                     as self.websocket:
-                print("Connected to "+self.websocketurl)
+                if self.log: print("Connected to "+self.websocketurl)
                 await self.hello()
                 if self.interval is None:
-                    print(self.LogLevel.WARNING + "Hello failed, exiting")
-                    print(self.LogLevel.DEFAULT)
+                    if self.log: print(self.LogLevel.WARNING + "Hello failed, exiting")
+                    if self.log: print(self.LogLevel.DEFAULT)
                     return
                 await asyncio.gather(self.heartbeat(), self.receive(),self.stopLoop(),self.taskManager())
         else:
             async with websockets.connect(
                     self.websocketurl, origin="https://discordapp.com", host=self.proxy_host, port=self.proxy_port) \
                     as self.websocket:
-                print("Connected to "+self.websocketurl)
+                if self.log: print("Connected to "+self.websocketurl)
                 await self.hello()
                 if self.interval is None:
-                    print(self.LogLevel.WARNING + "Hello failed, exiting")
-                    print(self.LogLevel.DEFAULT)
+                    if self.log: print(self.LogLevel.WARNING + "Hello failed, exiting")
+                    if self.log: print(self.LogLevel.DEFAULT)
                     return
                 await asyncio.gather(self.heartbeat(), self.receive(),self.stopLoop(),self.taskManager())
 
     async def receive(self):
-        print("Entering receive")
+        if self.log: print("Entering receive")
         async for message in self.websocket:
-            print(self.LogLevel.RECEIVE + "<", message)
-            print(self.LogLevel.DEFAULT)
+            if self.log: print(self.LogLevel.RECEIVE + "<", message)
+            if self.log: print(self.LogLevel.DEFAULT)
             data = json.loads(message)
             #the following lines are technically optional if youre using GatewayServer separately, I simply have them here for convenience
             if data["op"] == self.OPCODE.DISPATCH:
@@ -219,35 +221,35 @@ class GatewayServer():
 
     async def send(self, opcode, payload):
         data = self.opcode(opcode, payload)
-        print(self.LogLevel.SEND + ">", data)
-        print(self.LogLevel.DEFAULT)
+        if self.log: print(self.LogLevel.SEND + ">", data)
+        if self.log: print(self.LogLevel.DEFAULT)
         await self.websocket.send(data)
 
     async def heartbeat(self):
-        print("Entering heartbeat")
+        if self.log: print("Entering heartbeat")
         while self.interval is not None:
-            print("Sending a heartbeat")
+            if self.log: print("Sending a heartbeat")
             await self.send(self.OPCODE.HEARTBEAT, self.sequence)
             await asyncio.sleep(self.interval)
 
     async def hello(self):
         await self.send(self.OPCODE.IDENTIFY, self.auth)
-        print(self.LogLevel.SEND + "hello > auth")
-        print(self.LogLevel.DEFAULT)
+        if self.log: print(self.LogLevel.SEND + "hello > auth")
+        if self.log: print(self.LogLevel.DEFAULT)
 
         ret = await self.websocket.recv()
-        print("{}hello < {}".format(self.LogLevel.RECEIVE,ret))
-        print(self.LogLevel.DEFAULT)
+        if self.log: print("{}hello < {}".format(self.LogLevel.RECEIVE,ret))
+        if self.log: print(self.LogLevel.DEFAULT)
 
         data = json.loads(ret)
         opcode = data["op"]
         if opcode != 10:
-            print(self.LogLevel.WARNING + "Unexpected reply")
-            print(ret)
-            print(self.LogLevel.DEFAULT)
+            if self.log: print(self.LogLevel.WARNING + "Unexpected reply")
+            if self.log: print(ret)
+            if self.log: print(self.LogLevel.DEFAULT)
             return
         self.interval = (data["d"]["heartbeat_interval"] - 2000) / 1000
-        print("interval:", self.interval)
+        if self.log: print("interval:", self.interval)
 
     def opcode(self, opcode: int, payload) -> str:
         data = {

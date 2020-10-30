@@ -7,7 +7,8 @@ class Login:
     '''
     Manages HTTP authentication
     '''
-    def __init__(self, discordurlstart, user_email, user_password,user_agent,proxy_host,proxy_port):
+    def __init__(self, discordurlstart, user_email, user_password,user_agent,proxy_host,proxy_port,log):
+        self.log = log
         self.URL = discordurlstart + "auth/login"
         self.__user_email = user_email
         self.__user_password = user_password
@@ -28,10 +29,10 @@ class Login:
         session.headers.update({'X-Super-Properties': ''})
         session.headers.update({"Content-Type": "application/json"})
         http_auth_data = '{{"email": "{}", "password": "{}", "undelete": false, "captcha_key": null, "login_source": null, "gift_code_sku_id": null}}'.format(self.__user_email, self.__user_password)
-        Logger.LogMessage('Post -> {}'.format(self.URL))
-        Logger.LogMessage('{}'.format(http_auth_data))
+        if self.log: Logger.LogMessage('Post -> {}'.format(self.URL))
+        if self.log: Logger.LogMessage('{}'.format(http_auth_data))
         response = session.post(self.URL, data=http_auth_data)
-        Logger.LogMessage('Response <- {}'.format(response.text), log_level=LogLevel.OK)
+        if self.log: Logger.LogMessage('Response <- {}'.format(response.text), log_level=LogLevel.OK)
         self.__token = json.loads(response.content)['token']
 
     def GetToken(self):

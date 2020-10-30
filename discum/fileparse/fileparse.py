@@ -4,8 +4,9 @@ import requests
 import os
 
 class Fileparse(object):
-	def __init__(self, s): #s is the requests session object
+	def __init__(self, s, log): #s is the requests session object
 		self.s = s
+		self.log = log
 		
 	def parse(self, filelocation, isurl): #returns mimetype and extension if detected
 		fd = b""
@@ -15,19 +16,19 @@ class Fileparse(object):
 				fd = requests.get(filelocation,headers={"User-Agent":self.s.headers['User-Agent']},proxies=self.s.proxies).content
 				kind = filetype.guess(fd)
 				if kind is None:
-					print('Unsupported file type. Will attempt to send anyways.')
+					if self.log: print('Unsupported file type. Will attempt to send anyways.')
 					return 'unsupported', 'unsupported', fd
 				return kind.mime, kind.extension, fd
 			else:
-				print('Invalid link.')
+				if self.log: print('Invalid link.')
 				return 'invalid', 'invalid', fd
 		else:
 			if os.path.isfile(filelocation):
 				kind = filetype.guess(filelocation)
 				if kind is None:
-					print('Unsupported file type. Will attempt to send anyways.')
+					if self.log: print('Unsupported file type. Will attempt to send anyways.')
 					return 'unsupported', 'unsupported', fd
 				return kind.mime, kind.extension, fd
 			else:
-				print('Either not a file or file does not exist.')
+				if self.log: print('Either not a file or file does not exist.')
 				return 'invalid', 'invalid', fd

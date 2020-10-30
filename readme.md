@@ -41,7 +41,7 @@ bot = discum.Client(email=,password=,log=True) #note, this will not work if you 
 bot.read()
 bot.read(update=False).__dict__
 bot.getGuildIDs(update=False)
-log=False
+bot.log=False
 bot.sendMessage("383003333751856129","Hello You :)")
 ```
 

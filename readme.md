@@ -245,6 +245,6 @@ kick(guildID,userID,reason="")
 ban(guildID,userID,deleteMessagesDays=0,reason="")
 ```        
 ### Contributions?
-Contributors are always welcome! Feel free to submit issues or email! Also if you've worked with websockets + async in python before and would like to help out, let us know (GatewayServer.py is kind of a mess rn ngl lol). Ofc not all suggestions will be implemented (because discum is intended to be a transparent, raw discord user api wrapper), but all suggestions will be looked into.           
+Contributions are always welcome! Feel free to submit issues or suggest features! Also if you've worked with websockets + async in python before and would like to help out, let us know (GatewayServer.py is kind of a mess rn ngl lol). Ofc not all suggestions will be implemented (because discum is intended to be a transparent, raw discord user api wrapper), but all suggestions will be looked into.           
 Merubokkusu: liam@merubokkusu.com          
 arandomnewaccount: discordtehe@gmail.com (arandomnewaccount here: even though I'm busy, I check this email frequently)

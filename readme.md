@@ -245,5 +245,7 @@ kick(guildID,userID,reason="")
 ban(guildID,userID,deleteMessagesDays=0,reason="")
 ```
 
-### notes:
-arandomnewaccount here - my profile is invisible because this isn't my only github account and therefore I've been marked as spam by github. I'll still be commiting onto the repo from time to time but I won't be able to answer issues on the issue page. If you want to contact me about discum (issues, questions, etc) you can send an email to discordtehe@gmail.com.
+### Contributions?
+Contributors are always welcome! Feel free to submit issues or email us! Also if you've worked with websockets + async in python before and would like to help out, let us know (GatewayServer.py is kind of a mess rn ngl lol).   
+merubokkusu: liam@merubokkusu.com      
+arandomnewaccount: discordtehe@gmail.com     

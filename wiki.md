@@ -8,7 +8,7 @@ cd Discord-S.C.U.M
 python3 setup.py install
 ```
 #### Initiate client
-```discum.Client(email="none", password="none", token="none", proxy_host=False, proxy_port=False, user_agent="random")```
+```discum.Client(email="none", password="none", token="none", proxy_host=False, proxy_port=False, user_agent="random", log=True)```
 ```python
 >>> import discum
 >>> bot = discum.Client(email='email@email.com',password='password')
@@ -18,6 +18,11 @@ python3 setup.py install
  [+] (<discum.login.Login.Login->Connect) Response <- {"token": "420tokentokentokentoken.token.tokentokentokentokentoken", "user_settings": {"locale": "en-US", "theme": "dark"}}
 'Retrieving Discord's build number...'
 'Discord is currently on build number 68015'
+```
+#### Turn Logging On/Off (this can be done at any time)
+```python
+bot.log = True
+bot.log = False
 ```
 ## Commands
 - [Read User Data](#read-user-data)
@@ -265,7 +270,7 @@ bot.ban('guildID00000000000','userID11111111111')
 ```
 
 #### Gateway Server
-```_Client__gateway_server.runIt(taskdata)```
+```_Client__gateway_server.runIt(taskdata, log)```
 ```python
 bot._Client__gateway_server.runIt({
   1: {
@@ -286,7 +291,7 @@ bot._Client__gateway_server.runIt({
       "keyvalue": [(('d', 'ops', 0, 'op'), 'SYNC'), (('d', 'ops', 1, 'op'), 'SYNC')]
     }]
   }
-})
+}, log=True)
 ```
 the input consists of "send" and "receive" data:
 ```
@@ -324,5 +329,5 @@ bot._Client__gateway_server.runIt({
     "send": [],
     "receive": []
   }
-})
+}, log=True)
 ```

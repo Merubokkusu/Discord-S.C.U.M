@@ -171,17 +171,17 @@ changeName(name)
 setStatus(status)
 setAvatar(imagePath)
 getGuildPublicUpdatesChannelID(guildID,update=True)
-getGuildSystemChannelFlags(guildID,update=True): #https
-getGuildMfaLvl(guildID,update=True): #https
-getGuildAfkTimeout(guildID,update=True): #returns type int, unit seconds, https
-getGuildHashes(guildID,update=True): #https
+getGuildSystemChannelFlags(guildID,update=True)
+getGuildMfaLvl(guildID,update=True)
+getGuildAfkTimeout(guildID,update=True)
+getGuildHashes(guildID,update=True)
 getGuildSystemChannelID(guildID,update=True)
-isGuildLazy(guildID,update=True): #slightly different naming format since it returns a boolean (https
+isGuildLazy(guildID,update=True)
 getGuildNumBoosts(guildID,update=True)
 isGuildLarge(guildID,update=True)
-getGuildExplicitContentFilter(guildID,update=True): #https
+getGuildExplicitContentFilter(guildID,update=True)
 getGuildSplashHash(guildID,update=True)
-getGuildVoiceStates(guildID,update=True): #https
+getGuildVoiceStates(guildID,update=True)
 getGuildMemberCount(guildID,update=True)
 getGuildDescription(guildID,update=True)
 getGuildVanityUrlCode(guildID,update=True)
@@ -199,7 +199,7 @@ getDMs(update=True)
 getDMIDs(update=True)
 getDMData(DMID,update=True)
 getDMRecipients(DMID,update=True)
-getReadStates(update=True): #another advantage of using websockets instead of requests (see https
+getReadStates(update=True)
 getRelationships(update=True)
 getRelationshipIDs(update=True)
 getRelationshipData(RelationshipID,update=True)

@@ -30,7 +30,7 @@ bot.log = False
 - [User Actions](#User-Actions)
 - [Guilds](#Guilds)
 - [Gateway Server](#Gateway-Server)
-#### Read User Data:
+#### Read User Data \** will be fixing these functions later this weekend (either oct 31 or 32) because discord changed it's gateway session-settings format:
 \* this connects to discord's gateway server and returns your current session settings. It's recommended that you set update to False after you run a command since you can only connect so many times to the gateway until discord gets suspicious (maximum recommended connections per day is 1000)      
 ```bot.read(update=True)```     
 ```bot.getAnalyticsToken(update=True)```     

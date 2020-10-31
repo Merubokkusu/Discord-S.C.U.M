@@ -63,6 +63,7 @@ bot.snowflake_to_unixts(snowflake) #snowflake is of type int
 - [x] Sending Embeds
 - [X] Sending Requests (Friends etc)
 - [X] Profile Editing (Name,Status,Avatar)
+- [ ] Fix GatewayServer.py cause goddammit discord has changed their gateway api again :(
 - [ ] Making phone calls, sending audio/video data thru those calls
 - [ ] Everything
 

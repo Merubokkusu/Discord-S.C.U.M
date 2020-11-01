@@ -236,7 +236,7 @@ bot.getGuildMember('guildID00000000000','userID11111111111')
 #### Gateway Server
 ```_Client__gateway_server.runIt(taskdata, log)```
 ```python
-members = bot._Client__gateway_server.runIt({
+members = bot._Client__gateway_server.run({
   1: {
     "send": [{
       "op": 14,
@@ -288,7 +288,7 @@ and here's a closer look at the values in the "receive" data:
 and to clear up any confusion, key looks for the existence of keys and keyvalue looks to see if a specific key has a specific value. Since you can check multiple keys and/or multiple key-value pairs per task, the possibilities are literally endless for what you can look for :)
 simple example: here's the minimum amount of data a task can have (the command below simply connects to the gateway server and listens for messages from discord):
 ```python
-bot._Client__gateway_server.runIt({
+bot._Client__gateway_server.run({
   1: {
     "send": [],
     "receive": []

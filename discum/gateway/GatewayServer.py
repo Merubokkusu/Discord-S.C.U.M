@@ -130,7 +130,7 @@ class GatewayServer():
             else:
                 yield v
 
-    def runIt(self,tasks,log):
+    def run(self,tasks,log):
         self.log = log #update log
         self.results = [] #clear results list
         self.all_tasks = tasks

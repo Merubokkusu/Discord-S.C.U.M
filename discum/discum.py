@@ -415,3 +415,6 @@ class Client:
     def ban(self,guildID,userID,deleteMessagesDays=0,reason=""):
         return Guild(self.discord,self.s,self.log).ban(guildID,userID,deleteMessagesDays,reason)
 
+    #look up a user in a guild
+    def getGuildMember(self,guildID,userID):
+        return Guild(self.discord,self.s,self.log).getGuildMember(guildID,userID)

@@ -48,3 +48,14 @@ class Guild(object):
 		response = self.s.put(url, data=json.dumps(body))
 		if self.log: Logger.LogMessage('Response <- {}'.format(response.text), log_level=LogLevel.OK)
 		return response
+
+	#lookup a user in a guild. thx Echocage for finding this api endpoint
+	'''Note, user clients do not run this api request, however it currently works without a problem. 
+	Once discum's gatewayserver is improved, we'll add the actual api to discum (to best mimic the web client)
+	'''
+	def getGuildMember(self, guildID, userID):
+		url = self.discord+f"/guilds/{guildID}/members/{userID}"
+		if self.log: Logger.LogMessage('Get -> {}'.format(url))
+		response = self.s.get(url)
+		if self.log: Logger.LogMessage('Response <- {}'.format(response.text), log_level=LogLevel.OK)
+		return response

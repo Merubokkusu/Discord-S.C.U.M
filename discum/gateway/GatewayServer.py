@@ -46,7 +46,7 @@ class GatewayServer():
 
         self.all_tasks = {} #just the task input. all of it
         self.receiveData = [] #the receive value input
-        #self.response_data = [] #lists incoming batches of data
+        self.results = [] #output
 
         #as far as checklists go, allTasks variables have values looking like None or "complete" which subtasks have values looking like [None] or ["complete"]. The exception is in the mailSent subtask, which has a value of either True or False.
         self.receiveChecklist = [] #acts as a checklist for receive, looks at the current task
@@ -73,7 +73,7 @@ class GatewayServer():
                     "referrer_current": "",
                     "referring_domain_current": "",
                     "release_channel": "stable",
-                    "client_build_number": 68015,
+                    "client_build_number": 70781,
                     "client_event_source": None
                 },
                 "presence": {
@@ -90,7 +90,7 @@ class GatewayServer():
                     "user_guild_settings_version": -1
                 }
             }
-        if 'build_num' in self.ua_data and self.ua_data['build_num']!=68015:
+        if 'build_num' in self.ua_data and self.ua_data['build_num']!=70781:
             self.auth['properties']['client_build_number'] = self.ua_data['build_num']
 
         self.loop = asyncio.get_event_loop()
@@ -132,6 +132,7 @@ class GatewayServer():
 
     def runIt(self,tasks,log):
         self.log = log #update log
+        self.results = [] #clear results list
         self.all_tasks = tasks
         if self.all_tasks != 'get session data':
             self.allTasksChecklist = {key: None for key in self.all_tasks.keys()} #looks like {1:None,2:None,etc}
@@ -141,6 +142,7 @@ class GatewayServer():
             asyncio.run(self.main())
         except TaskCompleted:
             self.loop.stop()
+            return self.results #yay
 
     async def taskManager(self):
         if self.all_tasks != 'get session data':
@@ -195,6 +197,8 @@ class GatewayServer():
                 if event_type == "READY":
                     self.session_id = data["d"]["session_id"]
                     self.session_data = data
+                if event_type == "READY_SUPPLEMENTAL":
+                    self.session_data['d'].update(data['d']) #cause it's easier to parse both READY and READY_SUPPLEMENTAL this way
                 if event_type == "VOICE_SERVER_UPDATE":
                     if "token" in data["d"]:
                         self.media_token = data["d"]["token"]
@@ -215,6 +219,7 @@ class GatewayServer():
                         self.receiveChecklist[checklistIndex]["keyvalue"] = ["complete"]
                     if all(value == ["complete"] for value in list(self.NestedDictValues(self.receiveChecklist[checklistIndex]))): # and self.mailSent check mail sent later...
                         self.receiveChecklist[checklistIndex] = ["complete"]
+                        self.results.append(data)
                         break #after first match is found, break
             if len(self.receiveChecklist)>0 and all(item == ["complete"] for item in self.receiveChecklist) and self.mailSent:
                 self.taskCompleted = True #current task is completed
@@ -286,6 +291,6 @@ class GatewayServer():
 if __name__ == "__main__":
     gateway = GatewayServer(your_token_here,None,None) #lol id accidently posted my token online. deleted that account
     gateway.runIt(taskdata) #loop stops a few seconds after allTasksCompleted == True
-    #gateway.runIt('get session data')
-    #gateway.runIt({1:{"send":[],"receive":[]}})
+    #gateway.runIt('get session data', log=True)
+    #gateway.runIt({1:{"send":[],"receive":[]}}, log=True)
 '''

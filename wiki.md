@@ -30,7 +30,7 @@ bot.log = False
 - [User Actions](#User-Actions)
 - [Guilds](#Guilds)
 - [Gateway Server](#Gateway-Server)
-#### Read User Data \** will be fixing these functions later this weekend (either oct 31 or 32) because discord changed it's gateway session-settings format:
+#### Read User Data
 \* this connects to discord's gateway server and returns your current session settings. It's recommended that you set update to False after you run a command since you can only connect so many times to the gateway until discord gets suspicious (maximum recommended connections per day is 1000)      
 ```bot.read(update=True)```     
 ```bot.getAnalyticsToken(update=True)```     
@@ -40,52 +40,11 @@ bot.log = False
 ```bot.getFriendSuggestingCount(update=True)```     
 ```bot.getGuildExperiments(update=True)```     
 ```bot.getGuilds(update=True)```     
-```bot.getGuildIDs(update=True)```     
-```bot.getGuildData(guildID,update=True)```     
-```bot.getGuildOwner(guildID,update=True)```     
-```bot.getGuildBoostLvl(guildID,update=True)```     
-```bot.getGuildEmojis(guildID,update=True)```     
-```bot.getGuildBanner(guildID,update=True)```     
-```bot.getGuildDiscoverySplash(guildID,update=True)```     
-```bot.getGuildUserPresences(guildID,update=True)```     
-```bot.getGuildMsgNotificationSettings(guildID,update=True)```     
-```bot.getGuildRulesChannelID(guildID,update=True)```     
-```bot.getGuildVerificationLvl(guildID,update=True)```     
-```bot.getGuildFeatures(guildID,update=True)```     
-```bot.getGuildJoinTime(guildID,update=True)```     
-```bot.getGuildRegion(guildID,update=True)```     
-```bot.getGuildApplicationID(GuildID,update=True)```     
-```bot.getGuildAfkChannelID(guildID,update=True)```     
-```bot.getGuildIcon(guildID,update=True)```     
-```bot.getGuildName(guildID,update=True)```     
-```bot.getGuildMaxVideoChannelUsers(guildID,update=True)```     
-```bot.getGuildRoles(guildID,update=True)```     
-```bot.getGuildPublicUpdatesChannelID(guildID,update=True)```     
-```bot.getGuildSystemChannelFlags(guildID,update=True)```     
-```bot.getGuildMfaLvl(guildID,update=True)```     
-```bot.getGuildAfkTimeout(guildID,update=True)```     
-```bot.getGuildHashes(guildID,update=True)```     
-```bot.getGuildSystemChannelID(guildID,update=True)```     
-```bot.isGuildLazy(guildID,update=True)```     
-```bot.getGuildNumBoosts(guildID,update=True)```     
-```bot.isGuildLarge(guildID,update=True)```     
-```bot.getGuildExplicitContentFilter(guildID,update=True)```     
-```bot.getGuildSplashHash(guildID,update=True)```     
+```bot.getGuildIDs(update=True)```        
 ```bot.getGuildVoiceStates(guildID,update=True)```     
-```bot.getGuildMemberCount(guildID,update=True)```     
-```bot.getGuildDescription(guildID,update=True)```     
-```bot.getGuildVanityUrlCode(guildID,update=True)```     
-```bot.getGuildPreferredLocale(guildID,update=True)```     
-```bot.getGuildAllChannels(guildID,update=True)```     
-```bot.getGuildCategories(guildID,update=True)```     
-```bot.getGuildCategoryIDs(guildID,update=True)```     
-```bot.getGuildCategoryData(guildID,categoryID,update=True)```     
-```bot.getGuildChannels(guildID,update=True)```     
-```bot.getGuildChannelIDs(guildID,update=True)```     
-```bot.getGuildChannelData(guildID,channelID,update=True)```     
-```bot.getGuildMembers(guildID,update=True)```     
-```bot.getGuildMemberIDs(guildID,update=True)```     
-```bot.getGuildMemberData(guildID,memberID,update=True)```     
+```bot.getGuildCachedMembers(guildID,update=True)```     
+```bot.getGuildCachedMemberIDs(guildID,update=True)```     
+```bot.getGuildCachedMemberData(guildID,memberID,update=True)```     
 ```bot.getNotes(update=True)```     
 ```bot.getOnlineFriends(update=True)```     
 ```bot.getDMs(update=True)```     
@@ -272,7 +231,7 @@ bot.ban('guildID00000000000','userID11111111111')
 #### Gateway Server
 ```_Client__gateway_server.runIt(taskdata, log)```
 ```python
-bot._Client__gateway_server.runIt({
+members = bot._Client__gateway_server.runIt({
   1: {
     "send": [{
       "op": 14,

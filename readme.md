@@ -248,8 +248,8 @@ ban(guildID,userID,deleteMessagesDays=0,reason="")
 ### Contributions?
 Contributions are always welcome! Feel free to submit issues or suggest features! Also if you've worked with websockets + async in python before and would like to help out, let us know (GatewayServer.py is kind of a mess rn ngl lol). Ofc not all suggestions will be implemented (because discum is intended to be a transparent, raw discord user api wrapper), but all suggestions will be looked into.           
 
-### Additional Contributors
-We value contributions. Here's a list of other ppl who've contributed something to discum:
+### Contributions:
+Here's a list of other ppl who've contributed something to discum:
 - Echocage: api endpoint for 
      ```python
      bot.getGuildMember(guildID,userID)

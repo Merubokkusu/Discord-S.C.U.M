@@ -1,4 +1,66 @@
 # Changelog
+# 0.2.6
+### Added
+- ability to turn off logging in bot initiation function (discum.Client())
+- ability to toggle logging on/off
+- some guild functions (getInfoFromInviteCode, joinGuild, kick, ban, getGuildMember)
+- a message function (createDM)
+- \_Client__gateway_server.run(data,log) now returns the targeted responses in a list
+### Changed
+- discum.Client now has a logging option:
+  ```python
+  discum.Client(email="none", password="none", token="none", proxy_host=False, proxy_port=False, user_agent="random", log=True)
+  ```
+- \_Client__gateway_server.runIt(data,log) is now bot.\_Client__gateway_server.run(data,log)
+- \_Client__gateway_server.run requires the log input (True or False)
+- updated gateway protocol to process current session settings format
+- simplified discum.py by removing 1 useless class (that turned str(dictionaries) into classes) and 1 useless function (that turned dictionaries into strings)
+- ```bot.getGuildMembers(guildID,update=True)``` --> ```bot.getGuildCachedMembers(guildID,update=True)```
+- ```bot.getGuildMemberIDs(guildID,update=True)``` --> ```bot.getGuildCachedMemberIDs(guildID,update=True)```
+- ```bot.getGuildMemberData(guildID,memberID,update=True)``` --> ```bot.getGuildCachedMemberData(guildID,memberID,update=True)```
+### Removed
+The following functions were removed in this version due to discord changing its session settings format (gateway server). These functions (or many of them) will be added in the future as http api requests:  
+```bot.getGuildData(guildID,update=True)```     
+```bot.getGuildOwner(guildID,update=True)```     
+```bot.getGuildBoostLvl(guildID,update=True)```     
+```bot.getGuildEmojis(guildID,update=True)```     
+```bot.getGuildBanner(guildID,update=True)```     
+```bot.getGuildDiscoverySplash(guildID,update=True)```     
+```bot.getGuildUserPresences(guildID,update=True)```     
+```bot.getGuildMsgNotificationSettings(guildID,update=True)```     
+```bot.getGuildRulesChannelID(guildID,update=True)```     
+```bot.getGuildVerificationLvl(guildID,update=True)```     
+```bot.getGuildFeatures(guildID,update=True)```     
+```bot.getGuildJoinTime(guildID,update=True)```     
+```bot.getGuildRegion(guildID,update=True)```     
+```bot.getGuildApplicationID(GuildID,update=True)```     
+```bot.getGuildAfkChannelID(guildID,update=True)```     
+```bot.getGuildIcon(guildID,update=True)```     
+```bot.getGuildName(guildID,update=True)```     
+```bot.getGuildMaxVideoChannelUsers(guildID,update=True)```     
+```bot.getGuildRoles(guildID,update=True)```     
+```bot.getGuildPublicUpdatesChannelID(guildID,update=True)```     
+```bot.getGuildSystemChannelFlags(guildID,update=True)```     
+```bot.getGuildMfaLvl(guildID,update=True)```     
+```bot.getGuildAfkTimeout(guildID,update=True)```     
+```bot.getGuildHashes(guildID,update=True)```     
+```bot.getGuildSystemChannelID(guildID,update=True)```     
+```bot.isGuildLazy(guildID,update=True)```     
+```bot.getGuildNumBoosts(guildID,update=True)```     
+```bot.isGuildLarge(guildID,update=True)```     
+```bot.getGuildExplicitContentFilter(guildID,update=True)```     
+```bot.getGuildSplashHash(guildID,update=True)```   
+```bot.getGuildMemberCount(guildID,update=True)```     
+```bot.getGuildDescription(guildID,update=True)```     
+```bot.getGuildVanityUrlCode(guildID,update=True)```     
+```bot.getGuildPreferredLocale(guildID,update=True)```     
+```bot.getGuildAllChannels(guildID,update=True)```     
+```bot.getGuildCategories(guildID,update=True)```     
+```bot.getGuildCategoryIDs(guildID,update=True)```     
+```bot.getGuildCategoryData(guildID,categoryID,update=True)```     
+```bot.getGuildChannels(guildID,update=True)```     
+```bot.getGuildChannelIDs(guildID,update=True)```     
+```bot.getGuildChannelData(guildID,channelID,update=True)```     
 # 0.2.5
 ### Added
 - ability to set custom user agent (or randomly generate a user agent). This user agent is then used for both http api requests and websocket connections

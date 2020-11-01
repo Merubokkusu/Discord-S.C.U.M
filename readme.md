@@ -39,7 +39,7 @@ bot = discum.Client(email=,password=,log=True) #note, this will not work if you 
 #bot = discum.Client(token=,log=True) #works for all types of accounts, no profile editing however
 #bot = discum.Client(token=,proxy_host=,proxy_port=) #works for all types of accounts, no profile editing however
 bot.read()
-bot.read(update=False).__dict__
+bot.read(update=False)
 bot.getGuildIDs(update=False)
 bot.log=False
 bot.sendMessage("383003333751856129","Hello You :)")

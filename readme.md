@@ -61,7 +61,7 @@ bot.snowflake_to_unixts(snowflake) #snowflake is of type int
 - [ ] Making phone calls, sending audio/video data thru those calls
 - [ ] Everything
 
-# list of all 64 functions (click thru these and github should show their location in discum.py)
+# list of all 65 functions (click thru these and github should show their location in discum.py)
 \* turns out I was accidently double-counting some functions before. Apologies, I hadn't noticed till now.
 ```python
 discum.Client(email="none", password="none", token="none", proxy_host=False, proxy_port=False, user_agent="random",log=True) #look at __init__
@@ -105,6 +105,7 @@ getUserGuildSettings(update=True,guildID=None)
 getUserSettings(update=True)
 getOptionsForUserSettings(update=True)
 getWebsocketVersion(update=True)
+createDM(recipients)
 getMessages(channelID,num=1,beforeDate=None)
 sendMessage(channelID,message,embed="",tts=False)
 sendFile(channelID,filelocation,isurl=False,message="")

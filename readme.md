@@ -134,7 +134,7 @@ Contributions are always welcome! Feel free to submit issues or suggest features
 
 ### Contributions:
 Here's a list of other ppl who've contributed something to discum:
-- Echocage: api endpoint for 
+- Echocage:
      ```python
      bot.getGuildMember(guildID,userID)
      ```

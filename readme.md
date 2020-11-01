@@ -46,11 +46,6 @@ bot.sendMessage("383003333751856129","Hello You :)")
 ```
 
 ### bonus features: 
-convert username to userID and back:
-```python
-bot.username_to_userID(userdiscriminator) #input is "username#discriminator". you cannot input bot accounts or yourself
-bot.userID_to_username(snowflake) #input is userID (aka snowflake). you cannot input bot accounts or yourself
-```
 convert unix timestamp to snowflake and back:
 ```python
 bot.unixts_to_snowflake(unixts) #unixts is of type int

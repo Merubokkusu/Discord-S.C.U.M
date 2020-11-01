@@ -122,7 +122,7 @@ blockUser(userID)
 changeName(name)
 setStatus(status)
 setAvatar(imagePath)
-_Client__gateway_server.runIt(data,log) #for websocket connections
+_Client__gateway_server.run(data,log) #for websocket connections
 getInfoFromInviteCode(inviteCode)
 joinGuild(inviteCode)
 kick(guildID,userID,reason="")

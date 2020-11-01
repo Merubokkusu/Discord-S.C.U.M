@@ -227,6 +227,11 @@ bot.ban('guildID00000000000','userID11111111111',7)
 bot.ban('guildID00000000000','userID11111111111',reason='weeeee')
 bot.ban('guildID00000000000','userID11111111111')
 ```
+##### lookup userID in guild
+```getGuildMember(guildID,userID)```
+```python
+bot.getGuildMember('guildID00000000000','userID11111111111')
+```
 
 #### Gateway Server
 ```_Client__gateway_server.runIt(taskdata, log)```

@@ -97,7 +97,7 @@ class Client:
     def read(self,update=True): #returns a class, this is the main function, if you want ALL the session data (wall of data), then call this (or bot.read().__dict__). if update=False session_settings will not be updated
         if update == False: #if read() hasnt been called yet this will just return an empty dict
             return self.session_settings
-        self.__gateway_server.runIt('get session data',log=self.log)
+        self.__gateway_server.run('get session data',log=self.log)
         self.session_settings = self._Client__gateway_server.session_data["d"]
         return self.session_settings
 

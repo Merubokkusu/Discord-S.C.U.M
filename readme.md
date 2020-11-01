@@ -1,4 +1,4 @@
-![version](https://img.shields.io/badge/version-0.2.5-blue) [![PyPI version](https://badge.fury.io/py/discum.svg)](https://badge.fury.io/py/discum) [![python versions](https://img.shields.io/badge/python-3.7%20%7C%203.8-blue)](https://pypi.org/project/discum/0.2.1/) [![Downloads](https://pepy.tech/badge/discum/month)](https://pepy.tech/project/discum/month)
+![version](https://img.shields.io/badge/version-0.2.6-blue) [![PyPI version](https://badge.fury.io/py/discum.svg)](https://badge.fury.io/py/discum) [![python versions](https://img.shields.io/badge/python-3.7%20%7C%203.8-blue)](https://pypi.org/project/discum/0.2.1/) [![Downloads](https://pepy.tech/badge/discum/month)](https://pepy.tech/project/discum/month)
 
 
 ### A Discord Selfbot Api Wrapper - discum
@@ -20,7 +20,7 @@ from PyPI (this is probably outdated, installing from source is recommended):
 pip install discum 
 ```
      
-from source (this is up-to-date with recent changes)(currently on version 0.2.5):      
+from source (this is up-to-date with recent changes)(currently on version 0.2.6):      
 ```
 git clone https://github.com/Merubokkusu/Discord-S.C.U.M.git
 cd Discord-S.C.U.M

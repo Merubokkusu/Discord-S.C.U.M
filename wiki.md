@@ -31,7 +31,7 @@ bot.log = False
 - [Guilds](#Guilds)
 - [Gateway Server](#Gateway-Server)
 #### Read User Data
-\* this connects to discord's gateway server and returns your current session settings. It's recommended that you set update to False after you run a command since you can only connect so many times to the gateway until discord gets suspicious (maximum recommended connections per day is 1000)      
+\* this connects to discord's gateway server and returns your current session settings. It's recommended that you set update to False after you run one of these first since you can only connect so many times to the gateway until discord gets suspicious (maximum recommended connections per day is 1000)      
 ```bot.read(update=True)```                               
 ```bot.getGuilds(update=True)```                               
 ```bot.getGuildIDs(update=True)```                               

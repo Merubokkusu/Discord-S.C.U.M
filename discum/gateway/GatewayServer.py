@@ -134,6 +134,8 @@ class GatewayServer():
     def run(self,tasks,log):
         self.log = log #update log
         self.results = [] #clear results list
+        self.session_data = None #reset
+        self.session_settings_gathered = False #reset
         self.all_tasks = tasks
         if self.all_tasks != 'get session data':
             self.allTasksChecklist = {key: None for key in self.all_tasks.keys()} #looks like {1:None,2:None,etc}

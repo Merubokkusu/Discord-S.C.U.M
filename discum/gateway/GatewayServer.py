@@ -43,6 +43,7 @@ class GatewayServer():
 
         self.session_id = None
         self.session_data = None
+        self.session_settings_gathered = False #before, we could simply check if the session settings had stuff in it. Now that session settings arrives in 2 parts, this is no longer the ideal way to check whether or not session settings has been fully gathered.
 
         self.all_tasks = {} #just the task input. all of it
         self.receiveData = [] #the receive value input
@@ -149,14 +150,16 @@ class GatewayServer():
             self.taskCompleted = True #necessary for first task to begin
             for index in self.all_tasks:
                 if self.log: print('task num: '+str(index))
+                while not self.session_settings_gathered: #wait till ready supplemental is received
+                    await asyncio.sleep(0)
                 await self.addTask(self.all_tasks[index])
-                while self.taskCompleted == False:
+                while self.taskCompleted == False: #this just waits till task is completed
                     await asyncio.sleep(0)
                 self.taskCompleted = False #reset
                 self.allTasksChecklist[index] = "complete"
                 if self.log: print(self.allTasksChecklist)
         else:
-            while self.session_data is None:
+            while not self.session_settings_gathered:
                 await asyncio.sleep(0)
             self.allTasksChecklist[1] = "complete" #the index might seem wrong, but remember that the format of this dict is {1:value,2:value,etc}
 
@@ -199,6 +202,7 @@ class GatewayServer():
                     self.session_data = data
                 if event_type == "READY_SUPPLEMENTAL":
                     self.session_data['d'].update(data['d']) #cause it's easier to parse both READY and READY_SUPPLEMENTAL this way
+                    self.session_settings_gathered = True
                 if event_type == "VOICE_SERVER_UPDATE":
                     if "token" in data["d"]:
                         self.media_token = data["d"]["token"]
@@ -289,8 +293,8 @@ class GatewayServer():
 '''
 # although calling is not supported yet on discum, you can still initial calls with this program (and send data if you get creative). below lies an example code for calling another user (just input your token and the channel id)
 if __name__ == "__main__":
-    gateway = GatewayServer(your_token_here,None,None) #lol id accidently posted my token online. deleted that account
-    gateway.runIt(taskdata) #loop stops a few seconds after allTasksCompleted == True
-    #gateway.runIt('get session data', log=True)
-    #gateway.runIt({1:{"send":[],"receive":[]}}, log=True)
+    gateway = GatewayServer(your_token_here,None,None,True)
+    gateway.run(taskdata, log) #loop stops a few seconds after allTasksCompleted == True
+    #gateway.run('get session data', log=True)
+    #gateway.run({1:{"send":[],"receive":[]}}, log=True)
 '''

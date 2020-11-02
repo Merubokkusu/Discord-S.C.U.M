@@ -45,6 +45,7 @@ bot.log = False
 ```bot.getGuildCachedMembers(guildID,update=True)```     
 ```bot.getGuildCachedMemberIDs(guildID,update=True)```     
 ```bot.getGuildCachedMemberData(guildID,memberID,update=True)```     
+```bot.getCachedFriends(update=True)```
 ```bot.getNotes(update=True)```     
 ```bot.getOnlineFriends(update=True)```     
 ```bot.getDMs(update=True)```     

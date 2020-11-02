@@ -1,4 +1,4 @@
-#influence for much of this code came from here: https://github.com/Gehock/discord-ws
+#influence for the websocket protocol that this code uses came from here: https://github.com/Gehock/discord-ws
 import asyncio
 import websockets
 import json

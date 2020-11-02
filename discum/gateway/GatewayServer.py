@@ -42,8 +42,9 @@ class GatewayServer():
         self.sequence = None
 
         self.session_id = None
-        self.session_data = None
-        self.session_settings_gathered = False #before, we could simply check if the session settings had stuff in it. Now that session settings arrives in 2 parts, this is no longer the ideal way to check whether or not session settings has been fully gathered.
+        self.session_data_1 = None #session settings gathered from READY
+        self.session_data_2 = None #session settings gathered from READY_SUPPLEMENTAL
+        self.session_settings_gathered = False
 
         self.all_tasks = {} #just the task input. all of it
         self.receiveData = [] #the receive value input
@@ -134,8 +135,8 @@ class GatewayServer():
     def run(self,tasks,log):
         self.log = log #update log
         self.results = [] #clear results list
-        self.session_data = None #reset
-        self.session_settings_gathered = False #reset
+        self.session_data_1 = None #reset
+        self.session_data_2 = None #reset
         self.all_tasks = tasks
         if self.all_tasks != 'get session data':
             self.allTasksChecklist = {key: None for key in self.all_tasks.keys()} #looks like {1:None,2:None,etc}
@@ -152,7 +153,7 @@ class GatewayServer():
             self.taskCompleted = True #necessary for first task to begin
             for index in self.all_tasks:
                 if self.log: print('task num: '+str(index))
-                while not self.session_settings_gathered: #wait till ready supplemental is received
+                while self.session_data_2 == None:
                     await asyncio.sleep(0)
                 await self.addTask(self.all_tasks[index])
                 while self.taskCompleted == False: #this just waits till task is completed
@@ -161,7 +162,7 @@ class GatewayServer():
                 self.allTasksChecklist[index] = "complete"
                 if self.log: print(self.allTasksChecklist)
         else:
-            while not self.session_settings_gathered:
+            while self.session_data_2 == None:
                 await asyncio.sleep(0)
             self.allTasksChecklist[1] = "complete" #the index might seem wrong, but remember that the format of this dict is {1:value,2:value,etc}
 
@@ -201,10 +202,9 @@ class GatewayServer():
                 event_type = data["t"]
                 if event_type == "READY":
                     self.session_id = data["d"]["session_id"]
-                    self.session_data = data
+                    self.session_data_1 = data
                 if event_type == "READY_SUPPLEMENTAL":
-                    self.session_data['d'].update(data['d']) #cause it's easier to parse both READY and READY_SUPPLEMENTAL this way
-                    self.session_settings_gathered = True
+                    self.session_data_2 = data
                 if event_type == "VOICE_SERVER_UPDATE":
                     if "token" in data["d"]:
                         self.media_token = data["d"]["token"]

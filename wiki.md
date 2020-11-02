@@ -235,7 +235,6 @@ bot.getGuildMember('guildID00000000000','userID11111111111')
 ```
 
 #### Gateway Server
-Note: the log statements might make it look like the data in the "send" input list is sent before the identify message. This is not what's actually happening in the code; there's a tiny "lag" in the beginning between what's actually happening and what's getting printed.
 ```_Client__gateway_server.runIt(taskdata, log)```
 ```python
 members = bot._Client__gateway_server.run({

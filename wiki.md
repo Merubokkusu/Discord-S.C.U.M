@@ -278,7 +278,7 @@ bot.ban('guildID00000000000','userID11111111111',7)
 bot.ban('guildID00000000000','userID11111111111',reason='weeeee')
 bot.ban('guildID00000000000','userID11111111111')
 ```
-##### lookup userID in guild
+##### lookup userID in guild \* note: this api endpoint isn't normally used by user accounts
 ```getGuildMember(guildID,userID)```
 ```python
 bot.getGuildMember('guildID00000000000','userID11111111111')

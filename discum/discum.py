@@ -11,6 +11,9 @@ import random
 import re
 import user_agents
 
+class SessionSettingsError(Exception):
+    pass
+
 class Client:
     def __init__(self, email="none", password="none", token="none", proxy_host=None, proxy_port=None, user_agent="random", log=True): #not using None on email pass and token since that could get flagged by discord...
         self.log = log
@@ -19,7 +22,7 @@ class Client:
         self.__user_password = password
         self.__proxy_host = proxy_host
         self.__proxy_port = proxy_port
-        self.session_settings = {} #look at function read()
+        self.session_settings = [] #consists of 2 parts, READY and READY_SUPPLEMENTAL; look at function read()
         self.discord = 'https://discord.com/api/v8/'
         self.websocketurl = 'wss://gateway.discord.gg/?encoding=json&v=8'
         if user_agent != "random":
@@ -96,75 +99,299 @@ class Client:
     '''
     def read(self,update=True): #returns a class, this is the main function, if you want ALL the session data (wall of data), then call this (or bot.read().__dict__). if update=False session_settings will not be updated
         if update == False: #if read() hasnt been called yet this will just return an empty dict
+            if self.session_settings == []:
+                raise SessionSettingsError('Session Settings not collected yet. Your first gateway interaction needs update to be set to True. For example: bot.read(True)')
             return self.session_settings
         self.__gateway_server.run('get session data',log=self.log)
-        self.session_settings = self._Client__gateway_server.session_data["d"]
+        self.session_settings = [self._Client__gateway_server.session_data_1['d'], self._Client__gateway_server.session_data_2['d']]
         return self.session_settings
 
-    def getAnalyticsToken(self,update=True):
-    	return self.read(update)['analytics_token']
-
-    def getConnectedAccounts(self,update=True):
-    	return self.read(update)['connected_accounts']
-
-    def getConsents(self,update=True):
-    	return self.read(update)['consents']
-
-    def getExperiments(self,update=True):
-    	return self.read(update)['experiments']
-
-    def getFriendSuggestionCount(self,update=True): #no idea what this is but it's here so whatever
-    	return self.read(update)['friend_suggestion_count']
-
-    def getGuildExperiments(self,update=True):
-    	return self.read(update)['guild_experiments']
-
-
-    #Some info about guilds...discord's latest build has removed a lot of guild info from session settings
-    def getGuilds(self,update=True): 
-    	return self.read(update)['guilds']
+    #Parsing guild data from 1st part of session data (from READY)
+    def getGuilds(self,update=True): #returns all information about all guilds you're in...might be a little overwhelming so don't call unless you're ready to see a wall of text
+        return self.read(update)[0]['guilds']
 
     def getGuildIDs(self,update=True): #just get the guild ids, type list
-    	getthatdata = self.read(update) #refreshes session settings if update is True
-    	return [self.getGuilds(False)[i]['id'] for i in range(len(self.getGuilds(False)))]
+        getthatdata = self.read(update) #refreshes session settings if update is True
+        return [self.getGuilds(False)[i]['id'] for i in range(len(self.getGuilds(False)))]
 
+    ## getting specific about a PARTICULAR guild
+    def getGuildData(self,guildID,update=True): #type dict, all data about a PARTICULAR guild, can be overwhelming
+        getthatdata = self.read(update) #refreshes session settings if update is True
+        for i in range(len(self.getGuilds(False))):
+            if self.getGuilds(False)[i]['id'] == guildID:
+                return self.getGuilds(False)[i]
+        return None #guild not found
+
+    def getGuildOwner(self,guildID,update=True):
+        getthatdata = self.read(update) #refreshes session settings if update is True
+        return self.getGuildData(guildID,False)['owner_id'] #returns type int
+
+    def getGuildBoostLvl(self,guildID,update=True):
+        getthatdata = self.read(update) #refreshes session settings if update is True
+        return self.getGuildData(guildID,False)['premium_tier']
+
+    def getGuildEmojis(self,guildID,update=True):
+        getthatdata = self.read(update) #refreshes session settings if update is True
+        return self.getGuildData(guildID,False)['emojis']
+
+    def getGuildBanner(self,guildID,update=True):
+        getthatdata = self.read(update) #refreshes session settings if update is True
+        return self.getGuildData(guildID,False)['banner'] #if returns 'nil' then there's no banner
+
+    def getGuildDiscoverySplash(self,guildID,update=True): #not sure what this is about, something about server discoverability i guess (https://discord.com/developers/docs/resources/guild)
+        getthatdata = self.read(update) #refreshes session settings if update is True
+        return self.getGuildData(guildID,False)['discovery_splash']
+
+    def getGuildMsgNotificationSettings(self,guildID,update=True): #returns an int, 0=all messages, 1=only mentions (https://discord.com/developers/docs/resources/guild#guild-object-default-message-notification-level)
+        getthatdata = self.read(update) #refreshes session settings if update is True
+        return self.getGuildData(guildID,False)['default_message_notifications']
+
+    def getGuildRulesChannelID(self,guildID,update=True): #nil if no rules channel id, idk if this always works so it might actually be more useful just to look for the word "rules" in channel names
+        getthatdata = self.read(update) #refreshes session settings if update is True
+        return self.getGuildData(guildID,False)['rules_channel_id']
+
+    def getGuildVerificationLvl(self,guildID,update=True): #returns an int, 0-4 (https://discord.com/developers/docs/resources/guild#guild-object-verification-level)
+        getthatdata = self.read(update) #refreshes session settings if update is True
+        return self.getGuildData(guildID,False)['verification_level']
+
+    def getGuildFeatures(self,guildID,update=True): #returns a list of strings (https://discord.com/developers/docs/resources/guild#guild-object-guild-features)
+        getthatdata = self.read(update) #refreshes session settings if update is True
+        return self.getGuildData(guildID,False)['features']
+
+    def getGuildJoinTime(self,guildID,update=True): #returns when you joined the server, type string
+        getthatdata = self.read(update) #refreshes session settings if update is True
+        return self.getGuildData(guildID,False)['joined_at']
+
+    def getGuildRegion(self,guildID,update=True):
+        getthatdata = self.read(update) #refreshes session settings if update is True
+        return self.getGuildData(guildID,False)['region']
+
+    def getGuildApplicationID(self,guildID,update=True): #returns application id of the guild creator if it is bot-created (https://discord.com/developers/docs/resources/guild#guild-object-guild-features)
+        getthatdata = self.read(update) #refreshes session settings if update is True
+        return self.getGuildData(guildID,False)['application_id']
+
+    def getGuildAfkChannelID(self,guildID,update=True): #not sure what this is
+        getthatdata = self.read(update) #refreshes session settings if update is True
+        return self.getGuildData(guildID,False)['afk_channel_id']
+
+    def getGuildIcon(self,guildID,update=True): #https://discord.com/developers/docs/reference#image-formatting
+        getthatdata = self.read(update) #refreshes session settings if update is True
+        return self.getGuildData(guildID,False)['icon']
+
+    def getGuildName(self,guildID,update=True):
+        getthatdata = self.read(update) #refreshes session settings if update is True
+        return self.getGuildData(guildID,False)['name']
+
+    def getGuildMaxVideoChannelUsers(self,guildID,update=True):
+        getthatdata = self.read(update) #refreshes session settings if update is True
+        return self.getGuildData(guildID,False)['max_video_channel_users']
+
+    def getGuildRoles(self,guildID,update=True): #https://discord.com/developers/docs/topics/permissions#role-object
+        getthatdata = self.read(update) #refreshes session settings if update is True
+        return self.getGuildData(guildID,False)['roles']
+
+    def getGuildPublicUpdatesChannelID(self,guildID,update=True):
+        getthatdata = self.read(update) #refreshes session settings if update is True
+        return self.getGuildData(guildID,False)['public_updates_channel_id']
+
+    def getGuildSystemChannelFlags(self,guildID,update=True): #https://discord.com/developers/docs/resources/guild#guild-object-system-channel-flags
+        getthatdata = self.read(update) #refreshes session settings if update is True
+        return self.getGuildData(guildID,False)['system_channel_flags']
+
+    def getGuildMfaLvl(self,guildID,update=True): #https://discord.com/developers/docs/resources/guild#guild-object-mfa-level
+        getthatdata = self.read(update) #refreshes session settings if update is True
+        return self.getGuildData(guildID,False)['mfa_level']
+
+    def getGuildAfkTimeout(self,guildID,update=True): #returns type int, unit seconds, https://discord.com/developers/docs/resources/guild
+        getthatdata = self.read(update) #refreshes session settings if update is True
+        return self.getGuildData(guildID,False)['afk_timeout']
+
+    def getGuildHashes(self,guildID,update=True): #https://github.com/discord/discord-api-docs/issues/1642
+        getthatdata = self.read(update) #refreshes session settings if update is True
+        return self.getGuildData(guildID,False)['guild_hashes']
+
+    def getGuildSystemChannelID(self,guildID,update=True): #returns an int, the id of the channel where guild notices such as welcome messages and boost events are posted
+        getthatdata = self.read(update) #refreshes session settings if update is True
+        return self.getGuildData(guildID,False)['system_channel_id']
+
+    def isGuildLazy(self,guildID,update=True): #slightly different naming format since it returns a boolean (https://luna.gitlab.io/discord-unofficial-docs/lazy_guilds.html)
+        getthatdata = self.read(update) #refreshes session settings if update is True
+        if self.getGuildData(guildID,False)['lazy'] == 'true':
+            return True
+        else:
+            return False
+
+    def getGuildNumBoosts(self,guildID,update=True): #get number of boosts the server has gotten
+        getthatdata = self.read(update) #refreshes session settings if update is True
+        return self.getGuildData(guildID,False)['premium_subscription_count']
+
+    def isGuildLarge(self,guildID,update=True): #slightly different naming format since it returns a boolean, large if more than 250 members
+        getthatdata = self.read(update) #refreshes session settings if update is True
+        if self.getGuildData(guildID,False)['large'] == 'true':
+            return True
+        else:
+            return False
+
+    def getGuildExplicitContentFilter(self,guildID,update=True): #https://discord.com/developers/docs/resources/guild#guild-object-explicit-content-filter-level
+        getthatdata = self.read(update) #refreshes session settings if update is True
+        return self.getGuildData(guildID,False)['explicit_content_filter']
+
+    def getGuildSplashHash(self,guildID,update=True): #not sure what this is for
+        getthatdata = self.read(update) #refreshes session settings if update is True
+        return self.getGuildData(guildID,False)['splash']
+
+    def getGuildMemberCount(self,guildID,update=True):
+        getthatdata = self.read(update) #refreshes session settings if update is True
+        return self.getGuildData(guildID,False)['member_count']
+
+    def getGuildDescription(self,guildID,update=True):
+        getthatdata = self.read(update) #refreshes session settings if update is True
+        return self.getGuildData(guildID,False)['description']
+
+    def getGuildVanityUrlCode(self,guildID,update=True):
+        getthatdata = self.read(update) #refreshes session settings if update is True
+        return self.getGuildData(guildID,False)['vanity_url_code']
+
+    def getGuildPreferredLocale(self,guildID,update=True):
+        getthatdata = self.read(update) #refreshes session settings if update is True
+        return self.getGuildData(guildID,False)['preferred_locale']
+
+    def getGuildAllChannels(self,guildID,update=True): #returns all categories and all channels, all the data about that, wall of data so it can be a bit overwhelming, useful if you want to check how many channels your server has since discord counts categories as channels
+        getthatdata = self.read(update) #refreshes session settings if update is True
+        return self.getGuildData(guildID,False)['channels']
+
+    def getGuildCategories(self,guildID,update=True): #all data about all guild categories, can be overwhelming
+        getthatdata = self.read(update) #refreshes session settings if update is True
+        all_channels = self.getGuildData(guildID,False)['channels']
+        all_categories = []
+        for channel in all_channels: #https://discord.com/developers/docs/resources/channel#channel-object-channel-types
+            if channel['type'] == 4:
+                all_categories.append(channel)
+        return all_categories
+
+    def getGuildCategoryIDs(self,guildID,update=True):
+        getthatdata = self.read(update) #refreshes session settings if update is True
+        return [self.getGuildCategories(guildID,False)[i]['id'] for i in range(len(self.getGuildCategories(guildID,False)))]
+
+    def getGuildCategoryData(self,guildID,categoryID,update=True):
+        getthatdata = self.read(update) #refreshes session settings if update is True
+        for i in range(len(self.getGuildCategories(guildID,False))):
+            if self.getGuildCategories(guildID,False)[i]['id'] == categoryID:
+                return self.getGuildCategories(guildID,False)[i]
+        return None #category not found
+
+    def getGuildChannels(self,guildID,update=True): #all data about all guild channels, can be overwhelming
+        getthatdata = self.read(update) #refreshes session settings if update is True
+        all_channels = self.getGuildData(guildID,False)['channels']
+        all_non_categories = []
+        for channel in all_channels: #https://discord.com/developers/docs/resources/channel#channel-object-channel-types
+            if channel['type'] != 4:
+                all_non_categories.append(channel)
+        return all_non_categories
+
+    def getGuildChannelIDs(self,guildID,update=True):
+        getthatdata = self.read(update) #refreshes session settings if update is True
+        return [self.getGuildChannels(guildID,False)[i]['id'] for i in range(len(self.getGuildChannels(guildID,False)))]
+
+    def getGuildChannelData(self,guildID,channelID,update=True):
+        getthatdata = self.read(update) #refreshes session settings if update is True
+        for i in range(len(self.getGuildChannels(guildID,False))):
+            if self.getGuildChannels(guildID,False)[i]['id'] == channelID:
+                return self.getGuildChannels(guildID,False)[i]
+        return None #channel not found
+
+    #Parsing guild data from 2nd part of session data (from READY_SUPPLEMENTAL)
     def getGuildVoiceStates(self,guildID,update=True): #https://discord.com/developers/docs/resources/voice#voice-state-object
         getthatdata = self.read(update) #refreshes session settings if update is True
         guildIndex = self.getGuildIDs(False).index(guildID)
-        return self.getGuilds(False)[guildIndex]['voice_states']
+        return self.read(False)[1]['guilds'][guildIndex]['voice_states']
 
-    def getGuildCachedMembers(self,guildID,update=True): #all data about all cached members a guild you're in
+    def getGuildNotOfflineCachedMembers(self,guildID,update=True): #so, not offline, but not all the not-offline members so....not offline cached members. I know I know long function name, but it's descriptive.
         getthatdata = self.read(update) #refreshes session settings if update is True
         guildIndex = self.getGuildIDs(False).index(guildID)
-        return self.getGuildData(guildID,False)[guildIndex]
+        return self.read(False)[1]['merged_members'][guildIndex]
 
-    def getGuildCachedMemberIDs(self,guildID,update=True):
-    	getthatdata = self.read(update) #refreshes session settings if update is True
-    	return [self.getGuildMembers(guildID,False)[i]['user_id'] for i in range(len(self.getGuildMembers(guildID,False)))]
+    def getGuildNotOfflineCachedMemberIDs(self,guildID,update=True):
+        getthatdata = self.read(update) #refreshes session settings if update is True
+        return [self.getGuildCachedMembers(guildID,False)[i]['user_id'] for i in range(len(self.getGuildCachedMembers(guildID,False)))]
 
-    def getGuildCachedMemberData(self,guildID,userID,update=True):
-    	getthatdata = self.read(update) #refreshes session settings if update is True
-    	for i in range(len(self.getGuildMembers(guildID,False))):
-    		if self.getGuildMembers(guildID,False)[i]['user_id'] == userID:
-    			return self.getGuildMembers(guildID,False)[i]
-    	return None
+    def getGuildNotOfflineCachedMemberData(self,guildID,userID,update=True):
+        getthatdata = self.read(update) #refreshes session settings if update is True
+        for i in range(len(self.getGuildNotOfflineCachedMembers(guildID,False))):
+            if self.getGuildNotOfflineCachedMembers(guildID,False)[i]['user_id'] == userID:
+                return self.getGuildNotOfflineCachedMembers(guildID,False)[i]
+        return None
 
-    # end of guild stuff, now onto the other stuff
+    def getMergedPresences(self,update=True): #includes both guild and friend presences, but only the users that are not offline
+        return self.read(update)[1]['merged_presences']
 
-    def getCachedFriends(self,update=True):
-        return self.read(update)['merged_presences']['friends']
+    def getAllGuildsMergedPresences(self,update=True):
+        return self.read(update)[1]['merged_presences']['guilds']
 
-    def getNotes(self,update=True):
-    	return self.read(update)['notes'] #returns a dict where the keys are user IDs and the values are the notes
+    def getGuildMergedPresences(self,guildID,update=True): #this is different from getGuildNotOfflineCachedMembers because you can see presence data. also, not sure why, but a diff number of members shows up here than getGuildNotOfflineCachedMembers
+        getthatdata = self.read(update) #refreshes session settings if update is True
+        guildIndex = self.getGuildIDs(False).index(guildID)
+        return self.read(False)[1]['merged_presences']['guilds'][guildIndex]
 
-    def getOnlineFriends(self,update=True): #i saw no reason to make "sub functions" of this since it's only about online friends
-    	getthatdata = self.read(update) #refreshes session settings if update is True
-    	return self.read(False)['presences']
+    def getGuildMergedPresencesIDs(self,update=True):
+        getthatdata = self.read(update) #refreshes session settings if update is True
+        return [self.getGuildMergedPresences(guildID,False)[i]['user_id'] for i in range(len(self.getGuildMergedPresences(guildID,False)))]
 
-    #all about DMs, aw geez this is gonna be a long one too i guess...
+    def getGuildMergedPresencesData(self,guildID,userID,update=True):
+        getthatdata = self.read(update) #refreshes session settings if update is True
+        for i in range(len(self.getGuildMergedPresences(guildID,False))):
+            if self.getGuildMergedPresences(guildID,False)[i]['user_id'] == userID:
+                return self.getGuildMergedPresences(guildID,False)[i]
+        return None
+
+    def getAllFriendsMergedPresences(self,update=True):
+        return self.read(update)[1]['merged_presences']['friends']
+
+    def getAllFriendsMergedPresencesIDs(self,update=True): #get the user IDs from getAllFriendsMergedPresences
+        getthatdata = self.read(update) #refreshes session settings if update is True
+        return [self.getAllFriendsMergedPresences(False)[i]['user_id'] for i in range(len(self.getAllFriendsMergedPresences(False)))]
+
+    def getFriendMergedPresencesData(self,userID,update=True):
+        getthatdata = self.read(update) #refreshes session settings if update is True
+        for i in range(len(self.getAllFriendsMergedPresences(False))):
+            if self.getAllFriendsMergedPresences(False)[i]['user_id'] == userID:
+                return self.getAllFriendsMergedPresences(False)[i]
+        return None
+
+    def getAllMyGuildPositions(self,update=True): #if you have a better name for this, pls let me know. It outputs your roles, nick, joined at, etc for each guild.
+        return self.read(update)[0]['merged_members']
+
+    def getMyGuildPosition(self,guildID,update=True):
+        getthatdata = self.read(update) #refreshes session settings if update is True
+        guildIndex = self.getGuildIDs(False).index(guildID)
+        return self.read(False)[0]['merged_members'][guildIndex][0]
+
+    #################
+
+    def getAnalyticsToken(self,update=True):
+    	return self.read(update)[0]['analytics_token']
+
+    def getConnectedAccounts(self,update=True):
+    	return self.read(update)[0]['connected_accounts']
+
+    def getConsents(self,update=True):
+    	return self.read(update)[0]['consents']
+
+    def getExperiments(self,update=True):
+    	return self.read(update)[0]['experiments']
+
+    def getFriendSuggestionCount(self,update=True): #no idea what this is but it's here so whatever
+    	return self.read(update)[0]['friend_suggestion_count']
+
+    def getGuildExperiments(self,update=True):
+    	return self.read(update)[0]['guild_experiments']
+
+    def getNotOfflineFriends(self,update=True): #because there's a distinction between online and dnd and idle
+    	return self.read(update)[1]['merged_presences']['friends']
+
+    #all about DMs
     def getDMs(self,update=True):
-    	getthatdata = self.read(update) #refreshes session settings if update is True
-    	return self.read(False)['private_channels']
+    	return self.read(update)[0]['private_channels']
 
     def getDMIDs(self,update=True): #discord sometimes calls these channel IDs...
     	getthatdata = self.read(update) #refreshes session settings if update is True
@@ -184,13 +411,11 @@ class Client:
     #end of DM stuff, heh that wasnt that bad, onto the rest of the stuff
 
     def getReadStates(self,update=True): #another advantage of using websockets instead of requests (see https://github.com/discord/discord-api-docs/issues/13)
-    	getthatdata = self.read(update) #refreshes session settings if update is True
-    	return self.read(False)['read_state']
+    	return self.read(update)[0]['read_state']
 
     #all about relationships...on discord. note this includes all your friends AND all users youve blocked
     def getRelationships(self,update=True):
-    	getthatdata = self.read(update) #refreshes session settings if update is True
-    	return self.read(False)['relationships']
+    	return self.read(update)[0]['relationships']
 
     def getRelationshipIDs(self,update=True): #gets userIDs that are in a "relationship" with your account
     	getthatdata = self.read(update) #refreshes session settings if update is True
@@ -254,17 +479,17 @@ class Client:
     #end of relationship stuff
 
     def getSessionID(self,update=True):
-    	return self.read(update)['session_id']
+    	return self.read(update)[0]['session_id']
 
     def getTutorial(self,update=True): #tutorial on what? guess we'll never know...ask discord maybe?
-    	return self.read(update)['tutorial']
+    	return self.read(update)[0]['tutorial']
 
     def getUserData(self,update=True):
-    	return self.read(update)['user']
+    	return self.read(update)[0]['user']
 
     def getUserGuildSettings(self,guildID=None,update=True): #personal settings for a server, like whether or not you want @everyone pings to show, formatting is weird cause you might not want to pass a guildID, hence it is at the end
     	getthatdata = self.read(update) #refreshes session settings if update is True
-    	all_user_guild_settings = self.read(False).user_guild_settings
+    	all_user_guild_settings = self.read(False)[0]['user_guild_settings']
     	if guildID != None:
     		for i in range(len(all_user_guild_settings)):
     			if all_user_guild_settings[i]['guild_id'] == guildID:
@@ -273,13 +498,19 @@ class Client:
     		return all_user_guild_settings
 
     def getUserSettings(self,update=True): #returns a class
-    	return self.read(update)['user_settings']
+    	return self.read(update)[0]['user_settings']
 
     def getOptionsForUserSettings(self,update=True):
-    	return list(self.read(update)['user_settings'].keys())
+    	return list(self.read(update)[0]['user_settings'].keys())
+
+    def getGeoOrderedRtcRegions(self,update=True):
+        return self.read(update)[0]['geo_ordered_rtc_regions']
+
+    def getCachedUsers(self,update=True):
+        return self.read(update)[0]['users']
 
     def getWebsocketVersion(self,update=True):
-    	return self.read(update)['v']
+    	return self.read(update)[0]['v']
 
     # oof end of reading session settings
 

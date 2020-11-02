@@ -151,13 +151,13 @@ class GatewayServer():
                 if self.log: print('task num: '+str(index))
                 await self.addTask(self.all_tasks[index])
                 while self.taskCompleted == False:
-                    await asyncio.sleep(1)
+                    await asyncio.sleep(0)
                 self.taskCompleted = False #reset
                 self.allTasksChecklist[index] = "complete"
                 if self.log: print(self.allTasksChecklist)
         else:
             while self.session_data is None:
-                await asyncio.sleep(1)
+                await asyncio.sleep(0)
             self.allTasksChecklist[1] = "complete" #the index might seem wrong, but remember that the format of this dict is {1:value,2:value,etc}
 
     async def main(self): # http_proxy_host=self.proxy_host, http_proxy_port=self.proxy_port
@@ -282,7 +282,7 @@ class GatewayServer():
 
     async def stopLoop(self):
         while not all(value == "complete" for value in self.allTasksChecklist.values()):
-            await asyncio.sleep(1)
+            await asyncio.sleep(0)
         self.allTasksCompleted = True
         raise TaskCompleted(self.all_tasks)
 

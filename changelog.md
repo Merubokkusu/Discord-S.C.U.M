@@ -19,7 +19,7 @@
 - ```bot.getGuildMemberIDs(guildID,update=True)``` --> ```bot.getGuildCachedMemberIDs(guildID,update=True)```
 - ```bot.getGuildMemberData(guildID,memberID,update=True)``` --> ```bot.getGuildCachedMemberData(guildID,memberID,update=True)```
 ### Removed
-The following functions were removed in this version due to discord changing its session settings format (gateway server). These functions (or many of them) will be added in the next version as http api requests:  
+The following functions were removed in this version due to discord changing its session settings format (gateway server). These functions (or many of them) will be added in the next version as ~~http api requests~~ (figured out how to do it with websockets again; deciding against http api for this since official discord clients use websockets for the tasks below):  
 ```bot.getGuildData(guildID,update=True)```     
 ```bot.getGuildOwner(guildID,update=True)```     
 ```bot.getGuildBoostLvl(guildID,update=True)```     

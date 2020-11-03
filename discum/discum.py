@@ -97,8 +97,8 @@ class Client:
     '''
     (get) and/or read session settings/data (this section is all about reading the READY and READY_SUPPLEMENTAL responses after connecting to discord's gateway server)
     '''
-    def read(self,update=True): #returns a class, this is the main function, if you want ALL the session data (wall of data), then call this (or bot.read().__dict__). if update=False session_settings will not be updated
-        if update == False: #if read() hasnt been called yet this will just return an empty dict
+    def read(self,update=True):
+        if update == False:
             if self.session_settings == []:
                 raise SessionSettingsError('Session Settings not collected yet. Your first gateway interaction needs update to be set to True. For example: bot.read(True)')
             return self.session_settings

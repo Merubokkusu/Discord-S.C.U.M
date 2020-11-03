@@ -43,6 +43,12 @@ bot.read(update=False)
 bot.getGuildIDs(update=False)
 bot.log=False
 bot.sendMessage("383003333751856129","Hello You :)")
+bot._Client__gateway_server.run({
+  1: {
+    "send": [],
+    "receive": []
+  }
+}, log=True)
 ```
 
 ### bonus features: 

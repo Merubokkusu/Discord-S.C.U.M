@@ -308,7 +308,7 @@ members = bot._Client__gateway_server.run({
   }
 }, log=True)
 ```
-the input consists of "send" and "receive" data:
+the input consists of tasks ("send" and "receive"). All the items in "send" are sent while the items in "receive" are checked:
 ```
 {
   1: {
@@ -318,6 +318,19 @@ the input consists of "send" and "receive" data:
   2: {
     "send": [{...}],
     "receive": [{...}, {...}]
+  }, ...
+}
+```
+maybe a simpler way to look at the format:
+```
+{
+  1: {
+    "send": [{...}, THEN (without waiting for receive) {...}, THEN (without waiting for receive) {...}],
+    "receive": IN NO PARTICULAR ORDER: [{"key": a OR b OR c, AND "keyvalue": d OR e}, {"key": f OR g, AND "keyvalue": h}]
+  }, NEXT DO:
+  2: {
+    "send": [(send nothing)],
+    "receive": IN NO PARTICULAR ORDER: [{"key": i OR j, AND "keyvalue": k OR l}, {"key": m, AND "keyvalue": n OR o OR p OR q}]
   }, ...
 }
 ```

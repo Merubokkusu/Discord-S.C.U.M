@@ -291,12 +291,3 @@ class GatewayServer():
             await asyncio.sleep(0)
         self.allTasksCompleted = True
         raise TaskCompleted(self.all_tasks)
-
-'''
-# although calling is not supported yet on discum, you can still initial calls with this program (and send data if you get creative). below lies an example code for calling another user (just input your token and the channel id)
-if __name__ == "__main__":
-    gateway = GatewayServer(your_token_here,None,None,True)
-    gateway.run(taskdata, log) #loop stops a few seconds after allTasksCompleted == True
-    #gateway.run('get session data', log=True)
-    #gateway.run({1:{"send":[],"receive":[]}}, log=True)
-'''

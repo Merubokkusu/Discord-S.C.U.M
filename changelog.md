@@ -1,4 +1,64 @@
 # Changelog
+# 0.2.7
+### Added
+- added these functions back as websockets (since the web client doesn't use the http api to fetch guild data):
+```python
+getGuildIDs(update=True)
+getGuildData(guildID,update=True)
+getGuildOwner(guildID,update=True)
+getGuildBoostLvl(guildID,update=True)
+getGuildEmojis(guildID,update=True)
+getGuildBanner(guildID,update=True)
+getGuildDiscoverySplash(guildID,update=True)
+getGuildMsgNotificationSettings(guildID,update=True)
+getGuildRulesChannelID(guildID,update=True)
+getGuildVerificationLvl(guildID,update=True)
+getGuildFeatures(guildID,update=True)
+getGuildJoinTime(guildID,update=True)
+getGuildRegion(guildID,update=True)
+getGuildApplicationID(guildID,update=True)
+getGuildAfkChannelID(guildID,update=True)
+getGuildIcon(guildID,update=True)
+getGuildName(guildID,update=True)
+getGuildMaxVideoChannelUsers(guildID,update=True)
+getGuildRoles(guildID,update=True)
+getGuildPublicUpdatesChannelID(guildID,update=True)
+getGuildSystemChannelFlags(guildID,update=True)
+getGuildMfaLvl(guildID,update=True)
+getGuildAfkTimeout(guildID,update=True)
+getGuildHashes(guildID,update=True)
+getGuildSystemChannelID(guildID,update=True)
+isGuildLazy(guildID,update=True)
+getGuildNumBoosts(guildID,update=True)
+isGuildLarge(guildID,update=True)
+getGuildExplicitContentFilter(guildID,update=True)
+getGuildSplashHash(guildID,update=True)
+getGuildMemberCount(guildID,update=True)
+getGuildDescription(guildID,update=True)
+getGuildVanityUrlCode(guildID,update=True)
+getGuildPreferredLocale(guildID,update=True)
+getGuildAllChannels(guildID,update=True)
+getGuildCategories(guildID,update=True)
+getGuildCategoryIDs(guildID,update=True)
+getGuildCategoryData(guildID,categoryID,update=True)
+getGuildChannels(guildID,update=True)
+getGuildChannelIDs(guildID,update=True)
+getGuildChannelData(guildID,channelID,update=True)
+getGuildVoiceStates(guildID,update=True)
+getGuildNotOfflineCachedMembers(guildID,update=True)
+getGuildNotOfflineCachedMemberIDs(guildID,update=True)
+getGuildNotOfflineCachedMemberData(guildID,userID,update=True)
+getMergedPresences(update=True)
+getAllGuildsMergedPresences(update=True)
+getGuildMergedPresences(guildID,update=True)
+getGuildMergedPresencesIDs(update=True)
+getGuildMergedPresencesData(guildID,userID,update=True)
+getAllFriendsMergedPresences(update=True)
+getAllFriendsMergedPresencesIDs(update=True)
+getFriendMergedPresencesData(userID,update=True)
+getAllMyGuildPositions(update=True)
+getMyGuildPosition(guildID,update=True)
+```
 # 0.2.6
 ### Added
 - ability to turn off logging in bot initiation function (discum.Client())
@@ -61,6 +121,10 @@ The following functions were removed in this version due to discord changing its
 ```bot.getGuildChannels(guildID,update=True)```     
 ```bot.getGuildChannelIDs(guildID,update=True)```     
 ```bot.getGuildChannelData(guildID,channelID,update=True)```     
+### Changed
+- fixed session settings processing (session settings started getting sent in 2 parts: READY and READY_SUPPLEMENTAL)
+- changed timing in GatewayServer.py to better mimic the web client (start processing tasks after READY_SUPPLEMENTAL is received)
+
 # 0.2.5
 ### Added
 - ability to set custom user agent (or randomly generate a user agent). This user agent is then used for both http api requests and websocket connections

@@ -59,6 +59,10 @@ getFriendMergedPresencesData(userID,update=True)
 getAllMyGuildPositions(update=True)
 getMyGuildPosition(guildID,update=True)
 ```
+### Changed
+- fixed session settings processing (session settings started getting sent in 2 parts: READY and READY_SUPPLEMENTAL)
+- changed timing in GatewayServer.py to better mimic the web client (start processing tasks after READY_SUPPLEMENTAL is received)
+
 # 0.2.6
 ### Added
 - ability to turn off logging in bot initiation function (discum.Client())
@@ -121,9 +125,6 @@ The following functions were removed in this version due to discord changing its
 ```bot.getGuildChannels(guildID,update=True)```     
 ```bot.getGuildChannelIDs(guildID,update=True)```     
 ```bot.getGuildChannelData(guildID,channelID,update=True)```     
-### Changed
-- fixed session settings processing (session settings started getting sent in 2 parts: READY and READY_SUPPLEMENTAL)
-- changed timing in GatewayServer.py to better mimic the web client (start processing tasks after READY_SUPPLEMENTAL is received)
 
 # 0.2.5
 ### Added

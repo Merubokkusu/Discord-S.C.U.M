@@ -59,7 +59,6 @@ class GatewayServer():
         self.taskCompleted = False #is current task completed?
         self.allTasksCompleted = False #are all tasks completed?, technically unnecessary, but it's here in case youre confused about how the code works
 
-
         self.auth = {
                 "token": self.token,
                 "capabilities": 61,

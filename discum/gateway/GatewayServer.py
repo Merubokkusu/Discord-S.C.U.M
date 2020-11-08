@@ -48,7 +48,8 @@ class GatewayServer():
 
         self.all_tasks = {} #just the task input. all of it
         self.receiveData = [] #the receive value input
-        self.results = [] #output
+        self.task_num = 1 #task num
+        self.results = {} #output
 
         #as far as checklists go, allTasks variables have values looking like None or "complete" which subtasks have values looking like [None] or ["complete"]. The exception is in the mailSent subtask, which has a value of either True or False.
         self.receiveChecklist = [] #acts as a checklist for receive, looks at the current task
@@ -57,7 +58,6 @@ class GatewayServer():
 
         self.taskCompleted = False #is current task completed?
         self.allTasksCompleted = False #are all tasks completed?, technically unnecessary, but it's here in case youre confused about how the code works
-        #self.taskCompleteConstant = {}
 
 
         self.auth = {
@@ -75,7 +75,7 @@ class GatewayServer():
                     "referrer_current": "",
                     "referring_domain_current": "",
                     "release_channel": "stable",
-                    "client_build_number": 70781,
+                    "client_build_number": 71073,
                     "client_event_source": None
                 },
                 "presence": {
@@ -92,7 +92,7 @@ class GatewayServer():
                     "user_guild_settings_version": -1
                 }
             }
-        if 'build_num' in self.ua_data and self.ua_data['build_num']!=70781:
+        if 'build_num' in self.ua_data and self.ua_data['build_num']!=71073:
             self.auth['properties']['client_build_number'] = self.ua_data['build_num']
 
         self.loop = asyncio.get_event_loop()
@@ -132,26 +132,84 @@ class GatewayServer():
             else:
                 yield v
 
+    def opcode(self, opcode: int, payload) -> str:
+        data = {
+            "op": opcode,
+            "d": payload
+        }
+        return json.dumps(data)
+
     def run(self,tasks,log):
         self.log = log #update log
-        self.results = [] #clear results list
+        self.results = {} #clear results list
         self.session_data_1 = None #reset
         self.session_data_2 = None #reset
         self.all_tasks = tasks
         if self.all_tasks != 'get session data':
             self.allTasksChecklist = {key: None for key in self.all_tasks.keys()} #looks like {1:None,2:None,etc}
         else:
-        	self.allTasksChecklist = {1:'get session data'}
+            self.allTasksChecklist = {1:'get session data'}
         try:
             asyncio.run(self.main())
         except TaskCompleted:
             self.loop.stop()
             return self.results #yay
 
+    async def main(self): # http_proxy_host=self.proxy_host, http_proxy_port=self.proxy_port
+        if self.proxy_host == None:
+            async with websockets.connect(
+                    self.websocketurl, origin="https://discordapp.com") \
+                    as self.websocket:
+                if self.log: print("Connected to "+self.websocketurl)
+                await self.hello()
+                if self.interval is None:
+                    if self.log: print(self.LogLevel.WARNING + "Hello failed, exiting")
+                    if self.log: print(self.LogLevel.DEFAULT)
+                    return
+                await asyncio.gather(self.heartbeat(), self.receive(),self.taskManager(),self.stopLoop())
+        else:
+            async with websockets.connect(
+                    self.websocketurl, origin="https://discordapp.com", host=self.proxy_host, port=self.proxy_port) \
+                    as self.websocket:
+                if self.log: print("Connected to "+self.websocketurl)
+                await self.hello()
+                if self.interval is None:
+                    if self.log: print(self.LogLevel.WARNING + "Hello failed, exiting")
+                    if self.log: print(self.LogLevel.DEFAULT)
+                    return
+                await asyncio.gather(self.heartbeat(), self.receive(),self.taskManager(),self.stopLoop())
+
+    async def hello(self):
+        await self.send(self.OPCODE.IDENTIFY, self.auth)
+        if self.log: print(self.LogLevel.SEND + "hello > auth")
+        if self.log: print(self.LogLevel.DEFAULT)
+
+        ret = await self.websocket.recv()
+        if self.log: print("{}hello < {}".format(self.LogLevel.RECEIVE,ret))
+        if self.log: print(self.LogLevel.DEFAULT)
+
+        data = json.loads(ret)
+        opcode = data["op"]
+        if opcode != 10:
+            if self.log: print(self.LogLevel.WARNING + "Unexpected reply")
+            if self.log: print(ret)
+            if self.log: print(self.LogLevel.DEFAULT)
+            return
+        self.interval = (data["d"]["heartbeat_interval"] - 2000) / 1000
+        if self.log: print("interval:", self.interval)
+
+    async def heartbeat(self):
+        if self.log: print("Entering heartbeat")
+        while self.interval is not None:
+            if self.log: print("Sending a heartbeat")
+            await self.send(self.OPCODE.HEARTBEAT, self.sequence)
+            await asyncio.sleep(self.interval)
+
     async def taskManager(self):
         if self.all_tasks != 'get session data':
             self.taskCompleted = True #necessary for first task to begin
             for index in self.all_tasks:
+                self.task_num = index
                 if self.log: print('task num: '+str(index))
                 while self.session_data_2 == None:
                     await asyncio.sleep(0)
@@ -166,29 +224,32 @@ class GatewayServer():
                 await asyncio.sleep(0)
             self.allTasksChecklist[1] = "complete" #the index might seem wrong, but remember that the format of this dict is {1:value,2:value,etc}
 
-    async def main(self): # http_proxy_host=self.proxy_host, http_proxy_port=self.proxy_port
-        if self.proxy_host == None:
-            async with websockets.connect(
-                    self.websocketurl, origin="https://discordapp.com") \
-                    as self.websocket:
-                if self.log: print("Connected to "+self.websocketurl)
-                await self.hello()
-                if self.interval is None:
-                    if self.log: print(self.LogLevel.WARNING + "Hello failed, exiting")
-                    if self.log: print(self.LogLevel.DEFAULT)
-                    return
-                await asyncio.gather(self.heartbeat(), self.receive(),self.stopLoop(),self.taskManager())
-        else:
-            async with websockets.connect(
-                    self.websocketurl, origin="https://discordapp.com", host=self.proxy_host, port=self.proxy_port) \
-                    as self.websocket:
-                if self.log: print("Connected to "+self.websocketurl)
-                await self.hello()
-                if self.interval is None:
-                    if self.log: print(self.LogLevel.WARNING + "Hello failed, exiting")
-                    if self.log: print(self.LogLevel.DEFAULT)
-                    return
-                await asyncio.gather(self.heartbeat(), self.receive(),self.stopLoop(),self.taskManager())
+    async def addTask(self,data):
+        self.mailSent = False #reset
+        self.taskCompleted = False #reset
+        self.allTasksCompleted = False #reset
+        self.results[self.task_num] = []
+        self.receiveChecklist = [] #reset
+        self.receiveData = data["receive"]
+        for searchIndex in range(len(self.receiveData)):
+            self.receiveChecklist.append({}) # [{"key":[None]},{"key":[None],"keyvalue":[None]}]
+            if "key" in self.receiveData[searchIndex]:
+                self.receiveChecklist[searchIndex]["key"] = [None]
+            if "keyvalue" in self.receiveData[searchIndex]:
+                self.receiveChecklist[searchIndex]["keyvalue"] = [None]
+        sendData = data["send"] #have to also check if all data has been sent.............
+        for mail in sendData: #send data if theres data to send
+            #if you want to make changes to mail make that here
+            await self.send(mail["op"],mail["d"])
+        self.mailSent = True
+        print(self.receiveData)
+        print(self.receiveChecklist)
+
+    async def send(self, opcode, payload):
+        data = self.opcode(opcode, payload)
+        if self.log: print(self.LogLevel.SEND + ">", data)
+        if self.log: print(self.LogLevel.DEFAULT)
+        await self.websocket.send(data)
 
     async def receive(self):
         if self.log: print("Entering receive")
@@ -219,72 +280,16 @@ class GatewayServer():
             #onto updating self.receiveChecklist
             for checklistIndex in range(len(self.receiveChecklist)): #for each message, every receive is checked just in case
                 if self.receiveChecklist[checklistIndex] != ["complete"]:
-                    if "key" in self.receiveChecklist[checklistIndex] and all([self.key_checker(data,i) for i in self.receiveData[checklistIndex]["key"]]): #just looping thru the tuples
+                    if "key" in self.receiveChecklist[checklistIndex] and any([self.key_checker(data,i) for i in self.receiveData[checklistIndex]["key"]]): #just looping thru the tuples
                         self.receiveChecklist[checklistIndex]["key"] = ["complete"]
-                    if "keyvalue" in self.receiveChecklist[checklistIndex] and all([self.value_checker(data,i[0],i[1]) for i in self.receiveData[checklistIndex]["keyvalue"]]): #just looping thru the tuples
+                    if "keyvalue" in self.receiveChecklist[checklistIndex] and any([self.value_checker(data,i[0],i[1]) for i in self.receiveData[checklistIndex]["keyvalue"]]): #just looping thru the tuples
                         self.receiveChecklist[checklistIndex]["keyvalue"] = ["complete"]
-                    if all(value == ["complete"] for value in list(self.NestedDictValues(self.receiveChecklist[checklistIndex]))): # and self.mailSent check mail sent later...
+                    if all(value == ["complete"] for value in list(self.NestedDictValues(self.receiveChecklist[checklistIndex]))):
                         self.receiveChecklist[checklistIndex] = ["complete"]
-                        self.results.append(data)
+                        self.results[self.task_num].append(data)
                         break #after first match is found, break
             if len(self.receiveChecklist)>0 and all(item == ["complete"] for item in self.receiveChecklist) and self.mailSent:
                 self.taskCompleted = True #current task is completed
-
-    async def send(self, opcode, payload):
-        data = self.opcode(opcode, payload)
-        if self.log: print(self.LogLevel.SEND + ">", data)
-        if self.log: print(self.LogLevel.DEFAULT)
-        await self.websocket.send(data)
-
-    async def heartbeat(self):
-        if self.log: print("Entering heartbeat")
-        while self.interval is not None:
-            if self.log: print("Sending a heartbeat")
-            await self.send(self.OPCODE.HEARTBEAT, self.sequence)
-            await asyncio.sleep(self.interval)
-
-    async def hello(self):
-        await self.send(self.OPCODE.IDENTIFY, self.auth)
-        if self.log: print(self.LogLevel.SEND + "hello > auth")
-        if self.log: print(self.LogLevel.DEFAULT)
-
-        ret = await self.websocket.recv()
-        if self.log: print("{}hello < {}".format(self.LogLevel.RECEIVE,ret))
-        if self.log: print(self.LogLevel.DEFAULT)
-
-        data = json.loads(ret)
-        opcode = data["op"]
-        if opcode != 10:
-            if self.log: print(self.LogLevel.WARNING + "Unexpected reply")
-            if self.log: print(ret)
-            if self.log: print(self.LogLevel.DEFAULT)
-            return
-        self.interval = (data["d"]["heartbeat_interval"] - 2000) / 1000
-        if self.log: print("interval:", self.interval)
-
-    def opcode(self, opcode: int, payload) -> str:
-        data = {
-            "op": opcode,
-            "d": payload
-        }
-        return json.dumps(data)
-
-    async def addTask(self,data):
-        self.mailSent = False #reset
-        self.taskCompleted = False #reset
-        self.receiveChecklist = [] #reset
-        self.receiveData = data["receive"]
-        for searchIndex in range(len(self.receiveData)):
-            self.receiveChecklist.append({})
-            if "key" in self.receiveData[searchIndex]:
-                self.receiveChecklist[searchIndex]["key"] = [None]
-            if "keyvalue" in self.receiveData[searchIndex]:
-                self.receiveChecklist[searchIndex]["keyvalue"] = [None]
-        sendData = data["send"] #have to also check if all data has been sent.............
-        for mail in sendData: #send data if theres data to send
-            #if you want to make changes to mail make that here
-            await self.send(mail["op"],mail["d"])
-        self.mailSent = True
 
     async def stopLoop(self):
         while not all(value == "complete" for value in self.allTasksChecklist.values()):

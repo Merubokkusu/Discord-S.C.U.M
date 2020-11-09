@@ -324,11 +324,11 @@ the input consists of tasks ("send" and "receive"). All the items in "send" are 
 maybe a simpler way to look at the format:
 ```
 {
-  1: {
+  1st task: {
     "send": [{...}, THEN (without waiting for receive) {...}, THEN (without waiting for receive) {...}],
     "receive": IN NO PARTICULAR ORDER: [{message with: "key": a AND b AND c AND "keyvalue": d AND e}, {message with: "key": f AND g, AND "keyvalue": h}]
   }, NEXT DO:
-  2: {
+  2nd task: {
     "send": [],
     "receive": IN NO PARTICULAR ORDER: [{message with: "key": i AND j AND "keyvalue": k AND l}, {message with: "key": m AND "keyvalue": n AND o AND p AND q}]
   }, ...

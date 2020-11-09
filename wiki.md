@@ -367,7 +367,7 @@ bot._Client__gateway_server.run({
   }
 }, log=True)
 ```
-\*Even after this, I understand that the format can still be difficult to read, so here's an example long with example returned data:
+\*Even after this, I understand that the format can still be difficult to read, so here's an example long with example returned data:         
 Input:
 ```python
 >>> data = bot._Client__gateway_server.run(

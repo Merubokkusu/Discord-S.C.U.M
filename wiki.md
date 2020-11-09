@@ -367,3 +367,82 @@ bot._Client__gateway_server.run({
   }
 }, log=True)
 ```
+\*Even after this, I understand that the format can still be difficult to read, so here's an example long with example returned data:
+Input:
+```python
+>>> data = bot._Client__gateway_server.run(
+    {
+        1: {
+            "send": [
+                {
+                    "op": 14,
+                    "d": {
+                        "guild_id": "------------------",
+                        "channels": {"------------------": [[0, 99], [100, 199]]},
+                    },
+                }
+            ],
+            "receive": [
+                {
+                    "key": [("d", "ops", 0, "range"), ("d", "ops", 1, "range")],
+                    "keyvalue": [
+                        (("d", "ops", 0, "op"), "SYNC"),
+                        (("d", "ops", 1, "op"), "SYNC"),
+                    ],
+                }
+            ],
+        },
+        2: {
+            "send": [
+                {
+                    "op": 14,
+                    "d": {
+                        "guild_id": "------------------",
+                        "channels": {"------------------": [[0, 99], [100, 199]]},
+                    },
+                }
+            ],
+            "receive": [
+                {
+                    "keyvalue": [
+                        (
+                            ("t",),
+                            "PRESENCE_UPDATE",
+                        )
+                    ],
+                },
+                {
+                    "keyvalue": [
+                        (
+                            ("t",),
+                            "PRESENCE_UPDATE",
+                        ),
+                        (
+                            ("t",),
+                            "GUILD_MEMBER_LIST_UPDATE",
+                        )
+                    ],
+                }
+            ],
+        },
+    },
+    log=True,
+)
+```
+Output:
+```python
+>>> type(data) #data = {1: [], 2: []}
+<class 'dict'>
+>>> len(data)
+2
+>>> len(data[1])
+1
+>>> data[1][0]["d"]["ops"][0]["op"]
+'SYNC'
+>>> len(data[2])
+2
+>>> data[2][0]["t"]
+'GUILD_MEMBER_LIST_UPDATE'
+>>> data[2][1]["t"]
+'PRESENCE_UPDATE'
+```

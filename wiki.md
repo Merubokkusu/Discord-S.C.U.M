@@ -287,52 +287,57 @@ bot.getGuildMember('guildID00000000000','userID11111111111')
 #### Gateway Server
 ```_Client__gateway_server.runIt(taskdata, log)```
 ```python
-members = bot._Client__gateway_server.run({
-  1: {
-    "send": [{
-      "op": 14,
-      "d": {
-        "guild_id": GUILD_ID,
-        "channels": {
-          TEXT_CHANNEL_ID: [
-            [0, 99],
-            [100, 199]
-          ]
+members = bot._Client__gateway_server.run(
+    [
+        {
+            "send": [
+                {
+                    "op": 14,
+                    "d": {
+                        "guild_id": GUILD_ID,
+                        "channels": {TEXT_CHANNEL_ID: [[0, 99], [100, 199]]},
+                    },
+                }
+            ],
+            "receive": [
+                {
+                    "key": [("d", "ops", 0, "range"), ("d", "ops", 1, "range")],
+                    "keyvalue": [
+                        (("d", "ops", 0, "op"), "SYNC"),
+                        (("d", "ops", 1, "op"), "SYNC"),
+                    ],
+                }
+            ],
         }
-      }
-    }],
-    "receive": [{
-      "key": [('d', 'ops', 0, 'range'), ('d', 'ops', 1, 'range')],
-      "keyvalue": [(('d', 'ops', 0, 'op'), 'SYNC'), (('d', 'ops', 1, 'op'), 'SYNC')]
-    }]
-  }
-}, log=True)
+    ],
+    log=True,
+)
 ```
-the input consists of tasks ("send" and "receive"). All the items in "send" are sent while the items in "receive" are checked:
+the input consists of tasks (each containing a "send" and "receive"). All the items in "send" are sent while the items in "receive" are checked:
 ```
-{
-  1: {
+[
+  {
     "send": [{...}, {...}, {...}],
     "receive": [{...}]
   },
-  2: {
+  {
     "send": [{...}],
     "receive": [{...}, {...}]
   }, ...
-}
+]
 ```
 maybe a simpler way to look at the format:
 ```
-{
-  1st task: {
+[
+  {
     "send": [{...}, THEN (without waiting for receive) {...}, THEN (without waiting for receive) {...}],
     "receive": IN NO PARTICULAR ORDER: [{message with: "key": a AND b AND c AND "keyvalue": d AND e}, {message with: "key": f AND g, AND "keyvalue": h}]
   }, NEXT DO:
-  2nd task: {
+  {
     "send": [],
     "receive": IN NO PARTICULAR ORDER: [{message with: "key": i AND j AND "keyvalue": k AND l}, {message with: "key": m AND "keyvalue": n AND o AND p AND q}]
   }, ...
-}
+]
 ```
 the "send" data is a list of what you send, op code and all.
 the "receive" data is formatted like so:
@@ -360,19 +365,20 @@ receive: [{
 and to clear up any confusion, key looks for the existence of keys and keyvalue looks to see if a specific key has a specific value. Since you can check multiple keys and/or multiple key-value pairs per task, the possibilities are literally endless for what you can look for :)
 simple example: here's the minimum amount of data a task can have (the command below simply connects to the gateway server and listens for messages from discord):
 ```python
-bot._Client__gateway_server.run({
-  1: {
+bot._Client__gateway_server.run(
+[
+    {
     "send": [],
     "receive": []
-  }
-}, log=True)
+    }
+], log=True)
 ```
 \*Even after this, I understand that the format can still be difficult to read, so here's an __example__ along with corresponding returned data:         
 Input:
 ```python
 >>> data = bot._Client__gateway_server.run(
-    {
-        1: {
+    [
+        {
             "send": [
                 {
                     "op": 14,
@@ -392,7 +398,7 @@ Input:
                 }
             ],
         },
-        2: {
+        {
             "send": [
                 {
                     "op": 14,
@@ -415,34 +421,30 @@ Input:
                     "keyvalue": [
                         (
                             ("t",),
-                            "PRESENCE_UPDATE",
-                        ),
-                        (
-                            ("t",),
                             "GUILD_MEMBER_LIST_UPDATE",
-                        )
+                        ),
                     ],
-                }
+                },
             ],
         },
-    },
+    ],
     log=True,
 )
 ```
 Output:
 ```python
->>> type(data) #data = {1: [], 2: []} #note that the keys are numbers, indicating data from 1st task and data from 2nd task
-<class 'dict'>
+>>> type(data)
+<class 'list'>
 >>> len(data)
 2
 >>> len(data[1])
 1
->>> data[1][0]["d"]["ops"][0]["op"]
+>>> data[0][0]["d"]["ops"][0]["op"]
 'SYNC'
 >>> len(data[2])
 2
->>> data[2][0]["t"]
-'GUILD_MEMBER_LIST_UPDATE'
->>> data[2][1]["t"]
+>>> data[1][0]['t'] #this could have been 'GUILD_MEMBER_LIST_UPDATE', however, the 'PRESENCE_UPDATE' came first which is why it's at index 0
 'PRESENCE_UPDATE'
+>>> data[1][1]['t']
+'GUILD_MEMBER_LIST_UPDATE'
 ```

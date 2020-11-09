@@ -371,7 +371,7 @@ bot._Client__gateway_server.run({
 Input:
 ```python
 >>> data = bot._Client__gateway_server.run(
-    {
+        {
         1: {
             "send": [
                 {

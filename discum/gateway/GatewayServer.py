@@ -46,15 +46,15 @@ class GatewayServer():
         self.session_data_2 = None #session settings gathered from READY_SUPPLEMENTAL
         self.session_settings_gathered = False
 
-        self.all_tasks = {} #just the task input. all of it
+        self.all_tasks = [] #just the task input. all of it
         self.receiveData = [] #the receive value input
-        self.task_num = 1 #task num
-        self.results = {} #output
+        self.task_num = 0 #task num
+        self.results = [] #output
 
         #as far as checklists go, allTasks variables have values looking like None or "complete" which subtasks have values looking like [None] or ["complete"]. The exception is in the mailSent subtask, which has a value of either True or False.
         self.receiveChecklist = [] #acts as a checklist for receive, looks at the current task
         self.mailSent = False #just checks whether or not data has finished sending, looks at the current task
-        self.allTasksChecklist = {} #checklist for all tasks
+        self.allTasksChecklist = [] #checklist for all tasks
 
         self.taskCompleted = False #is current task completed?
         self.allTasksCompleted = False #are all tasks completed?, technically unnecessary, but it's here in case youre confused about how the code works
@@ -140,14 +140,14 @@ class GatewayServer():
 
     def run(self,tasks,log):
         self.log = log #update log
-        self.results = {} #clear results list
+        self.results = [] #clear results list
         self.session_data_1 = None #reset
         self.session_data_2 = None #reset
         self.all_tasks = tasks
         if self.all_tasks != 'get session data':
-            self.allTasksChecklist = {key: None for key in self.all_tasks.keys()} #looks like {1:None,2:None,etc}
+            self.allTasksChecklist = [None]*len(self.all_tasks) #looks like [None,None,etc]
         else:
-            self.allTasksChecklist = {1:'get session data'}
+            self.allTasksChecklist = ['get session data']
         try:
             asyncio.run(self.main())
         except TaskCompleted:
@@ -207,7 +207,7 @@ class GatewayServer():
     async def taskManager(self):
         if self.all_tasks != 'get session data':
             self.taskCompleted = True #necessary for first task to begin
-            for index in self.all_tasks:
+            for index in range(len(self.all_tasks)):
                 self.task_num = index
                 if self.log: print('task num: '+str(index))
                 while self.session_data_2 == None:
@@ -216,18 +216,18 @@ class GatewayServer():
                 while self.taskCompleted == False: #this just waits till task is completed
                     await asyncio.sleep(0)
                 self.taskCompleted = False #reset
-                self.allTasksChecklist[index] = "complete"
+                self.allTasksChecklist[self.task_num] = "complete"
                 if self.log: print(self.allTasksChecklist)
         else:
             while self.session_data_2 == None:
                 await asyncio.sleep(0)
-            self.allTasksChecklist[1] = "complete" #the index might seem wrong, but remember that the format of this dict is {1:value,2:value,etc}
+            self.allTasksChecklist[0] = "complete"
 
     async def addTask(self,data):
         self.mailSent = False #reset
         self.taskCompleted = False #reset
         self.allTasksCompleted = False #reset
-        self.results[self.task_num] = []
+        self.results.append([])
         self.receiveChecklist = [] #reset
         self.receiveData = data["receive"]
         for searchIndex in range(len(self.receiveData)):
@@ -241,6 +241,8 @@ class GatewayServer():
             #if you want to make changes to mail make that here
             await self.send(mail["op"],mail["d"])
         self.mailSent = True
+        print(self.receiveData)
+        print(self.receiveChecklist)
 
     async def send(self, opcode, payload):
         data = self.opcode(opcode, payload)
@@ -289,7 +291,7 @@ class GatewayServer():
                 self.taskCompleted = True #current task is completed
 
     async def stopLoop(self):
-        while not all(value == "complete" for value in self.allTasksChecklist.values()):
+        while not all(item == "complete" for item in self.allTasksChecklist):
             await asyncio.sleep(0)
         self.allTasksCompleted = True
         raise TaskCompleted(self.all_tasks)

@@ -241,8 +241,6 @@ class GatewayServer():
             #if you want to make changes to mail make that here
             await self.send(mail["op"],mail["d"])
         self.mailSent = True
-        print(self.receiveData)
-        print(self.receiveChecklist)
 
     async def send(self, opcode, payload):
         data = self.opcode(opcode, payload)

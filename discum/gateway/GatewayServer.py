@@ -277,9 +277,9 @@ class GatewayServer():
             #onto updating self.receiveChecklist
             for checklistIndex in range(len(self.receiveChecklist)): #for each message, every receive is checked just in case
                 if self.receiveChecklist[checklistIndex] != ["complete"]:
-                    if "key" in self.receiveChecklist[checklistIndex] and any([self.key_checker(data,i) for i in self.receiveData[checklistIndex]["key"]]): #just looping thru the tuples
+                    if "key" in self.receiveChecklist[checklistIndex] and all([self.key_checker(data,i) for i in self.receiveData[checklistIndex]["key"]]): #just looping thru the tuples
                         self.receiveChecklist[checklistIndex]["key"] = ["complete"]
-                    if "keyvalue" in self.receiveChecklist[checklistIndex] and any([self.value_checker(data,i[0],i[1]) for i in self.receiveData[checklistIndex]["keyvalue"]]): #just looping thru the tuples
+                    if "keyvalue" in self.receiveChecklist[checklistIndex] and all([self.value_checker(data,i[0],i[1]) for i in self.receiveData[checklistIndex]["keyvalue"]]): #just looping thru the tuples
                         self.receiveChecklist[checklistIndex]["keyvalue"] = ["complete"]
                     if all(value == ["complete"] for value in list(self.NestedDictValues(self.receiveChecklist[checklistIndex]))):
                         self.receiveChecklist[checklistIndex] = ["complete"]

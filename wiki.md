@@ -17,7 +17,7 @@ python3 setup.py install
  [+] (<discum.login.Login.Login->Connect) {"email": "email@email.com", "password": "password", "undelete": false, "captcha_key": null, "login_source": null, "gift_code_sku_id": null}
  [+] (<discum.login.Login.Login->Connect) Response <- {"token": "420tokentokentokentoken.token.tokentokentokentokentoken", "user_settings": {"locale": "en-US", "theme": "dark"}}
 'Retrieving Discord's build number...'
-'Discord is currently on build number 68015'
+'Discord is currently on build number 71073'
 ```
 #### Turn Logging On/Off (this can be done at any time)
 ```python
@@ -326,7 +326,7 @@ maybe a simpler way to look at the format:
 {
   1: {
     "send": [{...}, THEN (without waiting for receive) {...}, THEN (without waiting for receive) {...}],
-    "receive": IN NO PARTICULAR ORDER: [{"key": a AND b AND c AND "keyvalue": d AND e}, {"key": f AND g, AND "keyvalue": h}]
+    "receive": IN NO PARTICULAR ORDER: [{message with: "key": a AND b AND c AND "keyvalue": d AND e}, {message with: "key": f AND g, AND "keyvalue": h}]
   }, NEXT DO:
   2: {
     "send": [],
@@ -367,7 +367,7 @@ bot._Client__gateway_server.run({
   }
 }, log=True)
 ```
-\*Even after this, I understand that the format can still be difficult to read, so here's an example long with example returned data:         
+\*Even after this, I understand that the format can still be difficult to read, so here's an __example__ along with corresponding returned data:         
 Input:
 ```python
 >>> data = bot._Client__gateway_server.run(

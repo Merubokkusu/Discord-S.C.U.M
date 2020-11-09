@@ -431,7 +431,7 @@ Input:
 ```
 Output:
 ```python
->>> type(data) #data = {1: [], 2: []}
+>>> type(data) #data = {1: [], 2: []} #note that the keys are numbers, indicating data from 1st task and data from 2nd task
 <class 'dict'>
 >>> len(data)
 2

@@ -337,7 +337,7 @@ maybe a simpler way to look at the format:
 the "send" data is a list of what you send, op code and all.
 the "receive" data is formatted like so:
 ```
-[{
+receive: [{
   "key":(optional; type list of tuples of strings/ints),
   "keyvalue": (optional; type list of tuples of key&value)
 },
@@ -348,7 +348,7 @@ the "receive" data is formatted like so:
 ```
 and here's a closer look at the values in the "receive" data:
 ```
-[{
+receive: [{
   "key": [("keys","in","nesting","order"),("keys2","in2","nesting2","order2"),...]
   "keyvalue": [(("keys","in","nesting","order"),value_to_check_for),(("keys2","in2","nesting2","order2"),value_to_check_for2),...]
 },

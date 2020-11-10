@@ -221,11 +221,13 @@ bot.getPins("267624335836053506")
 ```addReaction(channelID,messageID,emoji)```
 ```python
 bot.addReaction("111111111111111111","222222222222222222","👻")
+bot.addReaction("111111111111111111","222222222222222222","wowee:720507026014450205") #emoji name:emoji id
 ```
 ##### remove reaction
 ```removeReaction(channelID,messageID,emoji)```
 ```python
 bot.removeReaction("111111111111111111","222222222222222222","👻")
+bot.removeReaction("111111111111111111","222222222222222222","wowee:720507026014450205") #emoji name:emoji id
 ```
 #### User Actions
 ##### send friend request

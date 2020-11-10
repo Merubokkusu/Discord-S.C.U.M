@@ -190,3 +190,23 @@ class Messages(object):
         response = self.s.delete(url)
         if self.log: Logger.LogMessage('Response <- {}'.format(response.text), log_level=LogLevel.OK)
         return response
+
+    #acknowledge message (mark message read)
+    def ackMessage(self,channelID,messageID,ackToken):
+        url = self.discord+"channels/"+channelID+"/messages/"+messageID+"/ack"
+        body = {"token": ackToken}
+        if self.log: Logger.LogMessage('Post -> {}'.format(url))
+        if self.log: Logger.LogMessage('{}'.format(str(body)))
+        response = self.s.post(url, data=json.dumps(body))
+        if self.log: Logger.LogMessage('Response <- {}'.format(response.text), log_level=LogLevel.OK)
+        return response
+
+    #unacknowledge message (mark message unread)
+    def unAckMessage(self,channelID,messageID,numMentions):
+        url = self.discord+"channels/"+channelID+"/messages/"+messageID+"/ack"
+        body = {"manual": True, "mention_count": numMentions}
+        if self.log: Logger.LogMessage('Post -> {}'.format(url))
+        if self.log: Logger.LogMessage('{}'.format(str(body)))
+        response = self.s.post(url, data=json.dumps(body))
+        if self.log: Logger.LogMessage('Response <- {}'.format(response.text), log_level=LogLevel.OK)
+        return response

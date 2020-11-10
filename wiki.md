@@ -217,6 +217,11 @@ bot.unPinMessage("267624335836053506","711254483669352469")
 ```python
 bot.getPins("267624335836053506")
 ```
+##### add reaction
+```addReaction(channelID,messageID,emoji)```
+```python
+bot.addReaction("111111111111111111","222222222222222222","👻")
+```
 #### User Actions
 ##### send friend request
 ```requestFriend(userID)```

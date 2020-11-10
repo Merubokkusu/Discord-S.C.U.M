@@ -552,8 +552,8 @@ class Client:
         return Messages(self.discord,self.s,self.log).createDM(recipients)
 
     #get recent messages
-    def getMessages(self,channelID,num=1,beforeDate=None): # num <= 100, beforeDate is a snowflake
-        return Messages(self.discord,self.s,self.log).getMessages(channelID,num,beforeDate)
+    def getMessages(self,channelID,num=1,beforeDate=None,aroundMessage=None): # num <= 100, beforeDate is a snowflake
+        return Messages(self.discord,self.s,self.log).getMessages(channelID,num,beforeDate,aroundMessage)
 
     #send text or embed messages
     def sendMessage(self,channelID,message,embed="",tts=False):

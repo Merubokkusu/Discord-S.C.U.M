@@ -599,6 +599,10 @@ class Client:
     def addReaction(self,channelID,messageID,emoji):
         return Messages(self.discord,self.s,self.log).addReaction(channelID,messageID,emoji)
 
+    #remove reaction
+    def removeReaction(self,channelID,messageID,emoji):
+        return Messages(self.discord,self.s,self.log).removeReaction(channelID,messageID,emoji)
+
     '''
     User relationships
     '''

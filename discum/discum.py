@@ -595,6 +595,10 @@ class Client:
     def getPins(self,channelID):
         return Messages(self.discord,self.s,self.log).getPins(channelID)
 
+    #add reaction
+    def addReaction(self,channelID,messageID,emoji):
+        return Messages(self.discord,self.s,self.log).addReaction(channelID,messageID,emoji)
+
     '''
     User relationships
     '''

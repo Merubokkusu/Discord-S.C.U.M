@@ -63,14 +63,14 @@ class Client:
         discord_login_page_exploration = self.s.get('https://discord.com/login').text
         time.sleep(1)
         try: #getting the build num is kinda experimental since who knows if discord will change where the build number is located...
-        	file_with_build_num = 'https://discord.com/assets/'+re.compile(r'assets/+([a-z0-9]+)\.js').findall(discord_login_page_exploration)[-2]+'.js' #fastest solution I could find since the last js file is huge in comparison to 2nd from last
-        	req_file_build = self.s.get(file_with_build_num).text
-        	index_of_build_num = req_file_build.find('buildNumber')+14
-        	self.discord_build_num = int(req_file_build[index_of_build_num:index_of_build_num+5])
-        	self.ua_data['build_num'] = self.discord_build_num #putting this onto ua_data since getting the build num won't necessarily work
-        	if self.log: print('Discord is currently on build number '+str(self.discord_build_num))
+            file_with_build_num = 'https://discord.com/assets/'+re.compile(r'assets/+([a-z0-9]+)\.js').findall(discord_login_page_exploration)[-2]+'.js' #fastest solution I could find since the last js file is huge in comparison to 2nd from last
+            req_file_build = self.s.get(file_with_build_num).text
+            index_of_build_num = req_file_build.find('buildNumber')+14
+            self.discord_build_num = int(req_file_build[index_of_build_num:index_of_build_num+5])
+            self.ua_data['build_num'] = self.discord_build_num #putting this onto ua_data since getting the build num won't necessarily work
+            if self.log: print('Discord is currently on build number '+str(self.discord_build_num))
         except:
-        	if self.log: print('Could not retrieve discord build number.')
+            if self.log: print('Could not retrieve discord build number.')
         self.__gateway_server = GatewayServer(self.websocketurl,self.__user_token,self.ua_data,self.__proxy_host,self.__proxy_port,self.log)
 
     '''
@@ -369,57 +369,57 @@ class Client:
     #################
 
     def getAnalyticsToken(self,update=True):
-    	return self.read(update)[0]['analytics_token']
+        return self.read(update)[0]['analytics_token']
 
     def getConnectedAccounts(self,update=True):
-    	return self.read(update)[0]['connected_accounts']
+        return self.read(update)[0]['connected_accounts']
 
     def getConsents(self,update=True):
-    	return self.read(update)[0]['consents']
+        return self.read(update)[0]['consents']
 
     def getExperiments(self,update=True):
-    	return self.read(update)[0]['experiments']
+        return self.read(update)[0]['experiments']
 
     def getFriendSuggestionCount(self,update=True): #no idea what this is but it's here so whatever
-    	return self.read(update)[0]['friend_suggestion_count']
+        return self.read(update)[0]['friend_suggestion_count']
 
     def getGuildExperiments(self,update=True):
-    	return self.read(update)[0]['guild_experiments']
+        return self.read(update)[0]['guild_experiments']
 
     def getNotOfflineFriends(self,update=True): #because there's a distinction between online and dnd and idle
-    	return self.read(update)[1]['merged_presences']['friends']
+        return self.read(update)[1]['merged_presences']['friends']
 
     #all about DMs
     def getDMs(self,update=True):
-    	return self.read(update)[0]['private_channels']
+        return self.read(update)[0]['private_channels']
 
     def getDMIDs(self,update=True): #discord sometimes calls these channel IDs...
-    	getthatdata = self.read(update) #refreshes session settings if update is True
-    	return [self.getDMs(False)[i]['id'] for i in range(len(self.getDMs(False)))]
+        getthatdata = self.read(update) #refreshes session settings if update is True
+        return [self.getDMs(False)[i]['id'] for i in range(len(self.getDMs(False)))]
 
     def getDMData(self,DMID,update=True): #get data about a particular DM
-    	getthatdata = self.read(update) #refreshes session settings if update is True
-    	for i in range(len(self.getDMs(False))):
-    		if self.getDMs(False)[i]['id'] == DMID:
-    			return self.getDMs(False)[i]
-    	return None
+        getthatdata = self.read(update) #refreshes session settings if update is True
+        for i in range(len(self.getDMs(False))):
+            if self.getDMs(False)[i]['id'] == DMID:
+                return self.getDMs(False)[i]
+        return None
 
     def getDMRecipients(self,DMID,update=True): #returns everyone in that DM except your user
-    	getthatdata = self.read(update) #refreshes session settings if update is True
-    	return self.getDMData(DMID,False)['recipients']
+        getthatdata = self.read(update) #refreshes session settings if update is True
+        return self.getDMData(DMID,False)['recipients']
 
     #end of DM stuff, heh that wasnt that bad, onto the rest of the stuff
 
     def getReadStates(self,update=True): #another advantage of using websockets instead of requests (see https://github.com/discord/discord-api-docs/issues/13)
-    	return self.read(update)[0]['read_state']
+        return self.read(update)[0]['read_state']
 
     #all about relationships...on discord. note this includes all your friends AND all users youve blocked
     def getRelationships(self,update=True):
-    	return self.read(update)[0]['relationships']
+        return self.read(update)[0]['relationships']
 
     def getRelationshipIDs(self,update=True): #gets userIDs that are in a "relationship" with your account
-    	getthatdata = self.read(update) #refreshes session settings if update is True
-    	return [self.getRelationships(False)[i]['id'] for i in range(len(self.getRelationships(False)))]
+        getthatdata = self.read(update) #refreshes session settings if update is True
+        return [self.getRelationships(False)[i]['id'] for i in range(len(self.getRelationships(False)))]
 
     def getRelationshipData(self,userID,update=True): #usernames and discriminators are no longer provided in this data
         getthatdata = self.read(update) #refreshes session settings if update is True
@@ -429,79 +429,79 @@ class Client:
         return None
 
     def getFriends(self,update=True): #yay, no this will not give you friends, it returns data about the users you have a friends
-    	getthatdata = self.read(update) #refreshes session settings if update is True
-    	friends = []
-    	for i in range(len(self.getRelationships(False))):
-    		if self.getRelationships(False)[i]['type'] == 1:
-    			friends.append(self.getRelationships(False)[i])
-    	return friends #wow and just like that you have friends.........................
+        getthatdata = self.read(update) #refreshes session settings if update is True
+        friends = []
+        for i in range(len(self.getRelationships(False))):
+            if self.getRelationships(False)[i]['type'] == 1:
+                friends.append(self.getRelationships(False)[i])
+        return friends #wow and just like that you have friends.........................
 
     def getFriendIDs(self,update=True):
-    	getthatdata = self.read(update) #refreshes session settings if update is True
-    	return [self.getFriends(False)[i]['user_id'] for i in range(len(self.getFriends(False)))]
+        getthatdata = self.read(update) #refreshes session settings if update is True
+        return [self.getFriends(False)[i]['user_id'] for i in range(len(self.getFriends(False)))]
 
     def getBlocked(self,update=True): #nay
-    	getthatdata = self.read(update) #refreshes session settings if update is True
-    	blocked = []
-    	for i in range(len(self.getRelationships(False))):
-    		if self.getRelationships(False)[i]['type'] == 2:
-    			blocked.append(self.getRelationships(False)[i])
-    	return blocked
+        getthatdata = self.read(update) #refreshes session settings if update is True
+        blocked = []
+        for i in range(len(self.getRelationships(False))):
+            if self.getRelationships(False)[i]['type'] == 2:
+                blocked.append(self.getRelationships(False)[i])
+        return blocked
 
     def getBlockedIDs(self,update=True):
-    	getthatdata = self.read(update) #refreshes session settings if update is True
-    	return [self.getBlocked(False)[i]['user_id'] for i in range(len(self.getBlocked(False)))]
+        getthatdata = self.read(update) #refreshes session settings if update is True
+        return [self.getBlocked(False)[i]['user_id'] for i in range(len(self.getBlocked(False)))]
 
     def getIncomingFriendRequests(self,update=True): #returns data...
-    	getthatdata = self.read(update) #refreshes session settings if update is True
-    	ifr = []
-    	for i in range(len(self.getRelationships(False))):
-    		if self.getRelationships(False)[i]['type'] == 3:
-    			ifr.append(self.getRelationships(False)[i])
-    	return ifr
+        getthatdata = self.read(update) #refreshes session settings if update is True
+        ifr = []
+        for i in range(len(self.getRelationships(False))):
+            if self.getRelationships(False)[i]['type'] == 3:
+                ifr.append(self.getRelationships(False)[i])
+        return ifr
 
     def getIncomingFriendRequestIDs(self,update=True):
-    	getthatdata = self.read(update) #refreshes session settings if update is True
-    	return [self.getIncomingFriendRequests(False)[i]['user_id'] for i in range(len(self.getIncomingFriendRequests(False)))]
+        getthatdata = self.read(update) #refreshes session settings if update is True
+        return [self.getIncomingFriendRequests(False)[i]['user_id'] for i in range(len(self.getIncomingFriendRequests(False)))]
 
     def getOutgoingFriendRequests(self,update=True):
-    	getthatdata = self.read(update) #refreshes session settings if update is True
-    	ofr = []
-    	for i in range(len(self.getRelationships(False))):
-    		if self.getRelationships(False)[i]['type'] == 4:
-    			ofr.append(self.getRelationships(False)[i])
-    	return ofr
+        getthatdata = self.read(update) #refreshes session settings if update is True
+        ofr = []
+        for i in range(len(self.getRelationships(False))):
+            if self.getRelationships(False)[i]['type'] == 4:
+                ofr.append(self.getRelationships(False)[i])
+        return ofr
 
     def getOutgoingFriendRequestIDs(self,update=True):
-    	getthatdata = self.read(update) #refreshes session settings if update is True
-    	return [self.getOutgoingFriendRequests(False)[i]['user_id'] for i in range(len(self.getOutgoingFriendRequests(False)))]
+        getthatdata = self.read(update) #refreshes session settings if update is True
+        return [self.getOutgoingFriendRequests(False)[i]['user_id'] for i in range(len(self.getOutgoingFriendRequests(False)))]
 
     #end of relationship stuff
 
     def getSessionID(self,update=True):
-    	return self.read(update)[0]['session_id']
+        return self.read(update)[0]['session_id']
 
     def getTutorial(self,update=True): #tutorial on what? guess we'll never know...ask discord maybe?
-    	return self.read(update)[0]['tutorial']
+        return self.read(update)[0]['tutorial']
 
     def getUserData(self,update=True):
-    	return self.read(update)[0]['user']
+        return self.read(update)[0]['user']
 
     def getUserGuildSettings(self,guildID=None,update=True): #personal settings for a server, like whether or not you want @everyone pings to show, formatting is weird cause you might not want to pass a guildID, hence it is at the end
-    	getthatdata = self.read(update) #refreshes session settings if update is True
-    	all_user_guild_settings = self.read(False)[0]['user_guild_settings']
-    	if guildID != None:
-    		for i in range(len(all_user_guild_settings)):
-    			if all_user_guild_settings[i]['guild_id'] == guildID:
-    				return all_user_guild_settings[i]
-    	else:
-    		return all_user_guild_settings
+        getthatdata = self.read(update) #refreshes session settings if update is True
+        all_user_guild_settings = self.read(False)[0]['user_guild_settings']
+        if guildID != None:
+            for i in range(len(all_user_guild_settings)):
+                if all_user_guild_settings[i]['guild_id'] == guildID:
+                    return all_user_guild_settings[i]
+        else:
+            return all_user_guild_settings
 
     def getUserSettings(self,update=True): #returns a class
-    	return self.read(update)[0]['user_settings']
+        return self.read(update)[0]['user_settings']
 
     def getOptionsForUserSettings(self,update=True):
-    	return list(self.read(update)[0]['user_settings'].keys())
+        return list(self.read(update)[0]['user_settings'].keys())
 
     def getGeoOrderedRtcRegions(self,update=True):
         return self.read(update)[0]['geo_ordered_rtc_regions']
@@ -510,7 +510,7 @@ class Client:
         return self.read(update)[0]['users']
 
     def getWebsocketVersion(self,update=True):
-    	return self.read(update)[0]['v']
+        return self.read(update)[0]['v']
 
     # oof end of reading session settings
 
@@ -602,6 +602,14 @@ class Client:
     #remove reaction
     def removeReaction(self,channelID,messageID,emoji):
         return Messages(self.discord,self.s,self.log).removeReaction(channelID,messageID,emoji)
+
+    #acknowledge message (mark message read)
+    def ackMessage(self,channelID,messageID,ackToken=None):
+        return Messages(self.discord,self.s,self.log).ackMessage(channelID,messageID,ackToken)
+
+    #unacknowledge message (mark message unread)
+    def unAckMessage(self,channelID,messageID,numMentions=0):
+        return Messages(self.discord,self.s,self.log).unAckMessage(channelID,messageID,numMentions)
 
     '''
     User relationships

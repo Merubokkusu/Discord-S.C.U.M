@@ -222,6 +222,11 @@ bot.getPins("267624335836053506")
 ```python
 bot.addReaction("111111111111111111","222222222222222222","👻")
 ```
+##### remove reaction
+```removeReaction(channelID,messageID,emoji)```
+```python
+bot.removeReaction("111111111111111111","222222222222222222","👻")
+```
 #### User Actions
 ##### send friend request
 ```requestFriend(userID)```

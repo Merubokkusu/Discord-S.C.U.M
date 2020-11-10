@@ -172,3 +172,15 @@ class Messages(object):
 		response = self.s.get(url)
 		if self.log: Logger.LogMessage('Response <- {}'.format(response.text), log_level=LogLevel.OK)
 		return response
+
+	def addReaction(self,channelID,messageID,emoji):
+		parsedemoji = "%"
+		for i in emoji.encode('utf-8'):
+			parsedemoji += hex(i).split('x')[-1].upper()
+			parsedemoji += "%"
+		parsedemoji = parsedemoji[:-1]
+		url = self.discord+"channels/"+channelID+"/messages/"+messageID+"/reactions/"+parsedemoji+"/%40me"
+		if self.log: Logger.LogMessage('Put -> {}'.format(url))
+		response = self.s.put(url)
+		if self.log: Logger.LogMessage('Response <- {}'.format(response.text), log_level=LogLevel.OK)
+		return response

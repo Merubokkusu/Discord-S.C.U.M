@@ -137,9 +137,9 @@ bot.createDM(['444444444444444444'])
 bot.createDM(['222222222222222222','000000000000000000'])
 ```
 ##### get messages in a channel
-```getMessages(ChannelID,num=1,beforeDate=None)```
+```getMessages(ChannelID,num=1,beforeDate=None,aroundMessage=None)```
 ```python
-bot.getMessages("383003333751856129") #if beforeDate not given, then most recent message(s) will be returned
+bot.getMessages("383003333751856129") #if beforeDate or aroundMessage not given, then most recent message(s) will be returned
 ```
 ##### send text message
 ```sendMessage(ChannelID,message,embed='',tts=False)```

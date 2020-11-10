@@ -26,10 +26,12 @@ class Messages(object):
 		return response
 
 	#get Message
-	def getMessages(self,channelID,num,beforeDate): # 1 ≤ num ≤ 100, beforeDate is a snowflake
+	def getMessages(self,channelID,num,beforeDate,aroundMessage): # 1 ≤ num ≤ 100, beforeDate is a snowflake
 		url = self.discord+"channels/"+channelID+"/messages?limit="+str(num)
 		if beforeDate != None:
 			url += "&before="+str(beforeDate)
+		elif aroundMessage != None:
+			url += "&around="+str(aroundMessage)
 		if self.log: Logger.LogMessage('Get -> {}'.format(url))
 		response = self.s.get(url)
 		if self.log: Logger.LogMessage('Response <- {}'.format(response.text), log_level=LogLevel.OK)

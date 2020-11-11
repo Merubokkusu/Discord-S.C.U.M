@@ -470,3 +470,79 @@ Output:
 >>> data[1][1]['t']
 'GUILD_MEMBER_LIST_UPDATE'
 ```
+Bonus feature (ability to __collect__ messages based on key and/or key-value):
+```python
+>>> data = bot._Client__gateway_server.run(
+    [
+        {
+            "send": [
+                {
+                    "op": 14,
+                    "d": {
+                        "guild_id": "------------------",
+                        "channels": {"------------------": [[0, 99], [100, 199]]},
+                    },
+                }
+            ],
+            "receive": [
+                {
+                    "key": [("d", "ops", 0, "range"), ("d", "ops", 1, "range")],
+                    "keyvalue": [
+                        (("d", "ops", 0, "op"), "SYNC"),
+                        (("d", "ops", 1, "op"), "SYNC"),
+                    ],
+                }
+            ],
+        },
+        {
+            "send": [
+                {
+                    "op": 14,
+                    "d": {
+                        "guild_id": "------------------",
+                        "channels": {"------------------": [[0, 99], [100, 199]]},
+                    },
+                }
+            ],
+            "receive": [
+                {
+                    "keyvalue": [
+                        (
+                            ("t",),
+                            "PRESENCE_UPDATE",
+                        )
+                    ],
+                },
+                {
+                    "keyvalue": [
+                        (
+                            ("t",),
+                            "GUILD_MEMBER_LIST_UPDATE",
+                        ),
+                    ],
+                },
+            ],
+            "collect": [
+                {
+                    "keyvalue": [
+                        (
+                            ("t",),
+                            "MESSAGE_CREATE",
+                        )
+                    ],
+                }
+            ],
+        },
+    ],
+    log=False,
+)
+>>> #the following are from a sample run I did. Your results will differ from these; however, the general structure of collected remains the same.
+>>> len(bot._Client__gateway_server.collected)
+2
+>>> bot._Client__gateway_server.collected[0]
+[]
+>>> len(bot._Client__gateway_server.collected[1])
+2
+>>> bot._Client__gateway_server.collected[1][0]['t'] == bot._Client__gateway_server.collected[1][1]['t'] == 'MESSAGE_CREATE'
+True
+```

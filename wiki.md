@@ -229,6 +229,16 @@ bot.addReaction("111111111111111111","222222222222222222","wowee:720507026014450
 bot.removeReaction("111111111111111111","222222222222222222","👻")
 bot.removeReaction("111111111111111111","222222222222222222","wowee:720507026014450205") #emoji name:emoji id
 ```
+##### acknowledge message (mark message read)
+```ackMessage(channelID,messageID,ackToken=None)```
+```python
+bot.ackMessage("222222222222222222","333333333333333333")
+```
+##### unacknowledge message (mark message unread)
+```unAckMessage(channelID,messageID,numMentions=0)```
+```python
+bot.unAckMessage("222222222222222222","333333333333333333",250)
+```
 #### User Actions
 ##### send friend request
 ```requestFriend(userID)```

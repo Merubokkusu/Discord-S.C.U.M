@@ -48,8 +48,10 @@ class GatewayServer():
 
         self.all_tasks = [] #just the task input. all of it
         self.receiveData = [] #the receive value input
+        self.collectData = []
         self.task_num = 0 #task num
         self.results = [] #output
+        self.collected = [] #on <anything> stuff
 
         #as far as checklists go, allTasks variables have values looking like None or "complete" which subtasks have values looking like [None] or ["complete"]. The exception is in the mailSent subtask, which has a value of either True or False.
         self.receiveChecklist = [] #acts as a checklist for receive, looks at the current task
@@ -141,6 +143,7 @@ class GatewayServer():
     def run(self,tasks,log):
         self.log = log #update log
         self.results = [] #clear results list
+        self.collected = []
         self.session_data_1 = None #reset
         self.session_data_2 = None #reset
         self.all_tasks = tasks
@@ -228,6 +231,7 @@ class GatewayServer():
         self.taskCompleted = False #reset
         self.allTasksCompleted = False #reset
         self.results.append([])
+        self.collected.append([])
         self.receiveChecklist = [] #reset
         self.receiveData = data["receive"]
         for searchIndex in range(len(self.receiveData)):
@@ -236,6 +240,7 @@ class GatewayServer():
                 self.receiveChecklist[searchIndex]["key"] = [None]
             if "keyvalue" in self.receiveData[searchIndex]:
                 self.receiveChecklist[searchIndex]["keyvalue"] = [None]
+        self.collectData = data.pop("collect", None)
         sendData = data["send"] #have to also check if all data has been sent.............
         for mail in sendData: #send data if theres data to send
             #if you want to make changes to mail make that here
@@ -285,6 +290,12 @@ class GatewayServer():
                         self.receiveChecklist[checklistIndex] = ["complete"]
                         self.results[self.task_num].append(data)
                         break #after first match is found, break
+            if self.collectData != None:
+                for collectItem in self.collectData:
+                    if "key" in collectItem and all([self.key_checker(data,i) for i in collectItem["key"]]):
+                        self.collected[self.task_num].append(data)
+                    if "keyvalue" in collectItem and all([self.value_checker(data,i[0],i[1]) for i in collectItem["keyvalue"]]):
+                        self.collected[self.task_num].append(data)
             if len(self.receiveChecklist)>0 and all(item == ["complete"] for item in self.receiveChecklist) and self.mailSent:
                 self.taskCompleted = True #current task is completed
 

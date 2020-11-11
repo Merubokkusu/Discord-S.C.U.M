@@ -15,7 +15,7 @@ class SessionSettingsError(Exception):
     pass
 
 class Client:
-    def __init__(self, email="none", password="none", token="none", proxy_host=None, proxy_port=None, user_agent="random", log=True): #not using None on email pass and token since that could get flagged by discord...
+    def __init__(self, email="none", password="none", token="none", proxy_host=None, proxy_port=None, user_agent="random", log=True): #not using None on email, pass, and token since that could get flagged by discord...
         self.log = log
         self.__user_token = token
         self.__user_email = email
@@ -33,7 +33,7 @@ class Client:
             if self.log: print('Randomly generated user agent: '+self.__user_agent)
         parseduseragent = user_agents.parse(self.__user_agent)
         self.ua_data = {'os':parseduseragent.os.family,'browser':parseduseragent.browser.family,'device':parseduseragent.device.family if parseduseragent.is_mobile else '','browser_user_agent':self.__user_agent,'browser_version':parseduseragent.browser.version_string,'os_version':parseduseragent.os.version_string}
-        if self.__user_token == "none": #assuming email and pass are given...
+        if self.__user_token in ("none",None,False): #assuming email and pass are given...
             self.__login = Login(self.discord,self.__user_email,self.__user_password,self.__user_agent,self.__proxy_host,self.__proxy_port,self.log)
             self.__user_token = self.__login.GetToken() #update token from "none" to true string value
             time.sleep(1)

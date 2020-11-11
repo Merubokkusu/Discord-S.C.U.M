@@ -31,6 +31,7 @@ python3 setup.py install
 ### [Read the Wiki](https://github.com/Merubokkusu/Discord-S.C.U.M/blob/master/wiki.md)
 
 # Example
+\* note: discord is starting to (sometimes) require captchas for the login. So, in the meanwhile (until we add 2captcha.com support), provide the email, password, and token (or just the token if you dont want profile editing).
 ```python
 import discum     
 bot = discum.Client(email=,password=,log=True) #note, this will not work if you have a MFA account

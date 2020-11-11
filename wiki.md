@@ -234,11 +234,14 @@ bot.removeReaction("111111111111111111","222222222222222222","wowee:720507026014
 ```python
 bot.ackMessage("222222222222222222","333333333333333333")
 ```
+- you can technically put any string number (str(num)) as the messageID
 ##### unacknowledge message (mark message unread)
 ```unAckMessage(channelID,messageID,numMentions=0)```
 ```python
 bot.unAckMessage("222222222222222222","333333333333333333",250)
 ```
+- numMentions can be any positive integer (but discord registers any input above 250 as 250)      
+- you can technically put any string number (str(num)) as the messageID
 #### User Actions
 ##### send friend request
 ```requestFriend(userID)```

@@ -307,7 +307,7 @@ bot.getGuildMember('guildID00000000000','userID11111111111')
 ```
 
 #### Gateway Server
-This is laying the groundwork for yet-to-be-implemented functions. In the future, we'll be adding functions (like getGuildMembers) that'll utilize this format.
+This is laying the groundwork for yet-to-be-implemented functions. In the future, we'll be adding functions (like getGuildMembers) that'll utilize this GatewayServer.py.
 ```_Client__gateway_server.runIt(taskdata, log)```
 ```python
 members = bot._Client__gateway_server.run(

@@ -312,7 +312,8 @@ bot.getGuildMember('guildID00000000000','userID11111111111')
 #### Gateway Server
 This is laying the groundwork for yet-to-be-implemented functions. In the future, we'll be adding functions (like getGuildMembers) that'll utilize  GatewayServer.py.         
 ```_Client__gateway_server.runIt(taskdata, log)```
-taskdata is a list of dictionaries. Each dictionary represents a "task" and always has these 2 keys: "send" and "receive". The value of "send" is a list of dictionaries (essentially what you want to send to discord). The value of "receive" is a list dictionaries (more on the formatting below) and refers to what you want to check for before continuing to the next task.     
+taskdata is a list of dictionaries. Each dictionary represents a "task" and always has these 2 keys: "send" and "receive". The value of "send" is a list of dictionaries (essentially what you want to send to discord). The value of "receive" is a list dictionaries (more on the formatting below) and refers to what you want to check for before continuing to the next task.  
+             
 There's an optional "collect" key in taskdata, which refers to what you want to collect. The formatting is the same as the value of "receive". The functional difference is that data collected doesn't affect task runs.     
 ```python
 members = bot._Client__gateway_server.run(

@@ -53,7 +53,7 @@ class Client:
         }
         self.s = requests.Session()
         self.s.headers.update(self.headers)
-        if self.__proxy_host != None: #self.s.proxies defaults to {}
+        if self.__proxy_host not in (None,False): #self.s.proxies defaults to {}
             self.proxies = {
             'http': self.__proxy_host+':'+self.__proxy_port,
             'https': self.__proxy_host+':'+self.__proxy_port

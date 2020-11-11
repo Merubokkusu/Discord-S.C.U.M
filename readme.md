@@ -69,7 +69,7 @@ bot.snowflake_to_unixts(snowflake) #snowflake is of type int
 - [ ] Making phone calls, sending audio/video data thru those calls
 - [ ] Everything
 
-# list of all 117 functions (click thru these and github should show their location in discum.py)
+# list of all 121 functions (click thru these and github should show their location in discum.py)
 ```python
 discum.Client(email="none", password="none", token="none", proxy_host=None, proxy_port=None, user_agent="random", log=True)
 connectionTest(self)
@@ -175,6 +175,10 @@ deleteMessage(channelID,messageID)
 editMessage(channelID,messageID,newMessage)
 pinMessage(channelID,messageID)
 unPinMessage(channelID,messageID)
+addReaction(channelID,messageID,emoji)
+removeReaction(channelID,messageID,emoji)
+ackMessage(channelID,messageID,ackToken=None)
+unAckMessage(channelID,messageID,numMentions=0)
 getPins(channelID)
 requestFriend(user)
 acceptFriend(userID)

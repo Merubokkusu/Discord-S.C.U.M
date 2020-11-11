@@ -453,7 +453,7 @@ Input:
     log=False,
 )
 ```
-Output:
+Output (the output is a list of lists: 1st list has results from 1st task, 2nd list has results from 2nd task, etc):
 ```python
 >>> type(data)
 <class 'list'>
@@ -536,7 +536,7 @@ Bonus feature (ability to __collect__ messages based on key and/or key-value):
     ],
     log=False,
 )
->>> #the following are from a sample run I did. Your results will differ from these; however, the general structure of collected remains the same.
+>>> #the following are from a sample run I did. Your results will differ from these; however, the general structure of collected remains the same (list of lists: 1st list has results from 1st task, 2nd list has results from 2nd task, etc).
 >>> len(bot._Client__gateway_server.collected)
 2
 >>> bot._Client__gateway_server.collected[0]

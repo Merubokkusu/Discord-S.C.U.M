@@ -18,8 +18,7 @@
 from PyPI (not recommended, likely outdated):      
 ```python
 pip install discum 
-```
-or                  
+```               
 from source (recommended, up-to-date)(currently on version 0.2.7):      
 ```
 git clone https://github.com/Merubokkusu/Discord-S.C.U.M.git

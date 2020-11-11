@@ -155,7 +155,7 @@ class GatewayServer():
             return self.results #yay
 
     async def main(self): # http_proxy_host=self.proxy_host, http_proxy_port=self.proxy_port
-        if self.proxy_host == None:
+        if self.proxy_host in (None,False):
             async with websockets.connect(
                     self.websocketurl, origin="https://discordapp.com") \
                     as self.websocket:

@@ -62,6 +62,7 @@ latest_messages = bot._Client__gateway_server.run(
     ],
     log=True,
 )
+#the "limit" above refers to number of seconds
 ```
 
 ### bonus features: 

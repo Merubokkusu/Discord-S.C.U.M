@@ -29,7 +29,7 @@ pip install discum
 ### [Read the Wiki](https://github.com/Merubokkusu/Discord-S.C.U.M/blob/master/wiki.md)
 
 # Example
-\* note: discord is starting to (sometimes) require captchas for the login. So, in the meanwhile (until we add 2captcha.com support), provide the email, password, and token (or just the token if you don't want profile editing).
+\* note: discord is starting to (sometimes) require captchas for the login. So, in the meanwhile (until we add 2captcha.com support), provide the email, password, and token (or just the token if you're not using the profile-editing functions).
 ```python
 import discum     
 bot = discum.Client(email=,password=,log=True) #note, this will not work if you have a MFA account

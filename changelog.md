@@ -1,4 +1,57 @@
 # Changelog
+# 0.2.8
+### Added
+```python
+addReaction(channelID,messageID,emoji)
+removeReaction(channelID,messageID,emoji)
+ackMessage(channelID,messageID,ackToken=None)
+unAckMessage(channelID,messageID,numMentions=0)
+```
+ability to limit task duration (in seconds) and ability to collect certain responses:
+for example, the following collects MESSAGE_CREATE and MESSAGE_UPDATE messages for 10 seconds:
+```python
+>>> bot._Client__gateway_server.run(
+    [
+        {
+            "send": [],
+            "receive": [],
+            "collect": [
+                {
+                    "keyvalue": [
+                        (
+                            ("t",),
+                            "MESSAGE_CREATE",
+                        )
+                    ],
+                },
+                {
+                    "keyvalue": [
+                        (
+                            ("t",),
+                            "MESSAGE_UPDATE",
+                        )
+                    ],
+                }
+            ],
+            "limit": 10,
+        }
+    ],
+    log=False,
+)
+>>> latest_messages = bot._Client__gateway_server.collected #collected messages
+>>> len(latest_messages) #only 1 task was inputted, so output is 1
+1
+>>> for item in latest_messages[0]:
+...    print(item['t'])
+...
+MESSAGE_CREATE
+MESSAGE_UPDATE
+MESSAGE_CREATE
+MESSAGE_UPDATE
+```
+### Changed
+- gateway server input is now a list of lists (1st list is the first task, 2nd list is the 2nd task, etc)
+
 # 0.2.7
 ### Added
 - added these functions back as websockets (since the web client doesn't use the http api to fetch guild data):

@@ -1,5 +1,6 @@
 #influence for the websocket protocol that this code uses came from here: https://github.com/Gehock/discord-ws
 import asyncio
+import time
 import websockets
 import json
 from collections import Counter
@@ -44,11 +45,11 @@ class GatewayServer():
         self.session_id = None
         self.session_data_1 = None #session settings gathered from READY
         self.session_data_2 = None #session settings gathered from READY_SUPPLEMENTAL
-        self.session_settings_gathered = False
 
         self.all_tasks = [] #just the task input. all of it
         self.receiveData = [] #the receive value input
         self.collectData = []
+        self.limitData = []
         self.task_num = 0 #task num
         self.results = [] #output
         self.collected = [] #on <anything> stuff
@@ -76,7 +77,7 @@ class GatewayServer():
                     "referrer_current": "",
                     "referring_domain_current": "",
                     "release_channel": "stable",
-                    "client_build_number": 71073,
+                    "client_build_number": 71420,
                     "client_event_source": None
                 },
                 "presence": {
@@ -93,7 +94,7 @@ class GatewayServer():
                     "user_guild_settings_version": -1
                 }
             }
-        if 'build_num' in self.ua_data and self.ua_data['build_num']!=71073:
+        if 'build_num' in self.ua_data and self.ua_data['build_num']!=71420:
             self.auth['properties']['client_build_number'] = self.ua_data['build_num']
 
         self.loop = asyncio.get_event_loop()
@@ -241,11 +242,21 @@ class GatewayServer():
             if "keyvalue" in self.receiveData[searchIndex]:
                 self.receiveChecklist[searchIndex]["keyvalue"] = [None]
         self.collectData = data.pop("collect", None)
+        self.limitData = data.pop("limit", None)
         sendData = data["send"] #have to also check if all data has been sent.............
         for mail in sendData: #send data if theres data to send
             #if you want to make changes to mail make that here
             await self.send(mail["op"],mail["d"])
         self.mailSent = True
+        if self.limitData != None:
+            if isinstance(self.limitData, int) or isinstance(self.limitData, float):
+            	timeout_start = time.time()
+            	while time.time() < timeout_start + self.limitData:
+            		await asyncio.sleep(0)
+            elif self.limitData == "next":
+            	while self.task_num == len(self.all_tasks)-1:
+            		await asyncio.sleep(0)
+            self.forceTaskMoveOn()
 
     async def send(self, opcode, payload):
         data = self.opcode(opcode, payload)
@@ -298,6 +309,16 @@ class GatewayServer():
                         self.collected[self.task_num].append(data)
             if len(self.receiveChecklist)>0 and all(item == ["complete"] for item in self.receiveChecklist) and self.mailSent:
                 self.taskCompleted = True #current task is completed
+
+    def forceTaskMoveOn(self):
+    	self.taskCompleted = True
+
+    def forceStopLoop(self):
+    	self.allTasksChecklist = ["complete"]*len(self.all_tasks)
+
+    def appendToTaskList(self, tasks):
+    	self.all_tasks.extend(tasks)
+    	self.allTasksChecklist.append(None) #this is needed so the loop doesn't stop
 
     async def stopLoop(self):
         while not all(item == "complete" for item in self.allTasksChecklist):

@@ -253,10 +253,11 @@ class GatewayServer():
             	timeout_start = time.time()
             	while time.time() < timeout_start + self.limitData:
             		await asyncio.sleep(0)
+            	self.forceTaskMoveOn()
             elif self.limitData == "next":
             	while self.task_num == len(self.all_tasks)-1:
             		await asyncio.sleep(0)
-            self.forceTaskMoveOn()
+            	self.forceTaskMoveOn()
 
     async def send(self, opcode, payload):
         data = self.opcode(opcode, payload)

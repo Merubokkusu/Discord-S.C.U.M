@@ -42,7 +42,7 @@ session_settings = bot.read(update=False)
 guildIDs = bot.getGuildIDs(update=False)
 bot.log = False
 messageData = bot.sendMessage("383003333751856129","Hello You :)")
-message_stream = bot._Client__gateway_server.run(
+latest_messages = bot._Client__gateway_server.run(
     [
         {
             "send": [],

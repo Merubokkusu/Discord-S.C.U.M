@@ -37,18 +37,30 @@ bot = discum.Client(email=,password=,log=True) #note, this will not work if you 
 #bot = discum.Client(email=,password=,token=,log=False) #works for all types of accounts
 #bot = discum.Client(token=,log=True) #works for all types of accounts, no profile editing however
 #bot = discum.Client(token=,proxy_host=,proxy_port=) #works for all types of accounts, no profile editing however
-bot.read()
-bot.read(update=False)
-bot.getGuildIDs(update=False)
-bot.log=False
-bot.sendMessage("383003333751856129","Hello You :)")
+session_settings = bot.read()
+session_settings = bot.read(update=False)
+guildIDs = bot.getGuildIDs(update=False)
+bot.log = False
+messageData = bot.sendMessage("383003333751856129","Hello You :)")
 bot._Client__gateway_server.run(
-[
-    {
-    "send": [],
-    "receive": []
-    }
-], log=True)
+    [
+        {
+            "send": [],
+            "receive": [],
+            "collect": [
+                {
+                    "keyvalue": [
+                        (
+                            ("t",),
+                            "MESSAGE_CREATE",
+                        )
+                    ],
+                }
+            ],
+        }
+    ],
+    log=True,
+)
 ```
 
 ### bonus features: 

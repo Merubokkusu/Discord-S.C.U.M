@@ -477,17 +477,18 @@ Output (the output is a list of lists: 1st list has results from 1st task, 2nd l
 >>> data[1][1]['t']
 'GUILD_MEMBER_LIST_UPDATE'
 ```
-Bonus feature (ability to __collect__ messages based on key and/or key-value):
+Bonus feature (optional inputs collect and limit):       
+__collect__ messages based on key and/or key-value and __limit__ task to certain number of seconds or until new task is appended       
 ```python
->>> data = bot._Client__gateway_server.run(
+data = bot._Client__gateway_server.run(
     [
         {
             "send": [
                 {
                     "op": 14,
                     "d": {
-                        "guild_id": "------------------",
-                        "channels": {"------------------": [[0, 99], [100, 199]]},
+                        "guild_id": "758030496776061074",
+                        "channels": {"758030526274863235": [[0, 99], [100, 199]]},
                     },
                 }
             ],
@@ -506,29 +507,12 @@ Bonus feature (ability to __collect__ messages based on key and/or key-value):
                 {
                     "op": 14,
                     "d": {
-                        "guild_id": "------------------",
-                        "channels": {"------------------": [[0, 99], [100, 199]]},
+                        "guild_id": "763684750862843904",
+                        "channels": {"763684750862843907": [[0, 99], [100, 199]]},
                     },
                 }
             ],
-            "receive": [
-                {
-                    "keyvalue": [
-                        (
-                            ("t",),
-                            "PRESENCE_UPDATE",
-                        )
-                    ],
-                },
-                {
-                    "keyvalue": [
-                        (
-                            ("t",),
-                            "GUILD_MEMBER_LIST_UPDATE",
-                        ),
-                    ],
-                },
-            ],
+            "receive": [],
             "collect": [
                 {
                     "keyvalue": [
@@ -539,11 +523,12 @@ Bonus feature (ability to __collect__ messages based on key and/or key-value):
                     ],
                 }
             ],
+            "limit": 10,
         },
     ],
-    log=False,
+    log=True,
 )
->>> #the following are from a sample run I did. Your results will differ from these; however, the general structure of collected remains the same (list of lists: 1st list has results from 1st task, 2nd list has results from 2nd task, etc).
+>>> #the following are from a sample run. Your results will differ from these; however, the general structure of collected remains the same (list of lists: 1st list has results from 1st task, 2nd list has results from 2nd task, etc).
 >>> len(bot._Client__gateway_server.collected)
 2
 >>> bot._Client__gateway_server.collected[0]

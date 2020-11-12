@@ -42,7 +42,7 @@ session_settings = bot.read(update=False)
 guildIDs = bot.getGuildIDs(update=False)
 bot.log = False
 messageData = bot.sendMessage("383003333751856129","Hello You :)")
-latest_messages = bot._Client__gateway_server.run(
+data = bot._Client__gateway_server.run(
     [
         {
             "send": [],
@@ -57,12 +57,13 @@ latest_messages = bot._Client__gateway_server.run(
                     ],
                 }
             ],
-            limit: 10,
+            "limit": 10,
         }
     ],
-    log=True,
+    log=False,
 )
 #the "limit" above refers to number of seconds
+latest_messages = bot._Client__gateway_server.collected #collected messages
 ```
 
 ### bonus features: 

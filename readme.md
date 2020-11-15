@@ -21,7 +21,7 @@ git clone https://github.com/Merubokkusu/Discord-S.C.U.M.git
 cd Discord-S.C.U.M
 python3 setup.py install               
 ```
-from PyPI (not recommended, likely outdated):      
+from PyPI:      
 ```python
 pip install discum 
 ```               

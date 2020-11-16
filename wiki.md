@@ -246,7 +246,7 @@ bot.unAckMessage("222222222222222222","333333333333333333",250)
 #### User Actions
 ##### send friend request
 ```requestFriend(userID)```
-```requestFriend(username+"#"+discriminator)
+```requestFriend(username+"#"+discriminator)```
 ```python
 bot.requestFriend("222222222222222222")
 bot.requestFriend("userwow#0001") #random username used here

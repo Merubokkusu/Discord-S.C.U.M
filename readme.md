@@ -66,9 +66,9 @@ bot.snowflake_to_unixts(snowflake) #snowflake is of type int
 - [ ] Making phone calls, sending audio/video data thru those calls
 - [ ] Everything
 
-# list of all 121 functions (click thru these and github should show their location in discum.py) **slightly changed in v0.3.0, will update soon
+# list of all 121 functions (click thru these and github should show their location in discum.py)
 
-Initiate client:
+### Initiate client:
 ```python
 discum.Client(email="none", password="none", token="none", proxy_host=None, proxy_port=None, user_agent="random", log=True)
 ```
@@ -108,10 +108,31 @@ getGuildMember(guildID,userID) #endpoint not actually used by official discord c
 ```        
 ### Gateway API:
 ##### by default, discum initializes the gateway interactions when you first initialize your bot (discum.Client). 
-If you'd like to reinitialize the gateway you can:
+If you'd like to reinitialize the gateway you can (replace "bot" with whatever variable name you're using):
 ```python
 from discum.gateway.gateway import *
 bot.gateway = GatewayServer(bot.websocketurl, token, user_agent_data, proxy_host, proxy_port, log) #user_agent_data is a dictionary with keys: 'os', 'browser' , 'device', 'browser_user_agent', 'browser_version', 'os_version'}
+```
+##### changing gateway commands
+```python
+#adding functions to gateway command list
+@bot.gateway.command #put ontop of functions you want to run on every received websocket message (replace "bot" with whatever variable name you're using)
+
+#removing functions from gateway command list
+bot.gateway.removeCommand(function)
+
+#clearing gateway command list
+bot.gateway.clearCommands
+```
+##### running and stopping gateway server
+```python
+bot.gateway.run(auto_reconnect=True)
+bot.gateway.close() #this can be done while gateway server is running
+```
+##### clearing current session (removes data collected from last session)
+Do not run this while the gateway is running. Only run this after you've stopped the gateway server.
+```python
+bot.gateway.resetSession()
 ```
 ##### Session Settings
 ```python

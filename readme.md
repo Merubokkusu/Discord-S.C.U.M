@@ -2,7 +2,7 @@
 
 
 ### DisCum: A Discord Selfbot Api Wrapper
-using requests and websockets
+using requests and websockets :)
 
 ![https://files.catbox.moe/3ns003.png](https://files.catbox.moe/3ns003.png)
 

@@ -67,100 +67,16 @@ bot.snowflake_to_unixts(snowflake) #snowflake is of type int
 - [ ] Everything
 
 # list of all 121 functions (click thru these and github should show their location in discum.py) **slightly changed in v0.3.0, will update soon
+
+Initiate client:
 ```python
 discum.Client(email="none", password="none", token="none", proxy_host=None, proxy_port=None, user_agent="random", log=True)
+```
+### Http API:
+```python
 connectionTest(self)
 snowflake_to_unixts(snowflake)
 unixts_to_snowflake(unixts)
-read(update=True)
-getGuilds(update=True)
-getGuildIDs(update=True)
-getGuildData(guildID,update=True)
-getGuildOwner(guildID,update=True)
-getGuildBoostLvl(guildID,update=True)
-getGuildEmojis(guildID,update=True)
-getGuildBanner(guildID,update=True)
-getGuildDiscoverySplash(guildID,update=True)
-getGuildMsgNotificationSettings(guildID,update=True)
-getGuildRulesChannelID(guildID,update=True)
-getGuildVerificationLvl(guildID,update=True)
-getGuildFeatures(guildID,update=True)
-getGuildJoinTime(guildID,update=True)
-getGuildRegion(guildID,update=True)
-getGuildApplicationID(guildID,update=True)
-getGuildAfkChannelID(guildID,update=True)
-getGuildIcon(guildID,update=True)
-getGuildName(guildID,update=True)
-getGuildMaxVideoChannelUsers(guildID,update=True)
-getGuildRoles(guildID,update=True)
-getGuildPublicUpdatesChannelID(guildID,update=True)
-getGuildSystemChannelFlags(guildID,update=True)
-getGuildMfaLvl(guildID,update=True)
-getGuildAfkTimeout(guildID,update=True)
-getGuildHashes(guildID,update=True)
-getGuildSystemChannelID(guildID,update=True)
-isGuildLazy(guildID,update=True)
-getGuildNumBoosts(guildID,update=True)
-isGuildLarge(guildID,update=True)
-getGuildExplicitContentFilter(guildID,update=True)
-getGuildSplashHash(guildID,update=True)
-getGuildMemberCount(guildID,update=True)
-getGuildDescription(guildID,update=True)
-getGuildVanityUrlCode(guildID,update=True)
-getGuildPreferredLocale(guildID,update=True)
-getGuildAllChannels(guildID,update=True)
-getGuildCategories(guildID,update=True)
-getGuildCategoryIDs(guildID,update=True)
-getGuildCategoryData(guildID,categoryID,update=True)
-getGuildChannels(guildID,update=True)
-getGuildChannelIDs(guildID,update=True)
-getGuildChannelData(guildID,channelID,update=True)
-getGuildVoiceStates(guildID,update=True)
-getGuildNotOfflineCachedMembers(guildID,update=True)
-getGuildNotOfflineCachedMemberIDs(guildID,update=True)
-getGuildNotOfflineCachedMemberData(guildID,userID,update=True)
-getMergedPresences(update=True)
-getAllGuildsMergedPresences(update=True)
-getGuildMergedPresences(guildID,update=True)
-getGuildMergedPresencesIDs(update=True)
-getGuildMergedPresencesData(guildID,userID,update=True)
-getAllFriendsMergedPresences(update=True)
-getAllFriendsMergedPresencesIDs(update=True)
-getFriendMergedPresencesData(userID,update=True)
-getAllMyGuildPositions(update=True)
-getMyGuildPosition(guildID,update=True)
-getAnalyticsToken(update=True)
-getConnectedAccounts(update=True)
-getConsents(update=True)
-getExperiments(update=True)
-getFriendSuggestionCount(update=True)
-getGuildExperiments(update=True)
-getNotOfflineFriends(update=True)
-getDMs(update=True)
-getDMIDs(update=True)
-getDMData(DMID,update=True)
-getDMRecipients(DMID,update=True)
-getReadStates(update=True)
-getRelationships(update=True)
-getRelationshipIDs(update=True)
-getRelationshipData(userID,update=True)
-getFriends(update=True)
-getFriendIDs(update=True)
-getBlocked(update=True)
-getBlockedIDs(update=True)
-getIncomingFriendRequests(update=True)
-getIncomingFriendRequestIDs(update=True)
-getOutgoingFriendRequests(update=True)
-getOutgoingFriendRequestIDs(update=True)
-getSessionID(update=True)
-getTutorial(update=True)
-getUserData(update=True)
-getUserGuildSettings(guildID=None,update=True)
-getUserSettings(update=True)
-getOptionsForUserSettings(update=True)
-getGeoOrderedRtcRegions(update=True)
-getCachedUsers(update=True)
-getWebsocketVersion(update=True)
 createDM(recipients)
 getMessages(channelID,num=1,beforeDate=None)
 sendMessage(channelID,message,embed="",tts=False)
@@ -188,8 +104,120 @@ getInfoFromInviteCode(inviteCode)
 joinGuild(inviteCode)
 kick(guildID,userID,reason="")
 ban(guildID,userID,deleteMessagesDays=0,reason="")
-getGuildMember(guildID,userID)
+getGuildMember(guildID,userID) #endpoint not actually used by official discord client
 ```        
+### Gateway API:
+##### by default, discum initializes the gateway interactions when you first initialize your bot (discum.Client). 
+If you'd like to reinitialize the gateway you can:
+```python
+from discum.gateway.gateway import *
+bot.gateway = GatewayServer(bot.websocketurl, token, user_agent_data, proxy_host, proxy_port, log) #user_agent_data is a dictionary with keys: 'os', 'browser' , 'device', 'browser_user_agent', 'browser_version', 'os_version'}
+```
+##### Session Settings
+```python
+#all settings
+gateway.SessionSettings.read()
+
+#user data
+gateway.SessionSettings.user
+
+#guilds
+gateway.SessionSettings.guilds
+gateway.SessionSettings.guildIDs
+gateway.SessionSettings.positions #your roles in each guild. 
+gateway.SessionSettings.guild(guildID).data
+gateway.SessionSettings.guild(guildID).owner
+gateway.SessionSettings.guild(guildID).boostLvl
+gateway.SessionSettings.guild(guildID).emojis
+gateway.SessionSettings.guild(guildID).banner
+gateway.SessionSettings.guild(guildID).discoverySplash
+gateway.SessionSettings.guild(guildID).msgNotificationSettings
+gateway.SessionSettings.guild(guildID).rulesChannelID
+gateway.SessionSettings.guild(guildID).verificationLvl
+gateway.SessionSettings.guild(guildID).features
+gateway.SessionSettings.guild(guildID).joinTime
+gateway.SessionSettings.guild(guildID).region
+gateway.SessionSettings.guild(guildID).applicationID
+gateway.SessionSettings.guild(guildID).afkChannelID
+gateway.SessionSettings.guild(guildID).icon
+gateway.SessionSettings.guild(guildID).name
+gateway.SessionSettings.guild(guildID).maxVideoChannelUsers
+gateway.SessionSettings.guild(guildID).roles
+gateway.SessionSettings.guild(guildID).publicUpdatesChannelID
+gateway.SessionSettings.guild(guildID).systemChannelFlags
+gateway.SessionSettings.guild(guildID).mfaLvl
+gateway.SessionSettings.guild(guildID).afkTimeout
+gateway.SessionSettings.guild(guildID).hashes
+gateway.SessionSettings.guild(guildID).systemChannelID
+gateway.SessionSettings.guild(guildID).lazy
+gateway.SessionSettings.guild(guildID).numBoosts
+gateway.SessionSettings.guild(guildID).large
+gateway.SessionSettings.guild(guildID).explicitContentFilter
+gateway.SessionSettings.guild(guildID).splashHash
+gateway.SessionSettings.guild(guildID).memberCount
+gateway.SessionSettings.guild(guildID).description
+gateway.SessionSettings.guild(guildID).vanityUrlCode
+gateway.SessionSettings.guild(guildID).preferredLocale
+gateway.SessionSettings.guild(guildID).allChannels
+gateway.SessionSettings.guild(guildID).categories
+gateway.SessionSettings.guild(guildID).categoryIDs
+gateway.SessionSettings.guild(guildID).categoryData(categoryID)
+gateway.SessionSettings.guild(guildID).channels
+gateway.SessionSettings.guild(guildID).channelIDs
+gateway.SessionSettings.guild(guildID).channelData(channelID)
+gateway.SessionSettings.guild(guildID).voiceStates
+gateway.SessionSettings.guild(guildID).notOfflineCachedMembers
+gateway.SessionSettings.guild(guildID).notOfflineCachedMemberIDs
+gateway.SessionSettings.guild(guildID).notOfflineCachedMemberData(userID)
+gateway.SessionSettings.guild(guildID).mergedPresences
+gateway.SessionSettings.guild(guildID).mergedPresenceIDs
+gateway.SessionSettings.guild(guildID).mergedPresenceData(userID)
+gateway.SessionSettings.guild(guildID).position #your roles in a specific guild
+
+#relationships
+gateway.SessionSettings.relationships
+gateway.SessionSettings.relationshipIDs
+gateway.SessionSettings.friends
+gateway.SessionSettings.friendIDs
+gateway.SessionSettings.blocked
+gateway.SessionSettings.blockedIDs
+gateway.SessionSettings.incomingFriendRequests
+gateway.SessionSettings.incomingFriendRequestIDs
+gateway.SessionSettings.outgoingFriendRequests
+gateway.SessionSettings.outgoingFriendRequestIDs
+gateway.SessionSettings.allFriendMergedPresences
+gateway.SessionSettings.allFriendMergedPresenceIDs
+gateway.SessionSettings.relationship(userID).data
+gateway.SessionSettings.relationship(userID).friendMergedPresenceData
+
+#DMs
+gateway.SessionSettings.DMs
+gateway.SessionSettings.DMIDs
+gateway.SessionSettings.DM(DMID).data
+gateway.SessionSettings.DM(DMID).recipients
+
+#guild settings (like notifications for each guild)
+gateway.SessionSettings.userGuildSettings
+gateway.SessionSettings.userGuildSetting(guildID).data
+
+#user settings
+gateway.SessionSettings.userSettings
+gateway.SessionSettings.optionsForUserSettings
+
+#other
+gateway.SessionSettings.mergedPresences
+gateway.SessionSettings.analyticsToken
+gateway.SessionSettings.connectedAccounts
+gateway.SessionSettings.consents
+gateway.SessionSettings.experiments
+gateway.SessionSettings.friendSuggestionCount
+gateway.SessionSettings.guildExperiments
+gateway.SessionSettings.readStates
+gateway.SessionSettings.geoOrderedRtcRegions
+gateway.SessionSettings.cachedUsers
+gateway.SessionSettings.tutorial
+gateway.SessionSettings.mergedPresences
+```
 ### Contributions?
 Contributions are always welcome! Feel free to submit issues or suggest features! Ofc not all suggestions will be implemented (because discum is intended to be a transparent, relatively-raw discord user api wrapper), but all suggestions will be looked into.           
 

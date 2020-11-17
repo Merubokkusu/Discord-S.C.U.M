@@ -66,7 +66,7 @@ bot.snowflake_to_unixts(snowflake) #snowflake is of type int
 - [ ] Making phone calls, sending audio/video data thru those calls
 - [ ] Everything
 
-# list of all 121 functions (click thru these and github should show their location in discum.py)
+# list of all 106 functions (click thru these and github should show their location in discum.py)
 
 ### Initiate client:
 ```python
@@ -119,15 +119,15 @@ bot.gateway = GatewayServer(bot.websocketurl, token, user_agent_data, proxy_host
 @bot.gateway.command #put ontop of functions you want to run on every received websocket message (replace "bot" with whatever variable name you're using)
 
 #removing functions from gateway command list
-bot.gateway.removeCommand(function)
+gateway.removeCommand(function)
 
 #clearing gateway command list
-bot.gateway.clearCommands
+gateway.clearCommands()
 ```
 ##### running and stopping gateway server
 ```python
-bot.gateway.run(auto_reconnect=True)
-bot.gateway.close() #this can be done while gateway server is running
+gateway.run(auto_reconnect=True)
+gateway.close() #this can be done while gateway server is running
 ```
 ##### clearing current session (removes data collected from last session)
 Do not run this while the gateway is running. Only run this after you've stopped the gateway server.

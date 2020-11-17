@@ -7,6 +7,9 @@ import base64
 
 from .sessionsettings import SessionSettings
 
+class InvalidSession(Exception):
+    pass
+
 class GatewayServer:
 
     class LogLevel:
@@ -128,6 +131,11 @@ class GatewayServer:
         if resp['op'] == self.OPCODE.HELLO: #only happens once, first message sent to client
             self.interval = (resp["d"]["heartbeat_interval"]-2000)/1000
             thread.start_new_thread(self._heartbeat, ())
+        elif resp['op'] == self.OPCODE.INVALID_SESSION:
+            if self.log: print("Invalid session.")
+            self._last_err = InvalidSession()
+            self.sequence = 0
+            self.ws.keep_running = False
         if self.interval == None:
             if self.log: print("Identify failed.")
             self.ws.keep_running = False
@@ -193,7 +201,7 @@ class GatewayServer:
     def run(self, auto_reconnect=True):
         while auto_reconnect: #interestingly, web clients don't actually send resume packets so...
             self.ws.run_forever(ping_interval=10, ping_timeout=5, http_proxy_host=self.proxy_host, http_proxy_port=self.proxy_port)
-            if isinstance(self._last_err, websocket._exceptions.WebSocketAddressException) or isinstance(self._last_err, websocket._exceptions.WebSocketTimeoutException):
+            if isinstance(self._last_err, websocket._exceptions.WebSocketAddressException) or isinstance(self._last_err, websocket._exceptions.WebSocketTimeoutException) or isinstance(self._last_err, InvalidSession):
                 if self.log: print("Connection Dropped. Retrying in 10 seconds.")
                 time.sleep(10)
                 self.ws.run_forever(ping_interval=10, ping_timeout=5, http_proxy_host=self.proxy_host, http_proxy_port=self.proxy_port)

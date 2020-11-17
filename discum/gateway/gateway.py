@@ -102,7 +102,7 @@ class GatewayServer:
             "Connection": "Upgrade",
             "Pragma": "no-cache",
             "Cache-Control": "no-cache",
-            "User-Agent": self.ua_data["useragent"],
+            "User-Agent": self.ua_data["browser_user_agent"],
             "Upgrade": "websocket",
             "Origin": "https://discord.com",
             "Sec-WebSocket-Version": "13",

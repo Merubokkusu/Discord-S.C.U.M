@@ -22,7 +22,7 @@ git clone https://github.com/Merubokkusu/Discord-S.C.U.M.git
 cd Discord-S.C.U.M
 python3 setup.py install               
 ```
-from PyPI:      
+from PyPI [![PyPI version](https://badge.fury.io/py/discum.svg)](https://badge.fury.io/py/discum):      
 ```python
 pip install discum 
 ```               

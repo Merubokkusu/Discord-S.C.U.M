@@ -1,4 +1,4 @@
-![version](https://img.shields.io/badge/version-0.2.8-blue) [![PyPI version](https://badge.fury.io/py/discum.svg)](https://badge.fury.io/py/discum) [![python versions](https://img.shields.io/badge/python-3.7%20%7C%203.8-blue)](https://pypi.org/project/discum/0.2.1/)
+![version](https://img.shields.io/badge/version-0.3.0-blue) [![PyPI version](https://badge.fury.io/py/discum.svg)](https://badge.fury.io/py/discum) [![python versions](https://img.shields.io/badge/python-3.7%20%7C%203.8-blue)](https://pypi.org/project/discum/0.2.1/)
 
 
 ### A Discord Selfbot Api Wrapper - discum
@@ -15,7 +15,7 @@
   Note, using a selfbot is against Discord's Terms of Service and you could get banned for using one if you're not careful. Also, this needs to be said: discum does not have rate limit handling. The main reasons for this are that discum is made to (1) be (relatively) simple and (2) give the developer/user freedom (generally I'd recommend a bit more than 1 second in between tasks of the same type, but if you'd like a longer or shorter wait time that's up to you). We (Merubokkusu and anewrandomaccount) do not take any responsibility for any consequences you might face while using discum. We also do not take any responsibility for any damage caused (to servers/channels) through the use of Discum. Discum is a tool; how you use this tool is on you.
 
 ## Install (installation should be the same on Mac, Linux, Windows, etc; just make sure you're using python 3.7 or 3.8)
-from source (recommended, up-to-date)(currently on version 0.2.8):      
+from source (recommended, up-to-date)(currently on version 0.3.0):      
 ```
 git clone https://github.com/Merubokkusu/Discord-S.C.U.M.git
 cd Discord-S.C.U.M
@@ -32,38 +32,18 @@ pip install discum
 \* note: discord is starting to (sometimes) require captchas for the login. So, in the meanwhile (until we add 2captcha.com support), provide the email, password, and token (or just the token if you're not using the profile-editing functions).
 ```python
 import discum     
-bot = discum.Client(email=,password=,log=True) #note, this will not work if you have a MFA account
-#bot = discum.Client(email=,password=,proxy_host=,proxy_port=,user_agent=,log=False)
-#bot = discum.Client(email=,password=,token=,log=False) #works for all types of accounts
-#bot = discum.Client(token=,log=True) #works for all types of accounts, no profile editing however
-#bot = discum.Client(token=,proxy_host=,proxy_port=) #works for all types of accounts, no profile editing however
-session_settings = bot.read()
-session_settings = bot.read(update=False)
-guildIDs = bot.getGuildIDs(update=False)
-bot.log = False
-messageData = bot.sendMessage("383003333751856129","Hello You :)")
-data = bot._Client__gateway_server.run(
-    [
-        {
-            "send": [],
-            "receive": [],
-            "collect": [
-                {
-                    "keyvalue": [
-                        (
-                            ("t",),
-                            "MESSAGE_CREATE",
-                        )
-                    ],
-                }
-            ],
-            "limit": 10,
-        }
-    ],
-    log=False,
-)
-#the "limit" above refers to number of seconds
-latest_messages = bot._Client__gateway_server.collected #collected messages
+bot = discum.Client(token='420tokentokentokentoken.token.tokentokentokentokentoken', log=False)
+bot.sendMessage("238323948859439", "Hello :)")
+
+@bot.gateway.command
+def helloworld(resp):
+    if resp['t'] == "READY_SUPPLEMENTAL": #ready_supplemental is sent after ready
+        print(f"Logged in as {bot.gateway.SessionSettings.user['username']}#{bot.gateway.SessionSettings.user['discriminator']}")
+    if resp['t'] == "MESSAGE_CREATE":
+        m = resp['d']
+        print(f"> guild {m['guild_id'] if 'guild_id' in m else None} channel {m['channel_id']} | {m['author']['username']}#{m['author']['discriminator']}: {m['content']}")
+
+bot.gateway.run(auto_reconnect=True)
 ```
 
 ### bonus features: 
@@ -83,7 +63,7 @@ bot.snowflake_to_unixts(snowflake) #snowflake is of type int
 - [ ] Making phone calls, sending audio/video data thru those calls
 - [ ] Everything
 
-# list of all 121 functions (click thru these and github should show their location in discum.py)
+# list of all 121 functions (click thru these and github should show their location in discum.py) **slightly changed in v0.3.0, will update soon
 ```python
 discum.Client(email="none", password="none", token="none", proxy_host=None, proxy_port=None, user_agent="random", log=True)
 connectionTest(self)

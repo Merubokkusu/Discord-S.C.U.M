@@ -7,9 +7,6 @@ import base64
 
 from .sessionsettings import SessionSettings
 
-class InvalidSession(Exception):
-    pass
-
 class GatewayServer:
 
     class LogLevel:
@@ -91,6 +88,7 @@ class GatewayServer:
         self._last_err = None
 
         self.connected = False
+        self.resumable = False
 
         self.voice_data = {} #voice connections dependent on current (connected) session
 
@@ -122,7 +120,11 @@ class GatewayServer:
     def on_open(self, ws):
         self.connected = True
         if self.log: print("Connected to websocket.")
-        self.send({"op": self.OPCODE.IDENTIFY, "d": self.auth})
+        if not self.resumable:
+            self.send({"op": self.OPCODE.IDENTIFY, "d": self.auth})
+        else:
+            self.resumable = False
+            self.send({"op": self.OPCODE.RESUME, "d": {"token": self.token, "session_id": self.session_id, "seq": self.sequence-1 if self.sequence>0 else self.sequence}})
 
     def on_message(self, ws, message):
         self.sequence += 1
@@ -133,16 +135,21 @@ class GatewayServer:
             thread.start_new_thread(self._heartbeat, ())
         elif resp['op'] == self.OPCODE.INVALID_SESSION:
             if self.log: print("Invalid session.")
-            self._last_err = InvalidSession()
-            self.sequence = 0
-            self.ws.keep_running = False
+            if self.resumable:
+                self.resumable = False
+                self.sequence = 0
+                self.close()
+            else:
+                self.sequence = 0
+                self.close()
         if self.interval == None:
             if self.log: print("Identify failed.")
-            self.ws.keep_running = False
+            self.close()
         if resp['t'] == "READY":
             self.session_id = resp['d']['session_id']
             self.settings_ready = resp['d']
         elif resp['t'] == "READY_SUPPLEMENTAL":
+            self.resumable = True #completely successful identify
             self.settings_ready_supp = resp['d']
             self.SessionSettings = SessionSettings(self.settings_ready, self.settings_ready_supp)
             self.READY = True
@@ -173,9 +180,12 @@ class GatewayServer:
         if self.log: print(f'{self.LogLevel.SEND}> {payload}{self.LogLevel.DEFAULT}')
         self.ws.send(json.dumps(payload))
 
-    #close websocket
     def close(self):
-        self.ws.keep_running = False
+        self.connected = False
+        self.READY = False #reset self.READY
+        if self.log: print('websocket closed') #sometimes this message will print twice. Don't worry, that's not an error.
+        self.ws.close()
+
 
     #the next 2 functions come from https://github.com/scrubjay55/Reddit_ChatBot_Python/blob/master/Reddit_ChatBot_Python/Utils/WebSockClient.py (Apache License 2.0)
     def command(self, func):
@@ -201,11 +211,21 @@ class GatewayServer:
     def run(self, auto_reconnect=True):
         while auto_reconnect: #interestingly, web clients don't actually send resume packets so...
             self.ws.run_forever(ping_interval=10, ping_timeout=5, http_proxy_host=self.proxy_host, http_proxy_port=self.proxy_port)
-            if isinstance(self._last_err, websocket._exceptions.WebSocketAddressException) or isinstance(self._last_err, websocket._exceptions.WebSocketTimeoutException) or isinstance(self._last_err, InvalidSession):
+            if isinstance(self._last_err, websocket._exceptions.WebSocketAddressException) or isinstance(self._last_err, websocket._exceptions.WebSocketTimeoutException):
+                if self.resumable:
+                    waitTime = random.randrange(1,6)
+                    if self.log: print(f"Connection Dropped. Attempting to resume last valid session in {waitTime} seconds.")
+                    time.sleep(waitTime)
+                else:
+                    if self.log: print("Connection Dropped. Retrying in 10 seconds.")
+                    time.sleep(10)
+                continue
+            elif not self.resumable: #this happens if you send an IDENTIFY but discord says INVALID_SESSION in response
                 if self.log: print("Connection Dropped. Retrying in 10 seconds.")
                 time.sleep(10)
                 continue
             else:
+                self.resumable = True
                 return 0
         if not auto_reconnect:
             self.ws.run_forever(ping_interval=10, ping_timeout=5, http_proxy_host=self.proxy_host, http_proxy_port=self.proxy_port)

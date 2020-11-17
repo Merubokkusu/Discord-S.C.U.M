@@ -170,7 +170,7 @@ class GatewayServer:
     def close(self):
         self.ws.keep_running = False
 
-    #the next 2 functions come from https://github.com/scrubjay55/Reddit_ChatBot_Python/blob/master/Reddit_ChatBot_Python/Utils/WebSockClient.py
+    #the next 2 functions come from https://github.com/scrubjay55/Reddit_ChatBot_Python/blob/master/Reddit_ChatBot_Python/Utils/WebSockClient.py (Apache License 2.0)
     def command(self, func):
         self._after_message_hooks.append(func)
         return func

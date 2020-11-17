@@ -66,7 +66,7 @@ bot.snowflake_to_unixts(snowflake) #snowflake is of type int
 - [ ] Making phone calls, sending audio/video data thru those calls
 - [ ] Everything
 
-# list of all 106 functions (click thru these and github should show their location in discum.py)
+# Overview (106 functions):
 
 ### Initiate client:
 ```python

@@ -207,6 +207,17 @@ class GatewayServer:
     def clearCommands(self):
         self._after_message_hooks = []
 
+    def resetSession(self): #just resets some variables that in-turn, resets the session (client side). Do not run this while running run().
+        self.interval = None
+        self.session_id = None
+        self.sequence = 0
+        self.READY = False #becomes True once READY_SUPPLEMENTAL is received
+        self.settings_ready = {}
+        self.settings_ready_supp = {}
+        self._last_err = None
+        self.voice_data = {}
+        self.resumable = False #you can't resume anyways without session_id and sequence
+
     #modified version of function run_4ever from https://github.com/scrubjay55/Reddit_ChatBot_Python/blob/master/Reddit_ChatBot_Python/Utils/WebSockClient.py (Apache License 2.0)
     def run(self, auto_reconnect=True):
         while auto_reconnect: #interestingly, web clients don't actually send resume packets so...

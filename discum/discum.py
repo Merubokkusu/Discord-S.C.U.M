@@ -32,7 +32,7 @@ class Client:
             self.__user_agent = UserAgent(limit=100).get_random_user_agent()
             if self.log: print('Randomly generated user agent: '+self.__user_agent)
         parseduseragent = user_agents.parse(self.__user_agent)
-        self.ua_data = {'useragent': self.__user_agent, 'os':parseduseragent.os.family,'browser':parseduseragent.browser.family,'device':parseduseragent.device.family if parseduseragent.is_mobile else '','browser_user_agent':self.__user_agent,'browser_version':parseduseragent.browser.version_string,'os_version':parseduseragent.os.version_string}
+        self.ua_data = {'os':parseduseragent.os.family,'browser':parseduseragent.browser.family,'device':parseduseragent.device.family if parseduseragent.is_mobile else '','browser_user_agent':self.__user_agent,'browser_version':parseduseragent.browser.version_string,'os_version':parseduseragent.os.version_string}
         if self.__user_token in ("none",None,False): #assuming email and pass are given...
             self.__login = Login(self.discord,self.__user_email,self.__user_password,self.__user_agent,self.__proxy_host,self.__proxy_port,self.log)
             self.__user_token = self.__login.GetToken() #update token from "none" to true string value

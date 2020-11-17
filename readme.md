@@ -1,4 +1,4 @@
-![version](https://img.shields.io/badge/version-0.3.0-blue) [![PyPI version](https://badge.fury.io/py/discum.svg)](https://badge.fury.io/py/discum) [![python versions](https://img.shields.io/badge/python-3.7%20%7C%203.8-blue)](https://pypi.org/project/discum/0.2.1/)
+![version](https://img.shields.io/badge/version-0.3.0-blue) [![PyPI version](https://badge.fury.io/py/discum.svg)](https://badge.fury.io/py/discum) [![python versions](https://img.shields.io/badge/python-3.6%20%7C%203.7%20%7C%203.8-blue)](https://pypi.org/project/discum/0.2.1/)
 
 
 ### A Discord Selfbot Api Wrapper - discum

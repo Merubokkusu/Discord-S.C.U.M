@@ -67,48 +67,48 @@ bot.snowflake_to_unixts(snowflake) #snowflake is of type int
 - [ ] Everything
 
 # Overview (106 functions):
-
+\*replace "bot" with whatever variable name you're using
 ### Initiate client:
 ```python
-discum.Client(email="none", password="none", token="none", proxy_host=None, proxy_port=None, user_agent="random", log=True)
+bot = discum.Client(email="none", password="none", token="none", proxy_host=None, proxy_port=None, user_agent="random", log=True)
 ```
 ### Http API:
 ```python
-connectionTest(self)
-snowflake_to_unixts(snowflake)
-unixts_to_snowflake(unixts)
-createDM(recipients)
-getMessages(channelID,num=1,beforeDate=None)
-sendMessage(channelID,message,embed="",tts=False)
-sendFile(channelID,filelocation,isurl=False,message="")
-searchMessages(guildID,channelID=None,userID=None,mentionsUserID=None,has=None,beforeDate=None,afterDate=None,textSearch=None,afterNumResults=None)
-filterSearchResults(searchResponse)
-typingAction(channelID)
-deleteMessage(channelID,messageID)
-editMessage(channelID,messageID,newMessage)
-pinMessage(channelID,messageID)
-unPinMessage(channelID,messageID)
-addReaction(channelID,messageID,emoji)
-removeReaction(channelID,messageID,emoji)
-ackMessage(channelID,messageID,ackToken=None)
-unAckMessage(channelID,messageID,numMentions=0)
-getPins(channelID)
-requestFriend(user)
-acceptFriend(userID)
-removeRelationship(userID)
-blockUser(userID)
-changeName(name)
-setStatus(status)
-setAvatar(imagePath)
-getInfoFromInviteCode(inviteCode)
-joinGuild(inviteCode)
-kick(guildID,userID,reason="")
-ban(guildID,userID,deleteMessagesDays=0,reason="")
-getGuildMember(guildID,userID) #endpoint not actually used by official discord client
+bot.connectionTest(self)
+bot.snowflake_to_unixts(snowflake)
+bot.unixts_to_snowflake(unixts)
+bot.createDM(recipients)
+bot.getMessages(channelID,num=1,beforeDate=None)
+bot.sendMessage(channelID,message,embed="",tts=False)
+bot.sendFile(channelID,filelocation,isurl=False,message="")
+bot.searchMessages(guildID,channelID=None,userID=None,mentionsUserID=None,has=None,beforeDate=None,afterDate=None,textSearch=None,afterNumResults=None)
+bot.filterSearchResults(searchResponse)
+bot.typingAction(channelID)
+bot.deleteMessage(channelID,messageID)
+bot.editMessage(channelID,messageID,newMessage)
+bot.pinMessage(channelID,messageID)
+bot.unPinMessage(channelID,messageID)
+bot.addReaction(channelID,messageID,emoji)
+bot.removeReaction(channelID,messageID,emoji)
+bot.ackMessage(channelID,messageID,ackToken=None)
+bot.unAckMessage(channelID,messageID,numMentions=0)
+bot.getPins(channelID)
+bot.requestFriend(user)
+bot.acceptFriend(userID)
+bot.removeRelationship(userID)
+bot.blockUser(userID)
+bot.changeName(name)
+bot.setStatus(status)
+bot.setAvatar(imagePath)
+bot.getInfoFromInviteCode(inviteCode)
+bot.joinGuild(inviteCode)
+bot.kick(guildID,userID,reason="")
+bot.ban(guildID,userID,deleteMessagesDays=0,reason="")
+bot.getGuildMember(guildID,userID) #endpoint not actually used by official discord client
 ```        
 ### Gateway API:
 ##### by default, discum initializes the gateway interactions when you first initialize your bot (discum.Client). 
-If you'd like to reinitialize the gateway you can (replace "bot" with whatever variable name you're using):
+If you'd like to reinitialize the gateway you can:
 ```python
 from discum.gateway.gateway import *
 bot.gateway = GatewayServer(bot.websocketurl, token, user_agent_data, proxy_host, proxy_port, log) #user_agent_data is a dictionary with keys: 'os', 'browser' , 'device', 'browser_user_agent', 'browser_version', 'os_version'}
@@ -116,18 +116,18 @@ bot.gateway = GatewayServer(bot.websocketurl, token, user_agent_data, proxy_host
 ##### changing gateway commands
 ```python
 #adding functions to gateway command list
-@bot.gateway.command #put ontop of functions you want to run on every received websocket message (replace "bot" with whatever variable name you're using)
+@bot.gateway.command #put ontop of functions you want to run on every received websocket message
 
 #removing functions from gateway command list
-gateway.removeCommand(function)
+bot.gateway.removeCommand(function)
 
 #clearing gateway command list
-gateway.clearCommands()
+bot.gateway.clearCommands()
 ```
 ##### running and stopping gateway server
 ```python
-gateway.run(auto_reconnect=True)
-gateway.close() #this can be done while gateway server is running
+bot.gateway.run(auto_reconnect=True)
+bot.gateway.close() #this can be done while gateway server is running
 ```
 ##### clearing current session (removes data collected from last session)
 Do not run this while the gateway is running. Only run this after you've stopped the gateway server.
@@ -137,107 +137,107 @@ bot.gateway.resetSession()
 ##### Session Settings
 ```python
 #all settings
-gateway.SessionSettings.read()
+bot.gateway.SessionSettings.read()
 
 #user data
-gateway.SessionSettings.user
+bot.gateway.SessionSettings.user
 
 #guilds
-gateway.SessionSettings.guilds
-gateway.SessionSettings.guildIDs
-gateway.SessionSettings.positions #your roles in each guild. 
-gateway.SessionSettings.guild(guildID).data
-gateway.SessionSettings.guild(guildID).owner
-gateway.SessionSettings.guild(guildID).boostLvl
-gateway.SessionSettings.guild(guildID).emojis
-gateway.SessionSettings.guild(guildID).banner
-gateway.SessionSettings.guild(guildID).discoverySplash
-gateway.SessionSettings.guild(guildID).msgNotificationSettings
-gateway.SessionSettings.guild(guildID).rulesChannelID
-gateway.SessionSettings.guild(guildID).verificationLvl
-gateway.SessionSettings.guild(guildID).features
-gateway.SessionSettings.guild(guildID).joinTime
-gateway.SessionSettings.guild(guildID).region
-gateway.SessionSettings.guild(guildID).applicationID
-gateway.SessionSettings.guild(guildID).afkChannelID
-gateway.SessionSettings.guild(guildID).icon
-gateway.SessionSettings.guild(guildID).name
-gateway.SessionSettings.guild(guildID).maxVideoChannelUsers
-gateway.SessionSettings.guild(guildID).roles
-gateway.SessionSettings.guild(guildID).publicUpdatesChannelID
-gateway.SessionSettings.guild(guildID).systemChannelFlags
-gateway.SessionSettings.guild(guildID).mfaLvl
-gateway.SessionSettings.guild(guildID).afkTimeout
-gateway.SessionSettings.guild(guildID).hashes
-gateway.SessionSettings.guild(guildID).systemChannelID
-gateway.SessionSettings.guild(guildID).lazy
-gateway.SessionSettings.guild(guildID).numBoosts
-gateway.SessionSettings.guild(guildID).large
-gateway.SessionSettings.guild(guildID).explicitContentFilter
-gateway.SessionSettings.guild(guildID).splashHash
-gateway.SessionSettings.guild(guildID).memberCount
-gateway.SessionSettings.guild(guildID).description
-gateway.SessionSettings.guild(guildID).vanityUrlCode
-gateway.SessionSettings.guild(guildID).preferredLocale
-gateway.SessionSettings.guild(guildID).allChannels
-gateway.SessionSettings.guild(guildID).categories
-gateway.SessionSettings.guild(guildID).categoryIDs
-gateway.SessionSettings.guild(guildID).categoryData(categoryID)
-gateway.SessionSettings.guild(guildID).channels
-gateway.SessionSettings.guild(guildID).channelIDs
-gateway.SessionSettings.guild(guildID).channelData(channelID)
-gateway.SessionSettings.guild(guildID).voiceStates
-gateway.SessionSettings.guild(guildID).notOfflineCachedMembers
-gateway.SessionSettings.guild(guildID).notOfflineCachedMemberIDs
-gateway.SessionSettings.guild(guildID).notOfflineCachedMemberData(userID)
-gateway.SessionSettings.guild(guildID).mergedPresences
-gateway.SessionSettings.guild(guildID).mergedPresenceIDs
-gateway.SessionSettings.guild(guildID).mergedPresenceData(userID)
-gateway.SessionSettings.guild(guildID).position #your roles in a specific guild
+bot.gateway.SessionSettings.guilds
+bot.gateway.SessionSettings.guildIDs
+bot.gateway.SessionSettings.positions #your roles in each guild. 
+bot.gateway.SessionSettings.guild(guildID).data
+bot.gateway.SessionSettings.guild(guildID).owner
+bot.gateway.SessionSettings.guild(guildID).boostLvl
+bot.gateway.SessionSettings.guild(guildID).emojis
+bot.gateway.SessionSettings.guild(guildID).banner
+bot.gateway.SessionSettings.guild(guildID).discoverySplash
+bot.gateway.SessionSettings.guild(guildID).msgNotificationSettings
+bot.gateway.SessionSettings.guild(guildID).rulesChannelID
+bot.gateway.SessionSettings.guild(guildID).verificationLvl
+bot.gateway.SessionSettings.guild(guildID).features
+bot.gateway.SessionSettings.guild(guildID).joinTime
+bot.gateway.SessionSettings.guild(guildID).region
+bot.gateway.SessionSettings.guild(guildID).applicationID
+bot.gateway.SessionSettings.guild(guildID).afkChannelID
+bot.gateway.SessionSettings.guild(guildID).icon
+bot.gateway.SessionSettings.guild(guildID).name
+bot.gateway.SessionSettings.guild(guildID).maxVideoChannelUsers
+bot.gateway.SessionSettings.guild(guildID).roles
+bot.gateway.SessionSettings.guild(guildID).publicUpdatesChannelID
+bot.gateway.SessionSettings.guild(guildID).systemChannelFlags
+bot.gateway.SessionSettings.guild(guildID).mfaLvl
+bot.gateway.SessionSettings.guild(guildID).afkTimeout
+bot.gateway.SessionSettings.guild(guildID).hashes
+bot.gateway.SessionSettings.guild(guildID).systemChannelID
+bot.gateway.SessionSettings.guild(guildID).lazy
+bot.gateway.SessionSettings.guild(guildID).numBoosts
+bot.gateway.SessionSettings.guild(guildID).large
+bot.gateway.SessionSettings.guild(guildID).explicitContentFilter
+bot.gateway.SessionSettings.guild(guildID).splashHash
+bot.gateway.SessionSettings.guild(guildID).memberCount
+bot.gateway.SessionSettings.guild(guildID).description
+bot.gateway.SessionSettings.guild(guildID).vanityUrlCode
+bot.gateway.SessionSettings.guild(guildID).preferredLocale
+bot.gateway.SessionSettings.guild(guildID).allChannels
+bot.gateway.SessionSettings.guild(guildID).categories
+bot.gateway.SessionSettings.guild(guildID).categoryIDs
+bot.gateway.SessionSettings.guild(guildID).categoryData(categoryID)
+bot.gateway.SessionSettings.guild(guildID).channels
+bot.gateway.SessionSettings.guild(guildID).channelIDs
+bot.gateway.SessionSettings.guild(guildID).channelData(channelID)
+bot.gateway.SessionSettings.guild(guildID).voiceStates
+bot.gateway.SessionSettings.guild(guildID).notOfflineCachedMembers
+bot.gateway.SessionSettings.guild(guildID).notOfflineCachedMemberIDs
+bot.gateway.SessionSettings.guild(guildID).notOfflineCachedMemberData(userID)
+bot.gateway.SessionSettings.guild(guildID).mergedPresences
+bot.gateway.SessionSettings.guild(guildID).mergedPresenceIDs
+bot.gateway.SessionSettings.guild(guildID).mergedPresenceData(userID)
+bot.gateway.SessionSettings.guild(guildID).position #your roles in a specific guild
 
 #relationships
-gateway.SessionSettings.relationships
-gateway.SessionSettings.relationshipIDs
-gateway.SessionSettings.friends
-gateway.SessionSettings.friendIDs
-gateway.SessionSettings.blocked
-gateway.SessionSettings.blockedIDs
-gateway.SessionSettings.incomingFriendRequests
-gateway.SessionSettings.incomingFriendRequestIDs
-gateway.SessionSettings.outgoingFriendRequests
-gateway.SessionSettings.outgoingFriendRequestIDs
-gateway.SessionSettings.allFriendMergedPresences
-gateway.SessionSettings.allFriendMergedPresenceIDs
-gateway.SessionSettings.relationship(userID).data
-gateway.SessionSettings.relationship(userID).friendMergedPresenceData
+bot.gateway.SessionSettings.relationships
+bot.gateway.SessionSettings.relationshipIDs
+bot.gateway.SessionSettings.friends
+bot.gateway.SessionSettings.friendIDs
+bot.gateway.SessionSettings.blocked
+bot.gateway.SessionSettings.blockedIDs
+bot.gateway.SessionSettings.incomingFriendRequests
+bot.gateway.SessionSettings.incomingFriendRequestIDs
+bot.gateway.SessionSettings.outgoingFriendRequests
+bot.gateway.SessionSettings.outgoingFriendRequestIDs
+bot.gateway.SessionSettings.allFriendMergedPresences
+bot.gateway.SessionSettings.allFriendMergedPresenceIDs
+bot.gateway.SessionSettings.relationship(userID).data
+bot.gateway.SessionSettings.relationship(userID).friendMergedPresenceData
 
 #DMs
-gateway.SessionSettings.DMs
-gateway.SessionSettings.DMIDs
-gateway.SessionSettings.DM(DMID).data
-gateway.SessionSettings.DM(DMID).recipients
+bot.gateway.SessionSettings.DMs
+bot.gateway.SessionSettings.DMIDs
+bot.gateway.SessionSettings.DM(DMID).data
+bot.gateway.SessionSettings.DM(DMID).recipients
 
 #guild settings (like notifications for each guild)
-gateway.SessionSettings.userGuildSettings
-gateway.SessionSettings.userGuildSetting(guildID).data
+bot.gateway.SessionSettings.userGuildSettings
+bot.gateway.SessionSettings.userGuildSetting(guildID).data
 
 #user settings
-gateway.SessionSettings.userSettings
-gateway.SessionSettings.optionsForUserSettings
+bot.gateway.SessionSettings.userSettings
+bot.gateway.SessionSettings.optionsForUserSettings
 
 #other
-gateway.SessionSettings.mergedPresences
-gateway.SessionSettings.analyticsToken
-gateway.SessionSettings.connectedAccounts
-gateway.SessionSettings.consents
-gateway.SessionSettings.experiments
-gateway.SessionSettings.friendSuggestionCount
-gateway.SessionSettings.guildExperiments
-gateway.SessionSettings.readStates
-gateway.SessionSettings.geoOrderedRtcRegions
-gateway.SessionSettings.cachedUsers
-gateway.SessionSettings.tutorial
-gateway.SessionSettings.mergedPresences
+bot.gateway.SessionSettings.mergedPresences
+bot.gateway.SessionSettings.analyticsToken
+bot.gateway.SessionSettings.connectedAccounts
+bot.gateway.SessionSettings.consents
+bot.gateway.SessionSettings.experiments
+bot.gateway.SessionSettings.friendSuggestionCount
+bot.gateway.SessionSettings.guildExperiments
+bot.gateway.SessionSettings.readStates
+bot.gateway.SessionSettings.geoOrderedRtcRegions
+bot.gateway.SessionSettings.cachedUsers
+bot.gateway.SessionSettings.tutorial
+bot.gateway.SessionSettings.mergedPresences
 ```
 ### Contributions?
 Contributions are always welcome! Feel free to submit issues or suggest features! Ofc not all suggestions will be implemented (because discum is intended to be a transparent, relatively-raw discord user api wrapper), but all suggestions will be looked into.           

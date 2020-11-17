@@ -190,7 +190,7 @@ class GatewayServer:
     def clearCommands(self):
         self._after_message_hooks = []
 
-    #modified version of function run_4ever from https://github.com/scrubjay55/Reddit_ChatBot_Python/blob/master/Reddit_ChatBot_Python/Utils/WebSockClient.py
+    #modified version of function run_4ever from https://github.com/scrubjay55/Reddit_ChatBot_Python/blob/master/Reddit_ChatBot_Python/Utils/WebSockClient.py (Apache License 2.0)
     def run(self, auto_reconnect=True):
         while auto_reconnect: #interestingly, web clients don't actually send resume packets so...
             self.ws.run_forever(ping_interval=10, ping_timeout=5, http_proxy_host=self.proxy_host, http_proxy_port=self.proxy_port)

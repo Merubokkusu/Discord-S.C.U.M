@@ -204,7 +204,6 @@ class GatewayServer:
             if isinstance(self._last_err, websocket._exceptions.WebSocketAddressException) or isinstance(self._last_err, websocket._exceptions.WebSocketTimeoutException) or isinstance(self._last_err, InvalidSession):
                 if self.log: print("Connection Dropped. Retrying in 10 seconds.")
                 time.sleep(10)
-                self.ws.run_forever(ping_interval=10, ping_timeout=5, http_proxy_host=self.proxy_host, http_proxy_port=self.proxy_port)
                 continue
             else:
                 return 0

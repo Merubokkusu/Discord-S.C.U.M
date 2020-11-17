@@ -15,7 +15,7 @@ using requests and websockets :)
   
   Note, using a selfbot is against Discord's Terms of Service and you could get banned for using one if you're not careful. Also, this needs to be said: discum does not have rate limit handling. The main reasons for this are that discum is made to (1) be (relatively) simple and (2) give the developer/user freedom (generally I'd recommend a bit more than 1 second in between tasks of the same type, but if you'd like a longer or shorter wait time that's up to you). We (Merubokkusu and anewrandomaccount) do not take any responsibility for any consequences you might face while using discum. We also do not take any responsibility for any damage caused (to servers/channels) through the use of Discum. Discum is a tool; how you use this tool is on you.
 
-## Install (installation should be the same on Mac, Linux, Windows, etc; just make sure you're using python 3.7 or 3.8)
+## Install (installation should be the same on Mac, Linux, Windows, etc; just make sure you're using python 3.6+)
 from source (recommended, up-to-date)(currently on version 0.3.0):      
 ```
 git clone https://github.com/Merubokkusu/Discord-S.C.U.M.git

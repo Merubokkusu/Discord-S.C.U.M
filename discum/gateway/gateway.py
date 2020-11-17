@@ -170,7 +170,7 @@ class GatewayServer:
 
     #just a wrapper for ws.send
     def send(self, payload):
-        if self.log: print(f'{self.LogLevel.SEND}> {payload}{self.LogLevel.RECEIVE}')
+        if self.log: print(f'{self.LogLevel.SEND}> {payload}{self.LogLevel.DEFAULT}')
         self.ws.send(json.dumps(payload))
 
     #close websocket

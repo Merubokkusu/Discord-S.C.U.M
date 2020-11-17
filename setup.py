@@ -25,7 +25,7 @@ REQUIRED = [
     'requests',
     'requests_toolbelt',
     'filetype',
-    'websockets',
+    'websocket_client',
     'user_agents',
     'random_user_agent'
 

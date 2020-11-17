@@ -17,8 +17,8 @@ DESCRIPTION = 'A Discord Self-Bot API'
 URL = 'https://github.com/Merubokkusu/Discord-S.C.U.M'
 EMAIL = 'loser@merubokkusu.com'
 AUTHOR = 'Merubokkusu'
-REQUIRES_PYTHON = '>=3.7.0'
-VERSION = '0.2.8'
+REQUIRES_PYTHON = '>=3.6.0'
+VERSION = '0.3.0'
 
 # What packages are required for this module to be executed?
 REQUIRED = [

@@ -77,6 +77,8 @@ bot = discum.Client(email="none", password="none", token="none", proxy_host=None
 bot.connectionTest(self)
 bot.snowflake_to_unixts(snowflake)
 bot.unixts_to_snowflake(unixts)
+
+#messages
 bot.createDM(recipients)
 bot.getMessages(channelID,num=1,beforeDate=None)
 bot.sendMessage(channelID,message,embed="",tts=False)
@@ -93,6 +95,8 @@ bot.removeReaction(channelID,messageID,emoji)
 bot.ackMessage(channelID,messageID,ackToken=None)
 bot.unAckMessage(channelID,messageID,numMentions=0)
 bot.getPins(channelID)
+
+#user
 bot.requestFriend(user)
 bot.acceptFriend(userID)
 bot.removeRelationship(userID)
@@ -100,6 +104,8 @@ bot.blockUser(userID)
 bot.changeName(name)
 bot.setStatus(status)
 bot.setAvatar(imagePath)
+
+#guild/server
 bot.getInfoFromInviteCode(inviteCode)
 bot.joinGuild(inviteCode)
 bot.kick(guildID,userID,reason="")

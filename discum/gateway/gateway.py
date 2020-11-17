@@ -76,7 +76,7 @@ class GatewayServer:
 
         self.interval = None
         self.session_id = None
-        self.sequence = None
+        self.sequence = 0
         self.READY = False #becomes True once READY_SUPPLEMENTAL is received
         self.settings_ready = {}
         self.settings_ready_supp = {}
@@ -117,7 +117,6 @@ class GatewayServer:
         return ws
 
     def on_open(self, ws):
-        self.sequence = 0
         self.connected = True
         if self.log: print("Connected to websocket.")
         self.send({"op": self.OPCODE.IDENTIFY, "d": self.auth})

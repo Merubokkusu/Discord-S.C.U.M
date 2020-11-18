@@ -214,7 +214,35 @@ bot.getGuildMember('guildID00000000000','userID11111111111')
 ```
 
 #### Gateway Server
-#### Session Settings
+scroll down to skip to the examples
+###### by default, discum initializes the gateway interactions when you first initialize your bot (discum.Client). 
+If you'd like to reinitialize the gateway you can:
+```python
+from discum.gateway.gateway import *
+bot.gateway = GatewayServer(bot.websocketurl, token, user_agent_data, proxy_host, proxy_port, log) #user_agent_data is a dictionary with keys: 'os', 'browser' , 'device', 'browser_user_agent', 'browser_version', 'os_version'}
+```
+###### changing gateway commands
+```python
+#adding functions to gateway command list
+@bot.gateway.command #put ontop of functions you want to run on every received websocket message
+
+#removing functions from gateway command list
+bot.gateway.removeCommand(function)
+
+#clearing gateway command list
+bot.gateway.clearCommands()
+```
+###### running and stopping gateway server
+```python
+bot.gateway.run(auto_reconnect=True)
+bot.gateway.close() #this can be done while gateway server is running
+```
+###### clearing current session (removes data collected from last session)
+Do not run this while the gateway is running. Only run this after you've stopped the gateway server.
+```python
+bot.gateway.resetSession()
+```
+##### Session Settings
 ```python
 #all settings
 bot.gateway.SessionSettings.read()
@@ -328,3 +356,87 @@ bot.gateway.SessionSettings.cachedUsers
 bot.gateway.SessionSettings.tutorial
 bot.gateway.SessionSettings.mergedPresences
 ```                               
+
+###### Examples (assuming you've already imported discum and initialized your bot (bot = discum.Client...))
+
+1)
+```python
+@bot.gateway.command
+def helloworld(resp):
+    if resp['t'] == "READY_SUPPLEMENTAL": #ready_supplemental is sent after ready
+        user = bot.gateway.SessionSettings.user
+        print(f"Logged in as {user['username']}#{user['discriminator']}")
+    if resp['t'] == "MESSAGE_CREATE":
+        m = resp['d']
+        print(f"> guild {m['guild_id'] if 'guild_id' in m else None} channel {m['channel_id']} | {m['author']['username']}#{m['author']['discriminator']}: {m['content']}")
+
+bot.gateway.run(auto_reconnect=True)
+```
+is the same as doing
+```python
+@bot.gateway.command
+def helloworld1(resp):
+    if resp['t'] == "READY_SUPPLEMENTAL": #ready_supplemental is sent after ready
+        user = bot.gateway.SessionSettings.user
+        print(f"Logged in as {user['username']}#{user['discriminator']}")
+
+@bot.gateway.command
+def helloworld2(resp):
+    if resp['t'] == "MESSAGE_CREATE":
+        m = resp['d']
+        print(f"> guild {m['guild_id'] if 'guild_id' in m else None} channel {m['channel_id']} | {m['author']['username']}#{m['author']['discriminator']}: {m['content']}")
+
+bot.gateway.run(auto_reconnect=True)
+```
+
+2) we can also remove functions
+```python
+@bot.gateway.command
+def example(resp):
+    if resp['t'] == "MESSAGE_CREATE":
+        print('Detected a message')
+        bot.gateway.removeCommand(example) #this works because bot.gateway.command returns the inputted function after adding the function to the command list
+
+bot.gateway.run(auto_reconnect=True)
+```
+3) clear functions
+```python
+@bot.gateway.command
+def helloworld1(resp):
+    if resp['t'] == "READY_SUPPLEMENTAL": #ready_supplemental is sent after ready
+        user = bot.gateway.SessionSettings.user
+        print(f"Logged in as {user['username']}#{user['discriminator']}")
+
+@bot.gateway.command
+def helloworld2(resp):
+    if resp['t'] == "MESSAGE_CREATE":
+        print('Detected a message')
+        bot.gateway.clearCommands()
+
+bot.gateway.run(auto_reconnect=True)
+```
+4) send data
+```python
+@bot.gateway.command
+def sendexample(resp):
+    if resp['t'] == "MESSAGE_CREATE":
+        print('Detected a message')
+        bot.gateway.send({"op":3,"d":{"status":"dnd","since":0,"activities":[],"afk":False}})
+        bot.gateway.removeCommand(sendexample) #use this if you only want to send the data once
+
+bot.gateway.run(auto_reconnect=True)
+```
+5) close connection
+```python
+@bot.gateway.command
+def closeexample(resp):
+    if resp['t'] == "MESSAGE_CREATE":
+        print('Detected a message')
+        bot.gateway.close()
+
+bot.gateway.run(auto_reconnect=True)
+
+bot.gateway.clearCommands() #run this if you want to clear commands
+bot.gateway.resetSession() #run this if you want to clear collected session data from last connection
+bot.gateway.run(auto_reconnect=True) #and now you can connect to the gateway server again
+```

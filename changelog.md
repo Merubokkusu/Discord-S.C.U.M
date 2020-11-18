@@ -1,4 +1,17 @@
 # Changelog
+# 0.3.0
+### Added
+- gateway interactions rewritten to use websocket.WebSocketApp from https://github.com/websocket-client/websocket-client
+- ability to have functions run on every receive message (influenced by this: https://github.com/scrubjay55/Reddit_ChatBot_Python/blob/master/Reddit_ChatBot_Python/Utils/WebSockClient.py)
+- ability to reconnect and properly send resume messages to discord when possible
+- check for and properly handle SESSION_INVALID events
+### Changed
+- simplified gateway code
+- simplified gateway api
+- reorganized session settings
+### Removed
+- old gateway interaction code (replaced with better code)
+
 # 0.2.8
 ### Added
 ```python

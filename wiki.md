@@ -356,8 +356,8 @@ bot.gateway.SessionSettings.cachedUsers
 bot.gateway.SessionSettings.tutorial
 bot.gateway.SessionSettings.mergedPresences
 ```                               
-
-###### Examples (assuming you've already imported discum and initialized your bot (bot = discum.Client...))
+_______________________
+###### Gateway API Examples (assuming you've already imported discum and initialized your bot (bot = discum.Client...))
 
 1)
 ```python

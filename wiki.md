@@ -31,7 +31,7 @@ bot.log = False
 - [Guilds](#Guilds)
 - [Gateway Server](#Gateway-Server)
 
-#### Messages
+## Messages
 ##### create DM
 ```createDM(userIDs)```
 ```python
@@ -144,7 +144,7 @@ bot.unAckMessage("222222222222222222","333333333333333333",250)
 ```
 - numMentions can be any positive integer (but discord registers any input above 250 as 250)      
 - you can technically put any string number (str(num)) as the messageID
-#### User Actions
+## User Actions
 ##### send friend request
 ```requestFriend(userID)```
 ```requestFriend(username+"#"+discriminator)```
@@ -182,7 +182,7 @@ bot.setStatus(status)
 ```python
 bot.setAvatar(email,password,imagePath)
 ```
-#### Guilds
+## Guild
 ##### get guild info from invite code
 ```getInfoFromInviteCode(inviteCode)```
 ```python
@@ -213,7 +213,7 @@ bot.ban('guildID00000000000','userID11111111111')
 bot.getGuildMember('guildID00000000000','userID11111111111')
 ```
 
-#### Gateway Server
+## Gateway Server
 scroll down to view the examples
 ###### by default, discum initializes the gateway interactions when you first initialize your bot (discum.Client). 
 If you'd like to reinitialize the gateway you can:

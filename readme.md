@@ -34,6 +34,7 @@ pip install discum
 - websocket_client
 - filetype
 - user_agents
+- ua_parser
 - random_user_agent
 
 # Usage

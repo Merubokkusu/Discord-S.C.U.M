@@ -32,104 +32,120 @@ bot.log = False
 - [Guilds](#Guilds)
 - [Gateway Server](#Gateway-Server)
 #### Read User Data \*slightly changed in v0.3.0, will update soon
-\* this connects to discord's gateway server and returns your current session settings. It's recommended that you set update to False after you run one of these first since you can only connect so many times to the gateway until discord gets suspicious (maximum recommended connections per day is 1000)      
-```bot.read(update=True)```                               
-```bot.getGuilds(update=True)```                               
-```bot.getGuildIDs(update=True)```                               
-```bot.getGuildData(guildID,update=True)```                               
-```bot.getGuildOwner(guildID,update=True)```                               
-```bot.getGuildBoostLvl(guildID,update=True)```                               
-```bot.getGuildEmojis(guildID,update=True)```                               
-```bot.getGuildBanner(guildID,update=True)```                               
-```bot.getGuildDiscoverySplash(guildID,update=True)```                               
-```bot.getGuildMsgNotificationSettings(guildID,update=True)```                               
-```bot.getGuildRulesChannelID(guildID,update=True)```                               
-```bot.getGuildVerificationLvl(guildID,update=True)```                               
-```bot.getGuildFeatures(guildID,update=True)```                               
-```bot.getGuildJoinTime(guildID,update=True)```                               
-```bot.getGuildRegion(guildID,update=True)```                               
-```bot.getGuildApplicationID(guildID,update=True)```                               
-```bot.getGuildAfkChannelID(guildID,update=True)```                               
-```bot.getGuildIcon(guildID,update=True)```                               
-```bot.getGuildName(guildID,update=True)```                               
-```bot.getGuildMaxVideoChannelUsers(guildID,update=True)```                               
-```bot.getGuildRoles(guildID,update=True)```                               
-```bot.getGuildPublicUpdatesChannelID(guildID,update=True)```                               
-```bot.getGuildSystemChannelFlags(guildID,update=True)```                               
-```bot.getGuildMfaLvl(guildID,update=True)```                               
-```bot.getGuildAfkTimeout(guildID,update=True)```                               
-```bot.getGuildHashes(guildID,update=True)```                               
-```bot.getGuildSystemChannelID(guildID,update=True)```                               
-```bot.isGuildLazy(guildID,update=True)```                               
-```bot.getGuildNumBoosts(guildID,update=True)```                               
-```bot.isGuildLarge(guildID,update=True)```                               
-```bot.getGuildExplicitContentFilter(guildID,update=True)```                               
-```bot.getGuildSplashHash(guildID,update=True)```                               
-```bot.getGuildMemberCount(guildID,update=True)```                               
-```bot.getGuildDescription(guildID,update=True)```                               
-```bot.getGuildVanityUrlCode(guildID,update=True)```                               
-```bot.getGuildPreferredLocale(guildID,update=True)```                               
-```bot.getGuildAllChannels(guildID,update=True)```                               
-```bot.getGuildCategories(guildID,update=True)```                               
-```bot.getGuildCategoryIDs(guildID,update=True)```                               
-```bot.getGuildCategoryData(guildID,categoryID,update=True)```                               
-```bot.getGuildChannels(guildID,update=True)```                               
-```bot.getGuildChannelIDs(guildID,update=True)```      
-```bot.getGuildChannelData(guildID,channelID,update=True)```      
-```bot.getGuildVoiceStates(guildID,update=True)```      
-```bot.getGuildNotOfflineCachedMembers(guildID,update=True)```      
-```bot.getGuildNotOfflineCachedMemberIDs(guildID,update=True)```      
-```bot.getGuildNotOfflineCachedMemberData(guildID,userID,update=True)```      
-```bot.getMergedPresences(update=True)```      
-```bot.getAllGuildsMergedPresences(update=True)```      
-```bot.getGuildMergedPresences(guildID,update=True)```      
-```bot.getGuildMergedPresencesIDs(update=True)```      
-```bot.getGuildMergedPresencesData(guildID,userID,update=True)```      
-```bot.getAllFriendsMergedPresences(update=True)```      
-```bot.getAllFriendsMergedPresencesIDs(update=True)```      
-```bot.getFriendMergedPresencesData(userID,update=True)```      
-```bot.getAllMyGuildPositions(update=True)```      
-```bot.getMyGuildPosition(guildID,update=True)```      
-```bot.getAnalyticsToken(update=True)```      
-```bot.getConnectedAccounts(update=True)```      
-```bot.getConsents(update=True)```      
-```bot.getExperiments(update=True)```      
-```bot.getFriendSuggestionCount(update=True)```      
-```bot.getGuildExperiments(update=True)```      
-```bot.getNotOfflineFriends(update=True)```      
-```bot.getDMs(update=True)```      
-```bot.getDMIDs(update=True)```      
-```bot.getDMData(DMID,update=True)```      
-```bot.getDMRecipients(DMID,update=True)```      
-```bot.getReadStates(update=True)```      
-```bot.getRelationships(update=True)```     
+\* this connects to discord's gateway server and returns your current session settings. It's recommended that you connect to the gateway server a maximum of 1000 times per day (resuming does not count). We don't know what happens to user accounts that connect more than 1000 times in a day.     
+```python
+#all settings
+bot.gateway.SessionSettings.read()
+
+#user data
+bot.gateway.SessionSettings.user
+
+#guilds
+bot.gateway.SessionSettings.guilds
+bot.gateway.SessionSettings.guildIDs
+bot.gateway.SessionSettings.positions #your roles in each guild. 
+bot.gateway.SessionSettings.guild(guildID).data
+bot.gateway.SessionSettings.guild(guildID).owner
+bot.gateway.SessionSettings.guild(guildID).boostLvl
+bot.gateway.SessionSettings.guild(guildID).emojis
+bot.gateway.SessionSettings.guild(guildID).banner
+bot.gateway.SessionSettings.guild(guildID).discoverySplash
+bot.gateway.SessionSettings.guild(guildID).msgNotificationSettings
+bot.gateway.SessionSettings.guild(guildID).rulesChannelID
+bot.gateway.SessionSettings.guild(guildID).verificationLvl
+bot.gateway.SessionSettings.guild(guildID).features
+bot.gateway.SessionSettings.guild(guildID).joinTime
+bot.gateway.SessionSettings.guild(guildID).region
+bot.gateway.SessionSettings.guild(guildID).applicationID
+bot.gateway.SessionSettings.guild(guildID).afkChannelID
+bot.gateway.SessionSettings.guild(guildID).icon
+bot.gateway.SessionSettings.guild(guildID).name
+bot.gateway.SessionSettings.guild(guildID).maxVideoChannelUsers
+bot.gateway.SessionSettings.guild(guildID).roles
+bot.gateway.SessionSettings.guild(guildID).publicUpdatesChannelID
+bot.gateway.SessionSettings.guild(guildID).systemChannelFlags
+bot.gateway.SessionSettings.guild(guildID).mfaLvl
+bot.gateway.SessionSettings.guild(guildID).afkTimeout
+bot.gateway.SessionSettings.guild(guildID).hashes
+bot.gateway.SessionSettings.guild(guildID).systemChannelID
+bot.gateway.SessionSettings.guild(guildID).lazy
+bot.gateway.SessionSettings.guild(guildID).numBoosts
+bot.gateway.SessionSettings.guild(guildID).large
+bot.gateway.SessionSettings.guild(guildID).explicitContentFilter
+bot.gateway.SessionSettings.guild(guildID).splashHash
+bot.gateway.SessionSettings.guild(guildID).memberCount
+bot.gateway.SessionSettings.guild(guildID).description
+bot.gateway.SessionSettings.guild(guildID).vanityUrlCode
+bot.gateway.SessionSettings.guild(guildID).preferredLocale
+bot.gateway.SessionSettings.guild(guildID).allChannels
+bot.gateway.SessionSettings.guild(guildID).categories
+bot.gateway.SessionSettings.guild(guildID).categoryIDs
+bot.gateway.SessionSettings.guild(guildID).categoryData(categoryID)
+bot.gateway.SessionSettings.guild(guildID).channels
+bot.gateway.SessionSettings.guild(guildID).channelIDs
+bot.gateway.SessionSettings.guild(guildID).channelData(channelID)
+bot.gateway.SessionSettings.guild(guildID).voiceStates
+bot.gateway.SessionSettings.guild(guildID).notOfflineCachedMembers
+bot.gateway.SessionSettings.guild(guildID).notOfflineCachedMemberIDs
+bot.gateway.SessionSettings.guild(guildID).notOfflineCachedMemberData(userID)
+bot.gateway.SessionSettings.guild(guildID).mergedPresences
+bot.gateway.SessionSettings.guild(guildID).mergedPresenceIDs
+bot.gateway.SessionSettings.guild(guildID).mergedPresenceData(userID)
+bot.gateway.SessionSettings.guild(guildID).position #your roles in a specific guild
+```
+```python
+#relationships
+```
 | Relationship Type | description |
 | ------ | ------ |
 | 1 | friend |
 | 2 | block |
 | 3 | incoming friend request |
-| 4 | outgoing friend request |      
-   
-```bot.getRelationshipIDs(update=True)```                              
-```bot.getRelationshipData(userID,update=True)```                              
-```bot.getFriends(update=True)```                              
-```bot.getFriendIDs(update=True)```                              
-```bot.getBlocked(update=True)```                              
-```bot.getBlockedIDs(update=True)```                              
-```bot.getIncomingFriendRequests(update=True)```                              
-```bot.getIncomingFriendRequestIDs(update=True)```                              
-```bot.getOutgoingFriendRequests(update=True)```                              
-```bot.getOutgoingFriendRequestIDs(update=True)```                              
-```bot.getSessionID(update=True)```                              
-```bot.getTutorial(update=True)```                              
-```bot.getUserData(update=True)```                              
-```bot.getUserGuildSettings(guildID=None,update=True)```                              
-```bot.getUserSettings(update=True)```                              
-```bot.getOptionsForUserSettings(update=True)```                              
-```bot.getGeoOrderedRtcRegions(update=True)```                              
-```bot.getCachedUsers(update=True)```                              
-```bot.getWebsocketVersion(update=True)```                                  
+| 4 | outgoing friend request | 
+```python
+bot.gateway.SessionSettings.relationships
+bot.gateway.SessionSettings.relationshipIDs
+bot.gateway.SessionSettings.friends
+bot.gateway.SessionSettings.friendIDs
+bot.gateway.SessionSettings.blocked
+bot.gateway.SessionSettings.blockedIDs
+bot.gateway.SessionSettings.incomingFriendRequests
+bot.gateway.SessionSettings.incomingFriendRequestIDs
+bot.gateway.SessionSettings.outgoingFriendRequests
+bot.gateway.SessionSettings.outgoingFriendRequestIDs
+bot.gateway.SessionSettings.allFriendMergedPresences
+bot.gateway.SessionSettings.allFriendMergedPresenceIDs
+bot.gateway.SessionSettings.relationship(userID).data
+bot.gateway.SessionSettings.relationship(userID).friendMergedPresenceData
 
+#DMs
+bot.gateway.SessionSettings.DMs
+bot.gateway.SessionSettings.DMIDs
+bot.gateway.SessionSettings.DM(DMID).data
+bot.gateway.SessionSettings.DM(DMID).recipients
+
+#guild settings (like notifications for each guild)
+bot.gateway.SessionSettings.userGuildSettings
+bot.gateway.SessionSettings.userGuildSetting(guildID).data
+
+#user settings
+bot.gateway.SessionSettings.userSettings
+bot.gateway.SessionSettings.optionsForUserSettings
+
+#other
+bot.gateway.SessionSettings.mergedPresences
+bot.gateway.SessionSettings.analyticsToken
+bot.gateway.SessionSettings.connectedAccounts
+bot.gateway.SessionSettings.consents
+bot.gateway.SessionSettings.experiments
+bot.gateway.SessionSettings.friendSuggestionCount
+bot.gateway.SessionSettings.guildExperiments
+bot.gateway.SessionSettings.readStates
+bot.gateway.SessionSettings.geoOrderedRtcRegions
+bot.gateway.SessionSettings.cachedUsers
+bot.gateway.SessionSettings.tutorial
+bot.gateway.SessionSettings.mergedPresences
+```                               
 #### Messages
 ##### create DM
 ```createDM(userIDs)```

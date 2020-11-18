@@ -18,6 +18,7 @@ for example:
    ```
 - ability to reconnect and properly send resume messages to discord when possible
 - check for and properly handle SESSION_INVALID events
+- added support for python 2.7
 ### Changed
 - simplified gateway code
 - simplified gateway api

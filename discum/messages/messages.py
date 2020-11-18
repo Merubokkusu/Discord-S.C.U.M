@@ -31,7 +31,7 @@ class Messages(object):
         return response
 
     #get Message
-    def getMessages(self,channelID,num,beforeDate,aroundMessage): # 1 ≤ num ≤ 100, beforeDate is a snowflake
+    def getMessages(self,channelID,num,beforeDate,aroundMessage): # num is between 1 and 100, beforeDate is a snowflake
         url = self.discord+"channels/"+channelID+"/messages?limit="+str(num)
         if beforeDate != None:
             url += "&before="+str(beforeDate)

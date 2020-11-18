@@ -16,7 +16,7 @@ python setup.py install
 ```
 #### Initiate client
 ```discum.Client(email="none", password="none", token="none", proxy_host=False, proxy_port=False, user_agent="random", log=True)```      
-\* note: discord is starting to (sometimes) require captchas for the login. So, in the meanwhile (until we add 2captcha.com support), provide the email, password, and token (or just the token if you're not using the profile-editing functions).
+\* note: discord is starting to (sometimes) require captchas for the login. Therefore, it's recommended that you provide the email, password, and token (or just the token if you're not using the profile-editing functions).
 ```python
 >>> import discum
 >>> bot = discum.Client(email='email@email.com',password='password')

@@ -7,14 +7,14 @@ A simple, easy to use, non-restrictive Discord API Wrapper written in Python.
 ![https://files.catbox.moe/3ns003.png](https://files.catbox.moe/3ns003.png)
         
 \* You can send issues to discordtehe@gmail.com (arandomnewaccount will respond). If you put them in the issues tab, either arandomnewaccount will edit your message to "respond" because he can't post public comments or Merubokkusu will respond.
-## Info
+## About
   Discum is a Discord selfbot api wrapper (in case you didn't know, selfbotting = automating a user account). Whenever you login to discord, your client communicates with Discord's servers using Discord's http api (http(s) requests) and gateway server (websockets). Discum allows you have this communication with Discord with python. 
   
   The main difference between Discum and other Discord api wrapper libraries (like discord.py) is that discum is written and maintained to work on user accounts (so, perfect for selfbots). We thoroughly test all code on here and develop discum to be readable, expandable, and useable.     
   
   Note, using a selfbot is against Discord's Terms of Service and you could get banned for using one if you're not careful. Also, this needs to be said: discum does not have rate limit handling. The main reasons for this are that discum is made to (1) be (relatively) simple and (2) give the developer/user freedom (generally I'd recommend a bit more than 1 second in between tasks of the same type, but if you'd like a longer or shorter wait time that's up to you). We (Merubokkusu and anewrandomaccount) do not take any responsibility for any consequences you might face while using discum. We also do not take any responsibility for any damage caused (to servers/channels) through the use of Discum. Discum is a tool; how you use this tool is on you.
 
-## Install (same on Mac, Linux, Windows, etc)
+## Installation
 \* v0.2.8 and before supports python 3.6, 3.7, 3.8 while v0.3.0 supports python 2.7, 3.5, 3.6, 3.7, 3.8      
 from source (recommended, up-to-date)(currently on version 0.3.0):      
 ```
@@ -34,11 +34,7 @@ pip install discum
 - user_agents
 - random_user_agent
 
-# Usage
-### [Read the Wiki](https://github.com/Merubokkusu/Discord-S.C.U.M/blob/master/wiki.md)
-
-# Example
-\* note: discord is starting to (sometimes) require captchas for the login. So, in the meanwhile (until we add 2captcha.com support), provide the email, password, and token (or just the token if you're not using the profile-editing functions).
+# Example usage
 ```python
 import discum     
 bot = discum.Client(token='420tokentokentokentoken.token.tokentokentokentokentoken', log=False)
@@ -61,6 +57,12 @@ def helloworld(resp):
 
 bot.gateway.run(auto_reconnect=True)
 ```
+
+# Links
+### [Documentation](https://github.com/Merubokkusu/Discord-S.C.U.M/blob/master/wiki.md)
+### [Changelog](https://github.com/Merubokkusu/Discord-S.C.U.M/blob/master/changelog.md)
+### [GitHub](https://github.com/Merubokkusu/Discord-S.C.U.M)
+### [PyPi](https://pypi.org/project/discum/)
 
 ### bonus features: 
 convert unix timestamp to snowflake and back:

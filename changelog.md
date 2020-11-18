@@ -5,21 +5,21 @@
 - ability to have functions run on every receive message (influenced by this: https://github.com/scrubjay55/Reddit_ChatBot_Python/blob/master/Reddit_ChatBot_Python/Utils/WebSockClient.py)
 for example:
    ```python
-@bot.gateway.command
-def helloworld(resp):
-    if resp['t'] == "READY_SUPPLEMENTAL": #ready_supplemental is sent after ready
-        user = bot.gateway.SessionSettings.user
-        print("Logged in as {}#{}".format(user['username'], user['discriminator']))
-    if resp['t'] == "MESSAGE_CREATE":
-        m = resp['d']
-        guildID = m['guild_id'] if 'guild_id' in m else None #because DMs are technically channels too
-        channelID = m['channel_id']
-        username = m['author']['username']
-        discriminator = m['author']['discriminator']
-        content = m['content']
-        print("> guild {} channel {} | {}#{}: {}".format(guildID, channelID, username, discriminator, content))
-
-bot.gateway.run(auto_reconnect=True)
+   @bot.gateway.command
+   def helloworld(resp):
+       if resp['t'] == "READY_SUPPLEMENTAL": #ready_supplemental is sent after ready
+           user = bot.gateway.SessionSettings.user
+           print("Logged in as {}#{}".format(user['username'], user['discriminator']))
+       if resp['t'] == "MESSAGE_CREATE":
+           m = resp['d']
+           guildID = m['guild_id'] if 'guild_id' in m else None #because DMs are technically channels too
+           channelID = m['channel_id']
+           username = m['author']['username']
+           discriminator = m['author']['discriminator']
+           content = m['content']
+           print("> guild {} channel {} | {}#{}: {}".format(guildID, channelID, username, discriminator, content))
+   
+   bot.gateway.run(auto_reconnect=True)
    ```
 - ability to reconnect and properly send resume messages to discord when possible
 - check for and properly handle SESSION_INVALID events

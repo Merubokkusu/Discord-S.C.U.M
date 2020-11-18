@@ -214,7 +214,7 @@ bot.getGuildMember('guildID00000000000','userID11111111111')
 ```
 
 #### Gateway Server
-scroll down to skip to the examples
+scroll down to view the examples
 ###### by default, discum initializes the gateway interactions when you first initialize your bot (discum.Client). 
 If you'd like to reinitialize the gateway you can:
 ```python

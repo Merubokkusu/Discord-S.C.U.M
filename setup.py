@@ -31,7 +31,6 @@ REQUIRED = [
     'websocket_client',
     'user_agents',
     'random_user_agent'
-
 ]
 
 # What packages are optional?

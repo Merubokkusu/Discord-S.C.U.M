@@ -30,7 +30,6 @@ REQUIRED = [
     'filetype',
     'websocket_client',
     'user_agents',
-    'ua-parser',
     'random_user_agent'
 ]
 

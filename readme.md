@@ -1,13 +1,12 @@
+### DisCum
+______________________      
 ![version](https://img.shields.io/badge/github%20version-0.3.0-blue) [![python versions](https://img.shields.io/badge/python-2.7%20%7C%203.5%20%7C%203.6%20%7C%203.7%20%7C%203.8-blue)](https://pypi.org/project/discum/0.2.1/)       
-[![PyPI version](https://badge.fury.io/py/discum.svg)](https://badge.fury.io/py/discum) [![python versions](https://img.shields.io/badge/python-3.6%20%7C%203.7%20%7C%203.8-green)](https://pypi.org/project/discum/0.2.1/)
-
-
-### DisCum: A Discord Selfbot Api Wrapper
-using requests and websockets :)
+[![PyPI version](https://badge.fury.io/py/discum.svg)](https://badge.fury.io/py/discum) [![python versions](https://img.shields.io/badge/python-3.6%20%7C%203.7%20%7C%203.8-green)](https://pypi.org/project/discum/0.2.1/)      
+A simple, easy to use, non-restrictive Discord API Wrapper written in Python. 
+- using requests and websockets :)
 
 ![https://files.catbox.moe/3ns003.png](https://files.catbox.moe/3ns003.png)
-
-\* [changelog](https://github.com/Merubokkusu/Discord-S.C.U.M/blob/master/changelog.md). Updates are slow nowadays due to school and covid and life.        
+        
 \* You can send issues to discordtehe@gmail.com (arandomnewaccount will respond). If you put them in the issues tab, either arandomnewaccount will edit your message to "respond" because he can't post public comments or Merubokkusu will respond.
 ## Info
   Discum is a Discord selfbot api wrapper (in case you didn't know, selfbotting = automating a user account). Whenever you login to discord, your client communicates with Discord's servers using Discord's http api (http(s) requests) and gateway server (websockets). Discum allows you have this communication with Discord with python. 
@@ -34,7 +33,6 @@ pip install discum
 - websocket_client
 - filetype
 - user_agents
-- ua_parser
 - random_user_agent
 
 # Usage

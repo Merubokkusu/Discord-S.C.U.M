@@ -1,5 +1,12 @@
 # Wiki
 
+# Table of Contents
+- [Quickstart](#Quickstart)    
+- [Messages](#Messages)
+- [User Actions](#User-Actions)
+- [Guilds](#Guilds)
+- [Gateway Server](#Gateway-Server)
+
 ## Quickstart:
 #### Install:
 ```
@@ -25,11 +32,6 @@ python setup.py install
 bot.log = True
 bot.log = False
 ```
-## Commands
-- [Messages](#Messages)
-- [User Actions](#User-Actions)
-- [Guilds](#Guilds)
-- [Gateway Server](#Gateway-Server)
 
 ## Messages
 ##### create DM

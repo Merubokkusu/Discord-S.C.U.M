@@ -1,9 +1,13 @@
 import websocket
-import _thread as thread
 import json
 import time
 import random
 import base64
+
+if __import__('sys').version.split(' ')[0] < '3.0.0':
+    import thread
+else:
+    import _thread as thread
 
 from .sessionsettings import SessionSettings
 

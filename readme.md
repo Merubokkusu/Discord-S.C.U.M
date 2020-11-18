@@ -22,7 +22,7 @@ from source (recommended, up-to-date)(currently on version 0.3.0):
 ```
 git clone https://github.com/Merubokkusu/Discord-S.C.U.M.git
 cd Discord-S.C.U.M
-python3 setup.py install               
+python setup.py install               
 ```
 from PyPI:      
 ```python

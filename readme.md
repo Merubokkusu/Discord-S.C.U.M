@@ -7,6 +7,16 @@ A simple, easy to use, non-restrictive Discord API Wrapper written in Python.
 ![https://files.catbox.moe/3ns003.png](https://files.catbox.moe/3ns003.png)
         
 \* You can send issues to discordtehe@gmail.com (arandomnewaccount will respond). If you put them in the issues tab, either arandomnewaccount will edit your message to "respond" because he can't post public comments or Merubokkusu will respond.
+
+## Table of Contents
+- [About](#About)
+- [Installation](#Installation)
+  - [Prerequisites](#Prerequisites)
+- [Example Usage](#Example-usage)
+- [Links](#Links)
+- [Contributing](#Contributing)
+- [Notes](#Notes)
+
 ## About
   Discum is a Discord selfbot api wrapper (in case you didn't know, selfbotting = automating a user account). Whenever you login to discord, your client communicates with Discord's servers using Discord's http api (http(s) requests) and gateway server (websockets). Discum allows you have this communication with Discord with python. 
   

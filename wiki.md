@@ -365,10 +365,15 @@ _______________________
 def helloworld(resp):
     if resp['t'] == "READY_SUPPLEMENTAL": #ready_supplemental is sent after ready
         user = bot.gateway.SessionSettings.user
-        print(f"Logged in as {user['username']}#{user['discriminator']}")
+        print("Logged in as {}#{}".format(user['username'], user['discriminator']))
     if resp['t'] == "MESSAGE_CREATE":
         m = resp['d']
-        print(f"> guild {m['guild_id'] if 'guild_id' in m else None} channel {m['channel_id']} | {m['author']['username']}#{m['author']['discriminator']}: {m['content']}")
+        guildID = m['guild_id'] if 'guild_id' in m else None #because DMs are technically channels too
+        channelID = m['channel_id']
+        username = m['author']['username']
+        discriminator = m['author']['discriminator']
+        content = m['content']
+        print("> guild {} channel {} | {}#{}: {}".format(guildID, channelID, username, discriminator, content))
 
 bot.gateway.run(auto_reconnect=True)
 ```
@@ -378,13 +383,18 @@ is the same as doing
 def helloworld1(resp):
     if resp['t'] == "READY_SUPPLEMENTAL": #ready_supplemental is sent after ready
         user = bot.gateway.SessionSettings.user
-        print(f"Logged in as {user['username']}#{user['discriminator']}")
+        print("Logged in as {}#{}".format(user['username'], user['discriminator']))
 
 @bot.gateway.command
 def helloworld2(resp):
     if resp['t'] == "MESSAGE_CREATE":
         m = resp['d']
-        print(f"> guild {m['guild_id'] if 'guild_id' in m else None} channel {m['channel_id']} | {m['author']['username']}#{m['author']['discriminator']}: {m['content']}")
+        guildID = m['guild_id'] if 'guild_id' in m else None #because DMs are technically channels too
+        channelID = m['channel_id']
+        username = m['author']['username']
+        discriminator = m['author']['discriminator']
+        content = m['content']
+        print("> guild {} channel {} | {}#{}: {}".format(guildID, channelID, username, discriminator, content))
 
 bot.gateway.run(auto_reconnect=True)
 ```
@@ -405,7 +415,7 @@ bot.gateway.run(auto_reconnect=True)
 def helloworld1(resp):
     if resp['t'] == "READY_SUPPLEMENTAL": #ready_supplemental is sent after ready
         user = bot.gateway.SessionSettings.user
-        print(f"Logged in as {user['username']}#{user['discriminator']}")
+        print("Logged in as {}#{}".format(user['username'], user['discriminator']))
 
 @bot.gateway.command
 def helloworld2(resp):

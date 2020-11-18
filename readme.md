@@ -264,8 +264,8 @@ bot.gateway.SessionSettings.cachedUsers
 bot.gateway.SessionSettings.tutorial
 bot.gateway.SessionSettings.mergedPresences
 ```
-### Contributing
+## Contributing
 Contributions are welcome. You can submit issues, make pull requests, or suggest features. Ofc not all suggestions will be implemented (because discum is intended to be a transparent, relatively-raw discord user api wrapper), but all suggestions will be looked into.            
 
-### Notes:
+## Notes:
 In recent years, token logging has become more common (as many people don't check code before they run it). I've seen many closed-source selfbots, and while surely some are well intentioned, others not so much. Discum (discord api wrapper) is open-sourced and organized to provide transparency, but even so, we encourage you to look at the code. Not only will looking at the code help you to better understand how discord's api is structured, but it'll also let you know exactly what you're running. If you have any questions about Discum, feel free to ask us.

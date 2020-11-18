@@ -1,7 +1,11 @@
 import requests
 import json
 from ..Logger import *
-import urllib
+
+if __import__('sys').version.split(' ')[0] < '3.0.0':
+    from urllib import quote
+else:
+    from urllib.parse import quote
 
 class Guild(object):
 	def __init__(self, discord, s, log): #s is the requests session object
@@ -14,7 +18,7 @@ class Guild(object):
 	'''
 	#get guild info from invite code
 	def getInfoFromInviteCode(self,inviteCode):
-		url = self.discord+f"invites/{inviteCode}?with_counts=true"
+		url = self.discord+"invites/"+inviteCode+"?with_counts=true"
 		if self.log: Logger.LogMessage('Get -> {}'.format(url))
 		response = self.s.get(url)
 		if self.log: Logger.LogMessage('Response <- {}'.format(response.text), log_level=LogLevel.OK)
@@ -33,7 +37,7 @@ class Guild(object):
 	'''
 	#kick a user
 	def kick(self,guildID,userID,reason):
-		url = self.discord+f"guilds/{guildID}/members/{userID}?reason={urllib.parse.quote(reason)}"
+		url = self.discord+"guilds/%s/members/%s?reason=%s" % (guildID, userID, quote(reason))
 		if self.log: Logger.LogMessage('Delete -> {}'.format(url))
 		response = self.s.delete(url)
 		if self.log: Logger.LogMessage('Response <- {}'.format(response.text), log_level=LogLevel.OK)
@@ -41,7 +45,7 @@ class Guild(object):
 
 	#ban a user
 	def ban(self,guildID,userID,deleteMessagesDays,reason):
-		url = self.discord+f"guilds/{guildID}/bans/{userID}"
+		url = self.discord+"guilds/%s/bans/%s" % (guildID, userID)
 		body = {"delete_message_days": str(deleteMessagesDays), "reason": reason}
 		if self.log: Logger.LogMessage('Put -> {}'.format(url))
 		if self.log: Logger.LogMessage('{}'.format(str(body)))
@@ -54,7 +58,7 @@ class Guild(object):
 	Once discum's gatewayserver is improved, we'll add the actual api to discum (to best mimic the web client)
 	'''
 	def getGuildMember(self, guildID, userID):
-		url = self.discord+f"/guilds/{guildID}/members/{userID}"
+		url = self.discord+"/guilds/%s/members/%s" % (guildID, userID)
 		if self.log: Logger.LogMessage('Get -> {}'.format(url))
 		response = self.s.get(url)
 		if self.log: Logger.LogMessage('Response <- {}'.format(response.text), log_level=LogLevel.OK)

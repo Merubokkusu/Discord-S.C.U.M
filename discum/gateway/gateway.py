@@ -129,7 +129,7 @@ class GatewayServer:
     def on_message(self, ws, message):
         self.sequence += 1
         resp = json.loads(message)
-        if self.log: print(f'{self.LogLevel.RECEIVE}< {resp}{self.LogLevel.DEFAULT}')
+        if self.log: print('%s< %s%s' % (self.LogLevel.RECEIVE, resp, self.LogLevel.DEFAULT))
         if resp['op'] == self.OPCODE.HELLO: #only happens once, first message sent to client
             self.interval = (resp["d"]["heartbeat_interval"]-2000)/1000
             thread.start_new_thread(self._heartbeat, ())
@@ -158,7 +158,7 @@ class GatewayServer:
         thread.start_new_thread(self._response_loop, (resp,))
 
     def on_error(self, ws, error):
-        if self.log: print(f'{self.LogLevel.WARNING}{error}{self.LogLevel.DEFAULT}')
+        if self.log: print('%s%s%s' % (self.LogLevel.WARNING, error, self.LogLevel.DEFAULT))
         self._last_err = error
 
     def on_close(self, ws):
@@ -177,7 +177,7 @@ class GatewayServer:
 
     #just a wrapper for ws.send
     def send(self, payload):
-        if self.log: print(f'{self.LogLevel.SEND}> {payload}{self.LogLevel.DEFAULT}')
+        if self.log: print('%s> %s%s' % (self.LogLevel.SEND, payload, self.LogLevel.DEFAULT))
         self.ws.send(json.dumps(payload))
 
     def close(self):
@@ -201,7 +201,7 @@ class GatewayServer:
         try:
             self._after_message_hooks.remove(func)
         except ValueError:
-            if self.log: print(f'{func} not found in _after_message_hooks.')
+            if self.log: print('%s not found in _after_message_hooks.' % func)
             pass
 
     def clearCommands(self):
@@ -225,7 +225,7 @@ class GatewayServer:
             if isinstance(self._last_err, websocket._exceptions.WebSocketAddressException) or isinstance(self._last_err, websocket._exceptions.WebSocketTimeoutException):
                 if self.resumable:
                     waitTime = random.randrange(1,6)
-                    if self.log: print(f"Connection Dropped. Attempting to resume last valid session in {waitTime} seconds.")
+                    if self.log: print("Connection Dropped. Attempting to resume last valid session in %s seconds." % waitTime)
                     time.sleep(waitTime)
                 else:
                     if self.log: print("Connection Dropped. Retrying in 10 seconds.")

@@ -1,7 +1,11 @@
 import filetype
-from urllib.parse import urlparse
 import requests
 import os
+
+if __import__('sys').version.split(' ')[0] < '3.0.0':
+    from urlparse import urlparse
+else:
+    from urllib.parse import urlparse
 
 class Fileparse(object):
 	def __init__(self, s, log): #s is the requests session object

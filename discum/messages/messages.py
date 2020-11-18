@@ -2,12 +2,17 @@ import requests
 import json
 from ..fileparse.fileparse import Fileparse
 from ..Logger import *
-from urllib.parse import urlparse,quote_plus
 from requests_toolbelt import MultipartEncoder
 import random,string
 import math
 import os
 import time
+
+if __import__('sys').version.split(' ')[0] < '3.0.0':
+    from urllib import quote_plus
+    from urlparse import urlparse
+else:
+    from urllib.parse import quote_plus, urlparse
 
 class Messages(object):
     def __init__(self, discord, s, log): #s is the requests session object

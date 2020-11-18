@@ -148,7 +148,7 @@ bot.gateway.SessionSettings.read()
 #user data
 bot.gateway.SessionSettings.user
 
-#guilds
+#guild
 bot.gateway.SessionSettings.guilds
 bot.gateway.SessionSettings.guildIDs
 bot.gateway.SessionSettings.positions #your roles in each guild. 

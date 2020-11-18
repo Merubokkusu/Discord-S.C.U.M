@@ -14,6 +14,8 @@ A simple, easy to use, non-restrictive Discord API Wrapper written in Python.
   - [Prerequisites](#Prerequisites)
 - [Example Usage](#Example-usage)
 - [Links](#Links)
+- [To Do](#To-Do)
+- [Summary](#Summary)
 - [Contributing](#Contributing)
 - [Notes](#Notes)
 

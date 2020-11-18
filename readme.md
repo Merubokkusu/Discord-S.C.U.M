@@ -41,7 +41,7 @@ bot.sendMessage("238323948859439", "Hello :)")
 def helloworld(resp):
     if resp['t'] == "READY_SUPPLEMENTAL": #ready_supplemental is sent after ready
         user = bot.gateway.SessionSettings.user
-        print("Logged in as {}#{}".format(user['username'], user['discriminator'])
+        print("Logged in as {}#{}".format(user['username'], user['discriminator']))
     if resp['t'] == "MESSAGE_CREATE":
         m = resp['d']
         guildID = m['guild_id'] if 'guild_id' in m else None #because DMs are technically channels too

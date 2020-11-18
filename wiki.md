@@ -5,7 +5,7 @@
 ```
 git clone https://github.com/Merubokkusu/Discord-S.C.U.M.git
 cd Discord-S.C.U.M
-python3 setup.py install
+python setup.py install
 ```
 #### Initiate client
 ```discum.Client(email="none", password="none", token="none", proxy_host=False, proxy_port=False, user_agent="random", log=True)```      

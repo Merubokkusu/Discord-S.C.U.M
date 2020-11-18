@@ -86,7 +86,7 @@ bot.gateway.run(auto_reconnect=True)
 - [ ] Making phone calls, sending audio/video data thru those calls
 - [ ] Everything
 
-# Overview:
+# Summary:
 >107 functions:      
 >(\*replace "bot" with whatever variable name you're using)
 >### Initiate client:

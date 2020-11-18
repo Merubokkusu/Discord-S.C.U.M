@@ -41,10 +41,10 @@ bot.sendMessage("238323948859439", "Hello :)")
 def helloworld(resp):
     if resp['t'] == "READY_SUPPLEMENTAL": #ready_supplemental is sent after ready
         user = bot.gateway.SessionSettings.user
-        print(f"Logged in as {user['username']}#{user['discriminator']}")
+        print("Logged in as {}#{}".format(user['username'], user['discriminator'])
     if resp['t'] == "MESSAGE_CREATE":
         m = resp['d']
-        print(f"> guild {m['guild_id'] if 'guild_id' in m else None} channel {m['channel_id']} | {m['author']['username']}#{m['author']['discriminator']}: {m['content']}")
+        print("> guild {} channel {} | {}#{}: {}".format(m['guild_id'] if 'guild_id' in m else None, m['channel_id'], m['author']['username'], m['author']['discriminator'], m['content']))
 
 bot.gateway.run(auto_reconnect=True)
 ```

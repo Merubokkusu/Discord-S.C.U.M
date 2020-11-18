@@ -66,7 +66,7 @@ bot.snowflake_to_unixts(snowflake) #snowflake is of type int
 - [ ] Making phone calls, sending audio/video data thru those calls
 - [ ] Everything
 
-# Overview (106 functions):
+# Overview (107 functions):
 \*replace "bot" with whatever variable name you're using
 ### Initiate client:
 ```python
@@ -129,6 +129,10 @@ bot.gateway.removeCommand(function)
 
 #clearing gateway command list
 bot.gateway.clearCommands()
+```
+##### send data (run while connected to gateway)
+```python
+bot.gateway.send(data)
 ```
 ##### running and stopping gateway server
 ```python

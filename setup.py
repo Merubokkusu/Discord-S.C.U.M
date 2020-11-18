@@ -11,6 +11,9 @@ from shutil import rmtree
 
 from setuptools import find_packages, setup, Command
 
+class FileNotFoundError(OSError):
+    pass
+
 # Package meta-data.
 NAME = 'discum'
 DESCRIPTION = 'A Discord Self-Bot API'

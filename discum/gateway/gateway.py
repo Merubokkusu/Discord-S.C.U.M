@@ -31,7 +31,7 @@ class GatewayServer:
         HEARTBEAT_ACK =         11 #    Sent immediately following a client heartbeat that was received
         GUILD_SYNC =            12 #
 
-    def __init__(self, websocketurl, token, ua_data, proxy_host, proxy_port, log):
+    def __init__(self, websocketurl, token, ua_data, proxy_host=None, proxy_port=None, log):
         self.token = token
         self.ua_data = ua_data
         self.auth = {

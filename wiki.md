@@ -219,7 +219,7 @@ scroll down to view the examples
 If you'd like to reinitialize the gateway you can:
 ```python
 from discum.gateway.gateway import *
-bot.gateway = GatewayServer(bot.websocketurl, token, user_agent_data, proxy_host, proxy_port, log) #user_agent_data is a dictionary with keys: 'os', 'browser' , 'device', 'browser_user_agent', 'browser_version', 'os_version'}
+bot.gateway = GatewayServer(bot.websocketurl, token, user_agent_data, proxy_host=None, proxy_port=None, log) #user_agent_data is a dictionary with keys: 'os', 'browser' , 'device', 'browser_user_agent', 'browser_version', 'os_version'}
 ```
 ###### changing gateway commands
 ```python

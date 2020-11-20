@@ -127,7 +127,7 @@ bot.gateway.run(auto_reconnect=True)
 >bot.setAvatar(imagePath)
 >
 >#guild/server
->>bot.getInfoFromInviteCode(inviteCode)
+>bot.getInfoFromInviteCode(inviteCode)
 >bot.joinGuild(inviteCode)
 >bot.kick(guildID,userID,reason="")
 >bot.ban(guildID,userID,deleteMessagesDays=0,reason="")

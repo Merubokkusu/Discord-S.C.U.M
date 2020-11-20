@@ -224,7 +224,7 @@ class GatewayServer:
 
     #modified version of function run_4ever from https://github.com/scrubjay55/Reddit_ChatBot_Python/blob/master/Reddit_ChatBot_Python/Utils/WebSockClient.py (Apache License 2.0)
     def run(self, auto_reconnect=True):
-        while auto_reconnect: #interestingly, web clients don't actually send resume packets so...
+        while auto_reconnect:
             self.ws.run_forever(ping_interval=10, ping_timeout=5, http_proxy_host=self.proxy_host, http_proxy_port=self.proxy_port)
             if isinstance(self._last_err, websocket._exceptions.WebSocketAddressException) or isinstance(self._last_err, websocket._exceptions.WebSocketTimeoutException):
                 if self.resumable:

@@ -1,6 +1,6 @@
 # DisCum
 ![version](https://img.shields.io/badge/github%20version-0.3.0-blue) [![python versions](https://img.shields.io/badge/python-2.7%20%7C%203.5%20%7C%203.6%20%7C%203.7%20%7C%203.8-blue)](https://pypi.org/project/discum/0.2.1/)       
-[![PyPI version](https://badge.fury.io/py/discum.svg)](https://badge.fury.io/py/discum) [![python versions](https://img.shields.io/badge/python-3.6%20%7C%203.7%20%7C%203.8-green)](https://pypi.org/project/discum/0.2.1/)      
+[![PyPI version](https://badge.fury.io/py/discum.svg)](https://badge.fury.io/py/discum) [![python versions](https://img.shields.io/badge/python-2.7%20%7C%203.5%20%7C%203.6%20%7C%203.7%20%7C%203.8-green)](https://pypi.org/project/discum/0.2.1/)      
 A simple, easy to use, non-restrictive Discord API Wrapper written in Python.       
 -using requests and websockets :)
 
@@ -26,9 +26,7 @@ A simple, easy to use, non-restrictive Discord API Wrapper written in Python.
   
   Note, using a selfbot is against Discord's Terms of Service and you could get banned for using one if you're not careful. Also, this needs to be said: discum does not have rate limit handling. The main reasons for this are that discum is made to (1) be (relatively) simple and (2) give the developer/user freedom (generally I'd recommend a bit more than 1 second in between tasks of the same type, but if you'd like a longer or shorter wait time that's up to you). We (Merubokkusu and anewrandomaccount) do not take any responsibility for any consequences you might face while using discum. We also do not take any responsibility for any damage caused (to servers/channels) through the use of Discum. Discum is a tool; how you use this tool is on you.
 
-## Installation
-\* v0.2.8 and before supports python 3.6, 3.7, 3.8 while v0.3.0 supports python 2.7, 3.5, 3.6, 3.7, 3.8      
-from source (recommended, up-to-date)(currently on version 0.3.0):      
+## Installation    
 ```
 git clone https://github.com/Merubokkusu/Discord-S.C.U.M.git
 cd Discord-S.C.U.M

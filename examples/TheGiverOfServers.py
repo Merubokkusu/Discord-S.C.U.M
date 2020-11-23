@@ -20,7 +20,7 @@ def helloworld(resp):
         m = resp['d']
         if m['content'] == 'turn me into a server':
             bot.sendMessage(m['channel_id'], 'reply to one of my messages and I will make you a server :)')
-        if m['author']['id'] == ':
+        if m['author']['id'] == bot.gateway.SessionSettings.user['id']:
             return
         if m['type'] == 19:
             if 'referenced_message' in m and m['referenced_message']['author']['id'] == bot.gateway.SessionSettings.user['id'] and 'guild_id' not in m:

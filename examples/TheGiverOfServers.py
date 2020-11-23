@@ -24,7 +24,7 @@ def helloworld(resp):
             return
         if m['type'] == 19:
             if 'referenced_message' in m and m['referenced_message']['author']['id'] == bot.gateway.SessionSettings.user['id'] and 'guild_id' not in m:
-                time.sleep(1) instant replies make ppl think ur running a selfbot so...
+                time.sleep(1) #instant replies make ppl think ur running a selfbot so...
                 channelID = m['channel_id']
                 baseURL = "https://discord.com/api/channels/{}/messages".format(channelID)
                 POSTedJSON =  json.dumps ({"content":"The server Gods have allowed me to grant you the server badge. You are now a server :).","nonce":None,"tts":False,"message_reference":{"guild_id":None,"channel_id":m['channel_id'],"message_id":m['id']},"allowed_mentions":{"parse":["users","roles","everyone"],"replied_user":False}})

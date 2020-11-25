@@ -1,7 +1,7 @@
 '''
 if someone replies to your message in a dm, this code will use a recent bug to give that person the SERVER badge (credits go to https://github.com/divinityseraph/server-badge-exploit)
 here's how it looks: https://www.reddit.com/r/discordapp/comments/jzlnlb/discords_new_reply_feature_is_fun_and_bugged_lol/
-this bug works both on servers and DMs :)
+this bug works both on servers and DMs :). The below code is only for DMs but can be easily modified to work only on guilds or on both.
 '''
 
 import requests, json #cause this bugged endpoint is not in discum yet, will update later

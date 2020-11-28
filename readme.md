@@ -81,6 +81,7 @@ bot.gateway.run(auto_reconnect=True)
 - [X] Sending Requests (Friends etc)
 - [X] Profile Editing (Name,Status,Avatar)
 - [X] On-Message (and other on-anything gateway) capabilities
+- [ ] Getting guild members
 - [ ] Making phone calls, sending audio/video data thru those calls
 - [ ] Everything
 

@@ -1,9 +1,9 @@
-class SessionSettings:
+class session:
     settings_ready = {}
     settings_ready_supp = {}
     def __init__(self, input_settings_ready, input_settings_ready_supp):
-        SessionSettings.settings_ready = input_settings_ready
-        SessionSettings.settings_ready_supp = input_settings_ready_supp
+        session.settings_ready = input_settings_ready
+        session.settings_ready_supp = input_settings_ready_supp
         self.guild = guild
         self.DM = DM
         self.relationship = relationship
@@ -43,7 +43,7 @@ class SessionSettings:
     def relationshipIDs(self):
         return [self.relationships[i]['id'] for i in range(len(self.relationships))]
 
-    #friends    
+    #friends
     @property
     def friends(self):
         f = []
@@ -176,158 +176,158 @@ class SessionSettings:
 
 
 ###specific guild
-class guild(SessionSettings):
+class guild(session):
     def __init__(self, guildID):
         self.guildIndex = None
-        for i in range(len(SessionSettings.settings_ready['guilds'])):
-            if SessionSettings.settings_ready['guilds'][i]['id'] == guildID:
+        for i in range(len(session.settings_ready['guilds'])):
+            if session.settings_ready['guilds'][i]['id'] == guildID:
                 self.guildIndex = i
 
     @property
     def data(self):
-        return SessionSettings.settings_ready['guilds'][self.guildIndex]
+        return session.settings_ready['guilds'][self.guildIndex]
 
     @property
     def owner(self):
-        return SessionSettings.settings_ready['guilds'][self.guildIndex]['owner_id'] #returns type int
+        return session.settings_ready['guilds'][self.guildIndex]['owner_id'] #returns type int
 
     @property
     def boostLvl(self):
-        return SessionSettings.settings_ready['guilds'][self.guildIndex]['premium_tier']
+        return session.settings_ready['guilds'][self.guildIndex]['premium_tier']
 
     @property
     def emojis(self):
-        return SessionSettings.settings_ready['guilds'][self.guildIndex]['emojis']
+        return session.settings_ready['guilds'][self.guildIndex]['emojis']
 
     @property
     def banner(self):
-        return SessionSettings.settings_ready['guilds'][self.guildIndex]['banner'] #if returns 'nil' then there's no banner
+        return session.settings_ready['guilds'][self.guildIndex]['banner'] #if returns 'nil' then there's no banner
 
     @property
     def discoverySplash(self): #not sure what this is about, something about server discoverability i guess (https://discord.com/developers/docs/resources/guild)
-        return SessionSettings.settings_ready['guilds'][self.guildIndex]['discovery_splash']
+        return session.settings_ready['guilds'][self.guildIndex]['discovery_splash']
 
     @property
     def msgNotificationSettings(self): #returns an int, 0=all messages, 1=only mentions (https://discord.com/developers/docs/resources/guild#guild-object-default-message-notification-level)
-        return SessionSettings.settings_ready['guilds'][self.guildIndex]['default_message_notifications']
+        return session.settings_ready['guilds'][self.guildIndex]['default_message_notifications']
 
     @property
     def rulesChannelID(self): #nil if no rules channel id, idk if this always works so it might actually be more useful just to look for the word "rules" in channel names
-        return SessionSettings.settings_ready['guilds'][self.guildIndex]['rules_channel_id']
+        return session.settings_ready['guilds'][self.guildIndex]['rules_channel_id']
 
     @property
     def verificationLvl(self): #returns an int, 0-4 (https://discord.com/developers/docs/resources/guild#guild-object-verification-level)
-        return SessionSettings.settings_ready['guilds'][self.guildIndex]['verification_level']
+        return session.settings_ready['guilds'][self.guildIndex]['verification_level']
 
     @property
     def features(self): #returns a list of strings (https://discord.com/developers/docs/resources/guild#guild-object-guild-features)
-        return SessionSettings.settings_ready['guilds'][self.guildIndex]['features']
+        return session.settings_ready['guilds'][self.guildIndex]['features']
 
     @property
     def joinTime(self): #returns when you joined the server, type string
-        return SessionSettings.settings_ready['guilds'][self.guildIndex]['joined_at']
+        return session.settings_ready['guilds'][self.guildIndex]['joined_at']
 
     @property
     def region(self):
-        return SessionSettings.settings_ready['guilds'][self.guildIndex]['region']
+        return session.settings_ready['guilds'][self.guildIndex]['region']
 
     @property
     def applicationID(self): #returns application id of the guild creator if it is bot-created (https://discord.com/developers/docs/resources/guild#guild-object-guild-features)
-        return SessionSettings.settings_ready['guilds'][self.guildIndex]['application_id']
+        return session.settings_ready['guilds'][self.guildIndex]['application_id']
 
     @property
     def afkChannelID(self): #not sure what this is
-        return SessionSettings.settings_ready['guilds'][self.guildIndex]['afk_channel_id']
+        return session.settings_ready['guilds'][self.guildIndex]['afk_channel_id']
 
     @property
     def icon(self): #https://discord.com/developers/docs/reference#image-formatting
-        return SessionSettings.settings_ready['guilds'][self.guildIndex]['icon']
+        return session.settings_ready['guilds'][self.guildIndex]['icon']
 
     @property
     def name(self):
-        return SessionSettings.settings_ready['guilds'][self.guildIndex]['name']
+        return session.settings_ready['guilds'][self.guildIndex]['name']
 
     @property
     def maxVideoChannelUsers(self):
-        return SessionSettings.settings_ready['guilds'][self.guildIndex]['max_video_channel_users']
+        return session.settings_ready['guilds'][self.guildIndex]['max_video_channel_users']
 
     @property
     def roles(self): #https://discord.com/developers/docs/topics/permissions#role-object
-        return SessionSettings.settings_ready['guilds'][self.guildIndex]['roles']
+        return session.settings_ready['guilds'][self.guildIndex]['roles']
 
     @property
     def publicUpdatesChannelID(self):
-        return SessionSettings.settings_ready['guilds'][self.guildIndex]['public_updates_channel_id']
+        return session.settings_ready['guilds'][self.guildIndex]['public_updates_channel_id']
 
     @property
     def systemChannelFlags(self): #https://discord.com/developers/docs/resources/guild#guild-object-system-channel-flags
-        return SessionSettings.settings_ready['guilds'][self.guildIndex]['system_channel_flags']
+        return session.settings_ready['guilds'][self.guildIndex]['system_channel_flags']
 
     @property
     def mfaLvl(self): #https://discord.com/developers/docs/resources/guild#guild-object-mfa-level
-        return SessionSettings.settings_ready['guilds'][self.guildIndex]['mfa_level']
+        return session.settings_ready['guilds'][self.guildIndex]['mfa_level']
 
     @property
     def afkTimeout(self): #returns type int, unit seconds, https://discord.com/developers/docs/resources/guild
-        return SessionSettings.settings_ready['guilds'][self.guildIndex]['afk_timeout']
+        return session.settings_ready['guilds'][self.guildIndex]['afk_timeout']
 
     @property
     def hashes(self): #https://github.com/discord/discord-api-docs/issues/1642
-        return SessionSettings.settings_ready['guilds'][self.guildIndex]['guild_hashes']
+        return session.settings_ready['guilds'][self.guildIndex]['guild_hashes']
 
     @property
     def systemChannelID(self): #returns an int, the id of the channel where guild notices such as welcome messages and boost events are posted
-        return SessionSettings.settings_ready['guilds'][self.guildIndex]['system_channel_id']
+        return session.settings_ready['guilds'][self.guildIndex]['system_channel_id']
 
     @property
     def lazy(self): #slightly different naming format since it returns a boolean (https://luna.gitlab.io/discord-unofficial-docs/lazy_guilds.html)
-        if SessionSettings.settings_ready['guilds'][self.guildIndex]['lazy'] == 'true':
+        if session.settings_ready['guilds'][self.guildIndex]['lazy'] == 'true':
             return True
         else:
             return False
 
     @property
     def numBoosts(self): #get number of boosts the server has gotten
-        return SessionSettings.settings_ready['guilds'][self.guildIndex]['premium_subscription_count']
+        return session.settings_ready['guilds'][self.guildIndex]['premium_subscription_count']
 
     @property
     def large(self): #slightly different naming format since it returns a boolean, large if more than 250 members
-        if SessionSettings.settings_ready['guilds'][self.guildIndex]['large'] == 'true':
+        if session.settings_ready['guilds'][self.guildIndex]['large'] == 'true':
             return True
         else:
             return False
 
     @property
     def explicitContentFilter(self): #https://discord.com/developers/docs/resources/guild#guild-object-explicit-content-filter-level
-        return SessionSettings.settings_ready['guilds'][self.guildIndex]['explicit_content_filter']
+        return session.settings_ready['guilds'][self.guildIndex]['explicit_content_filter']
 
     @property
     def splashHash(self): #not sure what this is for
-        return SessionSettings.settings_ready['guilds'][self.guildIndex]['splash']
+        return session.settings_ready['guilds'][self.guildIndex]['splash']
 
     @property
     def memberCount(self):
-        return SessionSettings.settings_ready['guilds'][self.guildIndex]['member_count']
+        return session.settings_ready['guilds'][self.guildIndex]['member_count']
 
     @property
     def description(self):
-        return SessionSettings.settings_ready['guilds'][self.guildIndex]['description']
+        return session.settings_ready['guilds'][self.guildIndex]['description']
 
     @property
     def vanityUrlCode(self):
-        return SessionSettings.settings_ready['guilds'][self.guildIndex]['vanity_url_code']
+        return session.settings_ready['guilds'][self.guildIndex]['vanity_url_code']
 
     @property
     def preferredLocale(self):
-        return SessionSettings.settings_ready['guilds'][self.guildIndex]['preferred_locale']
+        return session.settings_ready['guilds'][self.guildIndex]['preferred_locale']
 
     @property
     def allChannels(self): #returns all categories and all channels, all the data about that, wall of data so it can be a bit overwhelming, useful if you want to check how many channels your server has since discord counts categories as channels
-        return SessionSettings.settings_ready['guilds'][self.guildIndex]['channels']
+        return session.settings_ready['guilds'][self.guildIndex]['channels']
 
     @property
     def categories(self): #all data about all guild categories, can be overwhelming
-        all_channels = SessionSettings.settings_ready['guilds'][self.guildIndex]['channels']
+        all_channels = session.settings_ready['guilds'][self.guildIndex]['channels']
         all_categories = []
         for channel in all_channels: #https://discord.com/developers/docs/resources/channel#channel-object-channel-types
             if channel['type'] == 4:
@@ -346,7 +346,7 @@ class guild(SessionSettings):
 
     @property
     def channels(self): #all data about all guild channels, can be overwhelming
-        all_channels = SessionSettings.settings_ready['guilds'][self.guildIndex]['channels']
+        all_channels = session.settings_ready['guilds'][self.guildIndex]['channels']
         all_non_categories = []
         for channel in all_channels: #https://discord.com/developers/docs/resources/channel#channel-object-channel-types
             if channel['type'] != 4:
@@ -365,11 +365,11 @@ class guild(SessionSettings):
 
     @property
     def voiceStates(self): #https://discord.com/developers/docs/resources/voice#voice-state-object
-        return SessionSettings.settings_ready_supp['guilds'][self.guildIndex]['voice_states']
+        return session.settings_ready_supp['guilds'][self.guildIndex]['voice_states']
 
     @property
     def notOfflineCachedMembers(self): #so, not offline, but not all the not-offline members so....not offline cached members. I know I know long function name, but it's descriptive.
-        return SessionSettings.settings_ready_supp['merged_members'][self.guildIndex]
+        return session.settings_ready_supp['merged_members'][self.guildIndex]
 
     @property
     def notOfflineCachedMemberIDs(self):
@@ -383,7 +383,7 @@ class guild(SessionSettings):
 
     @property
     def mergedPresences(self): #this is different from getGuildNotOfflineCachedMembers because you can see presence data. also, not sure why, but a diff number of members shows up here than getGuildNotOfflineCachedMembers
-        return SessionSettings.settings_ready_supp['merged_presences']['guilds'][self.guildIndex]
+        return session.settings_ready_supp['merged_presences']['guilds'][self.guildIndex]
 
     @property
     def mergedPresenceIDs(self): #returns user ids in a list
@@ -397,37 +397,37 @@ class guild(SessionSettings):
 
     @property
     def position(self): #my roles in guild and other data
-        return SessionSettings.settings_ready['merged_members'][self.guildIndex]
+        return session.settings_ready['merged_members'][self.guildIndex]
 
 ###specific relationship
-class relationship(SessionSettings): #not the same organization as class guild
+class relationship(session): #not the same organization as class guild
     def __init__(self, userID):
         self.userID = userID
 
     @property
     def data(self): #usernames and discriminators are no longer provided in this data
-        for i in range(len(SessionSettings.settings_ready['relationships'])):
-            if SessionSettings.settings_ready['relationships'][i]['user_id'] == self.userID:
-                return SessionSettings.settings_ready['relationships'][i]
+        for i in range(len(session.settings_ready['relationships'])):
+            if session.settings_ready['relationships'][i]['user_id'] == self.userID:
+                return session.settings_ready['relationships'][i]
         return None
 
     @property
     def friendMergedPresenceData(self):
-        for i in range(len(SessionSettings.settings_ready_supp['merged_presences']['friends'])):
-            if SessionSettings.settings_ready_supp['merged_presences']['friends'][i]['user_id'] == self.userID:
-                return SessionSettings.settings_ready_supp['merged_presences']['friends'][i]
+        for i in range(len(session.settings_ready_supp['merged_presences']['friends'])):
+            if session.settings_ready_supp['merged_presences']['friends'][i]['user_id'] == self.userID:
+                return session.settings_ready_supp['merged_presences']['friends'][i]
         return None
 
 ###specific DM
-class DM(SessionSettings):
+class DM(session):
     def __init__(self, DMID):
         self.DMID = DMID
 
     @property
     def data(self):
-        for i in range(len(SessionSettings.settings_ready['private_channels'])):
-            if SessionSettings.settings_ready['private_channels'][i]['id'] == self.DMID:
-                return SessionSettings.settings_ready['private_channels'][i]
+        for i in range(len(session.settings_ready['private_channels'])):
+            if session.settings_ready['private_channels'][i]['id'] == self.DMID:
+                return session.settings_ready['private_channels'][i]
         return None
 
     @property
@@ -435,15 +435,15 @@ class DM(SessionSettings):
         return self.data['recipient_ids']
 
 ###specific User Guild Settings
-class userGuildSetting(SessionSettings):
+class userGuildSetting(session):
     def __init__(self, guildID):
         self.guildID = guildID
 
     @property
     def data(self):
-        if len(SessionSettings.settings_ready['user_guild_settings']['entries']) == 0:
+        if len(session.settings_ready['user_guild_settings']['entries']) == 0:
             return None
-        for i in range(len(SessionSettings.settings_ready['user_guild_settings']['entries'])):
-            if SessionSettings.settings_ready['user_guild_settings']['entries'][i]['guild_id'] == self.guildID:
-                return SessionSettings.settings_ready['user_guild_settings']['entries'][i]
+        for i in range(len(session.settings_ready['user_guild_settings']['entries'])):
+            if session.settings_ready['user_guild_settings']['entries'][i]['guild_id'] == self.guildID:
+                return session.settings_ready['user_guild_settings']['entries'][i]
         return None

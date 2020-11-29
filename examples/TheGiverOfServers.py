@@ -14,16 +14,16 @@ bot = discum.Client(token='ur token')
 @bot.gateway.command
 def helloworld(resp):
     if resp['t'] == "READY_SUPPLEMENTAL": #ready_supplemental is sent after ready
-        user = bot.gateway.SessionSettings.user
+        user = bot.gateway.session.user
         print("Logged in as {}#{}".format(user['username'], user['discriminator']))
     if resp['t'] == "MESSAGE_CREATE":
         m = resp['d']
         if m['content'] == 'turn me into a server':
             bot.sendMessage(m['channel_id'], 'reply to one of my messages and I will make you a server :)')
-        if m['author']['id'] == bot.gateway.SessionSettings.user['id']:
+        if m['author']['id'] == bot.gateway.session.user['id']:
             return
         if m['type'] == 19:
-            if 'referenced_message' in m and m['referenced_message']['author']['id'] == bot.gateway.SessionSettings.user['id'] and 'guild_id' not in m:
+            if 'referenced_message' in m and m['referenced_message']['author']['id'] == bot.gateway.session.user['id'] and 'guild_id' not in m:
                 time.sleep(1) #instant replies make ppl think ur running a selfbot so...
                 channelID = m['channel_id']
                 baseURL = "https://discord.com/api/channels/{}/messages".format(channelID)

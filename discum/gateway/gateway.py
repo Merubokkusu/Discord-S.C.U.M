@@ -9,7 +9,8 @@ if __import__('sys').version.split(' ')[0] < '3.0.0':
 else:
     import _thread as thread
 
-from .sessionsettings import SessionSettings
+from .session import session
+from .guildcommands import guildcommands
 
 class GatewayServer:
 
@@ -53,7 +54,7 @@ class GatewayServer:
                     "referrer_current": "",
                     "referring_domain_current": "",
                     "release_channel": "stable",
-                    "client_build_number": 71420,
+                    "client_build_number": 72376,
                     "client_event_source": None
                 },
                 "presence": {
@@ -70,7 +71,7 @@ class GatewayServer:
                     "user_guild_settings_version": -1
                 }
             }
-        if 'build_num' in self.ua_data and self.ua_data['build_num']!=71420:
+        if 'build_num' in self.ua_data and self.ua_data['build_num']!=72376:
             self.auth['properties']['client_build_number'] = self.ua_data['build_num']
 
         self.proxy_host = None if proxy_host in (None,False) else proxy_host
@@ -95,6 +96,9 @@ class GatewayServer:
         self.resumable = False
 
         self.voice_data = {} #voice connections dependent on current (connected) session
+
+        #guild helper functions
+        self.guildcommands = guildcommands(self) #passing the gateway object over so we can work with it in guildcommands.py
 
     #WebSocketApp, more info here: https://github.com/websocket-client/websocket-client/blob/master/websocket/_app.py#L79
     def _get_ws_app(self, websocketurl):
@@ -155,7 +159,7 @@ class GatewayServer:
         elif resp['t'] == "READY_SUPPLEMENTAL":
             self.resumable = True #completely successful identify
             self.settings_ready_supp = resp['d']
-            self.SessionSettings = SessionSettings(self.settings_ready, self.settings_ready_supp)
+            self.session = session(self.settings_ready, self.settings_ready_supp)
             self.READY = True
         elif resp['t'] in ("VOICE_SERVER_UPDATE", "VOICE_STATE_UPDATE"):
             self.voice_data.update(resp['d']) #called twice, resulting in a dictionary with 12 keys

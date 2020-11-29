@@ -20,7 +20,7 @@ bot.channelID = "713309316052156536" #you need to specify a channel ID
 
 @bot.gateway.command
 def getGuildChannelMembers(resp):
-	if resp['t'] == 'READY_SUPPLEMENTAL':
+	if resp['t'] == 'READY_SUPPLEMENTAL': #tells the program when to start requesting for guild members
 		bot.memberRanges = bot.gateway.guildcommands.rangeCalc(bot.gateway.session.guild(bot.guildID).memberCount)
 	if bot.memberRanges != False:
 		if bot.index == 0:

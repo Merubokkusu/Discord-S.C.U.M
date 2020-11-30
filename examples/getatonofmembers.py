@@ -1,6 +1,6 @@
 '''
 another get-members test
-this will work on any server. discord's weird...
+this will work on any (large) server. discord's weird...I still need to do some more testing. these are just testing scripts. messy messy code :(
 if you get an error it's likely cause discord doesnt think you're in that server yet. try again later
 '''
 

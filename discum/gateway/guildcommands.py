@@ -25,11 +25,12 @@ class guildcommands:
 		return memberlist
 
 	#send
-	def listen(self, guildID, channelID, memberRange, typing=True, activities=True): #memberCount is passed because this number could technically change at any time
+	def listen(self, guildID, channelID, memberRange, typing=True, activities=True, members=[]):
 		self.currentGuild = guildID
 		sendData = {"op":14,"d":{"guild_id":self.currentGuild, "channels":{channelID: memberRange}}}
-		if typing != None: sendData["typing"] = typing
-		if activities != None: sendData["activities"] = activities
+		if typing != None: sendData["d"]["typing"] = typing
+		if activities != None: sendData["d"]["activities"] = activities
+		if members != None: sendData["d"]["members"] = members
 		self.gatewayobject.send(sendData)
 
 
@@ -42,12 +43,17 @@ class guildcommands:
 		self.gatewayobject.send({"op":14,"d":{"guild_id":guildID,"members":[]}}) #completely useless it seems...didnt get any meaningful data back
 
 	#event (receive)
-	def GuildMemberListUpdate(self, resp, GMLU_type=None):
+	def GuildMemberListUpdate(self, resp, GUILD_MEMBER_LIST_UPDATE_type=None):
 		if resp['t'] == 'GUILD_MEMBER_LIST_UPDATE':
-			if GMLU_type:
+			if GUILD_MEMBER_LIST_UPDATE_type:
 				for itemchunk in resp['d']['ops']:
-					if GMLU_type == itemchunk['op']:
+					if GUILD_MEMBER_LIST_UPDATE_type == itemchunk['op']:
 						return True
 				return False
+			return True
+		return False
+
+	def GuildCreate(self, resp):
+		if resp['t'] == 'GUILD_CREATE':
 			return True
 		return False

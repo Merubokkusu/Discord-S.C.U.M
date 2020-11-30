@@ -187,6 +187,22 @@ class guild(session):
     def data(self):
         return session.settings_ready['guilds'][self.guildIndex]
 
+    def setData(self, newData):
+        session.settings_ready['guilds'][self.guildIndex] = newData
+
+    def modify(self, modifications):
+        session.settings_ready['guilds'][self.guildIndex].update(modifications)
+
+    @property
+    def unavailable(self):
+        if 'unavailable' in session.settings_ready['guilds'][self.guildIndex]:
+            return True
+        return False
+
+    @property
+    def someMembers(self): #will only work for guilds that you've receive a GUILD_CREATE response for. Also, this doesnt return all members. I didn't know what to call it so it's just "someMembers"...
+        return session.settings_ready['guilds'][self.guildIndex]['members']
+
     @property
     def owner(self):
         return session.settings_ready['guilds'][self.guildIndex]['owner_id'] #returns type int

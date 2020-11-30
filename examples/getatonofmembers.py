@@ -1,7 +1,12 @@
 '''
 another get-members test
-this will work on any (large) server. discord's weird...I still need to do some more testing. these are just testing scripts. messy messy code :(
+this will work on any server. discord's weird...
 if you get an error it's likely cause discord doesnt think you're in that server yet. try again later
+
+also...this doesnt always return all members (because turns out discord doesnt always send back 200 members when you request for them :/ )
+yea... the real implementation into the wrapper will ofc return all members.
+These are just tests, and tests are meant to show what I need to do on the real wrapper. All in all, I'd say this was a successful test: I learned more about discord's api.
+
 '''
 
 import discum
@@ -11,9 +16,9 @@ bot.memberlist = []
 bot.memberRanges = False
 bot.index = -1
 
-#set guild and channel variables. this example was tested on the official fortnite server :)
-bot.guildID = "322850917248663552"
-bot.channelID = "362236453771804683" #you need to specify a channel ID
+#set guild and channel variables
+bot.guildID = ""
+bot.channelID = "" #you need to specify a channel ID
 
 @bot.gateway.command
 def getGuildChannelMembers(resp):
@@ -41,7 +46,7 @@ def getGuildChannelMembers(resp):
 			bot.gateway.guildcommands.listen(bot.guildID,bot.channelID, memberRange=bot.memberRanges[bot.index], typing=None, activities=None, members=None)
 			bot.index += 1
 		if bot.gateway.guildcommands.GuildMemberListUpdate(resp,'SYNC'):
-			if len(bot.gateway.guildcommands.parseSyncData(resp)) == 0:
+			if len(bot.gateway.guildcommands.parseSyncData(resp)) == 0 and bot.gateway.session.guild(bot.guildID).memberCount>15000:
 				bot.f.write(']')
 				bot.f.close()
 				bot.gateway.close()
@@ -50,8 +55,9 @@ def getGuildChannelMembers(resp):
 			else:
 				bot.memberlist.extend(bot.gateway.guildcommands.parseSyncData(resp))
 			if bot.index == len(bot.memberRanges): #because we want to end it on the last SYNC
-				bot.f.write(']')
-				bot.f.close()
+				if bot.gateway.session.guild(bot.guildID).memberCount>15000:
+					bot.f.write(']')
+					bot.f.close()
 				bot.gateway.close()
 			elif bot.index != len(bot.memberRanges):
 				bot.gateway.guildcommands.listen(bot.guildID,bot.channelID, memberRange=bot.memberRanges[bot.index], typing=None, activities=None, members=None)

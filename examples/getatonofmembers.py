@@ -11,7 +11,7 @@ bot.memberlist = []
 bot.memberRanges = False
 bot.index = -1
 
-#set guild and channel variables
+#set guild and channel variables. this example was tested on the official fortnite server :)
 bot.guildID = "322850917248663552"
 bot.channelID = "362236453771804683" #you need to specify a channel ID
 

@@ -1,6 +1,6 @@
 '''
 another get-members test
-this will work on any server. discord's weird...
+this will work on any server..tried it on the official fortnite server and a few other >100k member servers. discord's weird...
 if you get an error it's likely cause discord doesnt think you're in that server yet. try again later
 
 also...this doesnt always return all members (because turns out discord doesnt always send back 200 members when you request for them :/ )

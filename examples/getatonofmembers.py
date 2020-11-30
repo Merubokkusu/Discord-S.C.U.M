@@ -7,6 +7,7 @@ also...this doesnt always return all members (because turns out discord doesnt a
 yea... the real implementation into the wrapper will ofc return all members.
 These are just tests, and tests are meant to show what I need to do on the real wrapper. All in all, I'd say this was a successful test: I learned more about discord's api.
 
+also...I dont condone writing such messy code unless you're doing it for a test
 '''
 
 import discum

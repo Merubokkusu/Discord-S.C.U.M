@@ -24,7 +24,7 @@ class Client:
         self.__proxy_port = None if proxy_host in (None,False) else proxy_host
         self.session_settings = [] #consists of 2 parts, READY and READY_SUPPLEMENTAL
         self.discord = 'https://discord.com/api/v8/'
-        self.websocketurl = 'wss://gateway.discord.gg/?encoding=json&v=8'
+        self.websocketurl = 'wss://gateway.discord.gg/?encoding=json&v=8&compress=zlib-stream'
         if user_agent != "random":
             self.__user_agent = user_agent
         else:

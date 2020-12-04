@@ -4,6 +4,8 @@ import time
 import random
 import base64
 
+import zlib
+
 if __import__('sys').version.split(' ')[0] < '3.0.0':
     import thread
 else:
@@ -54,7 +56,7 @@ class GatewayServer:
                     "referrer_current": "",
                     "referring_domain_current": "",
                     "release_channel": "stable",
-                    "client_build_number": 72376,
+                    "client_build_number": 72814,
                     "client_event_source": None
                 },
                 "presence": {
@@ -71,7 +73,7 @@ class GatewayServer:
                     "user_guild_settings_version": -1
                 }
             }
-        if 'build_num' in self.ua_data and self.ua_data['build_num']!=72376:
+        if 'build_num' in self.ua_data and self.ua_data['build_num']!=72814:
             self.auth['properties']['client_build_number'] = self.ua_data['build_num']
 
         self.proxy_host = None if proxy_host in (None,False) else proxy_host
@@ -95,6 +97,8 @@ class GatewayServer:
         self.connected = False
         self.resumable = False
 
+        self._zlib = zlib.decompressobj()
+
         self.voice_data = {} #voice connections dependent on current (connected) session
 
         #guild helper functions
@@ -104,16 +108,18 @@ class GatewayServer:
     def _get_ws_app(self, websocketurl):
         sec_websocket_key = base64.b64encode(bytes(random.getrandbits(8) for _ in range(16))).decode() #https://websockets.readthedocs.io/en/stable/_modules/websockets/handshake.html
         headers = {
-            "Host": "gateway.discord.gg",
-            "Connection": "Upgrade",
-            "Pragma": "no-cache",
+            "Accept-Encoding": "gzip, deflate, br",
+            "Accept-Language": "en-US,en;q=0.9",
             "Cache-Control": "no-cache",
-            "User-Agent": self.ua_data["browser_user_agent"],
-            "Upgrade": "websocket",
+            "Connection": "Upgrade",
+            "Host": "gateway.discord.gg",
             "Origin": "https://discord.com",
+            "Pragma": "no-cache",
+            "Sec-WebSocket-Extensions": "permessage-deflate; client_max_window_bits",
+            "Sec-WebSocket-Key": sec_websocket_key,
             "Sec-WebSocket-Version": "13",
-            "Accept-Language": "en-US",
-            "Sec-WebSocket-Key": sec_websocket_key
+            "Upgrade": "websocket",
+            "User-Agent": self.ua_data["browser_user_agent"]
         } #more info: https://stackoverflow.com/a/40675547
 
         ws = websocket.WebSocketApp(websocketurl,
@@ -124,6 +130,11 @@ class GatewayServer:
                                     on_close=lambda ws: self.on_close(ws)
                                     )
         return ws
+
+    def decompress(self, bmessage): #input is byte message
+        data = self._zlib.decompress(bmessage)
+        jsonmessage = json.loads(data.decode("UTF8"))
+        return jsonmessage
 
     def on_open(self, ws):
         self.connected = True
@@ -136,7 +147,7 @@ class GatewayServer:
 
     def on_message(self, ws, message):
         self.sequence += 1
-        resp = json.loads(message)
+        resp = self.decompress(message)
         if self.log: print('%s< %s%s' % (self.LogLevel.RECEIVE, resp, self.LogLevel.DEFAULT))
         if resp['op'] == self.OPCODE.HELLO: #only happens once, first message sent to client
             self.interval = (resp["d"]["heartbeat_interval"]-2000)/1000

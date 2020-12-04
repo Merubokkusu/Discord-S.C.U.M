@@ -178,6 +178,10 @@ bot.gateway.run(auto_reconnect=True)
 >bot.gateway.session.guildIDs
 >bot.gateway.session.positions #your roles in each guild. 
 >bot.gateway.session.guild(guildID).data
+>bot.gateway.session.guild(guildID).unavailable
+>bot.gateway.session.guild(guildID).setData
+>bot.gateway.session.guild(guildID).modify
+>bot.gateway.session.guild(guildID).someMembers #only works on guilds you've joined after you've connected
 >bot.gateway.session.guild(guildID).owner
 >bot.gateway.session.guild(guildID).boostLvl
 >bot.gateway.session.guild(guildID).emojis

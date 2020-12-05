@@ -110,9 +110,9 @@ class Messages(object):
                     if isinstance(item,str) and len(item)>0:
                         queryparams += "has="+item+"&"
             if beforeDate != None and isinstance(beforeDate,int):
-                queryparams += "min_id="+str(beforeDate)+"&"
+                queryparams += "max_id="+str(beforeDate)+"&"
             if afterDate != None and isinstance(afterDate,int):
-                queryparams += "max_id="+str(afterDate)+"&"
+                queryparams += "min_id="+str(afterDate)+"&"
             if textSearch != None and isinstance(textSearch,str): #textSearch can be len 0....ugh
                 queryparams += "content="+quote_plus(textSearch)+"&"
             if afterNumResults != None and isinstance(afterNumResults,int):

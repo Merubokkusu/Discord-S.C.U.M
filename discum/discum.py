@@ -21,7 +21,7 @@ class Client:
         self.__user_email = email
         self.__user_password = password
         self.__proxy_host = None if proxy_host in (None,False) else proxy_host
-        self.__proxy_port = None if proxy_host in (None,False) else proxy_host
+        self.__proxy_port = None if proxy_port in (None,False) else proxy_port
         self.session_settings = [] #consists of 2 parts, READY and READY_SUPPLEMENTAL
         self.discord = 'https://discord.com/api/v8/'
         self.websocketurl = 'wss://gateway.discord.gg/?encoding=json&v=8&compress=zlib-stream'
@@ -58,7 +58,7 @@ class Client:
             'http': self.__proxy_host+':'+self.__proxy_port,
             'https': self.__proxy_host+':'+self.__proxy_port
             }
-            self.s.proxies.update(proxies)
+            self.s.proxies.update(self.proxies)
         if self.log: print("Retrieving Discord's build number...")
         discord_login_page_exploration = self.s.get('https://discord.com/login').text
         time.sleep(1)

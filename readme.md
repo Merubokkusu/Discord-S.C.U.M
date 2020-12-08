@@ -83,6 +83,7 @@ bot.gateway.run(auto_reconnect=True)
 - [X] On-Message (and other on-anything gateway) capabilities
 - [ ] Getting guild members
 - [ ] Making phone calls, sending audio/video data thru those calls
+- [ ] bypass fingerprint detection? maybe?
 - [ ] Everything
 
 # Summary:

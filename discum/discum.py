@@ -88,10 +88,10 @@ class Client:
     discord snowflake to unix timestamp and back
     '''
     def snowflake_to_unixts(self,snowflake):
-        return int((snowflake/4194304+1420070400000)/1000)
+        return (snowflake/4194304+1420070400000)/1000
 
     def unixts_to_snowflake(self,unixts):
-        return int((unixts*1000-1420070400000)*4194304)
+        return (unixts*1000-1420070400000)*4194304
 
     '''
     Messages

@@ -87,7 +87,6 @@ bot.gateway.run(auto_reconnect=True)
 - [ ] Everything
 
 # Summary:
-\*added a few functions but im kinda tired rn so ill update the readme and wiki tmr
 >107 functions:      
 >(\*replace "bot" with whatever variable name you're using)
 >### Initiate client:

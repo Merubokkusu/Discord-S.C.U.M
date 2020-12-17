@@ -72,6 +72,6 @@ if bot.gateway.session.guild(bot.guildID).memberCount>15000:
 	import ast
 	membereval = ast.literal_eval(memberstring)
 	import itertools
-	bot.memberlist = list(itertools.chain(*membereval))
+	bot.memberlist = list(itertools.chain(*membereval)) #all this does is flatten the list
 
 memberlist = list({i['user']['id']:i for i in bot.memberlist}.values()) #remove duplicates, just in case

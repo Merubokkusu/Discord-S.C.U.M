@@ -55,7 +55,7 @@ class Client:
         if self.__proxy_host != None: #self.s.proxies defaults to {}
             self.proxies = {
             'http': "http://" +  self.__proxy_host+':'+self.__proxy_port,
-            'https': "http://" +  self.__proxy_host+':'+self.__proxy_port
+            'https': "https://" +  self.__proxy_host+':'+self.__proxy_port
             }
             self.s.proxies.update(self.proxies)
         if self.log: print("Retrieving Discord's build number...")

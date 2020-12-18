@@ -73,12 +73,12 @@ class Client:
         self.gateway = GatewayServer(self.websocketurl, self.__user_token, self.ua_data, self.__proxy_host, self.__proxy_port, self.log)
 
     '''
-    test connection (this function was originally in discum and was created by Merubokkusu)
+    test connection
     '''
-    def connectionTest(self): #,proxy):
+    def connectionTest(self):
         url=self.discord+'users/@me/affinities/users'
         connection = self.s.get(url)
-        if(connection.status_code == 200):
+        if connection.status_code == 200:
             if self.log: print("Connected")
         else:
             if self.log: print("Incorrect Token")

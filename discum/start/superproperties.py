@@ -44,7 +44,7 @@ class SuperProperties:
             "referrer_current": "",
             "referring_domain_current": "",
             "release_channel": "stable",
-            "client_build_number": 73712,
+            "client_build_number": 73777,
             "client_event_source": None
         }
         if self.buildnum == "request":

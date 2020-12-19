@@ -41,7 +41,7 @@ pip install discum
 - requests_toolbelt
 - websocket_client
 - filetype
-- ua_parser
+- ua-parser
 - random_user_agent
 
 # Example usage

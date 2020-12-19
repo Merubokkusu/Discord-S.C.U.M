@@ -1,21 +1,20 @@
+from .start.login import *
+from .start.superproperties import *
+
 from .guild.guild import Guild
 from .messages.messages import Messages
 from .messages.embed import Embedder
 from .user.user import User
 
-from .login.Login import *
 from .gateway.gateway import *
 
 import time
 import random
-import re
-import user_agents
-
-class SessionSettingsError(Exception):
-    pass
+import base64
 
 class Client:
-    def __init__(self, email="none", password="none", token="none", proxy_host=None, proxy_port=None, user_agent="random", log=True): #not using None on email, pass, and token since that could get flagged by discord...
+    def __init__(self, email="", password="", token="", proxy_host=None, proxy_port=None, user_agent="random", log=True):
+        #vars
         self.log = log
         self.__user_token = token
         self.__user_email = email
@@ -24,31 +23,26 @@ class Client:
         self.__proxy_port = None if proxy_port in (None,False) else proxy_port
         self.discord = 'https://discord.com/api/v8/'
         self.websocketurl = 'wss://gateway.discord.gg/?encoding=json&v=8&compress=zlib-stream'
+        #user agent
         if user_agent != "random":
             self.__user_agent = user_agent
         else:
-            from random_user_agent.user_agent import UserAgent #only really want to import this if needed...which is why it's down here
-            self.__user_agent = UserAgent(limit=100).get_random_user_agent()
+            import random_user_agent.user_agent #only really want to import this if needed
+            self.__user_agent = random_user_agent.user_agent.UserAgent(limit=100).get_random_user_agent()
             if self.log: print('Randomly generated user agent: '+self.__user_agent)
-        parseduseragent = user_agents.parse(self.__user_agent)
-        self.ua_data = {'os':parseduseragent.os.family,'browser':parseduseragent.browser.family,'device':parseduseragent.device.family if parseduseragent.is_mobile else '','browser_user_agent':self.__user_agent,'browser_version':parseduseragent.browser.version_string,'os_version':parseduseragent.os.version_string}
-        if self.__user_token in ("none",None,False): #assuming email and pass are given...
-            self.__login = Login(self.discord,self.__user_email,self.__user_password,self.__user_agent,self.__proxy_host,self.__proxy_port,self.log)
-            self.__user_token = self.__login.GetToken() #update token from "none" to true string value
-            time.sleep(1)
+        #headers
         self.headers = {
-        "Host": "discord.com",
-        "User-Agent": self.__user_agent,
-        "Accept": "*/*",
-        "Accept-Language": "en-US",
-        "Authorization": self.__user_token,
-        "Connection": "keep-alive",
-        "keep-alive" : "timeout=10, max=1000",
-        "TE": "Trailers",
-        "Pragma": "no-cache",
-        "Cache-Control": "no-cache",
-        "Referer": "https://discord.com/channels/@me",
-        "Content-Type": "application/json"
+        	"Host": "discord.com",
+        	"User-Agent": self.__user_agent,
+        	"Accept": "*/*",
+        	"Accept-Language": "en-US",
+        	"Connection": "keep-alive",
+        	"keep-alive" : "timeout=10, max=1000",
+        	"TE": "Trailers",
+        	"Pragma": "no-cache",
+        	"Cache-Control": "no-cache",
+        	"Referer": "https://discord.com/channels/@me",
+        	"Content-Type": "application/json"
         }
         self.s = requests.Session()
         self.s.headers.update(self.headers)
@@ -58,19 +52,18 @@ class Client:
             'https': "https://" +  self.__proxy_host+':'+self.__proxy_port
             }
             self.s.proxies.update(self.proxies)
-        if self.log: print("Retrieving Discord's build number...")
-        discord_login_page_exploration = self.s.get('https://discord.com/login').text
-        time.sleep(1)
-        try: #getting the build num is kinda experimental since who knows if discord will change where the build number is located...
-            file_with_build_num = 'https://discord.com/assets/'+re.compile(r'assets/+([a-z0-9]+)\.js').findall(discord_login_page_exploration)[-2]+'.js' #fastest solution I could find since the last js file is huge in comparison to 2nd from last
-            req_file_build = self.s.get(file_with_build_num).text
-            index_of_build_num = req_file_build.find('buildNumber')+14
-            self.discord_build_num = int(req_file_build[index_of_build_num:index_of_build_num+5])
-            self.ua_data['build_num'] = self.discord_build_num #putting this onto ua_data since getting the build num won't necessarily work
-            if self.log: print('Discord is currently on build number '+str(self.discord_build_num))
-        except:
-            if self.log: print('Could not retrieve discord build number.')
-        self.gateway = GatewayServer(self.websocketurl, self.__user_token, self.ua_data, self.__proxy_host, self.__proxy_port, self.log)
+        #super-properties
+        superpropertiesobj = SuperProperties(self.s, self.__user_agent, "request", self.log) #log is only used if buildnum is requested for
+        self.__super_properties = superpropertiesobj.GetSuperProperties()
+        self.s.headers.update({"X-Super-Properties": base64.b64encode(str(self.__super_properties).encode())})
+        #token/authorization
+        if self.__user_token in ("",None,False): #assuming email and pass are given...
+            self.__login = Login(self.s, self.discord, self.__user_email, self.__user_password, self.log)
+            self.__user_token, self.__xfingerprint = self.__login.GetToken() #update token from "" to actual value
+            time.sleep(1)
+        self.s.headers.update({"Authorization": self.__user_token}) #update headers
+        #gateway (object initialization)
+        self.gateway = GatewayServer(self.websocketurl, self.__user_token, self.__super_properties, self.__proxy_host, self.__proxy_port, self.log)
 
     '''
     test connection

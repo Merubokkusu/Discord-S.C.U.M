@@ -37,27 +37,13 @@ class GatewayServer:
         HEARTBEAT_ACK =         11 #    Sent immediately following a client heartbeat that was received
         GUILD_SYNC =            12 #
 
-    def __init__(self, websocketurl, token, ua_data, proxy_host=None, proxy_port=None, log=True):
+    def __init__(self, websocketurl, token, super_properties, proxy_host=None, proxy_port=None, log=True):
         self.token = token
-        self.ua_data = ua_data
+        self.super_properties = super_properties
         self.auth = {
                 "token": self.token,
                 "capabilities": 61,
-                "properties": {
-                    "os": self.ua_data["os"],
-                    "browser": self.ua_data["browser"],
-                    "device": self.ua_data["device"],
-                    "browser_user_agent": self.ua_data["browser_user_agent"],
-                    "browser_version": self.ua_data["browser_version"],
-                    "os_version": self.ua_data["os_version"],
-                    "referrer": "",
-                    "referring_domain": "",
-                    "referrer_current": "",
-                    "referring_domain_current": "",
-                    "release_channel": "stable",
-                    "client_build_number": 72814,
-                    "client_event_source": None
-                },
+                "properties": self.super_properties,
                 "presence": {
                     "status": "online",
                     "since": 0,
@@ -72,8 +58,6 @@ class GatewayServer:
                     "user_guild_settings_version": -1
                 }
             }
-        if 'build_num' in self.ua_data and self.ua_data['build_num']!=72814:
-            self.auth['properties']['client_build_number'] = self.ua_data['build_num']
 
         self.proxy_host = None if proxy_host in (None,False) else proxy_host
         self.proxy_port = None if proxy_port in (None,False) else proxy_port
@@ -87,7 +71,7 @@ class GatewayServer:
         self.settings_ready = {}
         self.settings_ready_supp = {}
 
-        #websocket.enableTrace(True)
+        #websocket.enableTrace(True) #for debugging
         self.ws = self._get_ws_app(websocketurl)
 
         self._after_message_hooks = []
@@ -116,7 +100,7 @@ class GatewayServer:
             "Sec-WebSocket-Key": sec_websocket_key,
             "Sec-WebSocket-Version": "13",
             "Upgrade": "websocket",
-            "User-Agent": self.ua_data["browser_user_agent"]
+            "User-Agent": self.super_properties["browser_user_agent"]
         } #more info: https://stackoverflow.com/a/40675547
 
         ws = websocket.WebSocketApp(websocketurl,

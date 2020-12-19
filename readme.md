@@ -1,6 +1,6 @@
 # DisCum
-![version](https://img.shields.io/badge/github%20version-0.3.0-blue) [![python versions](https://img.shields.io/badge/python-2.7%20%7C%203.5%20%7C%203.6%20%7C%203.7%20%7C%203.8-blue)](https://pypi.org/project/discum/0.2.1/)       
-[![PyPI version](https://badge.fury.io/py/discum.svg)](https://badge.fury.io/py/discum) [![python versions](https://img.shields.io/badge/python-2.7%20%7C%203.5%20%7C%203.6%20%7C%203.7%20%7C%203.8-green)](https://pypi.org/project/discum/0.2.1/)      
+![version](https://img.shields.io/badge/github%20version-0.3.1-blue) [![python versions](https://img.shields.io/badge/python-2.7%20%7C%203.5%20%7C%203.6%20%7C%203.7%20%7C%203.8-blue)](https://github.com/Merubokkusu/Discord-S.C.U.M)       
+[![PyPI version](https://badge.fury.io/py/discum.svg)](https://badge.fury.io/py/discum) [![python versions](https://img.shields.io/badge/python-2.7%20%7C%203.5%20%7C%203.6%20%7C%203.7%20%7C%203.8-green)](https://pypi.org/project/discum)      
 A simple, easy to use, non-restrictive Discord API Wrapper written in Python.       
 -using requests and websockets :)
 
@@ -41,7 +41,7 @@ pip install discum
 - requests_toolbelt
 - websocket_client
 - filetype
-- user_agents
+- ua_parser
 - random_user_agent
 
 # Example usage

@@ -1,4 +1,13 @@
 # Changelog
+# 0.3.1
+### Added
+- gateway decompression (zlib-stream)
+- super-properties to http headers
+- ability to get xfingerprint (used for login if only username and password are given, see login.py)
+### Changed
+- proxy inputs/parsing
+- search-messages function
+- organized client initialization
 # 0.3.0
 ### Added
 - gateway interactions rewritten to use websocket.WebSocketApp from https://github.com/websocket-client/websocket-client

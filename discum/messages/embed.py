@@ -41,10 +41,12 @@ class Embedder(object):
             'url': url,
             'icon_url':icon_url
         }})
-    def fields(self,name,value):
+
+    def fields(self,name,value,inline=False):
         self.jsonEmbed['fields'].append({
             'name': name,
-            'value': value
+            'value': value,
+            'inline': inline
         })
     
     

@@ -1,7 +1,7 @@
 '''
 working get-guild-members function
 This will get all the guild members that your client can see (from the members sidebar).
-This will eventually (maybe a few days, idk) be put into discum, made prettier (cause this code looks horrendous rn ngl), and get optimized, but I just wanted to upload this now cause I'm happy it works lol.
+This will eventually (in the next version) be put into discum, made prettier (cause this code looks horrendous rn ngl), and get optimized, but I just wanted to upload this now cause I'm happy it works lol.
 '''
 
 #notice how all these variables are bot.something

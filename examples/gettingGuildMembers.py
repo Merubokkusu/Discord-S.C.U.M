@@ -11,7 +11,7 @@ bot = discum.Client(token='ur token')
 @bot.gateway.command
 def memberTest(resp):
 	guild_id = '322850917248663552'
-  channel_id = '754536220826009670'
+	channel_id = '754536220826009670'
 	if resp.event.ready_supplemental:
 		bot.gateway.fetchMembers(guild_id, channel_id)
 	if bot.gateway.finishedMemberFetching(guild_id):

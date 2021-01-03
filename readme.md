@@ -53,11 +53,11 @@ bot.sendMessage("238323948859439", "Hello :)")
 
 @bot.gateway.command
 def helloworld(resp):
-    if resp['t'] == "READY_SUPPLEMENTAL": #ready_supplemental is sent after ready
+    if resp.event.ready_supplemental: #ready_supplemental is sent after ready
         user = bot.gateway.session.user
         print("Logged in as {}#{}".format(user['username'], user['discriminator']))
-    if resp['t'] == "MESSAGE_CREATE":
-        m = resp['d']
+    if resp.event.message:
+        m = resp.parsed.auto()
         guildID = m['guild_id'] if 'guild_id' in m else None #because DMs are technically channels too
         channelID = m['channel_id']
         username = m['author']['username']
@@ -81,14 +81,14 @@ bot.gateway.run(auto_reconnect=True)
 - [X] Sending Requests (Friends etc)
 - [X] Profile Editing (Name,Status,Avatar)
 - [X] On-Message (and other on-anything gateway) capabilities
-- [ ] Getting guild members
+- [X] Getting guild members
 - [ ] Making phone calls, sending audio/video data thru those calls
 - [ ] bypass fingerprint detection? maybe?
 - [ ] Everything
 
 # Summary:
->107 functions:      
->(\*replace "bot" with whatever variable name you're using)
+229 functions:      
+>(\*replace "bot" and "resp" with whatever variable names you're using)
 >### Initiate client:
 >```python
 >bot = discum.Client(email="none", password="none", token="none", proxy_host=None, proxy_port=None, user_agent="random", log=True)
@@ -143,7 +143,10 @@ bot.gateway.run(auto_reconnect=True)
 >##### changing gateway commands
 >```python
 >#adding functions to gateway command list
->@bot.gateway.command #put ontop of functions you want to run on every received websocket message
+>@bot.gateway.command #decorator, put ontop of functions you want to run on every received websocket message
+>or you can do this:
+>bot.gateway.command(function)
+>params can also be passed to that function, the documentation goes into more detail on this
 >
 >#removing functions from gateway command list
 >bot.gateway.removeCommand(function)
@@ -273,6 +276,113 @@ bot.gateway.run(auto_reconnect=True)
 >bot.gateway.session.cachedUsers
 >bot.gateway.session.tutorial
 >bot.gateway.session.mergedPresences
+>```
+##### Event checking
+>```
+>resp.event.achievement_updated
+>resp.event.activity
+>resp.event.activity_join_request
+>resp.event.all_message_reactions_removed
+>resp.event.ban_added
+>resp.event.ban_removed
+>resp.event.braintree
+>resp.event.bulk_messages_deleted
+>resp.event.call
+>resp.event.call_deleted
+>resp.event.call_updated
+>resp.event.channel
+>resp.event.channel_deleted
+>resp.event.channel_read_state_updated
+>resp.event.channel_updated
+>resp.event.connections_updated
+>resp.event.emojis_updated
+>resp.event.entitlement
+>resp.event.entitlement_deleted
+>resp.event.entitlement_updated
+>resp.event.feed_settings_updated
+>resp.event.friend_suggestion
+>resp.event.friend_suggestion_deleted
+>resp.event.gift_code_updated
+>resp.event.guild
+>resp.event.guild_application_commands_updated
+>resp.event.guild_deleted
+>resp.event.guild_integrations_updated
+>resp.event.guild_member_chunk
+>resp.event.guild_member_list
+>resp.event.guild_member_updated
+>resp.event.guild_updated
+>resp.event.invite
+>resp.event.invite_deleted
+>resp.event.library_app_updated
+>resp.event.lobby
+>resp.event.lobby_deleted
+>resp.event.lobby_member_connected
+>resp.event.lobby_member_disconnected
+>resp.event.lobby_member_updated
+>resp.event.lobby_message
+>resp.event.lobby_updated
+>resp.event.lobby_voice_server_update
+>resp.event.lobby_voice_state_update
+>resp.event.message
+>resp.event.message_ack
+>resp.event.message_deleted
+>resp.event.message_reaction_emoji_removed
+>resp.event.message_updated
+>resp.event.note_updated
+>resp.event.oauth2_token_removed
+>resp.event.payment_sources_updated
+>resp.event.payments_updated
+>resp.event.pins_ack
+>resp.event.pins_updated
+>resp.event.presence_replaced
+>resp.event.presence_updated
+>resp.event.reaction_added
+>resp.event.reaction_removed
+>resp.event.ready
+>resp.event.ready_supplemental
+>resp.event.recent_mention_deleted
+>resp.event.recipient_added
+>resp.event.recipient_removed
+>resp.event.relationship_added
+>resp.event.relationship_removed
+>resp.event.required_action_updated
+>resp.event.response
+>resp.event.role
+>resp.event.role_deleted
+>resp.event.role_updated
+>resp.event.session_replaced
+>resp.event.settings_updated
+>resp.event.stickers_updated
+>resp.event.stream
+>resp.event.stream_deleted
+>resp.event.stream_server_updated
+>resp.event.stream_updated
+>resp.event.subscriptions_updated
+>resp.event.typing
+>resp.event.user_guild_settings_updated
+>resp.event.user_premium_guild_sub_slot
+>resp.event.user_premium_guild_sub_slot_updated
+>resp.event.user_updated
+>resp.event.voice_server_updated
+>resp.event.voice_state_updated
+>resp.event.webhooks_updated
+>```
+##### Other functions
+>```
+>resp.parsed.auto()
+>#guild/server
+>bot.gateway.fetchMembers(guild_id, channel_id, method="overlap", keep=[], considerUpdates=True, reset=True, wait=None, priority=0)
+>bot.gateway.finishedMemberFetching(guild_id)
+>bot.gateway.request.lazyGuild(guild_id, channel_ranges, typing=None, threads=None, activities=None, members=None)
+>bot.gateway.request.searchGuildMembers(guild_ids, query, limit=10, presences=True)
+>resp.parsed.guild_member_list_update()
+>#messages
+>resp.parsed.message_create()
+>#DMs
+>bot.gateway.request.DMchannel(channel_id)
+>#Media/Calling
+>bot.gateway.request.call(channelID, guildID=None, mute=False, deaf=False, video=False)
+>bot.gateway.request.endCall()
 >```
 ## Contributing
 Contributions are welcome. You can submit issues, make pull requests, or suggest features. Ofc not all suggestions will be implemented (because discum is intended to be a transparent, relatively-raw discord user api wrapper), but all suggestions will be looked into.            

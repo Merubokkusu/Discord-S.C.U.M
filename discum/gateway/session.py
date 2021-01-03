@@ -34,6 +34,9 @@ class session:
     def positions(self): #outputs your roles, nick, joined at, etc for all guilds you're in
         return self.settings_ready['merged_members']
 
+    def add(self, guilddata):
+        self.settings_ready['guilds'].append(guilddata)
+
     ###***RELATIONSHIPS***### (general)
     @property
     def relationships(self):
@@ -195,13 +198,24 @@ class guild(session):
 
     @property
     def unavailable(self):
-        if 'unavailable' in session.settings_ready['guilds'][self.guildIndex]:
-            return True
-        return False
+        return 'unavailable' in session.settings_ready['guilds'][self.guildIndex]
 
     @property
-    def someMembers(self): #will only work for guilds that you've receive a GUILD_CREATE response for. Also, this doesnt return all members. I didn't know what to call it so it's just "someMembers"...
+    def hasMembers(self):
+        return 'members' in session.settings_ready['guilds'][self.guildIndex]
+
+    @property
+    def members(self):
         return session.settings_ready['guilds'][self.guildIndex]['members']
+
+    def resetMembers(self):
+        session.settings_ready['guilds'][self.guildIndex]['members'] = {}
+
+    def updateOneMember(self, userID, userProperties):
+        session.settings_ready['guilds'][self.guildIndex]['members'][userID] = userProperties
+
+    def updateMembers(self, memberdata): #where member data is a dictionary --> {userId: {properties}}
+        session.settings_ready['guilds'][self.guildIndex]['members'].update(memberdata)
 
     @property
     def owner(self):

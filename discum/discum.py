@@ -65,6 +65,8 @@ class Client:
         #gateway (object initialization)
         self.gateway = GatewayServer(self.websocketurl, self.__user_token, self.__super_properties, self.__proxy_host, self.__proxy_port, self.log)
 
+##########################################################
+
     '''
     test connection
     '''

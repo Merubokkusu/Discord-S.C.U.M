@@ -11,8 +11,13 @@ else:
     import _thread as thread
 
 from .session import session
-from .guildcommands import guildcommands
+from .response import Resp
+from .request import Request
 
+#other functions
+from .guild.combo import Guild
+
+#gateway class
 class GatewayServer:
 
     class LogLevel:
@@ -21,21 +26,32 @@ class GatewayServer:
         WARNING = '\033[93m'
         DEFAULT = '\033[m'
 
-    class OPCODE: #https://discordapp.com/developers/docs/topics/opcodes-and-status-codes
-        # Name                  Code    Client Action   Description
-        DISPATCH =              0  #    Receive         dispatches an event
-        HEARTBEAT =             1  #    Send/Receive    used for ping checking
-        IDENTIFY =              2  #    Send            used for client handshake
-        STATUS_UPDATE =         3  #    Send            used to update the client status
-        VOICE_UPDATE =          4  #    Send            used to join/move/leave voice channels
-        #                       5  #    ???             ???
-        RESUME =                6  #    Send            used to resume a closed connection
-        RECONNECT =             7  #    Receive         used to tell clients to reconnect to the gateway
-        REQUEST_GUILD_MEMBERS = 8  #    Send            used to request guild members
-        INVALID_SESSION =       9  #    Receive         used to notify client they have an invalid session id
-        HELLO =                 10 #    Receive         sent immediately after connecting, contains heartbeat and server debug information
-        HEARTBEAT_ACK =         11 #    Sent immediately following a client heartbeat that was received
-        GUILD_SYNC =            12 #
+    class OPCODE:
+        # Name                           Code    Client Action   Description
+        DISPATCH =                       0  #    Receive         dispatches an event
+        HEARTBEAT =                      1  #    Send/Receive    used for ping checking
+        IDENTIFY =                       2  #    Send            used for client handshake
+        PRESENCE_UPDATE =                3  #    Send            used to update the client status
+        VOICE_STATE_UPDATE =             4  #    Send            used to join/move/leave voice channels
+        VOICE_SERVER_PING =              5  #    Send            used for voice ping checking
+        RESUME =                         6  #    Send            used to resume a closed connection
+        RECONNECT =                      7  #    Receive         used to tell bots to reconnect...so..useless for discum
+        REQUEST_GUILD_MEMBERS =          8  #    Send            used to request guild members (when searching for members in the search bar of a guild)
+        INVALID_SESSION =                9  #    Receive         used to notify client they have an invalid session id
+        HELLO =                          10 #    Receive         sent immediately after connecting, contains heartbeat and server debug information
+        HEARTBEAT_ACK =                  11 #    Sent immediately following a client heartbeat that was received
+        #GUILD_SYNC =                    12 #    Receive         supposedly guild_sync but not used...idk
+        DM_UPDATE =                      13 #    Send            used to get dm features
+        LAZY_REQUEST =                   14 #    Send            discord responds back with GUILD_MEMBER_LIST_UPDATE type SYNC...
+        LOBBY_CONNECT =                  15 #    ??
+        LOBBY_DISCONNECT =               16 #    ??
+        LOBBY_VOICE_STATES_UPDATE =      17 #    Receive
+        STREAM_CREATE =                  18 #    ??
+        STREAM_DELETE =                  19 #    ??
+        STREAM_WATCH =                   20 #    ??
+        STREAM_PING =                    21 #    Send
+        STREAM_SET_PAUSED =              22 #    ??
+        REQUEST_APPLICATION_COMMANDS =   24 #    ??
 
     def __init__(self, websocketurl, token, super_properties, proxy_host=None, proxy_port=None, log=True):
         self.token = token
@@ -82,8 +98,9 @@ class GatewayServer:
 
         self.voice_data = {} #voice connections dependent on current (connected) session
 
-        #guild helper functions
-        self.guildcommands = guildcommands(self) #passing the gateway object over so we can work with it in guildcommands.py
+        self.memberFetchingStatus = {"first": []}
+
+        self.request = Request(self)
 
     #WebSocketApp, more info here: https://github.com/websocket-client/websocket-client/blob/master/websocket/_app.py#L79
     def _get_ws_app(self, websocketurl):
@@ -119,6 +136,7 @@ class GatewayServer:
 
     def on_open(self, ws):
         self.connected = True
+        self.memberFetchingStatus = {"first": []}
         if self.log: print("Connected to websocket.")
         if not self.resumable:
             self.send({"op": self.OPCODE.IDENTIFY, "d": self.auth})
@@ -128,12 +146,12 @@ class GatewayServer:
 
     def on_message(self, ws, message):
         self.sequence += 1
-        resp = self.decompress(message)
-        if self.log: print('%s< %s%s' % (self.LogLevel.RECEIVE, resp, self.LogLevel.DEFAULT))
-        if resp['op'] == self.OPCODE.HELLO: #only happens once, first message sent to client
-            self.interval = (resp["d"]["heartbeat_interval"]-2000)/1000
+        response = self.decompress(message)
+        if self.log: print('%s< %s%s' % (self.LogLevel.RECEIVE, response, self.LogLevel.DEFAULT))
+        if response['op'] == self.OPCODE.HELLO: #only happens once, first message sent to client
+            self.interval = (response["d"]["heartbeat_interval"]-2000)/1000
             thread.start_new_thread(self._heartbeat, ())
-        elif resp['op'] == self.OPCODE.INVALID_SESSION:
+        elif response['op'] == self.OPCODE.INVALID_SESSION:
             if self.log: print("Invalid session.")
             if self.resumable:
                 self.resumable = False
@@ -145,16 +163,25 @@ class GatewayServer:
         if self.interval == None:
             if self.log: print("Identify failed.")
             self.close()
-        if resp['t'] == "READY":
-            self.session_id = resp['d']['session_id']
-            self.settings_ready = resp['d']
-        elif resp['t'] == "READY_SUPPLEMENTAL":
+        if response['t'] == "READY":
+            self.session_id = response['d']['session_id']
+            self.settings_ready = response['d']
+            self.session = session(self.settings_ready, {}) #so that you can parse session settings right after ready (if you dont listen for ready supp data)
+        elif response['t'] == "READY_SUPPLEMENTAL":
             self.resumable = True #completely successful identify
-            self.settings_ready_supp = resp['d']
-            self.session = session(self.settings_ready, self.settings_ready_supp)
+            self.settings_ready_supp = response['d']
+            self.session.settings_ready_supp = self.settings_ready_supp
             self.READY = True
-        elif resp['t'] in ("VOICE_SERVER_UPDATE", "VOICE_STATE_UPDATE"):
-            self.voice_data.update(resp['d']) #called twice, resulting in a dictionary with 12 keys
+        elif response['t'] == "GUILD_CREATE":
+            guild_data = response['d']
+            guild_data['members'] = {} #the member data originally stored in here is far from complete so might as well throw it away tbh and prepare for member fetching
+            if response['d']['id'] in self.session.guildIDs:
+                self.session.guild(response['d']['id']).setData(guild_data)
+            else:
+                self.session.add(guild_data)
+        elif response['t'] in ("VOICE_SERVER_UPDATE", "VOICE_STATE_UPDATE"):
+            self.voice_data.update(response['d']) #called twice, resulting in a dictionary with 12 keys
+        resp = Resp(response)
         thread.start_new_thread(self._response_loop, (resp,))
 
     def on_error(self, ws, error):
@@ -187,19 +214,32 @@ class GatewayServer:
         self.ws.close()
 
 
-    #the next 2 functions come from https://github.com/scrubjay55/Reddit_ChatBot_Python/blob/master/Reddit_ChatBot_Python/Utils/WebSockClient.py (Apache License 2.0)
     def command(self, func):
-        self._after_message_hooks.append(func)
-        return func
+        if callable(func):
+            self._after_message_hooks.append(func)
+            return func
+        elif isinstance(func, dict): #because I can't figure out out to neatly pass params to decorators :(. Normal behavior still works; use as usual.\
+            priority = func['priority'] if 'priority' in func else -1
+            self._after_message_hooks.insert(priority, func) #func here is a dict btw
+            return func['function']
 
+    #_response_loop func comes from https://github.com/scrubjay55/Reddit_ChatBot_Python/blob/master/Reddit_ChatBot_Python/Utils/WebSockClient.py (Apache License 2.0)
     def _response_loop(self, resp):
-        for func in self._after_message_hooks:
-            if func(resp):
-                break
+        copy = self._after_message_hooks[:]
+        for func in copy:
+            if func in self._after_message_hooks:
+                if callable(func): #just regular, input is a function
+                    func(resp)
+                elif isinstance(func, dict):
+                    function = func['function']
+                    params = func['params'] if 'params' in func else {}
+                    function(resp, **params)
 
     def removeCommand(self, func):
         try:
-            self._after_message_hooks.remove(func)
+            commandsCopy = [i['function'] if isinstance(i,dict) else i for i in self._after_message_hooks] #this contains a list of functions
+            ind = commandsCopy.index(func)
+            del self._after_message_hooks[ind]
         except ValueError:
             if self.log: print('%s not found in _after_message_hooks.' % func)
             pass
@@ -242,3 +282,40 @@ class GatewayServer:
         if not auto_reconnect:
             self._zlib = zlib.decompressobj()
             self.ws.run_forever(ping_interval=10, ping_timeout=5, http_proxy_host=self.proxy_host, http_proxy_port=self.proxy_port)
+
+##########################################################
+
+    '''
+    Guild/Server stuff
+    '''
+    def fetchMembers(self, guild_id, channel_id, method="overlap", keep=[], considerUpdates=True, reset=True, wait=None, priority=0):
+        if guild_id in self.memberFetchingStatus:
+            del self.memberFetchingStatus[guild_id] #just resetting tracker on the specific guild_id
+        self.command(
+            {
+                "function": Guild(self).fetchMembers,
+                "priority": priority,
+                "params": {
+                    "guild_id": guild_id,
+                    "channel_id": channel_id,
+                    "method": method,
+                    "keep": keep,
+                    "considerUpdates": considerUpdates,
+                    "reset": reset,
+                    "wait": wait,
+                },
+            }
+        )
+
+
+    def finishedMemberFetching(self, guild_id):
+        return self.memberFetchingStatus.get(guild_id) == "done"
+
+    '''
+    test stuff
+    '''
+    def testfunc(self):
+        self.command({'function': Guild(self).testfunc, 'priority': 0})
+
+    def testfuncPOG(self, pog):
+        self.command({'function': Guild(self).testfuncPOG, 'priority': 0, 'params': {'pog': pog}})

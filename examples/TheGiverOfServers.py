@@ -4,7 +4,7 @@ here's how it looks: https://www.reddit.com/r/discordapp/comments/jzlnlb/discord
 this bug works both on servers and DMs :). The below code is only for DMs but can be easily modified to work only on guilds or on both.
 '''
 
-import requests, json #cause this bugged endpoint is not in discum yet, will update later
+import requests, json
 
 import discum
 import time
@@ -13,16 +13,16 @@ bot = discum.Client(token='ur token')
 
 @bot.gateway.command
 def helloworld(resp):
-    if resp['t'] == "READY_SUPPLEMENTAL": #ready_supplemental is sent after ready
+    if resp.event.ready_supplemental: #ready_supplemental is sent after ready
         user = bot.gateway.session.user
         print("Logged in as {}#{}".format(user['username'], user['discriminator']))
-    if resp['t'] == "MESSAGE_CREATE":
-        m = resp['d']
+    if resp.event.message:
+        message = resp.parsed.auto()
         if m['content'] == 'turn me into a server':
             bot.sendMessage(m['channel_id'], 'reply to one of my messages and I will make you a server :)')
         if m['author']['id'] == bot.gateway.session.user['id']:
             return
-        if m['type'] == 19:
+        if m['type'] == 'reply':
             if 'referenced_message' in m and m['referenced_message']['author']['id'] == bot.gateway.session.user['id'] and 'guild_id' not in m:
                 time.sleep(1) #instant replies make ppl think ur running a selfbot so...
                 channelID = m['channel_id']

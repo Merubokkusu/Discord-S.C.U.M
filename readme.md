@@ -287,7 +287,7 @@ bot.gateway.run(auto_reconnect=True)
 >bot.gateway.session.tutorial
 >bot.gateway.session.mergedPresences
 >```
-##### Event checking
+>##### Event checking
 >```
 >resp.event.achievement_updated
 >resp.event.activity
@@ -377,7 +377,7 @@ bot.gateway.run(auto_reconnect=True)
 >resp.event.voice_state_updated
 >resp.event.webhooks_updated
 >```
-##### Other functions
+>##### Other functions
 >```
 >resp.parsed.auto()
 >#guild/server

@@ -12,7 +12,7 @@ A simple, easy to use, non-restrictive Discord API Wrapper for Selfbots/Userbots
 - [Key Features](#Key-features)
 - [About](#About)
 - [Installation](#Installation)
-  - [Prerequisites](#Prerequisites)
+  - [Prerequisites](#prerequisites-installed-automatically-using-above-methods)
 - [Example Usage](#Example-usage)
 - [Links](#Links)
 - [To Do](#To-Do)

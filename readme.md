@@ -79,7 +79,7 @@ bot.gateway.run(auto_reconnect=True)
 
 # Links
 [Documentation](https://github.com/Merubokkusu/Discord-S.C.U.M/blob/master/wiki.md)      
-[More examples](https://github.com/Merubokkusu/Discord-S.C.U.M/tree/master/examples)
+[More examples](https://github.com/Merubokkusu/Discord-S.C.U.M/tree/master/examples)      
 [Changelog](https://github.com/Merubokkusu/Discord-S.C.U.M/blob/master/changelog.md)      
 [GitHub](https://github.com/Merubokkusu/Discord-S.C.U.M)      
 [PyPi](https://pypi.org/project/discum/)      

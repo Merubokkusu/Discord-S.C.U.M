@@ -3,7 +3,7 @@
 #function names are just lowercase types, so for type GUILD_MEMBER_LIST_UPDATE, the function is guild_member_list_update
 class GuildParse(object):
 	@staticmethod
-	def guild_member_list_update(response, include=['roles', 'presence', 'mute', 'joined_at', 'hoisted_role', 'deaf', 'username', 'public_flags', 'discriminator', 'avatar', 'nick']):
+	def guild_member_list_update(response):
 		memberdata = {
 		    "online_count": response["d"]["online_count"],
 		    "member_count": response["d"]["member_count"],

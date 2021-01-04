@@ -9,6 +9,7 @@ to make selfbots & userbots
 - [Messages](#Messages)
 - [User Actions](#User-Actions)
 - [Guilds](#Guilds)
+- [Calling](#Media/Calling)
 
 ## Quickstart:
 #### Install:
@@ -463,4 +464,15 @@ bot.gateway.session.guild(guildID).mergedPresences
 bot.gateway.session.guild(guildID).mergedPresenceIDs
 bot.gateway.session.guild(guildID).mergedPresenceData(userID)
 bot.gateway.session.guild(guildID).position #your roles in a specific guild
+```
+## Media/Calling
+# start call (no function yet for streaming data)
+```bot.gateway.request.call(channelID, guildID=None, mute=False, deaf=False, video=False)```
+```python
+bot.gateway.request.call('channelID000000', guildID=None, mute=False, deaf=False, video=False)
+```
+# end call
+```bot.gateway.request.endCall()```
+```python
+bot.gateway.request.endCall()
 ```

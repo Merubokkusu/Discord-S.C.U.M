@@ -466,7 +466,8 @@ bot.gateway.session.guild(guildID).mergedPresenceData(userID)
 bot.gateway.session.guild(guildID).position #your roles in a specific guild
 ```
 ## Media/Calling
-# start call (no function yet for streaming data)
+(no function yet for streaming data)
+# start call
 ```bot.gateway.request.call(channelID, guildID=None, mute=False, deaf=False, video=False)```
 ```python
 bot.gateway.request.call('channelID000000', guildID=None, mute=False, deaf=False, video=False)

@@ -194,11 +194,11 @@ bot.gateway.run(auto_reconnect=True)
 >bot.gateway.session.guild(guildID).unavailable
 >bot.gateway.session.guild(guildID).setData
 >bot.gateway.session.guild(guildID).modify
->bot.gateway.session.guild(guildID). hasMembers
->bot.gateway.session.guild(guildID). members
->bot.gateway.session.guild(guildID). resetMembers
->bot.gateway.session.guild(guildID). updateOneMember
->bot.gateway.session.guild(guildID). updateMembers
+>bot.gateway.session.guild(guildID).hasMembers
+>bot.gateway.session.guild(guildID).members
+>bot.gateway.session.guild(guildID).resetMembers
+>bot.gateway.session.guild(guildID).updateOneMember
+>bot.gateway.session.guild(guildID).updateMembers
 >bot.gateway.session.guild(guildID).owner
 >bot.gateway.session.guild(guildID).boostLvl
 >bot.gateway.session.guild(guildID).emojis

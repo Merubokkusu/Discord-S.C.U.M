@@ -78,7 +78,7 @@ bot.gateway.run(auto_reconnect=True)
 ```
 
 # Links
-[Documentation](https://github.com/Merubokkusu/Discord-S.C.U.M/blob/master/wiki.md)      
+[Documentation](https://github.com/Merubokkusu/Discord-S.C.U.M/tree/master/docs)      
 [More examples](https://github.com/Merubokkusu/Discord-S.C.U.M/tree/master/examples)      
 [Changelog](https://github.com/Merubokkusu/Discord-S.C.U.M/blob/master/changelog.md)      
 [GitHub](https://github.com/Merubokkusu/Discord-S.C.U.M)      

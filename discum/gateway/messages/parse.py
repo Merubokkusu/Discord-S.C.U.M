@@ -1,7 +1,7 @@
 class MessageParse(object):
 	@staticmethod
 	def message_create(response):
-		message = response["d"]
+		message = dict(response["d"])
 		types = [
 		    "default",
 		    "recipient_added",

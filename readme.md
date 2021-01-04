@@ -97,15 +97,15 @@ bot.gateway.run(auto_reconnect=True)
 - [ ] Everything
 
 # Summary:
-229 functions:      
+232 functions:      
 >(\*replace "bot" and "resp" with whatever variable names you're using)
 >### Initiate client:
 >```python
->bot = discum.Client(email="none", password="none", token="none", proxy_host=None, proxy_port=None, user_agent="random", log=True)
+>bot = discum.Client(email="", password="", token="", proxy_host=None, proxy_port=None, user_agent="random", log=True)
 >```
 >### Http API:
 >```python
->bot.connectionTest(self)
+>bot.connectionTest()
 >bot.snowflake_to_unixts(snowflake) #unixts is of type int
 >bot.unixts_to_snowflake(unixts) #snowflake is of type int
 >
@@ -194,7 +194,11 @@ bot.gateway.run(auto_reconnect=True)
 >bot.gateway.session.guild(guildID).unavailable
 >bot.gateway.session.guild(guildID).setData
 >bot.gateway.session.guild(guildID).modify
->bot.gateway.session.guild(guildID).someMembers #only works on guilds you've joined after you've connected
+>bot.gateway.session.guild(guildID). hasMembers
+>bot.gateway.session.guild(guildID). members
+>bot.gateway.session.guild(guildID). resetMembers
+>bot.gateway.session.guild(guildID). updateOneMember
+>bot.gateway.session.guild(guildID). updateMembers
 >bot.gateway.session.guild(guildID).owner
 >bot.gateway.session.guild(guildID).boostLvl
 >bot.gateway.session.guild(guildID).emojis

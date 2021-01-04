@@ -9,7 +9,7 @@ to make selfbots & userbots
 - [Messages](#Messages)
 - [User Actions](#User-Actions)
 - [Guilds](#Guilds)
-- [Calling](#Media/Calling)
+- [Calling](#mediacalling)
 
 ## Quickstart:
 #### Install:

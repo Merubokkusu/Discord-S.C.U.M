@@ -28,7 +28,7 @@ class Guild(object):
 	def joinGuild(self,inviteCode):
 		url = self.discord+"invites/"+inviteCode
 		if self.log: Logger.LogMessage('Post -> {}'.format(url))
-		response = self.s.get(url)
+		response = self.s.post(url)
 		if self.log: Logger.LogMessage('Response <- {}'.format(response.text), log_level=LogLevel.OK)
 		return response
 

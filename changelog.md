@@ -1,4 +1,21 @@
 # Changelog
+# 1.0.0
+### Added
+- gateway functions/wraps structure
+- added documentation for extending and reading discum
+- inline field to embed
+- ability to fetch guild members (gateway.fetchMembers(...) function) ([example](https://github.com/Merubokkusu/Discord-S.C.U.M/blob/master/examples/gettingGuildMembers.py))
+- gateway.finishedMemberFetching() function
+- some gateway.session functions to access and modify member dictionary
+- response.py, event.py, parse.py, and request.py
+- event checking
+- response parsing (and auto-parsing)
+### Changed
+- resp is now an Resp object with 3 attributes ([example](https://github.com/Merubokkusu/Discord-S.C.U.M/blob/master/examples/respexample.py)):
+  - raw (just the decompressed dictionary response)
+  - event (allows for resp.event... event checking)
+  - parsed (allows for resp.parsed... parsing)
+- organized documentation on using discum
 # 0.3.1
 ### Added
 - gateway decompression (zlib-stream)

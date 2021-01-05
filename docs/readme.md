@@ -5,7 +5,7 @@ __________
 # Table of Contents
 - [Using discum](https://github.com/Merubokkusu/Discord-S.C.U.M/blob/master/docs/using.md) (make selfbots and userbots)
 - [Extending discum](https://github.com/Merubokkusu/Discord-S.C.U.M/blob/master/docs/extending.md) (add discord API wraps)
-- [Reading discum](https://github.com/Merubokkusu/Discord-S.C.U.M/blob/master/docs/reading.md) (structure of discum and some pseudocode)
+- [Reading discum](https://github.com/Merubokkusu/Discord-S.C.U.M/blob/master/docs/reading.md) (structure of discum)
 ___________
 # Overview:
 ### 232 functions:      

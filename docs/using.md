@@ -8,7 +8,7 @@ to make selfbots & userbots
   - [Gateway](#Gateway)
 - [Messages](#Messages)
 - [User Actions](#User-Actions)
-- [Guilds](#Guilds)
+- [Guilds](#Guild)
 - [Calling](#mediacalling)
 
 ## Quickstart:

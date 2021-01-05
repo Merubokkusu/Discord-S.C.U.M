@@ -16,7 +16,6 @@ A simple, easy to use, non-restrictive Discord API Wrapper for Selfbots/Userbots
 - [Example Usage](#Example-usage)
 - [Links](#Links)
 - [To Do](#To-Do)
-- [Summary](#Summary)
 - [Contributing](#Contributing)
 - [Notes](#Notes)
 
@@ -25,7 +24,7 @@ A simple, easy to use, non-restrictive Discord API Wrapper for Selfbots/Userbots
 - easy-to-extend/edit (adding more api wrappers)
 - readable (organized 😃 )
 - on-event (gateway) capabilities
-- ability to fetch guild members (the ones that you can see from the member list)
+- [ability to fetch guild members (the ones that you can see from the member list)](https://github.com/Merubokkusu/Discord-S.C.U.M/blob/master/docs/using.md#fetch-guild-members)
 - support for python 2.7
 
 ## About

@@ -15,7 +15,7 @@ from .response import Resp
 from .request import Request
 
 #other functions
-from .guild.combo import Guild
+from .guild.combo import GuildCombo
 
 #gateway class
 class GatewayServer:

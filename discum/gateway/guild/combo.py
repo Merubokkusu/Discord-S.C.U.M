@@ -4,7 +4,7 @@
 
 import time
 
-class Guild(object):
+class GuildCombo(object):
 	def __init__(self, gatewayobj):
 		self.gatewayobj = gatewayobj
 

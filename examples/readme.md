@@ -1,1 +1,1 @@
-The examples in this folder work on the latest version of discum. The GitHub version is always up to date. So, if you installed through pip and get Attribute Errors, then the solution is most likely reinstall discum from github.
+The examples in this folder work on the latest version of discum. The GitHub version is always up to date. So, if you installed through pip and get Attribute Errors, then the solution is most likely to reinstall discum from github.

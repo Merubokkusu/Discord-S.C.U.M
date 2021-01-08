@@ -410,13 +410,13 @@ bot.gateway.session.guildIDs
 bot.gateway.session.positions #your roles in each guild. 
 bot.gateway.session.guild(guildID).data
 bot.gateway.session.guild(guildID).unavailable
-bot.gateway.session.guild(guildID).setData #set guild data (and delete existing data)
-bot.gateway.session.guild(guildID).modify #update guild data
+bot.gateway.session.guild(guildID).setData(newData) #set guild data (and delete existing data)
+bot.gateway.session.guild(guildID).modify(modifications) #update guild data
 bot.gateway.session.guild(guildID).hasMembers #checks if members key exists
 bot.gateway.session.guild(guildID).members #available after fetchMembers has been run
-bot.gateway.session.guild(guildID).resetMembers
-bot.gateway.session.guild(guildID).updateOneMember
-bot.gateway.session.guild(guildID).updateMembers
+bot.gateway.session.guild(guildID).resetMembers()
+bot.gateway.session.guild(guildID).updateOneMember(userID, userProperties)
+bot.gateway.session.guild(guildID).updateMembers(memberdata)
 bot.gateway.session.guild(guildID).owner
 bot.gateway.session.guild(guildID).boostLvl
 bot.gateway.session.guild(guildID).emojis

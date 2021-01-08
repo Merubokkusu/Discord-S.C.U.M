@@ -1,7 +1,5 @@
-import requests
-import json
 import base64
-from ..Logger import *
+from ..RESTapiwrap import *
 
 class User(object):
 	def __init__(self, discord, s, log): #s is the requests session object
@@ -25,91 +23,58 @@ class User(object):
 		if "#" in user:
 			url = self.discord+"users/@me/relationships"
 			body = {"username": user.split("#")[0], "discriminator": int(user.split("#")[1])}
-			if self.log: Logger.LogMessage('Post -> {}'.format(url))
-			if self.log: Logger.LogMessage('{}'.format(str(body)))
-			response = self.s.post(url, data=json.dumps(body))
-			if self.log: Logger.LogMessage('Response <- {}'.format(response.text), log_level=LogLevel.OK)
-			return response
-		url = self.discord+"users/@me/relationships/"+user
-		if self.log: Logger.LogMessage('Put -> {}'.format(url))
-		response = self.s.put(url, data=json.dumps({}))
-		if self.log: Logger.LogMessage('Response <- {}'.format(response.text), log_level=LogLevel.OK)
-		return response
+			return Wrapper.sendRequest(self.s, 'post', url, body, log=self.log)
+		else:
+			url = self.discord+"users/@me/relationships/"+user
+			body = {}
+			return Wrapper.sendRequest(self.s, 'put', url, body, log=self.log)
 
 	def acceptFriend(self,userID):
 		url = self.discord+"users/@me/relationships/"+userID
-		if self.log: Logger.LogMessage('Put -> {}'.format(url))
-		response = self.s.put(url, data=json.dumps({}))
-		if self.log: Logger.LogMessage('Response <- {}'.format(response.text), log_level=LogLevel.OK)
-		return response
+		body = {}
+		return Wrapper.sendRequest(self.s, 'put', url, body, log=self.log)
 
 	def removeRelationship(self,userID): #for removing friends, unblocking people
 		url = self.discord+"users/@me/relationships/"+userID
-		if self.log: Logger.LogMessage('Delete -> {}'.format(url))
-		response = self.s.delete(url)
-		if self.log: Logger.LogMessage('Response <- {}'.format(response.text), log_level=LogLevel.OK)
-		return response
+		return Wrapper.sendRequest(self.s, 'delete', url, log=self.log)
 
 	def blockUser(self,userID):
 		url = self.discord+"users/@me/relationships/"+userID
-		if self.log: Logger.LogMessage('Put -> {}'.format(url))
-		if self.log: Logger.LogMessage('{}'.format(str({"type":2})))
-		response = self.s.put(url, data=json.dumps({"type":2}))
-		if self.log: Logger.LogMessage('Response <- {}'.format(response.text), log_level=LogLevel.OK)
-		return response
+		body = {"type": 2}
+		return Wrapper.sendRequest(self.s, 'put', url, body, log=self.log)
+
+	def getProfile(self,userID):
+		url = self.discord+"users/"+userID+"/profile"
+		return Wrapper.sendRequest(self.s, 'get', url, log=self.log)
 
 	'''
 	Profile Edits
 	'''
 	def changeName(self,email,password,name):
 		url = self.discord+"users/@me"
-		if self.log: Logger.LogMessage('Patch -> {}'.format(url))
-		if self.log: Logger.LogMessage('{}'.format(str({"username":name,"email":email,"password":password})))
-		response = self.s.patch(url, data=json.dumps({"username":name,"email":email,"password":password}))
-		if self.log: Logger.LogMessage('Response <- {}'.format(response.text), log_level=LogLevel.OK)
-		return response
+		body = {"username":name,"email":email,"password":password}
+		return Wrapper.sendRequest(self.s, 'patch', url, body, log=self.log)
 	
 	def setStatus(self,status):
 		url = self.discord+"users/@me/settings"
-		if self.log: Logger.LogMessage('Patch -> {}'.format(url))
 		if(status == 0): # Online
-			if self.log: Logger.LogMessage('{}'.format(str({"status":"online"})))
-			response = self.s.patch(url, data=json.dumps({"status":"online"}))
-			if self.log: Logger.LogMessage('Response <- {}'.format(response.text), log_level=LogLevel.OK)
-			return response
+			body = {"status":"online"}
 		elif(status == 1): # Idle
-			if self.log: Logger.LogMessage('{}'.format(str({"status":"idle"})))
-			response = self.s.patch(url, data=json.dumps({"status":"idle"}))
-			if self.log: Logger.LogMessage('Response <- {}'.format(response.text), log_level=LogLevel.OK)
-			return response
+			body = {"status":"idle"}
 		elif(status == 2): #Do Not Disturb
-			if self.log: Logger.LogMessage('{}'.format(str({"status":"dnd"})))
-			response = self.s.patch(url, data=json.dumps({"status":"dnd"}))
-			if self.log: Logger.LogMessage('Response <- {}'.format(response.text), log_level=LogLevel.OK)
-			return response
+			body = {"status":"dnd"}
 		elif (status == 3): #Invisible
-			if self.log: Logger.LogMessage('{}'.format(str({"status":"invisible"})))
-			response = self.s.patch(url, data=json.dumps({"status":"invisible"}))
-			if self.log: Logger.LogMessage('Response <- {}'.format(response.text), log_level=LogLevel.OK)
-			return response
+			body = {"status":"invisible"}
 		elif (status == ''):
-			if self.log: Logger.LogMessage('{}'.format(str({"custom_status":None})))
-			response = self.s.patch(url, data=json.dumps({"custom_status":None}))
-			if self.log: Logger.LogMessage('Response <- {}'.format(response.text), log_level=LogLevel.OK)
-			return response
+			body = {"custom_status":None}
 		else:
-			if self.log: Logger.LogMessage('{}'.format(str({"custom_status":{"text":status}})))
-			response = self.s.patch(url, data=json.dumps({"custom_status":{"text":status}}))
-			if self.log: Logger.LogMessage('Response <- {}'.format(response.text), log_level=LogLevel.OK)
-			return response
+			body = {"custom_status":{"text":status}}
+		return Wrapper.sendRequest(self.s, 'patch', url, body, log=self.log)
 
 	def setAvatar(self,email,password,imagePath): #local image path
 		url = self.discord+"users/@me"
-		if self.log: Logger.LogMessage('Patch -> {}'.format(url))
-		if self.log: Logger.LogMessage('{}'.format(str({"email":email,"password":password,"avatar":"data:image/png;base64,<encoded image data>","discriminator":None,"new_password":None})))
 		with open(imagePath, "rb") as image:
 			encodedImage = base64.b64encode(image.read()).decode('utf-8')
-		response = self.s.patch(url, data=json.dumps({"email":email,"password":password,"avatar":"data:image/png;base64,"+encodedImage,"discriminator":None,"new_password":None}))
-		if self.log: Logger.LogMessage('Response <- {}'.format(response.text), log_level=LogLevel.OK)
-		return response
+		body = {"email":email,"password":password,"avatar":"data:image/png;base64,"+encodedImage,"discriminator":None,"new_password":None}
+		return Wrapper.sendRequest(self.s, 'patch', url, body, log=self.log)
 		

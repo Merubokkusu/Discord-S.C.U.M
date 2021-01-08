@@ -9,8 +9,8 @@ from .user.user import User
 from .gateway.gateway import *
 
 import time
-import random
 import base64
+import requests
 
 class Client:
     def __init__(self, email="", password="", token="", proxy_host=None, proxy_port=None, user_agent="random", log=True):

@@ -1,6 +1,4 @@
-import requests
-import json
-from ..Logger import *
+from ..RESTapiwrap import *
 
 if __import__('sys').version.split(' ')[0] < '3.0.0':
     from urllib import quote
@@ -19,18 +17,12 @@ class Guild(object):
 	#get guild info from invite code
 	def getInfoFromInviteCode(self,inviteCode):
 		url = self.discord+"invites/"+inviteCode+"?with_counts=true"
-		if self.log: Logger.LogMessage('Get -> {}'.format(url))
-		response = self.s.get(url)
-		if self.log: Logger.LogMessage('Response <- {}'.format(response.text), log_level=LogLevel.OK)
-		return response
+		return Wrapper.sendRequest(self.s, 'get', url, log=self.log)
 
 	#join guild with invite code
 	def joinGuild(self,inviteCode):
 		url = self.discord+"invites/"+inviteCode
-		if self.log: Logger.LogMessage('Post -> {}'.format(url))
-		response = self.s.post(url)
-		if self.log: Logger.LogMessage('Response <- {}'.format(response.text), log_level=LogLevel.OK)
-		return response
+		return Wrapper.sendRequest(self.s, 'post', url, log=self.log)
 
 	'''
 	server moderation
@@ -38,20 +30,13 @@ class Guild(object):
 	#kick a user
 	def kick(self,guildID,userID,reason):
 		url = self.discord+"guilds/%s/members/%s?reason=%s" % (guildID, userID, quote(reason))
-		if self.log: Logger.LogMessage('Delete -> {}'.format(url))
-		response = self.s.delete(url)
-		if self.log: Logger.LogMessage('Response <- {}'.format(response.text), log_level=LogLevel.OK)
-		return response
+		return Wrapper.sendRequest(self.s, 'delete', url, log=self.log)
 
 	#ban a user
 	def ban(self,guildID,userID,deleteMessagesDays,reason):
 		url = self.discord+"guilds/%s/bans/%s" % (guildID, userID)
 		body = {"delete_message_days": str(deleteMessagesDays), "reason": reason}
-		if self.log: Logger.LogMessage('Put -> {}'.format(url))
-		if self.log: Logger.LogMessage('{}'.format(str(body)))
-		response = self.s.put(url, data=json.dumps(body))
-		if self.log: Logger.LogMessage('Response <- {}'.format(response.text), log_level=LogLevel.OK)
-		return response
+		return Wrapper.sendRequest(self.s, 'put', url, body, log=self.log)
 
 	#lookup a user in a guild. thx Echocage for finding this api endpoint
 	'''Note, user clients do not run this api request, however it currently works without a problem. 
@@ -59,7 +44,4 @@ class Guild(object):
 	'''
 	def getGuildMember(self, guildID, userID):
 		url = self.discord+"/guilds/%s/members/%s" % (guildID, userID)
-		if self.log: Logger.LogMessage('Get -> {}'.format(url))
-		response = self.s.get(url)
-		if self.log: Logger.LogMessage('Response <- {}'.format(response.text), log_level=LogLevel.OK)
-		return response
+		return Wrapper.sendRequest(self.s, 'get', url, log=self.log)

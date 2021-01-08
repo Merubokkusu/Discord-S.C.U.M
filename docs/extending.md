@@ -15,53 +15,34 @@ Here's the format of each type of wrapper (depends on type of http request):
 ```python
 def wrapper(**params):
     url = "url"
-    if self.log: Logger.LogMessage('Get -> {}'.format(url))
-    response = self.s.get(url)
-    if self.log: Logger.LogMessage('Response <- {}'.format(response.text), log_level=LogLevel.OK)
-    return response
+    return Wrapper.sendRequest(self.s, 'get', url, log=self.log)
 ```
 ###### POST: 
 ```python
 def wrapper(**params):
     url = "url"
     body = {"something": something, ...}
-    if self.log: Logger.LogMessage('Post -> {}'.format(url))
-    if self.log: Logger.LogMessage('{}'.format(str(body)))
-    response = self.s.post(url, data=json.dumps(body))
-    if self.log: Logger.LogMessage('Response <- {}'.format(response.text), log_level=LogLevel.OK)
-    return response
+    return Wrapper.sendRequest(self.s, 'post', url, body, log=self.log)
 ```
 ###### PUT: 
 ```python
 def wrapper(**params):
     url = "url"
     body = {"something": something, ...}
-    if self.log: Logger.LogMessage('Put -> {}'.format(url))
-    if self.log: Logger.LogMessage('{}'.format(str(body)))
-    response = self.s.put(url, data=json.dumps(body))
-    if self.log: Logger.LogMessage('Response <- {}'.format(response.text), log_level=LogLevel.OK)
-    return response
+    return Wrapper.sendRequest(self.s, 'put', url, body, log=self.log)
 ```
 ###### PATCH: 
 ```python
 def wrapper(**params):
     url = "url"
     body = {"something": something, ...}
-    if self.log: Logger.LogMessage('Patch -> {}'.format(url))
-    if self.log: Logger.LogMessage('{}'.format(str(body)))
-    response = self.s.patch(url, data=json.dumps(body))
-    if self.log: Logger.LogMessage('Response <- {}'.format(response.text), log_level=LogLevel.OK)
-    return response
+    return Wrapper.sendRequest(self.s, 'patch', url, body, log=self.log)
 ```
 ###### DELETE: 
 ```python
 def wrapper(**params):
     url = "url"
-    body = {"something": something, ...}
-    if self.log: Logger.LogMessage('Delete -> {}'.format(url))
-    response = self.s.delete(url)
-    if self.log: Logger.LogMessage('Response <- {}'.format(response.text), log_level=LogLevel.OK)
-    return response
+    return Wrapper.sendRequest(self.s, 'delete', url, log=self.log)
 ```
 
 ##### 2) The wrapper is wrapped. This happens in the discum.py file. For example, for the createDM function, the wrapped wrapper looks like this:

@@ -4,6 +4,7 @@
 # Note, you'll need to connect to the gateway to get the member list.
 # An example usage is below. The Guild and Channel ids used are from the fortnite server (652k members, around 150k of those are actually fetchable).
 # The number of fetchable members changes from time to time.
+# https://github.com/Merubokkusu/Discord-S.C.U.M/blob/master/docs/using.md#fetch-guild-members
 
 import discum
 bot = discum.Client(token='ur token')

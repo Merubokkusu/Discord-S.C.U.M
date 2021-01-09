@@ -293,7 +293,7 @@ class GatewayServer:
             del self.memberFetchingStatus[guild_id] #just resetting tracker on the specific guild_id
         self.command(
             {
-                "function": Guild(self).fetchMembers,
+                "function": GuildCombo(self).fetchMembers,
                 "priority": priority,
                 "params": {
                     "guild_id": guild_id,
@@ -315,7 +315,7 @@ class GatewayServer:
     test stuff
     '''
     def testfunc(self):
-        self.command({'function': Guild(self).testfunc, 'priority': 0})
+        self.command({'function': GuildCombo(self).testfunc, 'priority': 0})
 
     def testfuncPOG(self, pog):
-        self.command({'function': Guild(self).testfuncPOG, 'priority': 0, 'params': {'pog': pog}})
+        self.command({'function': GuildCombo(self).testfuncPOG, 'priority': 0, 'params': {'pog': pog}})

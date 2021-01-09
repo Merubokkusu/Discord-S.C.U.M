@@ -104,7 +104,7 @@ In recent years, token logging has become more common (as many people don't chec
 
 ## 3.9 support?
 Discum doesn't support python 3.9 because the module we use for websocket connections doesn't support 3.9 yet.       
-If you want to use 3.9 with discum, you'll have to either edit your installation of websocket-client as done in [this PR](https://github.com/websocket-client/websocket-client/pull/594) or reinstall websocket-client from [this repo](https://github.com/Flytrex/websocket-client/tree/bugfix/use-is-alive) like this:
+If you want to use 3.9 with discum, you'll have to either edit your installation of websocket-client as done in [this PR](https://github.com/websocket-client/websocket-client/pull/594) or reinstall websocket-client from [this repo](https://github.com/Flytrex/websocket-client/tree/bugfix/use-is-alive) like this (uninstall websocket-client first):
 ```
 git clone --branch bugfix/use-is-alive https://github.com/Flytrex/websocket-client.git
 cd websocket-client

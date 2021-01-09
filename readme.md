@@ -18,6 +18,7 @@ A simple, easy to use, non-restrictive Discord API Wrapper for Selfbots/Userbots
 - [To Do](#To-Do)
 - [Contributing](#Contributing)
 - [Notes](#Notes)
+- [Python 3.9 support?](#3.9-support?)
 
 ## Key features
 - easy-to-use (make selfbots/userbots)
@@ -100,3 +101,6 @@ Contributions are welcome. You can submit issues, make pull requests, or suggest
 
 ## Notes:
 In recent years, token logging has become more common (as many people don't check code before they run it). I've seen many closed-source selfbots, and while surely some are well intentioned, others not so much. Discum (discord api wrapper) is open-sourced and organized to provide transparency, but even so, we encourage you to look at the code. Not only will looking at the code help you to better understand how discord's api is structured, but it'll also let you know exactly what you're running. If you have any questions about Discum, feel free to ask us.
+
+## 3.9 support?
+Discum doesn't support python 3.9 because the module we use for websocket connections doesn't support 3.9 yet. If you want to use 3.9 with discum, you'll have to edit your installation of websocket-client as done in this PR: https://github.com/websocket-client/websocket-client/pull/594/commits/6adc7ba35587324423bb3c03056e6d652149b21a

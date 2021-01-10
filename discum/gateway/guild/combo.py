@@ -64,10 +64,10 @@ class GuildCombo(object):
 	def getRanges(self, index, multiplier):
 		return self.rangeCorrector([[index*multiplier, index*multiplier+99], [index*multiplier+100, index*multiplier+199]])
 
-	def fetchMembers(self, resp, guild_id, channel_id, method="overlap", keep=[], considerUpdates=True, reset=True, wait=None): #process is a little simpler than it looks. Keep in mind that there's no actual api endpoint to get members so this is a bit hacky. However, the method used below mimics how the official client loads the member list.
+	def fetchMembers(self, resp, guild_id, channel_id, method="overlap", keep=[], considerUpdates=True, indexStart=0, reset=True, wait=None): #process is a little simpler than it looks. Keep in mind that there's no actual api endpoint to get members so this is a bit hacky. However, the method used below mimics how the official client loads the member list.
 		if self.gatewayobj.READY:
 			if self.gatewayobj.memberFetchingStatus.get(guild_id) == None: #request for lazy request
-				self.gatewayobj.memberFetchingStatus[guild_id] = 0
+				self.gatewayobj.memberFetchingStatus[guild_id] = indexStart
 				if not self.gatewayobj.session.guild(guild_id).hasMembers or reset:
 					self.gatewayobj.session.guild(guild_id).resetMembers() #reset
 				if len(self.gatewayobj.memberFetchingStatus["first"]) == 0:
@@ -88,7 +88,7 @@ class GuildCombo(object):
 						endFetching = True #ends fetching right after resp parsed
 				ranges = self.getRanges(index, multiplier)
 				#0th lazy request
-				if index == 0 and not self.gatewayobj.session.guild(guild_id).unavailable:
+				if index == indexStart and not self.gatewayobj.session.guild(guild_id).unavailable:
 					self.gatewayobj.memberFetchingStatus[guild_id] += 1
 					self.gatewayobj.request.lazyGuild(guild_id, {channel_id: ranges})
 				elif resp.event.guild_member_list:

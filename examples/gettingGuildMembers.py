@@ -7,46 +7,19 @@
 # https://github.com/Merubokkusu/Discord-S.C.U.M/blob/master/docs/using.md#fetch-guild-members
 
 import discum
-bot = discum.Client(token='ur token')
+bot = discum.Client(token='your token')
 
-@bot.gateway.command
-def memberTest(resp):
-	guild_id = '322850917248663552'
-	channel_id = '754536220826009670'
-	if resp.event.ready_supplemental:
-		bot.gateway.fetchMembers(guild_id, channel_id)
+def close_after_fetching(resp, guild_id):
 	if bot.gateway.finishedMemberFetching(guild_id):
-		lenmembersfetched = len(bot.gateway.session.guild(guild_id).members)
-		print(str(lenmembersfetched)+' members fetched')
-		bot.gateway.removeCommand(memberTest)
+		lenmembersfetched = len(bot.gateway.session.guild(guild_id).members) #this line is optional
+		print(str(lenmembersfetched)+' members fetched') #this line is optional
+		bot.gateway.removeCommand(close_after_fetching)
 		bot.gateway.close()
 
-bot.gateway.run()
+def get_members(guild_id, channel_id):
+	bot.gateway.fetchMembers(guild_id, channel_id)
+	bot.gateway.command({'function': close_after_fetching, 'params': {'guild_id': guild_id}})
+	bot.gateway.run()
+	return bot.gateway.session.guild(guild_id).members
 
-for memberID in bot.gateway.session.guild('322850917248663552').members:
-	print(memberID)
-
-'''
-Another possible way to fetchMembers is this (fetchMembers function outside of function memberTest):
-
-import discum
-bot = discum.Client(token='ur token')
-
-guild_id = '322850917248663552'
-channel_id = '754536220826009670'
-bot.gateway.fetchMembers(guild_id, channel_id)
-
-@bot.gateway.command
-def memberTest(resp):
-	if bot.gateway.finishedMemberFetching('322850917248663552'):
-		lenmembersfetched = len(bot.gateway.session.guild('322850917248663552').members)
-		print(str(lenmembersfetched)+' members fetched')
-		bot.gateway.removeCommand(memberTest)
-		bot.gateway.close()
-
-bot.gateway.run()
-
-for memberID in bot.gateway.session.guild('322850917248663552').members:
-	print(memberID)
-
-'''
+members = get_members('387613597225975809', '387617015038214165')

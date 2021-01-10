@@ -63,7 +63,7 @@ Using a slightly-modified version of discum (just 6 lines extra to track times a
 
 
 
-|      | overlap | no overlap |
+|      | overlap&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; | no overlap |
 |------|---------|------------|
 | 2.1k |![a](https://raw.githubusercontent.com/Merubokkusu/Discord-S.C.U.M/master/docs/memberFetchingStats/2100a.jpg)    |![c](https://raw.githubusercontent.com/Merubokkusu/Discord-S.C.U.M/master/docs/memberFetchingStats/2100b.jpg)       |
 | 128k |![b](https://raw.githubusercontent.com/Merubokkusu/Discord-S.C.U.M/master/docs/memberFetchingStats/128ka.jpg)    |![d](https://raw.githubusercontent.com/Merubokkusu/Discord-S.C.U.M/master/docs/memberFetchingStats/128kb.jpg)       |

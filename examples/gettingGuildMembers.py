@@ -22,4 +22,4 @@ def get_members(guild_id, channel_id):
 	bot.gateway.run()
 	return bot.gateway.session.guild(guild_id).members
 
-members = get_members('322850917248663552', '754536220826009670')
+members = get_members('322850917248663552', '754536220826009670') #yes, the channel_id input is required

@@ -390,6 +390,8 @@ params:
 - considerUpdates (boolean):
   - presence updates for users come in GUILD_MEMBER_LIST_UPDATE type UPDATE events. For massive guilds (where fetching members can take a while), this can provide updated presence info (only while fetchMembers is running).
   - this param is useless if 'presence' is not in the keep list
+- indexStart (integer):
+  - what index to start at. This is useful if fetchMembers doesn't fetch all fetchable members (usually due to rate limiting)
 - reset (boolean):
   - if you'd like to fetchMembers multiple times without clearing the current member list, set this is False
 - wait (float/None):

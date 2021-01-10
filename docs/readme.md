@@ -4,6 +4,7 @@ A simple, easy to use, non-restrictive Discord API Wrapper for Selfbots/Userbots
 __________
 # Table of Contents
 - [Using discum](https://github.com/Merubokkusu/Discord-S.C.U.M/blob/master/docs/using.md) (make selfbots and userbots)
+  - [fetching guild members](https://github.com/Merubokkusu/Discord-S.C.U.M/blob/master/docs/fetchingGuildMembers.md)
 - [Extending discum](https://github.com/Merubokkusu/Discord-S.C.U.M/blob/master/docs/extending.md) (add discord API wraps)
 - [Reading discum](https://github.com/Merubokkusu/Discord-S.C.U.M/blob/master/docs/reading.md) (structure of discum)
 ___________

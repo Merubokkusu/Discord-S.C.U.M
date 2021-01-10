@@ -4,6 +4,7 @@ Alright so this really needs a page of its own because it's special. There's no 
 - [Usage](https://github.com/Merubokkusu/Discord-S.C.U.M/blob/master/docs/using.md#fetch-guild-members)
 - [Reasoning/Make your own fetchMembers function](https://arandomnewaccount.gitlab.io/discord-unofficial-docs/lazy_guilds.html)
 - [What happens when fetchMembers is run](#what-happens)
+- [Calculating # of fetchable members]()
 - [Examples](#examples)
 - [Efficiency & Effectiveness](#efficiency--effectiveness)
 
@@ -12,6 +13,13 @@ Alright so this really needs a page of its own because it's special. There's no 
 2) the [fetchMembers combo function](https://github.com/Merubokkusu/Discord-S.C.U.M/blob/37a4c66713aac5111fa5fe14aebb866197cf2877/discum/gateway/guild/combo.py#L67) gets inserted at position 0 (or whatever priority you select) in the gateway command list
 3) the fetchMembers combo function starts running once ready_supplemental has been received
 4) the fetchMembers combo function removes itself from the command list once finished
+
+### calculating # of fetchable members
+Even though it's not yet known how discord calculates this, you can still come up with a "ground truth" number. The steps are as follows:
+1) open your browser's dev tools (chrome dev tools is a favorite)
+2) click on the network tab and make sure you can see websocket connections
+3) go to a guild and scroll all the way down on the member list
+4) see what are the ranges of the last gateway request your client sends (the # of fetchable members is somewhere in these ranges)
 
 ### examples
 
@@ -53,6 +61,27 @@ def memberTest(resp):
 		bot.gateway.close()
 
 bot.gateway.run()
+
+for memberID in bot.gateway.session.guild('322850917248663552').members:
+	print(memberID)
+```
+It's possible that fetchMembers doesn't fetch all fetchable members. Don't worry if this happens, you can start fetching members from any index. (discum calculates ranges using index x multiplier, the multiplier used below is 100):
+```python
+#import discum
+#bot = discum.Client(token='ur token')
+guild_id = '322850917248663552'
+channel_id = '754536220826009670'
+bot.gateway.fetchMembers(guild_id, channel_id, method="overlap", indexStart=50, reset=False) #overlap method means multiplier is 100, reset is False because you want to keep previous data
+@bot.gateway.command
+def memberTest(resp):
+	if bot.gateway.finishedMemberFetching('322850917248663552'):
+		lenmembersfetched = len(bot.gateway.session.guild('322850917248663552').members)
+		print(str(lenmembersfetched)+' members fetched')
+		bot.gateway.removeCommand(memberTest)
+		bot.gateway.close()
+
+bot.gateway.run()
+
 for memberID in bot.gateway.session.guild('322850917248663552').members:
 	print(memberID)
 ```

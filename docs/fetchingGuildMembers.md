@@ -1,5 +1,5 @@
 # Fetching Guild Members
-Alright so this really needs a page of its own because its special. There's no actual api endpoint to get the guild members, so instead what discum does is fetch the member list, piece by piece. Discum also provides some params for the fetchMembers function that allows you to modify fetching behavior (in almost any way you want).
+Alright so this really needs a page of its own because it's special. There's no actual api endpoint to get the guild members, so instead what discum does is fetch the member list, piece by piece. Discum also provides some params for the fetchMembers function that allows you to modify fetching behavior (in almost any way you want).
 # Links/Table of Contents
 - [Usage](https://github.com/Merubokkusu/Discord-S.C.U.M/blob/master/docs/using.md#fetch-guild-members)
 - [Reasoning/Make your own fetchMembers function](https://arandomnewaccount.gitlab.io/discord-unofficial-docs/lazy_guilds.html)
@@ -60,8 +60,6 @@ for memberID in bot.gateway.session.guild('322850917248663552').members:
 Alright so technically there are 2 ways to get the member list. The first way is through websockets (which is what discum uses). The second way is through html scraping (which I don't recommend since I imagine that'd be slower).
   
 Using a slightly-modified version of discum (just 6 lines extra to track times and member counts), these stats were collected on discum's fetchMembers's efficiency and effectiveness:
-
-
 
 |      | overlap&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; | no overlap |
 |------|---------|------------|

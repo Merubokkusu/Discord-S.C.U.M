@@ -23,3 +23,26 @@ def memberTest(resp):
 
 for memberID in bot.gateway.session.guild('322850917248663552').members:
 	print(memberID)
+
+'''
+Another possible way to fetchMembers is this (fetchMembers function outside of function memberTest):
+
+import discum
+bot = discum.Client(token='ur token')
+
+guild_id = '322850917248663552'
+channel_id = '754536220826009670'
+bot.gateway.fetchMembers(guild_id, channel_id)
+
+@bot.gateway.command
+def memberTest(resp):
+	if bot.gateway.finishedMemberFetching(guild_id):
+		lenmembersfetched = len(bot.gateway.session.guild(guild_id).members)
+		print(str(lenmembersfetched)+' members fetched')
+		bot.gateway.removeCommand(memberTest)
+		bot.gateway.close()
+
+for memberID in bot.gateway.session.guild('322850917248663552').members:
+	print(memberID)
+
+'''

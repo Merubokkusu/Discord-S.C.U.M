@@ -85,6 +85,8 @@ bot.gateway.run()
 for memberID in bot.gateway.session.guild('322850917248663552').members:
 	print(memberID)
 ```
+[Want a function that returns the member list? No worries.](https://github.com/Merubokkusu/Discord-S.C.U.M/blob/master/examples/gettingGuildMembers.py)
+
 
 ### Efficiency & Effectiveness
 Alright so technically there are 2 ways to get the member list. The first way is through websockets (which is what discum uses). The second way is through html scraping (which I don't recommend since I imagine that'd be slower).

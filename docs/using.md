@@ -351,6 +351,7 @@ params:
 - channel_id (str)
 - method (str/int/list/tuple):
   - "overlap":
+    - 100 members per request
     - fetches member list by requesting for overlapped member ranges (think of it like a sliding window). The member ranges in order of requested are
       ```
       [0,99][100,199]
@@ -360,6 +361,7 @@ params:
       ```
     - this is how the official discord client fetches the member sidebar (as the user scrolls through the member list)
   - "no overlap"
+    - 200 members per request
     - fetches member list by requesting for non-overlapped member ranges. The member ranges in order of requested are
       ```
       [0,99][100,199]

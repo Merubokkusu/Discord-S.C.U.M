@@ -333,7 +333,7 @@ bot.ban('guildID00000000000','userID11111111111')
 bot.getGuildMember('guildID00000000000','userID11111111111')
 ```
 ##### fetch guild members
-```gateway.fetchMembers(guild_id, channel_id, method="overlap", keep=[], considerUpdates=True, reset=True, wait=None, priority=0)```
+```gateway.fetchMembers(guild_id, channel_id, method="overlap", keep=[], considerUpdates=True, indexStart=0, reset=True, wait=None, priority=0)```
 ```python
 bot.gateway.fetchMembers('guildID00000000000', 'channelID00000000000') #all this does is insert a command to fetch members
 bot.gateway.run() #you still need to run the gateway to fetch the members

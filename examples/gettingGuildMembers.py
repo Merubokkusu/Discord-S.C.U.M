@@ -36,8 +36,8 @@ bot.gateway.fetchMembers(guild_id, channel_id)
 
 @bot.gateway.command
 def memberTest(resp):
-	if bot.gateway.finishedMemberFetching(guild_id):
-		lenmembersfetched = len(bot.gateway.session.guild(guild_id).members)
+	if bot.gateway.finishedMemberFetching('322850917248663552'):
+		lenmembersfetched = len(bot.gateway.session.guild('322850917248663552').members)
 		print(str(lenmembersfetched)+' members fetched')
 		bot.gateway.removeCommand(memberTest)
 		bot.gateway.close()

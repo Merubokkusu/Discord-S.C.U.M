@@ -86,7 +86,7 @@ for memberID in bot.gateway.session.guild('322850917248663552').members:
 	print(memberID)
 ```
 
-# Efficiency & Effectiveness
+### Efficiency & Effectiveness
 Alright so technically there are 2 ways to get the member list. The first way is through websockets (which is what discum uses). The second way is through html scraping (which I don't recommend since I imagine that'd be slower).
   
 Using a slightly-modified version of discum (just 6 lines extra to track times and member counts), these stats were collected on discum's fetchMembers's efficiency and effectiveness:

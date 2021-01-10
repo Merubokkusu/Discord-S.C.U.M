@@ -51,6 +51,7 @@ def memberTest(resp):
 		print(str(lenmembersfetched)+' members fetched')
 		bot.gateway.removeCommand(memberTest)
 		bot.gateway.close()
+
 bot.gateway.run()
 for memberID in bot.gateway.session.guild('322850917248663552').members:
 	print(memberID)

@@ -5,7 +5,7 @@ Alright so this really needs a page of its own because its special. There's no a
 - [Reasoning/Make your own fetchMembers function](https://arandomnewaccount.gitlab.io/discord-unofficial-docs/lazy_guilds.html)
 - [What happens when fetchMembers is run](#what-happens)
 - [Examples](#examples)
-- [Efficiency & Effectiveness](#)
+- [Efficiency & Effectiveness](#efficiency--effectiveness)
 
 ### what happens:
 1) the member-fetching tracker for that particular guild gets reset
@@ -61,3 +61,9 @@ Alright so technically there are 2 ways to get the member list. The first way is
   
 Using a slightly-modified version of discum (just 6 lines extra to track times and member counts), these stats were collected on discum's fetchMembers's efficiency and effectiveness:
 
+
+
+|      | overlap | no overlap |
+|------|---------|------------|
+| 2.1k |![a](https://raw.githubusercontent.com/Merubokkusu/Discord-S.C.U.M/master/docs/memberFetchingStats/2100a.jpg)    |![c](https://raw.githubusercontent.com/Merubokkusu/Discord-S.C.U.M/master/docs/memberFetchingStats/2100b.jpg)       |
+| 128k |![b](https://raw.githubusercontent.com/Merubokkusu/Discord-S.C.U.M/master/docs/memberFetchingStats/128ka.jpg)    |![d](https://raw.githubusercontent.com/Merubokkusu/Discord-S.C.U.M/master/docs/memberFetchingStats/128kb.jpg)       |

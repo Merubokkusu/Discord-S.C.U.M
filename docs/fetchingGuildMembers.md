@@ -15,7 +15,7 @@ Alright so this really needs a page of its own because it's special. There's no 
 
 ### examples
 
-This first example runs the fetchMembers function while the gateway is running:
+This first example runs the fetchMembers function while the gateway is running (both examples below use the "overlap" method):
 ```python
 import discum
 bot = discum.Client(token='ur token')

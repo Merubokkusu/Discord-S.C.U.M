@@ -223,7 +223,7 @@ class GatewayServer:
             self._after_message_hooks.insert(priority, func) #func here is a dict btw
             return func['function']
 
-    #influenced by https://github.com/scrubjay55/Reddit_ChatBot_Python/blob/master/Reddit_ChatBot_Python/Utils/WebSockClient.py (Apache License 2.0)
+    #influenced by https://github.com/scrubjay55/Reddit_ChatBot_Python/blob/master/Reddit_ChatBot_Python/WebSockClient.py (Apache License 2.0)
     def _response_loop(self, resp):
         copy = self._after_message_hooks[:]
         for func in copy:

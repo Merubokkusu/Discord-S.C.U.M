@@ -34,5 +34,6 @@ class Wrapper:
 				receivedMsg = 'Response <- {}'.format(response.text)
 				print('{} [+] {} {}'.format(LogLevel.OK, function_name, receivedMsg))
 				print(LogLevel.DEFAULT)
+			return response
 		else:
 			print('Invalid request method.')

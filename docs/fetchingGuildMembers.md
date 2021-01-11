@@ -4,7 +4,7 @@ Alright so this really needs a page of its own because it's special. There's no 
 - [Usage](https://github.com/Merubokkusu/Discord-S.C.U.M/blob/master/docs/using.md#fetch-guild-members)
 - [Reasoning/Make your own fetchMembers function](https://arandomnewaccount.gitlab.io/discord-unofficial-docs/lazy_guilds.html)
 - [What happens when fetchMembers is run](#what-happens)
-- [Calculating # of fetchable members]()
+- [Calculating # of fetchable members](#calculating--of-fetchable-members)
 - [Examples](#examples)
 - [Efficiency & Effectiveness](#efficiency--effectiveness)
 

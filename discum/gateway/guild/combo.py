@@ -118,7 +118,21 @@ class GuildCombo(object):
 									endFetching = True
 						if ranges[-2][-1]>self.gatewayobj.session.guild(guild_id).memberCount or ranges[-1][-1]>self.gatewayobj.session.guild(guild_id).memberCount or endFetching: #putting whats most likely to happen first
 							self.gatewayobj.memberFetchingStatus[guild_id] = "done"
-							self.gatewayobj.removeCommand(self.fetchMembers) #remove command
+							self.gatewayobj.removeCommand(
+							    {
+							        "function": self.fetchMembers,
+							        "params": {
+							            "guild_id": guild_id,
+							            "channel_id": channel_id,
+							            "method": method,
+							            "keep": keep,
+							            "considerUpdates": considerUpdates,
+							            "indexStart": indexStart,
+							            "reset": reset,
+							            "wait": wait,
+							        },
+							    }
+							)
 						elif (self.gatewayobj.memberFetchingStatus[guild_id] - index) == 1:
 							index = self.getIndex(guild_id)
 							ranges = self.getRanges(index, multiplier)

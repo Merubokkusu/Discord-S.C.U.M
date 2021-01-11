@@ -219,7 +219,7 @@ class GatewayServer:
             self._after_message_hooks.append(func)
             return func
         elif isinstance(func, dict): #because I can't figure out out to neatly pass params to decorators :(. Normal behavior still works; use as usual.\
-            priority = func['priority'] if 'priority' in func else -1
+            priority = func.pop('priority', -1)
             self._after_message_hooks.insert(priority, func) #func here is a dict btw
             return func['function']
 

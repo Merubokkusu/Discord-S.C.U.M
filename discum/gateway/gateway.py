@@ -223,7 +223,7 @@ class GatewayServer:
             self._after_message_hooks.insert(priority, func) #func here is a dict btw
             return func['function']
 
-    #_response_loop func comes from https://github.com/scrubjay55/Reddit_ChatBot_Python/blob/master/Reddit_ChatBot_Python/Utils/WebSockClient.py (Apache License 2.0)
+    #influenced by https://github.com/scrubjay55/Reddit_ChatBot_Python/blob/master/Reddit_ChatBot_Python/Utils/WebSockClient.py (Apache License 2.0)
     def _response_loop(self, resp):
         copy = self._after_message_hooks[:]
         for func in copy:
@@ -237,9 +237,12 @@ class GatewayServer:
 
     def removeCommand(self, func):
         try:
-            commandsCopy = [i['function'] if isinstance(i,dict) else i for i in self._after_message_hooks] #this contains a list of functions
-            ind = commandsCopy.index(func)
-            del self._after_message_hooks[ind]
+            if callable(func):
+                commandsCopy = [i['function'] if isinstance(i,dict) else i for i in self._after_message_hooks] #this contains a list of functions
+                ind = commandsCopy.index(func)
+                del self._after_message_hooks[ind]
+            else: #assume type dict. value error if not found anyways
+                self._after_message_hooks.remove(func)
         except ValueError:
             if self.log: print('%s not found in _after_message_hooks.' % func)
             pass

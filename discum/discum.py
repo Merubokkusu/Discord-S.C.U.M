@@ -58,8 +58,7 @@ class Client:
         self.s.headers.update({"X-Super-Properties": base64.b64encode(str(self.__super_properties).encode())})
         #token/authorization
         if self.__user_token in ("",None,False): #assuming email and pass are given...
-            self.__login = Login(self.s, self.discord, self.__user_email, self.__user_password, self.log)
-            self.__user_token, self.__xfingerprint = self.__login.GetToken() #update token from "" to actual value
+            self.__user_token, self.__xfingerprint = Login(self.s, self.discord, self.log).GetToken(email, password) #update token from "" to actual value
             time.sleep(1)
         self.s.headers.update({"Authorization": self.__user_token}) #update headers
         #gateway (object initialization)

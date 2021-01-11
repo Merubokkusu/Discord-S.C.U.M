@@ -62,7 +62,8 @@ class GuildCombo(object):
 		return self.gatewayobj.memberFetchingStatus[guild_id]
 
 	def getRanges(self, index, multiplier):
-		return self.rangeCorrector([[index*multiplier, index*multiplier+99], [index*multiplier+100, index*multiplier+199]])
+		initialNum = int(index*multiplier)
+		return self.rangeCorrector([[initialNum, initialNum+99], [initialNum+100, initialNum+199]])
 
 	def fetchMembers(self, resp, guild_id, channel_id, method="overlap", keep=[], considerUpdates=True, indexStart=0, reset=True, wait=None): #process is a little simpler than it looks. Keep in mind that there's no actual api endpoint to get members so this is a bit hacky. However, the method used below mimics how the official client loads the member list.
 		if self.gatewayobj.READY:

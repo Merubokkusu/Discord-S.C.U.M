@@ -65,7 +65,7 @@ bot.gateway.run()
 for memberID in bot.gateway.session.guild('322850917248663552').members:
 	print(memberID)
 ```
-It's possible that fetchMembers doesn't fetch all fetchable members. Don't worry if this happens, you can start fetching members from any index. (discum calculates ranges using index x multiplier, the multiplier used below is 100):
+It's possible that fetchMembers doesn't fetch all fetchable members. Don't worry if this happens, you can start fetching members from any index. (discum calculates ranges using index x multiplier; the index used below is 50 and the multiplier used is 100, so the fetching starts at 50x100 = 5000):
 ```python
 #import discum
 #bot = discum.Client(token='ur token')

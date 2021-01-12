@@ -17,6 +17,7 @@ A simple, easy to use, non-restrictive Discord API Wrapper for Selfbots/Userbots
 - [Links](#Links)
 - [To Do](#To-Do)
 - [Contributing](#Contributing)
+- [FAQ](#FAQ)
 - [Notes](#Notes)
 - [Python 3.9 support?](#39-support)
 
@@ -100,7 +101,11 @@ bot.gateway.run(auto_reconnect=True)
 ## Contributing
 Contributions are welcome. You can submit issues, make pull requests, or suggest features. Ofc not all suggestions will be implemented (because discum is intended to be a transparent, relatively-raw discord user api wrapper), but all suggestions will be looked into.            
 
-## Notes:
+## FAQ
+Q: Why am I getting Attribute Errors?      
+A: Most likely you've installed discum through pip, which is not always updated. To get the most recent version, install through github.
+
+## Notes
 In recent years, token logging has become more common (as many people don't check code before they run it). I've seen many closed-source selfbots, and while surely some are well intentioned, others not so much. Discum (discord api wrapper) is open-sourced and organized to provide transparency, but even so, we encourage you to look at the code. Not only will looking at the code help you to better understand how discord's api is structured, but it'll also let you know exactly what you're running. If you have any questions about Discum, feel free to ask us.
 
 ## 3.9 support?

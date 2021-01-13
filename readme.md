@@ -94,7 +94,6 @@ bot.gateway.run(auto_reconnect=True)
 - [X] On-Message (and other on-anything gateway) capabilities
 - [X] Getting guild members
 - [ ] add more http api wraps
-- [ ] make discum faster by implementing asyncio + aiohttp module + maybe websockets module (this also means python 2.7 support will be lost)
 - [ ] Making phone calls, sending audio/video data thru those calls
 - [ ] Everything
 

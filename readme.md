@@ -102,17 +102,17 @@ bot.gateway.run(auto_reconnect=True)
 Contributions are welcome. You can submit issues, make pull requests, or suggest features. Ofc not all suggestions will be implemented (because discum is intended to be a transparent, relatively-raw discord user api wrapper), but all suggestions will be looked into.            
 
 ## FAQ
-Q: Why am I getting Attribute Errors?      
-A: Most likely you've installed discum through pip, which is not always updated. To get the most recent version, install through github.
+Q: Why am I getting Attribute Errors?          
+A: Most likely you've installed discum through pip, which is not always updated. To get the most recent version, install through github.      
 
-Q: Does discum support BOT accounts?
-A: No. Discum only supports user accounts.
+Q: Does discum support BOT accounts?         
+A: No. Discum only supports user accounts.      
 
-Q: What's the difference between user/private API and BOT API?
-A: User APIs are run by the official client. Many of these are not documented by discord. On the other hand, BOT APIs are run by BOT accounts and are documented by discord. So far, discum consists of primarily user API wraps (with the exception of the bot.getGuildMember(...) http api wrap).
+Q: What's the difference between user/private API and BOT API?      
+A: User APIs are run by the official client. Many of these are not documented by discord. On the other hand, BOT APIs are run by BOT accounts and are documented by discord. So far, discum consists of primarily user API wraps (with the exception of the bot.getGuildMember(...) http api wrap).      
 
-Q: I'm getting ```KeyError: 'members'``` when running ```bot.gateway.session.guild(guild_ID).members```. Why?
-A: You need to run bot.fetchMembers(...) first. See the docs and examples here: https://github.com/Merubokkusu/Discord-S.C.U.M/blob/master/docs/fetchingGuildMembers.md
+Q: I'm getting ```KeyError: 'members'``` when running ```bot.gateway.session.guild(guild_ID).members```. Why?      
+A: You need to run bot.fetchMembers(...) first. See the docs and examples here: https://github.com/Merubokkusu/Discord-S.C.U.M/blob/master/docs/fetchingGuildMembers.md     
 
 ## Notes
 In recent years, token logging has become more common (as many people don't check code before they run it). I've seen many closed-source selfbots, and while surely some are well intentioned, others not so much. Discum (discord api wrapper) is open-sourced and organized to provide transparency, but even so, we encourage you to look at the code. Not only will looking at the code help you to better understand how discord's api is structured, but it'll also let you know exactly what you're running. If you have any questions about Discum, feel free to ask us.

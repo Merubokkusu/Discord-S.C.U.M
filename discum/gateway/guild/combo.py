@@ -98,7 +98,7 @@ class GuildCombo(object):
 						endFetching = False
 						for ind,i in enumerate(parsed['types']):
 							if i == 'SYNC':
-								if (self.gatewayobj.memberFetchingStatus[guild_id] - index) == 0:
+								if self.gatewayobj.memberFetchingStatus[guild_id]!="done" and (self.gatewayobj.memberFetchingStatus[guild_id] - index) == 0:
 									self.gatewayobj.memberFetchingStatus[guild_id] += 1
 								if len(parsed['updates'][ind]) == 0 and parsed['locations'][ind] in ranges[1:]: #checks if theres nothing in the SYNC data
 									endFetching = True

@@ -8,9 +8,8 @@ class SuperProperties:
     '''
     https://luna.gitlab.io/discord-unofficial-docs/science.html#super-properties-object
     '''
-    def __init__(self, s, useragent, buildnum="request", log=True):
+    def __init__(self, s, buildnum="request", log=True):
         self.s = s
-        self.parseduseragent = ua_parser.user_agent_parser.Parse(useragent)
         self.buildnum = buildnum
         self.log = log
 
@@ -29,14 +28,15 @@ class SuperProperties:
             if self.log: print('Could not retrieve discord build number.')
             return None
 
-    def GetSuperProperties(self):
-        browser_ver_list = [self.parseduseragent["user_agent"]["major"], self.parseduseragent["user_agent"]["minor"], self.parseduseragent["user_agent"]["patch"]]
-        os_ver_list = [self.parseduseragent["os"]["major"], self.parseduseragent["os"]["minor"], self.parseduseragent["os"]["patch"]]
+    def GetSuperProperties(self, user_agent):
+        parseduseragent = ua_parser.user_agent_parser.Parse(user_agent)
+        browser_ver_list = [parseduseragent["user_agent"]["major"], parseduseragent["user_agent"]["minor"], parseduseragent["user_agent"]["patch"]]
+        os_ver_list = [parseduseragent["os"]["major"], parseduseragent["os"]["minor"], parseduseragent["os"]["patch"]]
         sp = {
-            "os": self.parseduseragent["os"]["family"],
-            "browser": self.parseduseragent["user_agent"]["family"],
+            "os": parseduseragent["os"]["family"],
+            "browser": parseduseragent["user_agent"]["family"],
             "device": "",
-            "browser_user_agent": self.parseduseragent["string"],
+            "browser_user_agent": parseduseragent["string"],
             "browser_version": ".".join(filter(None, browser_ver_list)),
             "os_version": ".".join(filter(None, os_ver_list)),
             "referrer": "",

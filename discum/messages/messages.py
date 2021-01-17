@@ -1,7 +1,9 @@
 from ..fileparse.fileparse import Fileparse
 from requests_toolbelt import MultipartEncoder
 import random,string
-import os
+import os.path
+import time, datetime
+import json
 from ..RESTapiwrap import *
 
 if __import__('sys').version.split(' ')[0] < '3.0.0':
@@ -16,13 +18,17 @@ class Messages(object):
         self.s = s
         self.log = log
 
+    def calculateNonce(self, date=datetime.datetime.now()):
+        unixts = time.mktime(date.timetuple())
+        return str((int(unixts)*1000-1420070400000)*4194304)
+
     #add DM
     def createDM(self,recipients):
         url = self.discord+"users/@me/channels"
         body = {"recipients": recipients}
         return Wrapper.sendRequest(self.s, 'post', url, body, log=self.log)
 
-    #get Message
+    #get messages
     def getMessages(self,channelID,num,beforeDate,aroundMessage): # num is between 1 and 100, beforeDate is a snowflake
         url = self.discord+"channels/"+channelID+"/messages?limit="+str(num)
         if beforeDate != None:
@@ -31,14 +37,30 @@ class Messages(object):
             url += "&around="+str(aroundMessage)
         return Wrapper.sendRequest(self.s, 'get', url, log=self.log)
 
+    #get message by channel ID and message ID
+    def getMessage(self, channelID, messageID):
+        url = self.discord+"channels/"+channelID+"/messages?limit=1&around="+messageID
+        return Wrapper.sendRequest(self.s, 'get', url, log=self.log)
+
     #text message
-    def sendMessage(self,channelID,message,embed,tts):
+    def sendMessage(self, channelID, message, nonce="calculate", tts=False, embed=None, message_reference=None, allowed_mentions=None, sticker_ids=None):
         url = self.discord+"channels/"+channelID+"/messages"
-        body = {"content": message, "tts": tts,"embed":embed}
+        if nonce == "calculate":
+            body = {"content": message, "tts": tts, "nonce": self.calculateNonce()}
+        else:
+            body = {"content": message, "tts": tts, "nonce": str(nonce)}
+        if embed != None:
+            body["embed"] = embed
+        if message_reference != None:
+            body["message_reference"] = message_reference
+        if allowed_mentions != None:
+            body["allowed_mentions"] = allowed_mentions
+        if sticker_ids != None:
+            body["sticker_ids"] = sticker_ids
         return Wrapper.sendRequest(self.s, 'post', url, body, log=self.log)
 
     #send file
-    def sendFile(self,channelID,filelocation,isurl,message):
+    def sendFile(self,channelID,filelocation,isurl=False,message="", tts=False, message_reference=None, sticker_ids=None):
         mimetype, extensiontype, fd = Fileparse(self.s,self.log).parse(filelocation,isurl) #guess extension from file data
         if mimetype == 'invalid': #error out
             return
@@ -56,14 +78,32 @@ class Messages(object):
         #now time to post the file
         url = self.discord+'channels/'+channelID+'/messages'
         if isurl:
-            fields={"file":(filename,fd,mimetype),"file_id":"0", "content":message}
+            payload = {"content":message,"tts":tts}
+            if message_reference != None:
+                payload["message_reference"] = message_reference
+                payload["type"] = 19
+            if sticker_ids != None:
+                payload["sticker_ids"] = sticker_ids
+            fields={"file":(filename,fd,mimetype), "payload_json":(None,json.dumps(payload))}
         else:
-            fields={"file":(filename,open(filelocation,'rb').read(),mimetype),"file_id":"0", "content":message}
+            payload = {"content":message,"tts":tts}
+            if message_reference != None:
+                payload["message_reference"] = message_reference
+                payload["type"] = 19
+            if sticker_ids != None:
+                payload["sticker_ids"] = sticker_ids
+            fields={"file":(filename,open(filelocation,'rb').read(),mimetype), "payload_json":(None,json.dumps(payload))}
         m=MultipartEncoder(fields=fields,boundary='----WebKitFormBoundary'+''.join(random.sample(string.ascii_letters+string.digits,16)))
         self.s.headers.update({"Content-Type":m.content_type})
         response = Wrapper.sendRequest(self.s, 'post', url, body=m, log=self.log)
         self.s.headers.update({"Content-Type":"application/json"})
         return response
+
+    def reply(self, channelID, messageID, message, nonce="calculate", tts=False, embed=None, allowed_mentions={"parse":["users","roles","everyone"],"replied_user":False}, sticker_ids=None, file=None, isurl=False):
+        if file == None:
+            self.sendMessage(channelID, message, nonce="calculate", tts=tts, embed=embed, message_reference={"channel_id":channelID,"message_id":messageID}, allowed_mentions=allowed_mentions, sticker_ids=sticker_ids)
+        else:
+            self.sendFile(channelID, file, isurl=isurl, message=message, tts=tts, message_reference={"channel_id":channelID,"message_id":messageID})
 
     def searchMessages(self,guildID,channelID,userID,mentionsUserID,has,beforeDate,afterDate,textSearch,afterNumResults): #classic discord search function, results with key "hit" are the results you searched for, afterNumResults (aka offset) is multiples of 25 and indicates after which messages (type int), filterResults defaults to False
         url = self.discord+"guilds/"+guildID+"/messages/search?"
@@ -157,3 +197,12 @@ class Messages(object):
         url = self.discord+"channels/"+channelID+"/messages/"+messageID+"/ack"
         body = {"manual": True, "mention_count": numMentions}
         return Wrapper.sendRequest(self.s, 'post', url, body, log=self.log)
+
+    def bulkAck(self, data):
+        url = self.discord+"read-states/ack-bulk"
+        body = {"read_states": data}
+        return Wrapper.sendRequest(self.s, 'post', url, body, log=self.log)
+
+    def getTrendingGifs(self, provider="tenor", locale="en-US", media_format="mp4"):
+        url = self.discord+"gifs/trending?provider="+provider+"&locale="+locale+"&media_format="+media_format
+        return Wrapper.sendRequest(self.s, 'get', url, log=self.log)

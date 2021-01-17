@@ -1,13 +1,11 @@
-import json
-
 class Embedder(object):
     def __init__(self):
-        self.jsonEmbed = {"fields": []}#Create a 'fields' key otherwise we can't add anything to it, plus it doesn't effect anything if nothing is added.
+        self.jsonEmbed = {"fields": []} #Create a 'fields' key otherwise we can't add anything to it, plus it doesn't effect anything if nothing is added.
 
     def read(self):
-        return json.loads(json.dumps(self.jsonEmbed))
+        return self.jsonEmbed
 
-    def Title(self,title):
+    def title(self,title):
         self.jsonEmbed.update({'title': title}) 
 
     def description(self,description):

@@ -103,7 +103,7 @@ class Messages(object):
         if file == None:
             self.sendMessage(channelID, message, nonce="calculate", tts=tts, embed=embed, message_reference={"channel_id":channelID,"message_id":messageID}, allowed_mentions=allowed_mentions, sticker_ids=sticker_ids)
         else:
-            self.sendFile(channelID, file, isurl=isurl, message=message, tts=tts, message_reference={"channel_id":channelID,"message_id":messageID})
+            self.sendFile(channelID, file, isurl=isurl, message=message, tts=tts, message_reference={"channel_id":channelID,"message_id":messageID}, sticker_ids=sticker_ids)
 
     def searchMessages(self,guildID,channelID,userID,mentionsUserID,has,beforeDate,afterDate,textSearch,afterNumResults): #classic discord search function, results with key "hit" are the results you searched for, afterNumResults (aka offset) is multiples of 25 and indicates after which messages (type int), filterResults defaults to False
         url = self.discord+"guilds/"+guildID+"/messages/search?"

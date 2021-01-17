@@ -140,8 +140,8 @@ class Client:
         return Messages(self.discord,self.s,self.log).sendMessage(channelID, message, nonce, tts, embed, message_reference, allowed_mentions, sticker_ids)
 
     #send files (local or link)
-    def sendFile(self,channelID,filelocation,isurl=False,message="", tts=False, message_reference=None):
-        return Messages(self.discord,self.s,self.log).sendFile(channelID,filelocation,isurl,message, tts, message_reference)
+    def sendFile(self,channelID,filelocation,isurl=False,message="", tts=False, message_reference=None, sticker_ids=None):
+        return Messages(self.discord,self.s,self.log).sendFile(channelID,filelocation,isurl,message, tts, message_reference, sticker_ids)
 
     #reply, with a message and/or file
     def reply(self, channelID, messageID, message, nonce="calculate", tts=False, embed=None, allowed_mentions={"parse":["users","roles","everyone"],"replied_user":False}, sticker_ids=None, file=None, isurl=False):

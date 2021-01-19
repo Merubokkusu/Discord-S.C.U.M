@@ -21,12 +21,12 @@ class Client_UUID(object): #Huge thanks to github user fweak for helping me figu
             userID = int(userID)
 
         buf = bytearray(struct.pack('24x'))
-        buf[0:4] = bytes(struct.pack("<i", userID%4294967296 if userID%4294967296<=2147483647 else userID%4294967296-2147483647))
-        buf[4:8] = bytes(struct.pack("<i", userID>>32))
-        buf[8:12] = bytes(struct.pack("<i", self.randomPrefix))
-        buf[12:14] = bytes(struct.pack("<i", self.creationTime%4294967296 if self.creationTime%4294967296<=2147483647 else self.creationTime%4294967296-2147483647))
-        buf[16:20] = bytes(struct.pack("<i", self.creationTime>>32))
-        buf[20:24] = bytes(struct.pack("<i", eventNum))
+        buf[0:4] = struct.pack("<i", userID%4294967296 if userID%4294967296<=2147483647 else userID%4294967296-2147483647)
+        buf[4:8] = struct.pack("<i", userID>>32)
+        buf[8:12] = struct.pack("<i", self.randomPrefix)
+        buf[12:16] = struct.pack("<i", self.creationTime%4294967296 if self.creationTime%4294967296<=2147483647 else self.creationTime%4294967296-2147483647)
+        buf[16:20] = struct.pack("<i", self.creationTime>>32)
+        buf[20:24] = struct.pack("<i", eventNum)
 
         if increment:
             self.eventNum += 1
@@ -42,11 +42,9 @@ class Client_UUID(object): #Huge thanks to github user fweak for helping me figu
 
     @staticmethod
     def parse(client_uuid): #need to correct userID calculation*
-        parts = []
-        for i in range(int(len(base64.b64decode(client_uuid))/4)):
-            parts.append(struct.unpack('<i', base64.b64decode(client_uuid)[4*i:4*i+4])[0])
-        userID = str(parts[1]<<32)
-        randomPrefix = parts[2]
-        creationTime = parts[4]<<32
-        eventNum = parts[5]
-        return {'userID':userID, 'randomPrefix':randomPrefix, 'creationTime':creationTime, 'eventNum':eventNum}
+        decoded_client_uuid = base64.b64decode(client_uuid)
+        userID = struct.unpack('<i', decoded_client_uuid[4:8])[0]<<32 + struct.unpack('<i', decoded_client_uuid[0:4])[0]
+        randomPrefix = struct.unpack('<i', decoded_client_uuid[8:12])[0]
+        creationTime = struct.unpack('<i', decoded_client_uuid[16:20])[0]<<32 + struct.unpack('<i', decoded_client_uuid[12:16])[0]
+        eventNum = struct.unpack('<i', decoded_client_uuid[20:24])[0]
+        return {'userID':str(userID), 'randomPrefix':randomPrefix, 'creationTime':creationTime, 'eventNum':eventNum}

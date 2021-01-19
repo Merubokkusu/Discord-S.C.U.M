@@ -19,20 +19,14 @@ class Client_UUID(object): #Huge thanks to github user fweak for helping me figu
             userID = self.userID
         else:
             userID = int(userID)
-        first = bytes(struct.pack("<i", userID%4294967296 if userID%4294967296<=2147483647 else userID%4294967296-2147483647))
-        second = bytes(struct.pack("<i", userID>>32))
-        third = bytes(struct.pack("<i", self.randomPrefix))
-        fourth = bytes(struct.pack("<i", self.creationTime%4294967296 if self.creationTime%4294967296<=2147483647 else self.creationTime%4294967296-2147483647))
-        fifth = bytes(struct.pack("<i", self.creationTime>>32))
-        sixth = bytes(struct.pack("<i", eventNum))
 
         buf = bytearray(struct.pack('24x'))
-        buf[0:len(first)] = first
-        buf[4:4+len(second)] = second
-        buf[8:8+len(third)] = third
-        buf[12:12+len(fourth)] = fourth
-        buf[16:16+len(fifth)] = fifth
-        buf[20:20+len(sixth)] = sixth
+        buf[0:4] = bytes(struct.pack("<i", userID%4294967296 if userID%4294967296<=2147483647 else userID%4294967296-2147483647))
+        buf[4:8] = bytes(struct.pack("<i", userID>>32))
+        buf[8:12] = bytes(struct.pack("<i", self.randomPrefix))
+        buf[12:14] = bytes(struct.pack("<i", self.creationTime%4294967296 if self.creationTime%4294967296<=2147483647 else self.creationTime%4294967296-2147483647))
+        buf[16:20] = bytes(struct.pack("<i", self.creationTime>>32))
+        buf[20:24] = bytes(struct.pack("<i", eventNum))
 
         if increment:
             self.eventNum += 1

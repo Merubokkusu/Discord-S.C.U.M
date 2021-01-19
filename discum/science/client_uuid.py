@@ -45,3 +45,14 @@ class Client_UUID(object): #Huge thanks to github user fweak for helping me figu
         if resetEventNum:
             self.eventNum = 0
         return self.calculate()
+
+    @staticmethod
+    def parse(client_uuid):
+        parts = []
+        for i in range(int(len(base64.b64decode(client_uuid))/4)):
+            parts.append(struct.unpack('<i', base64.b64decode(client_uuid)[4*i:4*i+4])[0])
+        userID = str(parts[1]<<32)
+        randomPrefix = parts[2]
+        creationTime = parts[4]<<32
+        eventNum = parts[5]
+        return {'userID':userID, 'randomPrefix':randomPrefix, 'creationTime':creationTime, 'eventNum':eventNum}

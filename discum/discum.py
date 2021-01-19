@@ -75,7 +75,7 @@ class Client:
             self.userData = User(self.discord,self.s,self.log).me(with_analytics_token=True).json() #this is essentially the connection test. We need it cause we can get important data without connecting to the gateway.
             connectiontest = self.userData["analytics_token"]
         except:
-            self.userData = {"analytics_token": None, "id": str(random.randint(0,4294967296))}
+            self.userData = {"analytics_token": None, "id": "0"}
         #and finally, science, which needs to be put up here because client_uuids are sequential (if you choose to use the science endpoint)
         self.Science = Science(self.discord, self.s, self.log, self.userData["analytics_token"], self.userData["id"], self.__xfingerprint)
 
@@ -325,3 +325,12 @@ class Client:
     '''
     def science(self, events):
         return self.Science.science(events)
+
+    def calculateClientUUID(self, eventNum="default", userID="default", increment=True):
+        return self.Science.UUIDobj.calculate(eventNum, userID, increment)
+
+    def refreshClientUUID(self, resetEventNum=True):
+        return self.Science.UUIDobj.refresh(resetEventNum)
+
+    def parseClientUUID(self, client_uuid):
+        return self.Science.UUIDobj.parse(client_uuid)

@@ -11,6 +11,10 @@ class Science(object):
         self.log = log
         self.analytics_token = analytics_token
         self.xfingerprint = xfingerprint
+        if userID == "0":
+            date = datetime.datetime.now()
+            unixts = time.mktime(date.timetuple())
+            userID = str((int(unixts)*1000-1420070400000)*4194304)
         self.UUIDobj = Client_UUID(userID)
 
     def getCurrentUnixMS(self): #returns unix ts in milliseconds

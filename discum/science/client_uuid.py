@@ -41,7 +41,7 @@ class Client_UUID(object): #Huge thanks to github user fweak for helping me figu
         return self.calculate()
 
     @staticmethod
-    def parse(client_uuid): #need to correct userID calculation*
+    def parse(client_uuid):
         decoded_client_uuid = base64.b64decode(client_uuid)
         unpacked = []
         for i in range(6):

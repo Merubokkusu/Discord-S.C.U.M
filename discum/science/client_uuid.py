@@ -43,8 +43,12 @@ class Client_UUID(object): #Huge thanks to github user fweak for helping me figu
     @staticmethod
     def parse(client_uuid): #need to correct userID calculation*
         decoded_client_uuid = base64.b64decode(client_uuid)
-        userID = struct.unpack('<i', decoded_client_uuid[4:8])[0]<<32 + struct.unpack('<i', decoded_client_uuid[0:4])[0]
-        randomPrefix = struct.unpack('<i', decoded_client_uuid[8:12])[0]
-        creationTime = struct.unpack('<i', decoded_client_uuid[16:20])[0]<<32 + struct.unpack('<i', decoded_client_uuid[12:16])[0]
-        eventNum = struct.unpack('<i', decoded_client_uuid[20:24])[0]
-        return {'userID':str(userID), 'randomPrefix':randomPrefix, 'creationTime':creationTime, 'eventNum':eventNum}
+        unpacked = []
+        for i in range(6):
+            unpacked.append(struct.unpack('<i', decoded_client_uuid[4*i:4*i+4])[0])
+        UUIDdata = {}
+        UUIDdata['userID'] = str((unpacked[1]<<32) + unpacked[0])
+        UUIDdata['randomPrefix'] = unpacked[2]
+        UUIDdata['creationTime'] = (unpacked[4]<<32) + unpacked[3]
+        UUIDdata['eventNum'] = unpacked[5]
+        return UUIDdata

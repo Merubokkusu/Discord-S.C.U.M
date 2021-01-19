@@ -9,6 +9,7 @@ __________
 - [Reading discum](https://github.com/Merubokkusu/Discord-S.C.U.M/blob/master/docs/reading.md) (structure of discum)
 ___________
 # Overview:
+\*\*will update soon...(added sticker stuff, more user functions, and science functions)
 ### 232 functions:      
 >(\*replace "bot" and "resp" with whatever variable names you're using)
 >### Initiate client:

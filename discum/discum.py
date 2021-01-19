@@ -1,18 +1,20 @@
-from .start.login import *
-from .start.superproperties import *
-from .start.other import *
+from .start.login import Login
+from .start.superproperties import SuperProperties
+from .start.other import Other
 
 from .guild.guild import Guild
 from .messages.messages import Messages
 from .messages.embed import Embedder
 from .user.user import User
 from .stickers.stickers import Stickers
+from .science.science import Science
 
 from .gateway.gateway import *
 
 import time
 import base64
 import requests
+import random
 
 class Client:
     def __init__(self, email="", password="", token="", proxy_host=None, proxy_port=None, user_agent="random", log=True):
@@ -57,15 +59,26 @@ class Client:
         #super-properties
         self.__super_properties = SuperProperties(self.s, buildnum="request", log=self.log).GetSuperProperties(self.__user_agent)
         self.s.headers.update({"X-Super-Properties": base64.b64encode(str(self.__super_properties).encode())})
-        #token/authorization
+        #token/authorization/fingerprint
         if self.__user_token in ("",None,False): #assuming email and pass are given...
             self.__user_token, self.__xfingerprint = Login(self.s, self.discord, self.log).GetToken(email, password) #update token from "" to actual value
             time.sleep(1)
+        else:
+            self.__xfingerprint = Login(self.s, self.discord, self.log).GetXFingerprint()
         self.s.headers.update({"Authorization": self.__user_token}) #update headers
         #gateway (object initialization)
         self.gateway = GatewayServer(self.websocketurl, self.__user_token, self.__super_properties, self.__proxy_host, self.__proxy_port, self.log)
         #embed stuff for messages
         self.Embedder = Embedder
+        #get user data
+        try: 
+            self.userData = User(self.discord,self.s,self.log).me(with_analytics_token=True).json() #this is essentially the connection test. We need it cause we can get important data without connecting to the gateway.
+            connectiontest = self.userData["analytics_token"]
+        except:
+            self.userData = {"analytics_token": None, "id": str(random.randint(0,4294967296))}
+        #and finally, science, which needs to be put up here because client_uuids are sequential (if you choose to use the science endpoint)
+        self.Science = Science(self.discord, self.s, self.log, self.userData["analytics_token"], self.userData["id"], self.__xfingerprint)
+
 
 ##########################################################
 
@@ -73,10 +86,11 @@ class Client:
     test connection
     '''
     def connectionTest(self):
-        url=self.discord+'users/@me/affinities/users'
+        url=self.discord+'users/@me?with_analytics_token=true'
         connection = self.s.get(url)
         if connection.status_code == 200:
             if self.log: print("Connected")
+            self.userData = connection.json()
         else:
             if self.log: print("Incorrect Token")
         return connection
@@ -305,3 +319,9 @@ class Client:
     #look up a user in a guild
     def getGuildMember(self,guildID,userID):
         return Guild(self.discord,self.s,self.log).getGuildMember(guildID,userID)
+
+    '''
+    "Science", aka Discord's tracking endpoint (https://luna.gitlab.io/discord-unofficial-docs/science.html - "Discord argues that they need to collect the data in the case the User allows the usage of the data later on. Which in [luna's] opinion is complete bullshit. Have a good day.")
+    '''
+    def science(self, events):
+        return self.Science.science(events)

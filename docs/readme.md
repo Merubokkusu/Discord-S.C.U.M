@@ -10,7 +10,7 @@ __________
 ___________
 # Overview:
 
-### 232 functions:      
+### 261 functions:      
 ```
 # HTTP API
 bot.discum.Client(email="", password="", token="", proxy_host=None, proxy_port=None, user_agent="random", log=True)

@@ -133,7 +133,7 @@ class GuildCombo(object):
 							        },
 							    }
 							)
-						elif (self.gatewayobj.memberFetchingStatus[guild_id] - index) == 1:
+						elif self.gatewayobj.memberFetchingStatus[guild_id]!="done" and (self.gatewayobj.memberFetchingStatus[guild_id] - index) == 1:
 							index = self.getIndex(guild_id)
 							ranges = self.getRanges(index, multiplier)
 							if wait!=None: time.sleep(wait)

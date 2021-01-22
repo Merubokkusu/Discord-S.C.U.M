@@ -107,8 +107,8 @@ class Client:
     '''
     start
     '''
-    def login(self, email, password):
-        return Login(self.s, self.discord, self.log).GetToken(email, password)
+    def login(self, email, password, undelete=False, captcha=None, source=None, gift_code_sku_id=None):
+        return Login(self.s, self.discord, self.log).GetToken(email, password, undelete, captcha, source, gift_code_sku_id)
 
     def getXFingerprint(self):
         return Login(self.s, self.discord, self.log).GetXFingerprint()

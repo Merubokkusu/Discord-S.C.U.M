@@ -6,9 +6,12 @@ to make selfbots & userbots
   - [Initiate client](#Initiate-Client)
   - [Switch logging On/Off](#logging)
   - [Gateway](#Gateway)
+- [Starting](#Start)
 - [Messages](#Messages)
+- [Stickers](#Stickers)
 - [User Actions](#User-Actions)
 - [Guilds](#Guild)
+- [Science](#Science)
 - [Calling](#mediacalling)
 
 ## Quickstart:
@@ -95,6 +98,54 @@ bot.gateway.session.read()
 ```python
 resp.parsed.auto()
 ```
+## Start
+The endpoints below are classified as "start" since they can/are run normally by the client at the start of a session.
+##### login
+```login(email, password, undelete=False, captcha=None, source=None, gift_code_sku_id=None)```
+```python
+bot.login('email@email.com', 'password') #returns: token, x-fingerprint; note, a key-error will happen if discord wants you to enter captcha details
+```
+##### getXFingerprint
+```getXFingerprint()```
+```python
+bot.getXFingerprint()
+```
+##### getBuildNumber
+```getBuildNumber()```
+```python
+bot.getBuildNumber()```
+```
+##### getSuperProperties
+```getSuperProperties(user_agent, buildnum="request")```
+```python
+bot.getSuperProperties('Opera/8.17 (Windows NT 5.1; sl-SI) Presto/2.8.215 Version/11.00')
+```
+##### getGatewayUrl
+```getGatewayUrl()```
+```python
+bot.getGatewayUrl()
+```
+##### getDiscordStatus
+```getDiscordStatus()```
+```python
+bot.getDiscordStatus()
+```
+##### getDetectables
+```getDetectables()```
+```python
+bot.getDetectables()
+```
+##### getOauth2Tokens
+```getOauth2Tokens()```
+```python
+bot.getOauth2Tokens()
+```
+##### getVersionStableHash
+```getVersionStableHash(underscore=None)```
+```python
+bot.getVersionStableHash()
+```
+
 ## Messages
 ##### create DM
 ```createDM(userIDs)```
@@ -107,8 +158,13 @@ bot.createDM(['222222222222222222','000000000000000000'])
 ```python
 bot.getMessages("383003333751856129") #if beforeDate or aroundMessage not given, then most recent message(s) will be returned
 ```
+##### get a single message
+```getMessage(channelID, messageID)```
+```python
+bot.getMessage('222222222222222222','000000000000000000')
+```
 ##### send text message
-```sendMessage(ChannelID,message,embed='',tts=False)```
+```sendMessage(channelID, message, nonce="calculate", tts=False, embed=None, message_reference=None, allowed_mentions=None, sticker_ids=None)```
 ```python
 bot.sendMessage("383003333751856129","Hello You :)")
 ```
@@ -119,21 +175,25 @@ bot.sendMessage("383003333751856129","Hello You :)")
 * code: \`text\`
 * spoiler: \|\|text\|\|
 ##### send file
-```sendFile(channelID,filelocation,isurl=False,message="")```
+```sendFile(channelID,filelocation,isurl=False,message="", tts=False, message_reference=None, sticker_ids=None)```
 ```python
 bot.sendFile("383003333751856129","https://thiscatdoesnotexist.com/",True)
 ```
 * spoiler images: rename image to SPOILER_imagename.jpg (or whatever extension it has)
-##### send embed
-```sendMessage(ChannelID,message,embed='',tts=False)```
+##### reply with a message and/or file
+```reply(channelID, messageID, message, nonce="calculate", tts=False, embed=None, allowed_mentions={"parse":["users","roles","everyone"],"replied_user":False}, sticker_ids=None, file=None, isurl=False)```
 ```python
-embed = discum.Embedder()
-embed.Title("This is a test")
+bot.reply('222222222222222222','000000000000000000', 'this is a reply', sticker_ids=['444444444444444444'], file="https://thiscatdoesnotexist.com/", isurl=True)
+```
+##### send embed
+```python
+embed = bot.Embedder()
+embed.title("This is a test")
 embed.image('https://cdn.dribbble.com/users/189524/screenshots/2105870/04-example_800x600_v4.gif')
 embed.fields('Hello!',':yum:')
 embed.fields(':smile:','Testing :)')
 embed.author('Tester')
-bot.sendMessage("383006063751856129","",embed.read())
+bot.sendMessage("383006063751856129", embed=embed.read())
 ```
 ##### search messages     
 (if only guildID is provided, this will return most recent messages in that guild). format 25 grouped results per page, ~4 messages in each group, target messages have key "hit" in them). If you'd like to filter searchMessages to only return the messages you searched for, use filterSearchResults
@@ -208,9 +268,41 @@ bot.unAckMessage("222222222222222222","333333333333333333",250)
 ```
 - numMentions can be any positive integer (but discord registers any input above 250 as 250)      
 - you can technically put any string number (str(num)) as the messageID
+##### bulk acknowledge messages
+```bulkAck(data)```
+```python
+bot.bulkAck([{"222222222222222222":"333333333333333333"},{"121212121212121212":"939393939393939393"}])
+```
+##### getTrendingGifs
+```getTrendingGifs(provider="tenor", locale="en-US", media_format="mp4")```
+```python
+bot.getTrendingGifs()
+```
 ##### parse message (MESSAGE_CREATE)
 ```python
 resp.parsed.message_create()
+```
+
+## Stickers
+##### get sticker datas
+```getStickers(directoryID="758482250722574376", store_listings=False, locale="en-US")```
+```python
+bot.getStickers()
+```
+##### get sticker data file (animated png data)
+```getStickerFile(stickerID, stickerAsset)```
+```python
+bot.getStickerFile("749052944682582036", "5bc6cc8f8002e733e612ef548e7cbe0c")
+```
+##### get sticker json data
+```getStickerJson(stickerID, stickerAsset)```
+```python
+bot.getStickerJson("749052944682582036", "5bc6cc8f8002e733e612ef548e7cbe0c")
+```
+##### get sticker pack data
+```getStickerPack(stickerPackID)```
+```python
+bot.stickerPackID('749043879713701898')
 ```
 
 ## User
@@ -236,21 +328,62 @@ bot.removeRelationship(ID)
 ```python
 bot.blockUser(ID)
 ```
-##### change name
-```changeName(name)```
-```python
-bot.changeName(email,password,name)
-```
 ##### set status
 ```setStatus(status)```
 ```python
 bot.setStatus(status)
 ```
-##### set avatar
-```setAvatar(imagePath)```
+##### set username
+```setUsername(username)```
 ```python
-bot.setAvatar(email,password,imagePath)
+bot.setUsername('helloworld')
 ```
+##### set email
+```setEmail(email)```
+```python
+bot.setEmail('helloworld@email.com')
+```
+##### set password
+```setPassword(new_password)```
+```python
+bot.setPassword('thisismynewpass')
+```
+##### set discriminator
+```setDiscriminator(discriminator)```
+```python
+bot.setDiscriminator('0001')
+```
+##### get profile data
+```getProfile(userID)```
+```python
+bot.getProfile('110101010101010101')
+```
+##### get my data
+```me(with_analytics_token=None)```
+```python
+bot.me(True)
+```
+##### get user affinities
+```getUserAffinities()```
+```python
+bot.getUserAffinities()
+```
+##### get user guild affinities
+```getGuildAffinities()```
+```python
+bot.getGuildAffinities()
+```
+##### get mentions (from inbox)
+```getMentions(limit=25, roleMentions=True, everyoneMentions=True)```
+```python
+bot.getMentions()
+```
+##### remove mention from inbox
+```removeMentionFromInbox(messageID)```
+```python
+bot.removeMentionFromInbox('5898989898989898')
+```
+
 ##### session (user data)
 ```python
 bot.gateway.session.user
@@ -469,14 +602,36 @@ bot.gateway.session.guild(guildID).mergedPresenceIDs
 bot.gateway.session.guild(guildID).mergedPresenceData(userID)
 bot.gateway.session.guild(guildID).position #your roles in a specific guild
 ```
+### Science
+aka Discord's tracking endpoint (https://luna.gitlab.io/discord-unofficial-docs/science.html - "Discord argues that they need to collect the data in the case the User allows the usage of the data later on. Which in [luna's] opinion is complete bullshit. Have a good day.")
+##### send tracking data
+```science(events)```
+```python
+bot.science([{}])
+```
+##### calculate client_uuid (more info here: https://docs.google.com/document/d/1b5aDx7S1iLHoeb6B56izZakbXItA84gUjFzK-0OBwy0/edit?usp=sharing)
+```calculateClientUUID(eventNum="default", userID="default", increment=True)```
+```python
+bot.calculateClientUUID()
+```
+##### refresh client_uuid
+```refreshClientUUID(resetEventNum=True)```
+```python
+bot.refreshClientUUID()
+```
+##### parse client_uuid
+```parseClientUUID(client_uuid)```
+```python
+bot.parseClientUUID('AAASXwTHGwfnejRw+qeUEncBAAAAAAAA') #client_uuids belonging to not-logged-in users are just snowflake timestamps
+```
 ## Media/Calling
 (no function yet for streaming data)
-# start call
+##### start call
 ```bot.gateway.request.call(channelID, guildID=None, mute=False, deaf=False, video=False)```
 ```python
 bot.gateway.request.call('channelID000000', guildID=None, mute=False, deaf=False, video=False)
 ```
-# end call
+##### end call
 ```bot.gateway.request.endCall()```
 ```python
 bot.gateway.request.endCall()

@@ -47,7 +47,7 @@ class User(object):
 		url = self.discord+"users/"+userID+"/profile"
 		return Wrapper.sendRequest(self.s, 'get', url, log=self.log)
 
-	def me(self, with_analytics_token=None): #simple. bot.me() for own user data
+	def info(self, with_analytics_token=None): #simple. bot.info() for own user data
 		url = self.discord+"users/@me"
 		if with_analytics_token!=None:
 			with_analytics_token = str(with_analytics_token).lower()
@@ -116,4 +116,158 @@ class User(object):
 		url = self.discord+"users/@me"
 		body = {"password":password, "discriminator":discriminator}
 		return Wrapper.sendRequest(self.s, 'patch', url, body, log=self.log)
+	'''
+	More settings stuff
+	'''
+	def setHypesquad(self, house):
+		url = self.discord+"hypesquad/online"
+		if house.lower() == "bravery":
+			body = {"house_id": 1}
+		elif house.lower() == "brilliance":
+			body = {"house_id": 2}
+		elif house.lower() == "balance":
+			body = {"house_id": 3}
+		return Wrapper.sendRequest(self.s, 'post', url, body, log=self.log)
+
+	def leaveHypesquad(self):
+		url = self.discord+"hypesquad/online"
+		return Wrapper.sendRequest(self.s, 'delete', url, log=self.log)
+
+	def setLocale(self, locale):
+		url = self.discord+"users/@me/settings"
+		body = {"locale": locale}
+		return Wrapper.sendRequest(self.s, 'patch', url, body, log=self.log)
+
+	def enable2FA(self, code, secret, password): #returns new token plus backup codes
+		url = self.discord+"users/@me/mfa/totp/enable"
+		body = {"code": code, "secret": secret, "password": password}
+		return Wrapper.sendRequest(self.s, 'post', url, body, log=self.log)
+
+	def disable2FA(self, code):
+		url = self.discord+"users/@me/mfa/totp/disable"
+		body = {"code": code}
+		return Wrapper.sendRequest(self.s, 'post', url, body, log=self.log)
+
+	def getRTCregions(self):
+		url = "https://latency.discord.media/rtc"
+		return Wrapper.sendRequest(self.s, 'get', url, log=self.log)
+
+	def setAFKtimeout(self, timeout_seconds):
+		url = self.discord+"users/@me/settings"
+		body = {"afk_timeout": timeout_seconds}
+		return Wrapper.sendRequest(self.s, 'patch', url, body, log=self.log)
+
+	def setTheme(self, theme):
+		url = self.discord+"users/@me/settings"
+		body = {"theme": theme.lower()}
+		return Wrapper.sendRequest(self.s, 'patch', url, body, log=self.log)
+
+	def setMessageDisplay(self, CozyOrCompact):
+		url = self.discord+"users/@me/settings"
+		if CozyOrCompact.lower() == "compact":
+			body = {"message_display_compact": True}
+		else:
+			body = {"message_display_compact": False}
+		return Wrapper.sendRequest(self.s, 'patch', url, body, log=self.log)
+
+	def enableDevMode(self, enable):
+		url = self.discord+"users/@me/settings"
+		body = {"developer_mode": enable}
+		return Wrapper.sendRequest(self.s, 'patch', url, body, log=self.log)
+
+	def activateApplicationTestMode(self, applicationID):
+		url = self.discord+"applications/"+applicationID+"/skus"
+		return Wrapper.sendRequest(self.s, 'get', url, log=self.log)
+
+	def getApplicationData(self, applicationID, with_guild=False):
+		url = self.discord+"applications/"+applicationID+"/public?with_guild="+str(with_guild).lower()
+		return Wrapper.sendRequest(self.s, 'get', url, log=self.log)
+
+	def getBackupCodes(self, password, regenerate=False):
+		url = self.discord+"users/@me/mfa/codes"
+		body = {"password": password, "regenerate": regenerate}
+		return Wrapper.sendRequest(self.s, 'post', url, body, log=self.log)
+
+	'''
+	App Settings - Text&Images
+	'''
+	def enableInlineMedia(self, enable):
+		url = self.discord+"users/@me/settings"
+		body = {"inline_embed_media": enable}
+		return Wrapper.sendRequest(self.s, 'patch', url, body, log=self.log)
+
+	def enableLargeImagePreview(self, enable):
+		url = self.discord+"users/@me/settings"
+		body = {"inline_attachment_media": enable}
+		return Wrapper.sendRequest(self.s, 'patch', url, body, log=self.log)
+
+	def enableGifAutoPlay(self, enable):
+		url = self.discord+"users/@me/settings"
+		body = {"gif_auto_play": enable}
+		return Wrapper.sendRequest(self.s, 'patch', url, body, log=self.log)
+
+	def enableLinkPreview(self, enable):
+		url = self.discord+"users/@me/settings"
+		body = {"render_embeds": enable}
+		return Wrapper.sendRequest(self.s, 'patch', url, body, log=self.log)
+
+	def enableReactionRendering(self, enable):
+		url = self.discord+"users/@me/settings"
+		body = {"render_reactions": enable}
+		return Wrapper.sendRequest(self.s, 'patch', url, body, log=self.log)
+
+	def enableAnimatedEmoji(self, enable):
+		url = self.discord+"users/@me/settings"
+		body = {"animate_emoji": enable}
+		return Wrapper.sendRequest(self.s, 'patch', url, body, log=self.log)
+
+	def enableEmoticonConversion(self, enable):
+		url = self.discord+"users/@me/settings"
+		body = {"convert_emoticons": enable}
+		return Wrapper.sendRequest(self.s, 'patch', url, body, log=self.log)
+
+	def stickerAnimation(self, setting):
+		url = self.discord+"users/@me/settings"
+		if setting.lower() == "always":
+			body = {"animate_stickers": 0}
+		elif setting.lower() == "interaction":
+			body = {"animate_stickers": 1}
+		elif setting.lower() == "never":
+			body = {"animate_stickers": 2}
+		return Wrapper.sendRequest(self.s, 'patch', url, body, log=self.log)
+
+	def enableTTS(self, enable):
+		url = self.discord+"users/@me/settings"
+		body = {"enable_tts_command": enable}
+		return Wrapper.sendRequest(self.s, 'patch', url, body, log=self.log)
+
+	'''
+	Billing Settings - Billing
+	'''
+	def getBillingHistory(self, limit=20):
+		url = self.discord+"users/@me/billing/payments?limit="+str(limit)
+		return Wrapper.sendRequest(self.s, 'get', url, log=self.log)
+
+	def getPaymentSources(self):
+		url = self.discord+"users/@me/billing/payment-sources"
+		return Wrapper.sendRequest(self.s, 'get', url, log=self.log)
+
+	def getBillingSubscriptions(self):
+		url = self.discord+"users/@me/billing/subscriptions"
+		return Wrapper.sendRequest(self.s, 'get', url, log=self.log)
+
+	def getStripeClientSecret(self): #for adding new payment methods. Stripe api wraps are not included because discum is just a discord api wrapper.
+		url = self.discord+"users/@me/billing/stripe/setup-intents"
+		return Wrapper.sendRequest(self.s, 'post', url, log=self.log)
+	'''
+	Billing Settings - Gift Inventory
+	'''
+	
+	'''
+	Logout
+	'''
+	def logout(self, provider=None, voip_provider=None):
+		url = self.discord+"auth/logout"
+		body = {"provider": provider, "voip_provider": voip_provider}
+		return Wrapper.sendRequest(self.s, 'post', url, body, log=self.log)
 

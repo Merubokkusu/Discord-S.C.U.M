@@ -1,6 +1,7 @@
 from .start.login import Login
 from .start.superproperties import SuperProperties
 from .start.other import Other
+from .start.totp import TOTP
 
 from .guild.guild import Guild
 from .messages.messages import Messages
@@ -17,24 +18,25 @@ import requests
 import random
 
 class Client:
-    def __init__(self, email="", password="", token="", proxy_host=None, proxy_port=None, user_agent="random", log=True):
-        #vars
+    def __init__(self, email="", password="", secret="", code="", token="", proxy_host=None, proxy_port=None, user_agent="random", log=True):
+        #step 1: vars
         self.log = log
         self.__user_token = token
         self.__user_email = email
         self.__user_password = password
+        self.__totp_secret = secret
         self.__proxy_host = None if proxy_host in (None,False) else proxy_host
         self.__proxy_port = None if proxy_port in (None,False) else proxy_port
         self.discord = 'https://discord.com/api/v8/'
         self.websocketurl = 'wss://gateway.discord.gg/?encoding=json&v=8&compress=zlib-stream'
-        #user agent
+        #step 2: user agent
         if user_agent != "random":
             self.__user_agent = user_agent
         else:
             import random_user_agent.user_agent #only really want to import this if needed
             self.__user_agent = random_user_agent.user_agent.UserAgent(limit=100).get_random_user_agent()
             if self.log: print('Randomly generated user agent: '+self.__user_agent)
-        #headers
+        #step 3: http request headers
         self.headers = {
         	"Host": "discord.com",
         	"User-Agent": self.__user_agent,
@@ -56,27 +58,27 @@ class Client:
             'https': "https://" +  self.__proxy_host+':'+self.__proxy_port
             }
             self.s.proxies.update(self.proxies)
-        #super-properties
+        #step 4: super-properties (part of headers)
         self.__super_properties = SuperProperties(self.s, buildnum="request", log=self.log).GetSuperProperties(self.__user_agent)
         self.s.headers.update({"X-Super-Properties": base64.b64encode(str(self.__super_properties).encode())})
-        #token/authorization/fingerprint
+        #step 5: token/authorization/fingerprint (also part of headers, except for fingerprint)
         if self.__user_token in ("",None,False): #assuming email and pass are given...
-            self.__user_token, self.__xfingerprint = Login(self.s, self.discord, self.log).GetToken(email, password) #update token from "" to actual value
+            self.__user_token, self.__xfingerprint = Login(self.s, self.discord, self.log).GetToken(email=email, password=password, secret=secret, code=code) #update token from "" to actual value
             time.sleep(1)
         else:
             self.__xfingerprint = Login(self.s, self.discord, self.log).GetXFingerprint()
         self.s.headers.update({"Authorization": self.__user_token}) #update headers
-        #gateway (object initialization)
+        #step 6: gateway (object initialization)
         self.gateway = GatewayServer(self.websocketurl, self.__user_token, self.__super_properties, self.__proxy_host, self.__proxy_port, self.log)
-        #embed stuff for messages
+        #step 7: embed (object initialization)
         self.Embedder = Embedder
-        #get user data
+        #step 8: get user info (need analytics token for science requests, and this is the fastest method)
         try: 
             self.userData = User(self.discord,self.s,self.log).me(with_analytics_token=True).json() #this is essentially the connection test. We need it cause we can get important data without connecting to the gateway.
             connectiontest = self.userData["analytics_token"]
         except:
-            self.userData = {"analytics_token": None, "id": "0"}
-        #and finally, science, which needs to be put up here because client_uuids are sequential (if you choose to use the science endpoint)
+            self.userData = {"analytics_token": None, "id": "0"} #if token invalid
+        #step 9: science, which needs to be put up here because client_uuids are sequential (if you choose to use the science endpoint) (object initialization)
         self.Science = Science(self.discord, self.s, self.log, self.userData["analytics_token"], self.userData["id"], self.__xfingerprint)
 
 
@@ -107,8 +109,8 @@ class Client:
     '''
     start
     '''
-    def login(self, email, password, undelete=False, captcha=None, source=None, gift_code_sku_id=None):
-        return Login(self.s, self.discord, self.log).GetToken(email, password, undelete, captcha, source, gift_code_sku_id)
+    def login(self, email, password, undelete=False, captcha=None, source=None, gift_code_sku_id=None, secret="", code=""):
+        return Login(self.s, self.discord, self.log).GetToken(email, password, undelete, captcha, source, gift_code_sku_id, secret, code)
 
     def getXFingerprint(self):
         return Login(self.s, self.discord, self.log).GetXFingerprint()
@@ -261,19 +263,19 @@ class Client:
         return User(self.discord,self.s,self.log).setAvatar(imagePath)
 
     #set username
-    def setUsername(self, username):
+    def setUsername(self, username): #USER PASSWORD NEEDS TO BE SET BEFORE THIS IS RUN
         return User(self.discord,self.s,self.log).setUsername(username, password=self.__user_password)
 
     #set email
-    def setEmail(self, email):
+    def setEmail(self, email): #USER PASSWORD NEEDS TO BE SET BEFORE THIS IS RUN
         return User(self.discord,self.s,self.log).setEmail(email, password=self.__user_password)
 
     #set password
-    def setPassword(self, new_password):
+    def setPassword(self, new_password): #USER PASSWORD NEEDS TO BE SET BEFORE THIS IS RUN
         return User(self.discord,self.s,self.log).setPassword(new_password, password=self.__user_password)
 
     #set discriminator
-    def setDiscriminator(self, discriminator):
+    def setDiscriminator(self, discriminator): #USER PASSWORD NEEDS TO BE SET BEFORE THIS IS RUN
         return User(self.discord,self.s,self.log).setDiscriminator(discriminator, password=self.__user_password)
 
     '''
@@ -282,8 +284,8 @@ class Client:
     def getProfile(self, userID):
         return User(self.discord,self.s,self.log).getProfile(userID)
 
-    def me(self, with_analytics_token=None):
-        return User(self.discord,self.s,self.log).me(with_analytics_token)
+    def info(self, with_analytics_token=None):
+        return User(self.discord,self.s,self.log).info(with_analytics_token)
 
     def getUserAffinities(self):
         return User(self.discord,self.s,self.log).getUserAffinities()
@@ -296,6 +298,115 @@ class Client:
 
     def removeMentionFromInbox(self, messageID):
         return User(self.discord,self.s,self.log).removeMentionFromInbox(messageID)
+
+    def setHypesquad(self, house):
+        return User(self.discord,self.s,self.log).setHypesquad(house)
+
+    def leaveHypesquad(self):
+        return User(self.discord,self.s,self.log).leaveHypesquad()
+
+    def setLocale(self, locale):
+        return User(self.discord,self.s,self.log).setLocale(locale)
+
+    def calculateTOTPcode(self, secret="default"): #need to put this function here (instead of in login folder or user folder) because it updates the secret (if and only if secret == "")
+        if secret == "default":
+            if self.__totp_secret == "":
+                self.__totp_secret = ''.join(random.choice(list('ABCDEFGHIJKLMNOPQRSTUVWXYZ234567')) for _ in range(16)) #random base32 (len 16)
+            secret = self.__totp_secret
+        if "?secret=" in secret:
+            secret = secret[secret.index("?secret=")+8: secret.index("?secret=")+24]
+        return TOTP(secret).generateTOTP(), secret #secret is returned just in case it wasn't set at the beginning.
+
+    def getTOTPurl(self, secret): #use this to store your totp secret/qr pic; btw url format is otpauth://totp/Discord:EMAIL?secret=SECRET&issuer=Discord
+        url = "otpauth://totp/Discord"
+        if self.__user_email != "":
+            url += ":"+self.__user_email
+        url += "?secret="+secret+"&issuer=Discord"
+        return url
+
+    def enable2FA(self): #this also returns backup codes (value of key "backup_codes"). USER PASSWORD NEEDS TO BE SET BEFORE THIS IS RUN
+        code = self.calculateTOTPcode()[0]
+        result = User(self.discord,self.s,self.log).enable2FA(code, secret=self.__totp_secret, password=self.__user_password)
+        self.__user_token = result.json()["token"]
+        self.s.headers['Authorization'] = self.__user_token
+        return result
+
+    def disable2FA(self, code="calculate", clearSecretAfter=False): #either set your token before running this or input a code.
+        if code == "calculate":
+            code = self.calculateTOTPcode()[0] #this will generate a random secret if you dont have one set, so...set your secret before running this
+        code = str(code) #just in case
+        result = User(self.discord,self.s,self.log).disable2FA(code)
+        self.__user_token = result.json()["token"]
+        self.s.headers['Authorization'] = self.__user_token
+        if clearSecretAfter: #this is dangerous (even though disable2FA should error out before getting to this point if something goes wrong). If you already have your secret saved, clear away. By default this is set to False to avoid any mishaps.
+            self.__totp_secret = ""
+        return result
+
+    def getRTCregions(self):
+        return User(self.discord,self.s,self.log).getRTCregions()
+
+    def setAFKtimeout(self, timeout_seconds):
+        return User(self.discord,self.s,self.log).setAFKtimeout(timeout_seconds)
+
+    def setTheme(self, theme): #"light" or "dark"
+        return User(self.discord,self.s,self.log).setTheme(theme)
+
+    def setMessageDisplay(self, CozyOrCompact): #"cozy" or "compact"
+        return User(self.discord,self.s,self.log).setMessageDisplay(CozyOrCompact)
+
+    def enableDevMode(self, enable): #boolean, default=False
+        return User(self.discord,self.s,self.log).enableDevMode(enable)
+
+    def activateApplicationTestMode(self, applicationID):
+        return User(self.discord,self.s,self.log).activateApplicationTestMode(applicationID)
+
+    def getApplicationData(self, applicationID, with_guild=False):
+        return User(self.discord,self.s,self.log).getApplicationData(applicationID, with_guild)
+
+    def getBackupCodes(self, regenerate=False):
+        return User(self.discord,self.s,self.log).getBackupCodes(self.__user_password, regenerate)
+
+    def enableInlineMedia(self, enable): #boolean, default=True
+        return User(self.discord,self.s,self.log).enableInlineMedia(enable)
+
+    def enableLargeImagePreview(self, enable): #boolean, default=True
+        return User(self.discord,self.s,self.log).enableLargeImagePreview(enable)
+
+    def enableGifAutoPlay(self, enable): #boolean, default=True
+        return User(self.discord,self.s,self.log).enableGifAutoPlay(enable)
+
+    def enableLinkPreview(self, enable): #boolean, default=True
+        return User(self.discord,self.s,self.log).enableLinkPreview(enable)
+
+    def enableReactionRendering(self, enable): #boolean, default=True
+        return User(self.discord,self.s,self.log).enableReactionRendering(enable)
+
+    def enableAnimatedEmoji(self, enable): #boolean, default=True
+        return User(self.discord,self.s,self.log).enableAnimatedEmoji(enable)
+
+    def enableEmoticonConversion(self, enable): #boolean, default=True
+        return User(self.discord,self.s,self.log).enableEmoticonConversion(enable)
+
+    def stickerAnimation(self, setting): #string, default="always"
+        return User(self.discord,self.s,self.log).stickerAnimation(setting)
+
+    def enableTTS(self, enable): #boolean, default=True
+        return User(self.discord,self.s,self.log).enableTTS(enable)
+
+    def getBillingHistory(self, limit=20):
+        return User(self.discord,self.s,self.log).getBillingHistory(limit)
+
+    def getPaymentSources(self):
+        return User(self.discord,self.s,self.log).getPaymentSources()
+
+    def getBillingSubscriptions(self):
+        return User(self.discord,self.s,self.log).getBillingSubscriptions()
+
+    def getStripeClientSecret(self):
+        return User(self.discord,self.s,self.log).getStripeClientSecret()
+
+    def logout(self, provider=None, voip_provider=None):
+        return User(self.discord,self.s,self.log).logout(provider, voip_provider)
 
     '''
     Guild/Server stuff

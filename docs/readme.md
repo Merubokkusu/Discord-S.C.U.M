@@ -11,6 +11,7 @@ ___________
 # Overview:
 
 ### 261 functions:      
+* added some more functions, will update soon
 ```
 # HTTP API
 bot.discum.Client(email="", password="", token="", proxy_host=None, proxy_port=None, user_agent="random", log=True)

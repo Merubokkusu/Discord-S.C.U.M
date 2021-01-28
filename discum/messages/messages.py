@@ -18,7 +18,9 @@ class Messages(object):
         self.s = s
         self.log = log
 
-    def calculateNonce(self, date=datetime.datetime.now()):
+    def calculateNonce(self, date="now"):
+        if date == "now":
+            date = datetime.datetime.now()
         unixts = time.mktime(date.timetuple())
         return str((int(unixts)*1000-1420070400000)*4194304)
 
@@ -43,7 +45,7 @@ class Messages(object):
         return Wrapper.sendRequest(self.s, 'get', url, log=self.log)
 
     #text message
-    def sendMessage(self, channelID, message, nonce="calculate", tts=False, embed=None, message_reference=None, allowed_mentions=None, sticker_ids=None):
+    def sendMessage(self, channelID, message, nonce, tts=False, embed=None, message_reference=None, allowed_mentions=None, sticker_ids=None):
         url = self.discord+"channels/"+channelID+"/messages"
         if nonce == "calculate":
             body = {"content": message, "tts": tts, "nonce": self.calculateNonce()}
@@ -99,9 +101,9 @@ class Messages(object):
         self.s.headers.update({"Content-Type":"application/json"})
         return response
 
-    def reply(self, channelID, messageID, message, nonce="calculate", tts=False, embed=None, allowed_mentions={"parse":["users","roles","everyone"],"replied_user":False}, sticker_ids=None, file=None, isurl=False):
+    def reply(self, channelID, messageID, message, nonce, tts=False, embed=None, allowed_mentions={"parse":["users","roles","everyone"],"replied_user":False}, sticker_ids=None, file=None, isurl=False):
         if file == None:
-            self.sendMessage(channelID, message, nonce="calculate", tts=tts, embed=embed, message_reference={"channel_id":channelID,"message_id":messageID}, allowed_mentions=allowed_mentions, sticker_ids=sticker_ids)
+            self.sendMessage(channelID, message, nonce=nonce, tts=tts, embed=embed, message_reference={"channel_id":channelID,"message_id":messageID}, allowed_mentions=allowed_mentions, sticker_ids=sticker_ids)
         else:
             self.sendFile(channelID, file, isurl=isurl, message=message, tts=tts, message_reference={"channel_id":channelID,"message_id":messageID}, sticker_ids=sticker_ids)
 

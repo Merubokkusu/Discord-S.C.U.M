@@ -431,6 +431,12 @@ class Client:
     def getGuildMember(self,guildID,userID):
         return Guild(self.discord,self.s,self.log).getGuildMember(guildID,userID)
 
+    def getMemberVerificationData(self, guildID, with_guild=False, invite_code=None):
+        return Guild(self.discord,self.s,self.log).getMemberVerificationData(guildID, with_guild, invite_code)
+
+    def agreeGuildRules(self, guildID, form_fields, version="2021-01-05T01:44:32.163000+00:00"):
+        return Guild(self.discord,self.s,self.log).agreeGuildRules(guildID, form_fields, version)
+
     '''
     "Science", aka Discord's tracking endpoint (https://luna.gitlab.io/discord-unofficial-docs/science.html - "Discord argues that they need to collect the data in the case the User allows the usage of the data later on. Which in [luna's] opinion is complete bullshit. Have a good day.")
     '''

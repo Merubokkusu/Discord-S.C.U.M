@@ -45,3 +45,16 @@ class Guild(object):
 	def getGuildMember(self, guildID, userID):
 		url = self.discord+"/guilds/%s/members/%s" % (guildID, userID)
 		return Wrapper.sendRequest(self.s, 'get', url, log=self.log)
+
+	#get member verification data
+	def getMemberVerificationData(self, guildID, with_guild=False, invite_code=None):
+		url = "https://discord.com/api/v8/guilds/"+guildID+"/member-verification?with_guild="+str(with_guild).lower()
+		if invite_code != None:
+			url += "&invite_code="+invite_code
+		return Wrapper.sendRequest(self.s, 'get', url, log=self.log)
+
+	def agreeGuildRules(self, guildID, form_fields, version="2021-01-05T01:44:32.163000+00:00"):
+		url = "https://discord.com/api/v8/guilds/"+guildID+"/requests/@me"
+		form_fields[0]['response'] = True
+		body = {"version":version, "form_fields":json.dumps(form_fields)}
+		return Wrapper.sendRequest(self.s, 'put', url, body, log=self.log)

@@ -25,6 +25,8 @@ class Client:
         self.__user_email = email
         self.__user_password = password
         self.__totp_secret = secret
+        self.__xfingerprint = ""
+        self.userData = {}
         self.__proxy_host = None if proxy_host in (None,False) else proxy_host
         self.__proxy_port = None if proxy_port in (None,False) else proxy_port
         self.discord = 'https://discord.com/api/v8/'
@@ -64,23 +66,14 @@ class Client:
         #step 5: token/authorization/fingerprint (also part of headers, except for fingerprint)
         if self.__user_token in ("",None,False): #assuming email and pass are given...
             self.__user_token, self.__xfingerprint = Login(self.s, self.discord, self.log).GetToken(email=email, password=password, secret=secret, code=code) #update token from "" to actual value
-            time.sleep(1)
-        else:
-            self.__xfingerprint = Login(self.s, self.discord, self.log).GetXFingerprint()
+            time.sleep(1)            
         self.s.headers.update({"Authorization": self.__user_token}) #update headers
         #step 6: gateway (object initialization)
         self.gateway = GatewayServer(self.websocketurl, self.__user_token, self.__super_properties, self.__proxy_host, self.__proxy_port, self.log)
         #step 7: embed (object initialization)
         self.Embedder = Embedder
-        #step 8: get user info (need analytics token for science requests, and this is the fastest method)
-        try: 
-            self.userData = User(self.discord,self.s,self.log).me(with_analytics_token=True).json() #this is essentially the connection test. We need it cause we can get important data without connecting to the gateway.
-            connectiontest = self.userData["analytics_token"]
-        except:
-            self.userData = {"analytics_token": None, "id": "0"} #if token invalid
-        #step 9: science, which needs to be put up here because client_uuids are sequential (if you choose to use the science endpoint) (object initialization)
-        self.Science = Science(self.discord, self.s, self.log, self.userData["analytics_token"], self.userData["id"], self.__xfingerprint)
-
+        #step 8: somewhat prepare for science events
+        self.Science = ""
 
 ##########################################################
 
@@ -440,7 +433,20 @@ class Client:
     '''
     "Science", aka Discord's tracking endpoint (https://luna.gitlab.io/discord-unofficial-docs/science.html - "Discord argues that they need to collect the data in the case the User allows the usage of the data later on. Which in [luna's] opinion is complete bullshit. Have a good day.")
     '''
-    def science(self, events):
+    def science(self, events): #the real prep for science events happens down here, and only once for each client obj
+        if self.Science == "":
+            try:
+                #get xfingerprint
+                if self.__xfingerprint == "":
+                    self.__xfingerprint = Login(self.s, self.discord, self.log).GetXFingerprint()
+                    time.sleep(1)
+                #get analytics token
+                self.userData = User(self.discord,self.s,self.log).info(with_analytics_token=True).json() #this is essentially the connection test. We need it cause we can get important data without connecting to the gateway.
+                connectiontest = self.userData["analytics_token"]
+            except:
+                self.userData = {"analytics_token": None, "id": "0"} #if token invalid
+            #initialize Science object
+            self.Science = Science(self.discord, self.s, self.log, self.userData["analytics_token"], self.userData["id"], self.__xfingerprint)
         return self.Science.science(events)
 
     def calculateClientUUID(self, eventNum="default", userID="default", increment=True):

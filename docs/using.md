@@ -528,7 +528,7 @@ params:
 - reset (boolean):
   - if you'd like to fetchMembers multiple times without clearing the current member list, set this is False
 - wait (float/None):
-  - if discord disconnects you due to gateway rate limits (normally doesn't happen, but it's possible) and you don't want to try again later, you can set the wait time (in seconds) here. I wouldn't recommend a wait time higher than 1 second. Also, depending on discord's response time, fetchMembers behavior can become unstable if you set a wait time. This parameter should only be used with care.
+  - puts a wait time (in seconds) between member fetching requests to prevent getting rate limited
 - priority (int):
   - tells discum where to insert the fetchMembers command. Default priority is 0 for fetchMembers.
 

@@ -50,10 +50,6 @@ or from PyPI:
 pip install discum 
 ```               
 
-## Documentation
-Don't refer to the wiki, refer to these docs instead:
-https://github.com/Merubokkusu/Discord-S.C.U.M/tree/master/docs
-
 #### Prerequisites (installed automatically using above methods)
 - requests
 - requests_toolbelt
@@ -61,6 +57,10 @@ https://github.com/Merubokkusu/Discord-S.C.U.M/tree/master/docs
 - filetype
 - ua-parser
 - random_user_agent
+
+## Documentation
+Don't refer to the wiki, refer to these docs instead:
+https://github.com/Merubokkusu/Discord-S.C.U.M/tree/master/docs
 
 # Example usage
 ```python

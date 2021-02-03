@@ -10,11 +10,14 @@ __________
 ___________
 # Overview:
 
-### 261 functions:      
-* added some more functions, will update soon
+### 292 functions:      
+```
+# client initialization
+discum.Client(email="", password="", secret="", code="", token="", proxy_host=None, proxy_port=None, user_agent="random", log=True)
+```
+
 ```
 # HTTP API
-discum.Client(email="", password="", secret="", code="", token="", proxy_host=None, proxy_port=None, user_agent="random", log=True)
 connectionTest()
 snowflake_to_unixts(snowflake)
 unixts_to_snowflake(unixts)

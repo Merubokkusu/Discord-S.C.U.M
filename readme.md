@@ -13,6 +13,7 @@ A simple, easy to use, non-restrictive Discord API Wrapper for Selfbots/Userbots
 - [About](#About)
 - [Installation](#Installation)
   - [Prerequisites](#prerequisites-installed-automatically-using-above-methods)
+- [Documentation](#Documentation)
 - [Example Usage](#Example-usage)
 - [Links](#Links)
 - [To Do](#To-Do)
@@ -48,6 +49,11 @@ or from PyPI:
 ```python
 pip install discum 
 ```               
+
+## Documentation
+Don't refer to the wiki, refer to these docs instead:
+https://github.com/Merubokkusu/Discord-S.C.U.M/tree/master/docs
+
 #### Prerequisites (installed automatically using above methods)
 - requests
 - requests_toolbelt

@@ -6,7 +6,7 @@ A simple, easy to use, non-restrictive Discord API Wrapper for Selfbots/Userbots
 
 ![https://files.catbox.moe/3ns003.png](https://files.catbox.moe/3ns003.png)
         
-\* You can send issues to discordtehe@gmail.com (arandomnewaccount will respond). If you put them in the issues tab, either arandomnewaccount will edit your message to "respond" because he can't post public comments or Merubokkusu will respond.
+\* You can send issues to discordtehe@gmail.com (arandomnewaccount will respond). If you put them in the issues tab, either arandomnewaccount will edit your message to "respond" because he can't post public comments or Merubokkusu will respond. Please at least read the README before submitting an issue.
 
 ## Table of Contents
 - [Key Features](#Key-features)

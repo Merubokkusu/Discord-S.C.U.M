@@ -306,6 +306,11 @@ bot.stickerPackID('749043879713701898')
 ```
 
 ## User
+##### get (my) data
+```info(with_analytics_token=None)```
+```python
+bot.info(True)
+```
 ##### send friend request
 ```requestFriend(userID)```
 ```requestFriend(username+"#"+discriminator)```
@@ -328,10 +333,15 @@ bot.removeRelationship(ID)
 ```python
 bot.blockUser(ID)
 ```
-##### set status
+##### set status ("online", "idle", "dnd", "invisible", None, or "some custom status")
 ```setStatus(status)```
 ```python
-bot.setStatus(status)
+bot.setStatus("online")
+bot.setStatus("idle")
+bot.setStatus("dnd")
+bot.setStatus("invisible")
+bot.setStatus(None)
+bot.setStatus("some custom status here")
 ```
 ##### set username
 ```setUsername(username)```
@@ -358,11 +368,6 @@ bot.setDiscriminator('0001')
 ```python
 bot.getProfile('110101010101010101')
 ```
-##### get my data
-```me(with_analytics_token=None)```
-```python
-bot.me(True)
-```
 ##### get user affinities
 ```getUserAffinities()```
 ```python
@@ -383,7 +388,148 @@ bot.getMentions()
 ```python
 bot.removeMentionFromInbox('5898989898989898')
 ```
-
+##### set hypesquad badge
+```setHypesquad(house)```
+```python
+bot.setHypesquad("bravery")
+bot.setHypesquad("brilliance")
+bot.setHypesquad("balance")
+```
+### leave hypesquad
+```leaveHypesquad()```
+```python
+bot.leaveHypesquad()
+```
+### set locale
+```setLocale(locale)```
+```python
+bot.setLocale("en-US")
+```
+### enable 2FA (without sms)
+```python
+#optional: you can set a custom TOTP secret by either doing bot._Client__totp_secret = "whateversecretidk" or passing it in as a param when initializing your client
+bot.enable2FA()
+#now, to calculate the Time-Based code, you can do:
+bot.calculateTOTPcode(secret = bot._Client__totp_secret)
+#or, if you'd like to stick to an authenticator app and a qr code:
+bot.getTOTPurl(secret = bot._Client__totp_secret) #just paste this url into any qr-code generator. Or, you can just save the url.
+```
+### get backup codes
+```getBackupCodes(regenerate=False)```
+```python
+bot.getBackupCodes()
+```
+### disable 2FA
+```disable2FA(code="calculate", clearSecretAfter=False)```
+```python
+bot.disable2FA('123456')
+```
+### get RTC regions
+```getRTCregions()```
+```python
+bot.getRTCregions()
+```
+### set AFK timeout
+```setAFKtimeout(timeout_seconds)```
+```python
+bot.setAFKtimeout(500)
+```
+### set theme ("dark" or "light")
+```setTheme(theme)```
+```python
+bot.setTheme("dark")
+```
+### set message display ("cozy" or "compact")
+```setMessageDisplay(CozyOrCompact)```
+```python
+bot.setMessageDisplay("cozy")
+```
+### enable developer mode
+```enableDevMode(enable)```
+```python
+bot.enableDevMode(True)
+```
+### activate application test mode
+```activateApplicationTestMode(applicationID)```
+```python
+bot.activateApplicationTestMode('10101010101010')
+```
+### get application data
+```getApplicationData(applicationID, with_guild=False)```
+```python
+bot.getApplicationData('10101010101010')
+```
+### enable inline media
+```enableInlineMedia(enable)```
+```python
+bot.enableInlineMedia(True)
+```
+### preview large images
+```enableLargeImagePreview(enable)```
+```python
+bot.enableLargeImagePreview(True)
+```
+### enable gif auto-play
+```enableGifAutoPlay(enable)```
+```python
+bot.enableGifAutoPlay(True)
+```
+### enable link previewing
+```enableLinkPreview(enable)```
+```python
+bot.enableLinkPreview(True)
+```
+### render reactions
+```enableReactionRendering(enable)```
+```python
+bot.enableReactionRendering(True)
+```
+### enable animated emoji
+```enableAnimatedEmoji(enable)```
+```python
+bot.enableAnimatedEmoji(True)
+```
+### enable emoticon conversion
+```enableEmoticonConversion(enable)```
+```python
+bot.enableEmoticonConversion(True)
+```
+### set sticker animation ("always", "interaction", or "never")
+```setStickerAnimation(setting)```
+```python
+bot.setStickerAnimation("interaction")
+```
+### enable TTS command
+```enableTTS(enable)```
+```python
+bot.enableTTS(True)
+```
+### get billing history
+```getBillingHistory(limit=20)```
+```python
+bot.getBillingHistory()
+```
+### get payment sources
+```getPaymentSources()```
+```python
+bot.getPaymentSources()
+```
+### get billing subscriptions
+```getBillingSubscriptions()```
+```python
+bot.getBillingSubscriptions()
+```
+### get stripe client secret
+```getStripeClientSecret()```
+```python
+bot.getStripeClientSecret()
+```
+### logout
+```logout(provider=None, voip_provider=None)```
+```python
+bot.logout()
+```
+### session data (data sent to client in the READY and READY_SUPPLEMENTAL gateway events)
 ##### session (user data)
 ```python
 bot.gateway.session.user
@@ -397,7 +543,7 @@ bot.gateway.session.readStates
 bot.gateway.session.analyticsToken
 bot.gateway.session.connectedAccounts
 ```
-##### session (settings)
+##### session (user settings (and user guild settings))
 ```python
 bot.gateway.session.userSettings
 bot.gateway.session.optionsForUserSettings
@@ -436,23 +582,23 @@ bot.gateway.session.DM(DMID).data
 bot.gateway.session.DM(DMID).recipients
 ```
 ## Guild
-##### get guild info from invite code
+### get guild info from invite code
 ```getInfoFromInviteCode(inviteCode)```
 ```python
 bot.getInfoFromInviteCode('1a1a1')
 ```
-##### join guild using invite code
+### join guild using invite code
 ```joinGuild(inviteCode)```
 ```python
 bot.joinGuild('1a1a1')
 ```
-##### kick user
+### kick user
 ```kick(guildID,userID,reason="")```
 ```python
 bot.kick('guildID00000000000','userID11111111111','weeeee')
 bot.kick('guildID00000000000','userID11111111111')
 ```
-##### ban user
+### ban user
 ```ban(guildID,userID,deleteMessagesDays=0,reason="")```
 ```python
 bot.ban('guildID00000000000','userID11111111111',7,'weeeee')
@@ -460,12 +606,17 @@ bot.ban('guildID00000000000','userID11111111111',7)
 bot.ban('guildID00000000000','userID11111111111',reason='weeeee')
 bot.ban('guildID00000000000','userID11111111111')
 ```
-##### lookup userID in guild \*note: this api endpoint isn't normally used by user accounts
+### member-verification (where you have to agree to a list of rules; some servers have it)
+```python
+memberVerificationData = bot.getMemberVerificationData(guildID="10101010101010").json()
+bot.agreeGuildRules(guildID="10101010101010", form_fields=memberVerificationData["form_fields"], version=memberVerificationData["version"])
+```
+### lookup userID in guild \*note: this api endpoint isn't normally used by user accounts
 ```getGuildMember(guildID,userID)```
 ```python
 bot.getGuildMember('guildID00000000000','userID11111111111')
 ```
-##### fetch guild members
+### fetch guild members
 ```gateway.fetchMembers(guild_id, channel_id, method="overlap", keep=[], considerUpdates=True, indexStart=0, reset=True, wait=None, priority=0)```
 ```python
 bot.gateway.fetchMembers('guildID00000000000', 'channelID00000000000') #all this does is insert a command to fetch members
@@ -532,14 +683,14 @@ params:
 - priority (int):
   - tells discum where to insert the fetchMembers command. Default priority is 0 for fetchMembers.
 
-##### check member fetching status
+### check member fetching status
 ```gateway.finishedMemberFetching(guild_id)```
 ```python
 bot.gateway.finishedMemberFetching('guildID00000000000') #returns a boolean
 ```
 for reference, member fetching status data is kept in the ```bot.memberFetchingStatus``` variable.
 
-##### session
+### session data (data sent to client in the READY and READY_SUPPLEMENTAL gateway events)
 ```python
 bot.gateway.session.guilds
 bot.gateway.session.guildExperiments

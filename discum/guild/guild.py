@@ -53,7 +53,7 @@ class Guild(object):
 			url += "&invite_code="+invite_code
 		return Wrapper.sendRequest(self.s, 'get', url, log=self.log)
 
-	def agreeGuildRules(self, guildID, form_fields, version="2021-01-05T01:44:32.163000+00:00"):
+	def agreeGuildRules(self, guildID, form_fields, version="2021-01-31T02:41:24.540000+00:00"):
 		url = "https://discord.com/api/v8/guilds/"+guildID+"/requests/@me"
 		form_fields[0]['response'] = True
 		body = {"version":version, "form_fields":json.dumps(form_fields)}

@@ -30,8 +30,8 @@ pip install discum
 ```discum.Client(email="", password="", secret="", code="", token="", proxy_host=None, proxy_port=None, user_agent="random", log=True)```      
 \* note: discord is starting to (sometimes) require captchas for the login (even when not using proxies). Therefore, it's recommended that you provide the email, password, and token (or just the token if you're not using the profile-editing functions).
 ```python
->>> import discum
->>> bot = discum.Client(email='email@email.com',password='password', log=False)
+import discum
+bot = discum.Client(email='email@email.com',password='password', log=False)
 ```
 #### Logging
 Logging essentially makes discum's communications transparent. All sent data and received (decompressed) data is printed. Purple texts are sent data and green texts are received data. Uncolored texts (usually black or white, depending on your terminal settings) are extra logs.

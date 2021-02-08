@@ -1,5 +1,5 @@
 # DisCum
-![version](https://img.shields.io/badge/github%20version-1.0.0-blue) [![python versions](https://img.shields.io/badge/python-2.7%20%7C%203.5%20%7C%203.6%20%7C%203.7%20%7C%203.8-blue)](https://github.com/Merubokkusu/Discord-S.C.U.M)       
+![version](https://img.shields.io/badge/github%20version-1.0.1-blue) [![python versions](https://img.shields.io/badge/python-2.7%20%7C%203.5%20%7C%203.6%20%7C%203.7%20%7C%203.8-blue)](https://github.com/Merubokkusu/Discord-S.C.U.M)       
 [![PyPI version](https://badge.fury.io/py/discum.svg)](https://badge.fury.io/py/discum) [![python versions](https://img.shields.io/badge/python-2.7%20%7C%203.5%20%7C%203.6%20%7C%203.7%20%7C%203.8-green)](https://pypi.org/project/discum)      
 A simple, easy to use, non-restrictive Discord API Wrapper for Selfbots/Userbots written in Python.       
 -using requests and websockets :)

@@ -1,4 +1,44 @@
 # Changelog
+# 1.0.1
+### Added
+- more http endpoints:
+  ```python
+  bot.setHypesquad(house)
+  bot.leaveHypesquad()
+  bot.setLocale(locale)
+  bot.calculateTOTPcode(secret="default")
+  bot.getTOTPurl(secret): #use this to store your totp secret/qr pic; btw url format is otpauth://totp/Discord
+  bot.enable2FA()
+  bot.disable2FA(code="calculate", clearSecretAfter=False)
+  bot.getRTCregions()
+  bot.setAFKtimeout(timeout_seconds)
+  bot.setTheme(theme)
+  bot.setMessageDisplay(CozyOrCompact)
+  bot.enableDevMode(enable)
+  bot.activateApplicationTestMode(applicationID)
+  bot.getApplicationData(applicationID, with_guild=False)
+  bot.getBackupCodes(regenerate=False)
+  bot.enableInlineMedia(enable)
+  bot.enableLargeImagePreview(enable)
+  bot.enableGifAutoPlay(enable)
+  bot.enableLinkPreview(enable)
+  bot.enableReactionRendering(enable)
+  bot.enableAnimatedEmoji(enable)
+  bot.enableEmoticonConversion(enable)
+  bot.setStickerAnimation(setting)
+  bot.enableTTS(enable)
+  bot.getBillingHistory(limit=20)
+  bot.getPaymentSources()
+  bot.getBillingSubscriptions()
+  bot.getStripeClientSecret()
+  bot.logout(provider=None, voip_provider=None)
+  bot.getMemberVerificationData(guildID, with_guild=False, invite_code=None)
+  bot.agreeGuildRules(guildID, form_fields, version="2021-01-31T02:41:24.540000+00:00")
+  ```
+- ability to login to accounts that have 2FA (either input code or secret) (no sms login support yet, however)
+### Changed
+- bot.setStatus accepts "online"/"idle"/"dnd"/"invisible" as inputs instead of 0/1/2/3
+- bot.me renamed to bot.info
 # 1.0.0
 ### Added
 - gateway functions/wraps structure

@@ -1,8 +1,33 @@
 # Changelog
 # 1.0.1
 ### Added
-- more http endpoints:
+- more 56 http api wraps:
   ```python
+  bot.login(email, password, undelete=False, captcha=None, source=None, gift_code_sku_id=None, secret="", code="")
+  bot.getXFingerprint()
+  bot.getBuildNumber()
+  bot.getSuperProperties(user_agent, buildnum="request")
+  bot.getGatewayUrl()
+  bot.getDiscordStatus()
+  bot.getDetectables()
+  bot.getOauth2Tokens()
+  bot.getVersionStableHash(underscore=None)
+  bot.bulkAck(data)
+  bot.getTrendingGifs(provider="tenor", locale="en-US", media_format="mp4")
+  bot.getStickers(directoryID="758482250722574376", store_listings=False, locale="en-US")
+  bot.getStickerFile(stickerID, stickerAsset)
+  bot.getStickerJson(stickerID, stickerAsset)
+  bot.getStickerPack(stickerPackID)
+  bot.setUsername(username)
+  bot.setEmail(email)
+  bot.setPassword(new_password)
+  bot.setDiscriminator(discriminator)
+  bot.getProfile(userID)
+  bot.info(with_analytics_token=None)
+  bot.getUserAffinities()
+  bot.getGuildAffinities()
+  bot.getMentions(limit=25, roleMentions=True, everyoneMentions=True)
+  bot.removeMentionFromInbox(messageID)
   bot.setHypesquad(house)
   bot.leaveHypesquad()
   bot.setLocale(locale)
@@ -36,9 +61,13 @@
   bot.agreeGuildRules(guildID, form_fields, version="2021-01-31T02:41:24.540000+00:00")
   ```
 - ability to login to accounts that have 2FA (either input code or secret) (no sms login support yet, however)
+- ability to send science requests (along with automatic (sequencial) client uuid calculation, client_send_timestamp, and client_track_timestamp if not inputted)
+- ability to parse client uuids (and have a good guess of when the client uuid was calculated and for which user id)
+- function to reply to messages
+- Embedder object initialization on client start
 ### Changed
 - bot.setStatus accepts "online"/"idle"/"dnd"/"invisible" as inputs instead of 0/1/2/3
-- bot.me renamed to bot.info
+- bot.sendMessage and bot.sendFile to allow for replies and stickers
 # 1.0.0
 ### Added
 - gateway functions/wraps structure

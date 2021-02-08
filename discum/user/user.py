@@ -226,7 +226,7 @@ class User(object):
 		body = {"convert_emoticons": enable}
 		return Wrapper.sendRequest(self.s, 'patch', url, body, log=self.log)
 
-	def stickerAnimation(self, setting):
+	def setStickerAnimation(self, setting):
 		url = self.discord+"users/@me/settings"
 		if setting.lower() == "always":
 			body = {"animate_stickers": 0}

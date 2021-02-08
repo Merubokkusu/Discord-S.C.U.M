@@ -63,7 +63,7 @@
 - ability to login to accounts that have 2FA (either input code or secret) (no sms login support yet, however)
 - ability to send science requests (along with automatic (sequencial) client uuid calculation, client_send_timestamp, and client_track_timestamp if not inputted)
 - ability to parse client uuids (and have a good guess of when the client uuid was calculated and for which user id)
-- function to reply to messages
+- function to reply to messages (bot.reply(...))
 - Embedder object initialization on client start
 ### Changed
 - bot.setStatus accepts "online"/"idle"/"dnd"/"invisible" as inputs instead of 0/1/2/3

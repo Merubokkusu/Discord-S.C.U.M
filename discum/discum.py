@@ -380,8 +380,8 @@ class Client:
     def enableEmoticonConversion(self, enable): #boolean, default=True
         return User(self.discord,self.s,self.log).enableEmoticonConversion(enable)
 
-    def stickerAnimation(self, setting): #string, default="always"
-        return User(self.discord,self.s,self.log).stickerAnimation(setting)
+    def setStickerAnimation(self, setting): #string, default="always"
+        return User(self.discord,self.s,self.log).setStickerAnimation(setting)
 
     def enableTTS(self, enable): #boolean, default=True
         return User(self.discord,self.s,self.log).enableTTS(enable)

@@ -135,6 +135,10 @@ class Event:
 		return self.response['t'] == 'GUILD_MEMBERS_CHUNK'
 
 	@property
+	def guild_member_removed(self): #only seems to get sent when you leave a guild (voluntarily or involuntarily)...but the server owner sees no such event? weird.
+		return self.response['t'] == 'GUILD_MEMBER_REMOVE'
+
+	@property
 	def role(self):
 		return self.response['t'] == 'GUILD_ROLE_CREATE'
 

@@ -42,11 +42,11 @@ from github (recommended):
 ```
 git clone https://github.com/Merubokkusu/Discord-S.C.U.M.git
 cd Discord-S.C.U.M
-python setup.py install               
+pip install .               
 ```
 or from PyPI:      
 ```python
-pip install discum 
+pip install discum -U
 ```               
 
 #### Prerequisites (installed automatically using above methods)

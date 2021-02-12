@@ -117,6 +117,9 @@ A: No. Discum only supports user accounts.
 Q: What's the difference between user/private API and BOT API?      
 A: User APIs are run by the official client. Many of these are not documented by discord. On the other hand, BOT APIs are run by BOT accounts and are documented by discord. So far, discum consists of primarily user API wraps (with the exception of the bot.getGuildMember(...) http api wrap).      
 
+Q: How to fix "\[SSL: CERTIFICATE_VERIFY_FAILED]" errors?
+A: https://stackoverflow.com/a/53310545/14776493
+
 Q: I'm getting ```KeyError: 'members'``` when running ```bot.gateway.session.guild(guild_ID).members```. Why?      
 A: You need to run bot.gateway.fetchMembers(...) and bot.gateway.run() first. See the docs and examples here: https://github.com/Merubokkusu/Discord-S.C.U.M/blob/master/docs/fetchingGuildMembers.md     
 

@@ -103,9 +103,6 @@ class GuildCombo(object):
 					else:
 						endFetching = True #ends fetching right after resp parsed
 				ranges = self.getRanges(index, multiplier) if not endFetching else [[0],[0]]
-				if not self.gatewayobj.finishedMemberFetching(guild_id) and (index-self.gatewayobj.memberFetchingStatus[guild_id][0])==1:
-					if wait!=None: time.sleep(wait)
-					self.updatePrevious(guild_id) #previous = current
 				#0th lazy request (separated from the rest because this happens "first")
 				if index == startIndex and not self.gatewayobj.session.guild(guild_id).unavailable:
 					self.updateCurrent(guild_id) #current = previous+1
@@ -124,6 +121,9 @@ class GuildCombo(object):
 										member_id, member_properties = self.reformat_member(item, keep=keep)
 										self.gatewayobj.session.guild(guild_id).updateOneMember(member_id, member_properties)
 										if self.gatewayobj.log: print('<SYNC> updated member '+member_id)
+								if not self.gatewayobj.finishedMemberFetching(guild_id) and (index-self.gatewayobj.memberFetchingStatus[guild_id][0])==1:
+									if wait!=None: time.sleep(wait)
+									self.updatePrevious(guild_id) #previous = current
 							elif i == 'UPDATE' and considerUpdates: #this really only becomes useful for large guilds (because fetching members can take a quite some time for those guilds)
 								for key in parsed['updates'][ind]:
 									if key == 'member':

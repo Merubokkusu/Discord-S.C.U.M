@@ -129,9 +129,9 @@ Suppose you're in a guild with 1000 members and want to fetch the member list ba
    The first one looks like an overlap method while the second looks like a no-overlap method. However, since we're fetching the memberlist backwards, we cannot   
    use 100 and 200 for the methods. Instead, we need a list of multipliers (method) and a startIndex.         
    To easily calculate these params, either do this:        
-   ```startIndex, method = bot.gateway.getMemberFetchingParams([800, 700, 600, 500, 400, 300, 200, 100, 0])```
-   or
-   ```startIndex, method = bot.gateway.getMemberFetchingParams([800, 600, 400, 200, 0])```
+   ```startIndex, method = bot.gateway.getMemberFetchingParams([800, 700, 600, 500, 400, 300, 200, 100, 0])```        
+   or        
+   ```startIndex, method = bot.gateway.getMemberFetchingParams([800, 600, 400, 200, 0])```        
    depending on how to want to request for members.        
    Then, simply do         
    ```

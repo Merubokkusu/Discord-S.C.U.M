@@ -136,6 +136,6 @@ Suppose you're in a guild with 1000 members and want to fetch the member list ba
    Then, simply do         
    ```
    bot.gateway.fetchMembers("guildID","channelID",startIndex=startIndex, method=method)
-   bot.gateway.run
+   bot.gateway.run()
    ```
    

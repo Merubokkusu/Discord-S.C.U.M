@@ -7,6 +7,7 @@ Alright so this really needs a page of its own because it's special. There's no 
 - [Calculating # of fetchable members](#calculating--of-fetchable-members)
 - [Examples](#examples)
 - [Efficiency & Effectiveness](#efficiency--effectiveness)
+-
 
 ### what happens:
 1) the member-fetching tracker for that particular guild gets reset
@@ -33,7 +34,7 @@ def memberTest(resp):
 	guild_id = '322850917248663552'
 	channel_id = '754536220826009670'
 	if resp.event.ready_supplemental:
-		bot.gateway.fetchMembers(guild_id, channel_id)
+		bot.gateway.fetchMembers(guild_id, channel_id) #put wait=1 in params if you'd like to wait 1 second inbetween requests
 	if bot.gateway.finishedMemberFetching(guild_id):
 		lenmembersfetched = len(bot.gateway.session.guild(guild_id).members)
 		print(str(lenmembersfetched)+' members fetched')
@@ -51,7 +52,7 @@ import discum
 bot = discum.Client(token='ur token')
 guild_id = '322850917248663552'
 channel_id = '754536220826009670'
-bot.gateway.fetchMembers(guild_id, channel_id)
+bot.gateway.fetchMembers(guild_id, channel_id) #put wait=1 in params if you'd like to wait 1 second inbetween requests
 @bot.gateway.command
 def memberTest(resp):
 	if bot.gateway.finishedMemberFetching('322850917248663552'):
@@ -71,7 +72,7 @@ It's possible that fetchMembers doesn't fetch all fetchable members. Don't worry
 #bot = discum.Client(token='ur token')
 guild_id = '322850917248663552'
 channel_id = '754536220826009670'
-bot.gateway.fetchMembers(guild_id, channel_id, method="overlap", indexStart=50, reset=False) #overlap method means multiplier is 100, reset is False because you want to keep previous data
+bot.gateway.fetchMembers(guild_id, channel_id, method="overlap", startIndex=50, reset=False) #overlap method means multiplier is 100, reset is False because you want to keep previous data
 @bot.gateway.command
 def memberTest(resp):
 	if bot.gateway.finishedMemberFetching('322850917248663552'):
@@ -91,7 +92,7 @@ for memberID in bot.gateway.session.guild('322850917248663552').members:
 ### Efficiency & Effectiveness
 Alright so technically there are 2 ways to get the member list. The first way is through websockets (which is what discum uses). The second way is through html scraping (which I don't recommend since I imagine that'd be slower).
   
-Using a slightly-modified version of discum (just 6 lines extra to track times and member counts), these stats were collected on discum's fetchMembers's efficiency and effectiveness:
+Using a slightly-modified version of discum (just 6 lines extra to track times and member counts), these stats were collected on discum's fetchMembers's efficiency and effectiveness (note, wait time was set to 0 for these tests):
 
 |      | overlap&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; | no overlap |
 |------|---------|------------|
@@ -99,3 +100,42 @@ Using a slightly-modified version of discum (just 6 lines extra to track times a
 | 128k |![b](https://raw.githubusercontent.com/Merubokkusu/Discord-S.C.U.M/master/docs/memberFetchingStats/128ka.jpg)    |![d](https://raw.githubusercontent.com/Merubokkusu/Discord-S.C.U.M/master/docs/memberFetchingStats/128kb.jpg)       |
 
 As you can see, the "no overlap" method fetches 200 members/second while the "overlap" method fetches 100 members/second. However, "no overlap" is also a lot less effective. After doing a few more tests with both methods ("overlap" and "no overlap"), "no overlap" shows a lot less consistency/reliability than "overlap".
+
+
+### fetching the member list backwards
+(and in pretty much any "style" you want)       
+So, this is more proof-of-concept, but here's a short explanation.         
+Suppose you're in a guild with 1000 members and want to fetch the member list backwards (I dunno...more undetectable since noone fetches it backwards? lol).        
+   Since discum requests members in 200-member chunks, you'll either have to request for the following range groups (safer):        
+   ```
+   [[0,99],[800,899],[900,999]] #target start: 800
+   [[0,99],[700,799],[800,899]] #target start: 700
+   [[0,99],[600,699],[700,799]] #target start: 600
+   [[0,99],[500,599],[600,699]] #target start: 500
+   [[0,99],[400,499],[500,599]] #target start: 400
+   [[0,99],[300,399],[400,499]] #target start: 300
+   [[0,99],[200,299],[300,399]] #target start: 200
+   [[0,99],[100,199],[200,299]] #target start: 100
+   [[0,99],[100,199]] #target start: 0
+   ```
+   or the following range groups (faster):        
+   ```
+   [[0,99],[800,899],[900,999]] #target start: 800
+   [[0,99],[600,699],[700,799]] #target start: 600
+   [[0,99],[400,499],[500,599]] #target start: 400
+   [[0,99],[200,299],[300,399]] #target start: 200
+   [[0,99],[100,199]] #target start: 0
+   ```
+   The first one looks like an overlap method while the second looks like a no-overlap method. However, since we're fetching the memberlist backwards, we cannot   
+   use 100 and 200 for the methods. Instead, we need a list of multipliers (method) and a startIndex.         
+   To easily calculate these params, either do this:        
+   ```startIndex, method = bot.gateway.getMemberFetchingParams([800, 700, 600, 500, 400, 300, 200, 100, 0])```
+   or
+   ```startIndex, method = bot.gateway.getMemberFetchingParams([800, 600, 400, 200, 0])```
+   depending on how to want to request for members.        
+   Then, simply do         
+   ```
+   bot.gateway.fetchMembers("guildID","channelID",startIndex=startIndex, method=method)
+   bot.gateway.run
+   ```
+   

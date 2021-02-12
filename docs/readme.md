@@ -10,7 +10,7 @@ __________
 ___________
 # Overview:
 
-### 292 functions:      
+### 296 functions:      
 ```
 # client initialization
 discum.Client(email="", password="", secret="", code="", token="", proxy_host=None, proxy_port=None, user_agent="random", log=True)
@@ -101,8 +101,11 @@ bot.getStripeClientSecret()
 bot.logout(provider=None, voip_provider=None)
 bot.getInfoFromInviteCode(inviteCode)
 bot.joinGuild(inviteCode)
+bot.leaveGuild(guildID)
+bot.createInvite(channelID, max_age_seconds=False, max_uses=False, grantTempMembership=False, checkInvite="", targetType="")
 bot.kick(guildID,userID,reason="")
 bot.ban(guildID,userID,deleteMessagesDays=0,reason="")
+bot.revokeBan(guildID, userID)
 bot.getGuildMember(guildID,userID)
 bot.getMemberVerificationData(guildID, with_guild=False, invite_code=None)
 bot.agreeGuildRules(guildID, form_fields, version="2021-01-31T02:41:24.540000+00:00")
@@ -308,7 +311,8 @@ resp.event.webhooks_updated
 
 ## other functions
 resp.parsed.auto()
-bot.gateway.fetchMembers(guild_id, channel_id, method="overlap", keep=[], considerUpdates=True, reset=True, wait=None, priority=0)
+bot.gateway.fetchMembers(guild_id, channel_id, method="overlap", keep=[], considerUpdates=True, startIndex=0, stopIndex=1000000000, reset=True, wait=None, priority=0)
+bot.gateway.getMemberFetchingParams(targetRangeStarts)
 bot.gateway.finishedMemberFetching(guild_id)
 bot.gateway.request.lazyGuild(guild_id, channel_ranges, typing=None, threads=None, activities=None, members=None)
 bot.gateway.request.searchGuildMembers(guild_ids, query, limit=10, presences=True)

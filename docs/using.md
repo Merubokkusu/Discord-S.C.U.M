@@ -20,11 +20,11 @@ from Github (you can also select a specific release version: https://github.com/
 ```
 git clone https://github.com/Merubokkusu/Discord-S.C.U.M.git
 cd Discord-S.C.U.M
-python setup.py install
+pip install .
 ```
 or from pypi:
 ```
-pip install discum
+pip install discum -U
 ```
 #### Initiate client
 ```discum.Client(email="", password="", secret="", code="", token="", proxy_host=None, proxy_port=None, user_agent="random", log=True)```      
@@ -592,6 +592,16 @@ bot.getInfoFromInviteCode('1a1a1')
 ```python
 bot.joinGuild('1a1a1')
 ```
+### leave guild
+```leaveGuild(guildID)```
+```python
+bot.leaveGuild('guildID00000000000')
+```
+### create invite
+```createInvite(channelID, max_age_seconds=False, max_uses=False, grantTempMembership=False, checkInvite="", targetType="")```
+```python
+bot.createInvite('channelID00000000000')
+```
 ### kick user
 ```kick(guildID,userID,reason="")```
 ```python
@@ -606,6 +616,11 @@ bot.ban('guildID00000000000','userID11111111111',7)
 bot.ban('guildID00000000000','userID11111111111',reason='weeeee')
 bot.ban('guildID00000000000','userID11111111111')
 ```
+### unban user
+```revokeBan(guildID, userID)```
+```python
+bot.revokeBan('guildID00000000000','userID11111111111')
+```
 ### member-verification (where you have to agree to a list of rules; some servers have it)
 ```python
 memberVerificationData = bot.getMemberVerificationData(guildID="10101010101010").json()
@@ -617,7 +632,7 @@ bot.agreeGuildRules(guildID="10101010101010", form_fields=memberVerificationData
 bot.getGuildMember('guildID00000000000','userID11111111111')
 ```
 ### fetch guild members
-```gateway.fetchMembers(guild_id, channel_id, method="overlap", keep=[], considerUpdates=True, indexStart=0, reset=True, wait=None, priority=0)```
+```gateway.fetchMembers(guild_id, channel_id, method="overlap", keep=[], considerUpdates=True, startIndex=0, stopIndex=1000000000, reset=True, wait=None, priority=0)```
 ```python
 bot.gateway.fetchMembers('guildID00000000000', 'channelID00000000000') #all this does is insert a command to fetch members
 bot.gateway.run() #you still need to run the gateway to fetch the members
@@ -638,9 +653,9 @@ params:
     - 100 members per request
     - fetches member list by requesting for overlapped member ranges (think of it like a sliding window). The member ranges in order of requested are
       ```
-      [0,99][100,199]
-      [100,199][200,299]
-      [200,299][300,399]
+      [[0,99],[100,199]]
+      [[0,99],[100,199],[200,299]]
+      [[0,99],[200,299],[300,399]]
       ...
       ```
     - this is how the official discord client fetches the member sidebar (as the user scrolls through the member list)
@@ -648,9 +663,9 @@ params:
     - 200 members per request
     - fetches member list by requesting for non-overlapped member ranges. The member ranges in order of requested are
       ```
-      [0,99][100,199]
-      [200,299][300,399]
-      [400,499][500,599]
+      [[0,99],[100,199]]
+      [[0,99],[200,299],[300,399]]
+      [[0,99],[400,499],[500,599]]
       ...
       ```
     - 2 times faster than "overlap" method. However, it's more likely that you'll miss members due to nickname changes and presence updates.
@@ -674,14 +689,30 @@ params:
 - considerUpdates (boolean):
   - presence updates for users come in GUILD_MEMBER_LIST_UPDATE type UPDATE events. For massive guilds (where fetching members can take a while), this can provide updated presence info (only while fetchMembers is running).
   - this param is useless if 'presence' is not in the keep list
-- indexStart (integer):
+- startIndex (integer):
   - what index to start at. This is useful if fetchMembers doesn't fetch all fetchable members (usually due to rate limiting)
+- stopIndex (integer):
+  - what index to stop right before. The stop index is exclusive (like in list slice notation).
 - reset (boolean):
   - if you'd like to fetchMembers multiple times without clearing the current member list, set this is False
 - wait (float/None):
   - puts a wait time (in seconds) between member fetching requests to prevent getting rate limited
 - priority (int):
   - tells discum where to insert the fetchMembers command. Default priority is 0 for fetchMembers.
+
+### get member fetching params
+This is a proof-of-concept to show that you can completely control member-requesting behavior in the fetchMembers function.
+```python
+startIndex, method = bot.gateway.getMemberFetchingParams([600, 500, 400])
+bot.gateway.fetchMembers("guildID","channelID",startIndex=startIndex, method=method, wait=3)
+```
+The above code will make requests for the following 3 range groups:
+```
+[[0,99],[600,699],[700,799]] #target start: 600
+[[0,99],[500,599],[600,699]] #target start: 500
+[[0,99],[400,499],[500,599]] #target start: 400
+```
+For more info, check out https://github.com/Merubokkusu/Discord-S.C.U.M/blob/master/docs/fetchingGuildMembers.md#fetching-the-member-list-backwards
 
 ### check member fetching status
 ```gateway.finishedMemberFetching(guild_id)```

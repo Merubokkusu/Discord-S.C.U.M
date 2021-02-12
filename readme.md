@@ -42,7 +42,7 @@ from github (recommended):
 ```
 git clone https://github.com/Merubokkusu/Discord-S.C.U.M.git
 cd Discord-S.C.U.M
-pip install .               
+pip install .
 ```
 or from PyPI:      
 ```python

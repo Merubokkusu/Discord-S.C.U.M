@@ -412,6 +412,14 @@ class Client:
     def joinGuild(self,inviteCode):
         return Guild(self.discord,self.s,self.log).joinGuild(inviteCode)
 
+    #leave guild
+    def leaveGuild(self, guildID):
+        return Guild(self.discord,self.s,self.log).leaveGuild(guildID)
+
+    #create invite
+    def createInvite(self, channelID, max_age_seconds=False, max_uses=False, grantTempMembership=False, checkInvite="", targetType=""):
+        return Guild(self.discord,self.s,self.log).createInvite(channelID, max_age_seconds, max_uses, grantTempMembership, checkInvite, targetType)
+
     #kick a user
     def kick(self,guildID,userID,reason=""):
         return Guild(self.discord,self.s,self.log).kick(guildID,userID,reason)
@@ -419,6 +427,10 @@ class Client:
     #ban a user
     def ban(self,guildID,userID,deleteMessagesDays=0,reason=""):
         return Guild(self.discord,self.s,self.log).ban(guildID,userID,deleteMessagesDays,reason)
+
+    #unban a user
+    def revokeBan(self, guildID, userID):
+        return Guild(self.discord,self.s,self.log).revokeBan(guildID, userID)
 
     #look up a user in a guild
     def getGuildMember(self,guildID,userID):

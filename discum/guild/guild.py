@@ -24,6 +24,23 @@ class Guild(object):
 		url = self.discord+"invites/"+inviteCode
 		return Wrapper.sendRequest(self.s, 'post', url, log=self.log)
 
+	def leaveGuild(self, guildID):
+		url = self.discord+"users/@me/guilds/"+guildID
+		return Wrapper.sendRequest(self.s, 'delete', url, log=self.log)
+
+	def createInvite(self, channelID, max_age_seconds, max_uses, grantTempMembership, checkInvite, targetType): #has to be a channel thats in a guild. also checkInvite and targetType are basically useless.
+		url = self.discord+"channels/"+channelID+"/invites"
+		if max_age_seconds == False:
+			max_age_seconds = 0
+		if max_uses == False:
+			max_uses = 0
+		body = {"max_age": max_age_seconds, "max_uses": max_uses, "temporary": grantTempMembership}
+		if checkInvite != "":
+			body["validate"] = checkInvite
+		if targetType != "":
+			body["target_type"] = targetType
+		return Wrapper.sendRequest(self.s, 'post', url, body, log=self.log)
+
 	'''
 	server moderation
 	'''
@@ -38,9 +55,15 @@ class Guild(object):
 		body = {"delete_message_days": str(deleteMessagesDays), "reason": reason}
 		return Wrapper.sendRequest(self.s, 'put', url, body, log=self.log)
 
+	def revokeBan(self, guildID, userID):
+		url = self.discord+"guilds/"+guildID+"/bans/"+userID
+		return Wrapper.sendRequest(self.s, 'delete', url, log=self.log)
+
+
+
 	#lookup a user in a guild. thx Echocage for finding this api endpoint
 	'''Note, user clients do not run this api request, however it currently works without a problem. 
-	Once discum's gatewayserver is improved, we'll add the actual api to discum (to best mimic the web client)
+	Once the equivalent gateway command/request is added, the getGuildMember function will be removed from here.
 	'''
 	def getGuildMember(self, guildID, userID):
 		url = self.discord+"/guilds/%s/members/%s" % (guildID, userID)
@@ -53,7 +76,7 @@ class Guild(object):
 			url += "&invite_code="+invite_code
 		return Wrapper.sendRequest(self.s, 'get', url, log=self.log)
 
-	def agreeGuildRules(self, guildID, form_fields, version="2021-01-31T02:41:24.540000+00:00"):
+	def agreeGuildRules(self, guildID, form_fields, version):
 		url = "https://discord.com/api/v8/guilds/"+guildID+"/requests/@me"
 		form_fields[0]['response'] = True
 		body = {"version":version, "form_fields":json.dumps(form_fields)}

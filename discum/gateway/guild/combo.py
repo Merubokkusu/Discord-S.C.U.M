@@ -8,6 +8,7 @@ class GuildCombo(object):
 	def __init__(self, gatewayobj):
 		self.gatewayobj = gatewayobj
 
+	#fetchMembers helper function
 	def reformat_member(self, memberdata, keep=[]): #memberdata comes in as a dict and leaves as a tuple (userID, memberdatareformatted). This is done to easily prevent duplicates in the member list when fetching.
 		allProperties = ['pending', 'deaf', 'hoisted_role', 'presence', 'joined_at', 'public_flags', 'username', 'avatar', 'discriminator', 'premium_since', 'roles', 'is_pending', 'mute', 'nick', 'bot']
 		if keep == None:
@@ -53,22 +54,35 @@ class GuildCombo(object):
 			del memberproperties['bot']
 		return userID, memberproperties
 
+	#fetchMembers helper function
 	def rangeCorrector(self, ranges): #just adds [0,99] at the beginning
 		if [0,99] not in ranges:
 			ranges.insert(0, [0,99])
 		return ranges
 
+	#fetchMembers helper function
 	def getIndex(self, guild_id):
-		return self.gatewayobj.memberFetchingStatus[guild_id]
+		return self.gatewayobj.memberFetchingStatus[guild_id][1]
 
+	#fetchMembers helper function
 	def getRanges(self, index, multiplier):
 		initialNum = int(index*multiplier)
 		return self.rangeCorrector([[initialNum, initialNum+99], [initialNum+100, initialNum+199]])
 
-	def fetchMembers(self, resp, guild_id, channel_id, method="overlap", keep=[], considerUpdates=True, indexStart=0, reset=True, wait=None): #process is a little simpler than it looks. Keep in mind that there's no actual api endpoint to get members so this is a bit hacky. However, the method used below mimics how the official client loads the member list.
+	#fetchMembers helper function
+	def updateCurrent(self, guild_id):
+		if not self.gatewayobj.finishedMemberFetching(guild_id): #yep still gotta check for this
+			self.gatewayobj.memberFetchingStatus[guild_id][1] = self.gatewayobj.memberFetchingStatus[guild_id][0]+1
+
+	#fetchMembers helper function
+	def updatePrevious(self, guild_id):
+		if not self.gatewayobj.finishedMemberFetching(guild_id):
+			self.gatewayobj.memberFetchingStatus[guild_id][0] = self.gatewayobj.memberFetchingStatus[guild_id][1]
+
+	def fetchMembers(self, resp, guild_id, channel_id, method, keep, considerUpdates, startIndex, stopIndex, reset, wait): #process is a little simpler than it looks. Keep in mind that there's no actual api endpoint to get members so this is a bit hacky. However, the method used below mimics how the official client loads the member list.
 		if self.gatewayobj.READY:
 			if self.gatewayobj.memberFetchingStatus.get(guild_id) == None: #request for lazy request
-				self.gatewayobj.memberFetchingStatus[guild_id] = indexStart
+				self.gatewayobj.memberFetchingStatus[guild_id] = [startIndex, startIndex] #format is [previous index, current index]. This format is useful for the wait parameter.
 				if not self.gatewayobj.session.guild(guild_id).hasMembers or reset:
 					self.gatewayobj.session.guild(guild_id).resetMembers() #reset
 				if len(self.gatewayobj.memberFetchingStatus["first"]) == 0:
@@ -77,8 +91,9 @@ class GuildCombo(object):
 				else:
 					self.gatewayobj.request.lazyGuild(guild_id, {channel_id: [[0,99]]}, typing=True, activities=True)
 			if self.gatewayobj.memberFetchingStatus.get(guild_id) != None and not self.gatewayobj.finishedMemberFetching(guild_id): #proceed with lazy requests
-				index = self.getIndex(guild_id)
-				#find multiplier (this dictates the way the member list requested for).
+				index = self.getIndex(guild_id) #index always has the current value
+				endFetching = False
+				#find multiplier (this dictates the way the member list requested for)
 				if method == "overlap": multiplier = 100
 				elif method == "no overlap": multiplier = 200
 				elif isinstance(method, int): multiplier = method
@@ -87,10 +102,14 @@ class GuildCombo(object):
 						multiplier = method[index]
 					else:
 						endFetching = True #ends fetching right after resp parsed
-				ranges = self.getRanges(index, multiplier)
-				#0th lazy request
-				if index == indexStart and not self.gatewayobj.session.guild(guild_id).unavailable:
-					self.gatewayobj.memberFetchingStatus[guild_id] += 1
+				ranges = self.getRanges(index, multiplier) if not endFetching else [[0],[0]]
+				if not self.gatewayobj.finishedMemberFetching(guild_id) and (index-self.gatewayobj.memberFetchingStatus[guild_id][0])==1:
+					if wait!=None: time.sleep(wait)
+					self.updatePrevious(guild_id) #previous = current
+				#0th lazy request (separated from the rest because this happens "first")
+				if index == startIndex and not self.gatewayobj.session.guild(guild_id).unavailable:
+					self.updateCurrent(guild_id) #current = previous+1
+					if wait!=None: time.sleep(wait)
 					self.gatewayobj.request.lazyGuild(guild_id, {channel_id: ranges})
 				elif resp.event.guild_member_list:
 					parsed = resp.parsed.guild_member_list_update()
@@ -98,8 +117,6 @@ class GuildCombo(object):
 						endFetching = False
 						for ind,i in enumerate(parsed['types']):
 							if i == 'SYNC':
-								if self.gatewayobj.memberFetchingStatus[guild_id]!="done" and (self.gatewayobj.memberFetchingStatus[guild_id] - index) == 0:
-									self.gatewayobj.memberFetchingStatus[guild_id] += 1
 								if len(parsed['updates'][ind]) == 0 and parsed['locations'][ind] in ranges[1:]: #checks if theres nothing in the SYNC data
 									endFetching = True
 								for item in parsed['updates'][ind]:
@@ -116,7 +133,7 @@ class GuildCombo(object):
 							elif i == 'INVALIDATE':
 								if parsed['locations'][ind] in ranges or parsed['member_count'] == 0:
 									endFetching = True
-						if ranges[-2][-1]>self.gatewayobj.session.guild(guild_id).memberCount or ranges[-1][-1]>self.gatewayobj.session.guild(guild_id).memberCount or endFetching: #putting whats most likely to happen first
+						if ranges==[[0],[0]] or index>=stopIndex or ranges[-2][-1]>self.gatewayobj.session.guild(guild_id).memberCount or ranges[-1][-1]>self.gatewayobj.session.guild(guild_id).memberCount or endFetching: #putting whats most likely to happen first
 							self.gatewayobj.memberFetchingStatus[guild_id] = "done"
 							self.gatewayobj.removeCommand(
 							    {
@@ -127,16 +144,15 @@ class GuildCombo(object):
 							            "method": method,
 							            "keep": keep,
 							            "considerUpdates": considerUpdates,
-							            "indexStart": indexStart,
+							            "startIndex": startIndex,
+							            "stopIndex": stopIndex,
 							            "reset": reset,
-							            "wait": wait,
+							            "wait": wait
 							        },
 							    }
-							)
-						elif self.gatewayobj.memberFetchingStatus[guild_id]!="done" and (self.gatewayobj.memberFetchingStatus[guild_id] - index) == 1:
-							index = self.getIndex(guild_id)
-							ranges = self.getRanges(index, multiplier)
-							if wait!=None: time.sleep(wait)
+							) #it's alright if you get a "not found in _after_message_hooks" error log. That's not an error for this situation.
+						elif not self.gatewayobj.finishedMemberFetching(guild_id) and index==self.gatewayobj.memberFetchingStatus[guild_id][0]:
+							self.updateCurrent(guild_id) #current = previous + 1
 							self.gatewayobj.request.lazyGuild(guild_id, {channel_id: ranges})
 
 	#the following 2 are test functions to show how the fetchMembers combo function works, might be removed in a later update

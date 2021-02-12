@@ -291,7 +291,20 @@ class GatewayServer:
     '''
     Guild/Server stuff
     '''
-    def fetchMembers(self, guild_id, channel_id, method="overlap", keep=[], considerUpdates=True, indexStart=0, reset=True, wait=None, priority=0):
+
+    def getMemberFetchingParams(self, targetRangeStarts): #more for just proof of concept. targetRangeStarts must not contain duplicates and must be a list of integers
+        targetRangeStarts = {i:1 for i in targetRangeStarts} #remove duplicates but preserve order
+        if targetRangeStarts.get(0)!=None and targetRangeStarts.get(100)!=None:
+            keys = list(targetRangeStarts)
+            if keys.index(100)<keys.index(0):
+                targetRangeStarts.pop(0) #needs to be removed or else fetchMembers will enter an infinite loop because of how discord responds to member list requests
+        startIndex = 1 #can't start at 0 because can't divide by 0. No need to specify a stop index since fetchMembers continues until end of multipliers
+        method = [0] #because startIndex is 1
+        for index,i in enumerate(targetRangeStarts):
+            method.append(i/(index+1))
+        return startIndex, method #return startIndex and multipliers
+
+    def fetchMembers(self, guild_id, channel_id, method="overlap", keep=[], considerUpdates=True, startIndex=0, stopIndex=1000000000, reset=True, wait=None, priority=0):
         if guild_id in self.memberFetchingStatus:
             del self.memberFetchingStatus[guild_id] #just resetting tracker on the specific guild_id
         self.command(
@@ -304,9 +317,10 @@ class GatewayServer:
                     "method": method,
                     "keep": keep,
                     "considerUpdates": considerUpdates,
-                    "indexStart": indexStart,
+                    "startIndex": startIndex,
+                    "stopIndex": stopIndex,
                     "reset": reset,
-                    "wait": wait,
+                    "wait": wait
                 },
             }
         )
@@ -316,7 +330,7 @@ class GatewayServer:
         return self.memberFetchingStatus.get(guild_id) == "done"
 
     '''
-    test stuff
+    test stuff (these show how to add combo functions)
     '''
     def testfunc(self):
         self.command({'function': GuildCombo(self).testfunc, 'priority': 0})

@@ -7,7 +7,7 @@ Alright so this really needs a page of its own because it's special. There's no 
 - [Calculating # of fetchable members](#calculating--of-fetchable-members)
 - [Examples](#examples)
 - [Efficiency & Effectiveness](#efficiency--effectiveness)
--
+- [POC: fetching the memberlist backwards](#fetching-the-member-list-backwards)
 
 ### what happens:
 1) the member-fetching tracker for that particular guild gets reset

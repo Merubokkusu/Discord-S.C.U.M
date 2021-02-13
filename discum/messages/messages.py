@@ -28,9 +28,7 @@ class Messages(object):
     def createDM(self,recipients):
         url = self.discord+"users/@me/channels"
         body = {"recipients": recipients}
-        response = Wrapper.sendRequest(self.s, 'post', url, body, log=self.log)
-        dmChannelID = json.loads(response.content)
-        return dmChannelID['id']
+        return Wrapper.sendRequest(self.s, 'post', url, body, log=self.log)
 
     #get messages
     def getMessages(self,channelID,num,beforeDate,aroundMessage): # num is between 1 and 100, beforeDate is a snowflake

@@ -72,11 +72,11 @@ bot.gateway.command(
     }
 )  
 ```
-```
+```python
 #remove function from gateway command list
 bot.gateway.removeCommand(function)
 ```
-```
+```python
 #clear gateway command list
 bot.gateway.clearCommands()
 ```

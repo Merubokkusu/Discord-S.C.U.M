@@ -17,7 +17,7 @@ def helloworld(resp):
         user = bot.gateway.session.user
         print("Logged in as {}#{}".format(user['username'], user['discriminator']))
     if resp.event.message:
-        message = resp.parsed.auto()
+        m = resp.parsed.auto()
         if m['content'] == 'turn me into a server':
             bot.sendMessage(m['channel_id'], 'reply to one of my messages and I will make you a server :)')
         if m['author']['id'] == bot.gateway.session.user['id']:

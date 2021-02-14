@@ -113,7 +113,7 @@ bot.getXFingerprint()
 ##### getBuildNumber
 ```getBuildNumber()```
 ```python
-bot.getBuildNumber()```
+bot.getBuildNumber()
 ```
 ##### getSuperProperties
 ```getSuperProperties(user_agent, buildnum="request")```

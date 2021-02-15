@@ -100,7 +100,7 @@ bot.gateway.run(auto_reconnect=True)
 - [X] Profile Editing (Name,Status,Avatar)
 - [X] On-Message (and other on-anything gateway) capabilities
 - [X] Getting guild members
-- [X] fix command list propagation (for loop -> while loop w/some modifications)
+- [X] fix command list traversal (for loop -> while loop w/some modifications)
 - [ ] add more http api wraps
 - [ ] Making phone calls, sending audio/video data thru those calls
 - [ ] Everything

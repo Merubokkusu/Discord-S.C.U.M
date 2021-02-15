@@ -13,7 +13,7 @@ def close_after_fetching(resp, guild_id):
 	if bot.gateway.finishedMemberFetching(guild_id):
 		lenmembersfetched = len(bot.gateway.session.guild(guild_id).members) #this line is optional
 		print(str(lenmembersfetched)+' members fetched') #this line is optional
-		bot.gateway.removeCommand(close_after_fetching)
+		bot.gateway.removeCommand({'function': close_after_fetching, 'params': {'guild_id': guild_id}})
 		bot.gateway.close()
 
 def get_members(guild_id, channel_id):

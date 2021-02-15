@@ -220,35 +220,48 @@ class GatewayServer:
             return func
         elif isinstance(func, dict): #because I can't figure out out to neatly pass params to decorators :(. Normal behavior still works; use as usual.\
             priority = func.pop('priority', -1)
-            self._after_message_hooks.insert(priority, func) #func here is a dict btw
+            self._after_message_hooks.insert(priority, func)
             return func['function']
 
-    #influenced by https://github.com/scrubjay55/Reddit_ChatBot_Python/blob/master/Reddit_ChatBot_Python/WebSockClient.py (Apache License 2.0)
+    #kinda influenced by https://github.com/scrubjay55/Reddit_ChatBot_Python/blob/master/Reddit_ChatBot_Python/WebSockClient.py (Apache License 2.0)
     def _response_loop(self, resp):
-        copy = self._after_message_hooks[:]
-        for func in copy:
-            if func in self._after_message_hooks:
-                if callable(func): #just regular, input is a function
-                    func(resp)
-                elif isinstance(func, dict):
-                    function = func['function']
-                    params = func['params'] if 'params' in func else {}
-                    function(resp, **params)
-
-    def removeCommand(self, func):
-        try:
+        index = 0
+        while index<len(self._after_message_hooks):
+            func = self._after_message_hooks[index]
             if callable(func):
-                commandsCopy = [i['function'] if isinstance(i,dict) else i for i in self._after_message_hooks] #this contains a list of functions
-                ind = commandsCopy.index(func)
-                del self._after_message_hooks[ind]
-            else: #assume type dict. value error if not found anyways
-                self._after_message_hooks.remove(func)
+                func(resp)
+                if self._after_message_hooks[index] == None: #if function removed
+                    index -= 1
+            elif isinstance(func, dict):
+                function = func['function']
+                params = func['params'] if 'params' in func else {}
+                function(resp, **params)
+                if self._after_message_hooks[index] == None: #if function removed
+                    index -= 1
+            index += 1
+        self._after_message_hooks = list(filter(None, self._after_message_hooks)) #finally, remove all Nones from list (created from "removing" commands)
+
+    def removeCommand(self, func, exactMatch=True, allMatches=False):
+        try:
+            if exactMatch:
+                self._after_message_hooks.index(func) #for raising the value error
+                if allMatches:
+                    self._after_message_hooks = [None if i==func else i for i in self._after_message_hooks]
+                else: #simply remove first found
+                    self._after_message_hooks[self._after_message_hooks.index(func)] = None
+            else:
+                commandsCopy = [i if callable(i) else i['function'] for i in self._after_message_hooks] #list of just functions
+                commandsCopy.index(func) #for raising the value error
+                if allMatches:
+                    self._after_message_hooks = [None if i==func else j for (i,j) in zip(commandsCopy, self._after_message_hooks)]
+                else:
+                    self._after_message_hooks[commandsCopy.index(func)] = None
         except ValueError:
             if self.log: print('%s not found in _after_message_hooks.' % func)
             pass
 
     def clearCommands(self):
-        self._after_message_hooks = []
+        self._after_message_hooks = [None]*len(self._after_message_hooks)
 
     def resetSession(self): #just resets some variables that in-turn, resets the session (client side). Do not run this while running run().
         self.interval = None

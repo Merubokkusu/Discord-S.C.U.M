@@ -6,6 +6,7 @@
 ### Changed
 - fixed fetchMember's wait param (now waits a specified number of seconds after previous response)
 - modified http api request headers to better mimic web client
+- added brotli decompression support (other decompression types handled automatically by requests module)
 - gateway heartbeat now occurs exactly after that many milliseconds specified by HELLO response (used to occur 2 seconds less)
 - discum.Client(...) now accepts locale as a parameter
 

@@ -1,4 +1,14 @@
 # Changelog
+# 1.1.0
+### Added
+- 3 http api wraps: leaveGuild, createInvite, revokeBan
+- stopIndex param to fetchMembers (making guild member requesting behavior/style now completely controllable)
+### Changed
+- fixed fetchMember's wait param (now waits a specified number of seconds after previous response)
+- modified http api request headers to better mimic web client
+- gateway heartbeat now occurs exactly after that many milliseconds specified by HELLO response (used to occur 2 seconds less)
+- discum.Client(...) now accepts locale as a parameter
+
 # 1.0.1
 ### Added
 - more 56 http api wraps:

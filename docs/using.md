@@ -74,7 +74,9 @@ bot.gateway.command(
 ```
 ```python
 #remove function from gateway command list
-bot.gateway.removeCommand(function)
+bot.gateway.removeCommand(function, exactMatch=True, allMatches=False)
+#default is exact match and only remove first match
+#if you set exactMatch to False and just input a function (callable), removeCommand will ignore the params
 ```
 ```python
 #clear gateway command list

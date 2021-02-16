@@ -1,6 +1,6 @@
 # Discum
 A simple, easy to use, non-restrictive Discord API Wrapper for Selfbots/Userbots written in Python.        
-![version](https://img.shields.io/badge/latest%20version-1.0.1-blue) [![python versions](https://img.shields.io/badge/python-2.7%20%7C%203.5%20%7C%203.6%20%7C%203.7%20%7C%203.8%20%7C%203.9-blue)](https://github.com/Merubokkusu/Discord-S.C.U.M)
+![version](https://img.shields.io/badge/latest%20version-1.1.0-blue) [![python versions](https://img.shields.io/badge/python-2.7%20%7C%203.5%20%7C%203.6%20%7C%203.7%20%7C%203.8%20%7C%203.9-blue)](https://github.com/Merubokkusu/Discord-S.C.U.M)
 __________
 # Table of Contents
 - [Using discum](https://github.com/Merubokkusu/Discord-S.C.U.M/blob/master/docs/using.md) (make selfbots and userbots)
@@ -118,7 +118,7 @@ bot.parseClientUUID(client_uuid)
 ```
 # Gateway API
 bot.gateway.command()
-bot.gateway.removeCommand(function)
+bot.gateway.removeCommand(function, exactMatch=True, allMatches=False)
 bot.gateway.clearCommands()
 bot.gateway.run(auto_reconnect=True)
 bot.gateway.send(data)

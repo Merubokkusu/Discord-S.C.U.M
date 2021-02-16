@@ -149,7 +149,7 @@ class GatewayServer:
         response = self.decompress(message)
         if self.log: print('%s< %s%s' % (self.LogLevel.RECEIVE, response, self.LogLevel.DEFAULT))
         if response['op'] == self.OPCODE.HELLO: #only happens once, first message sent to client
-            self.interval = (response["d"]["heartbeat_interval"]-2000)/1000
+            self.interval = (response["d"]["heartbeat_interval"])/1000 #if this fails make an issue and I'll revert it back to the old method (slightly smaller wait time than heartbeat)
             thread.start_new_thread(self._heartbeat, ())
         elif response['op'] == self.OPCODE.INVALID_SESSION:
             if self.log: print("Invalid session.")

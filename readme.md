@@ -53,6 +53,7 @@ Note that older versions (specifically, before 0.3.1) do not mimic the official 
 #### Prerequisites (installed automatically using above methods)
 - requests
 - requests_toolbelt
+- brotli
 - websocket_client
 - filetype
 - ua-parser
@@ -124,6 +125,9 @@ A: https://stackoverflow.com/a/53310545/14776493
 
 Q: I'm getting ```KeyError: 'members'``` when running ```bot.gateway.session.guild(guild_ID).members```. Why?      
 A: You need to run bot.gateway.fetchMembers(...) and bot.gateway.run() first. See the docs and examples here: https://github.com/Merubokkusu/Discord-S.C.U.M/blob/master/docs/fetchingGuildMembers.md     
+
+Q: I'm getting ```requests.exceptions.ConnectionError: ('Connection aborted.', ConnectionResetError(54, 'Connection reset by peer'))```. How to fix?          
+A: Just run the command again and it should work.       
 
 ## Notes
 In recent years, token logging has become more common (as many people don't check code before they run it). I've seen many closed-source selfbots, and while surely some are well intentioned, others not so much. Discum (discord api wrapper) is open-sourced and organized to provide transparency, but even so, we encourage you to look at the code. Not only will looking at the code help you to better understand how discord's api is structured, but it'll also let you know exactly what you're running. If you have any questions about Discum, feel free to ask us.

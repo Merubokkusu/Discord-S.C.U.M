@@ -27,6 +27,7 @@ VERSION = '1.0.1'
 REQUIRED = [
     'requests',
     'requests_toolbelt',
+    'brotli',
     'filetype',
     'websocket_client',
     'ua-parser',

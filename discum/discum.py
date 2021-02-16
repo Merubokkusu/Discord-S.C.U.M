@@ -18,9 +18,10 @@ import requests
 import random
 
 class Client:
-    def __init__(self, email="", password="", secret="", code="", token="", proxy_host=None, proxy_port=None, user_agent="random", log=True):
+    def __init__(self, email="", password="", secret="", code="", token="", proxy_host=None, proxy_port=None, user_agent="random", locale="en-US", log=True):
         #step 1: vars
         self.log = log
+        self.locale = locale
         self.__user_token = token
         self.__user_email = email
         self.__user_password = password
@@ -39,40 +40,44 @@ class Client:
             self.__user_agent = random_user_agent.user_agent.UserAgent(limit=100).get_random_user_agent()
             if self.log: print('Randomly generated user agent: '+self.__user_agent)
         #step 3: http request headers
-        self.headers = {
-        	"Host": "discord.com",
-        	"User-Agent": self.__user_agent,
-        	"Accept": "*/*",
-        	"Accept-Language": "en-US",
-        	"Connection": "keep-alive",
-        	"keep-alive" : "timeout=10, max=1000",
-        	"TE": "Trailers",
-        	"Pragma": "no-cache",
-        	"Cache-Control": "no-cache",
-        	"Referer": "https://discord.com/channels/@me",
-        	"Content-Type": "application/json"
+        headers = {
+            "Origin": "https://discord.com",
+            "User-Agent": self.__user_agent,
+            "Accept": "*/*",
+            "Accept-Encoding": "gzip, deflate, br",
+            "Accept-Language": self.locale,
+            "Cache-Control": "no-cache",
+            "Pragma": "no-cache",
+            "Referer": "https://discord.com/channels/@me",
+            "Sec-Fetch-Dest": "empty",
+            "Sec-Fetch-Mode": "cors",
+            "Sec-Fetch_Site": "same-origin",
+            "Connection": "keep-alive",
+            "Content-Type": "application/json"
         }
         self.s = requests.Session()
-        self.s.headers.update(self.headers)
+        self.s.headers.update(headers)
         if self.__proxy_host != None: #self.s.proxies defaults to {}
             self.proxies = {
             'http': "http://" +  self.__proxy_host+':'+self.__proxy_port,
             'https': "https://" +  self.__proxy_host+':'+self.__proxy_port
             }
             self.s.proxies.update(self.proxies)
-        #step 4: super-properties (part of headers)
+        #step 4: cookies
+        self.s.cookies.update({"locale": self.locale})
+        #step 5: super-properties (part of headers)
         self.__super_properties = SuperProperties(self.s, buildnum="request", log=self.log).GetSuperProperties(self.__user_agent)
         self.s.headers.update({"X-Super-Properties": base64.b64encode(str(self.__super_properties).encode()).decode("utf-8")})
-        #step 5: token/authorization/fingerprint (also part of headers, except for fingerprint)
+        #step 6: token/authorization/fingerprint (also part of headers, except for fingerprint)
         if self.__user_token in ("",None,False): #assuming email and pass are given...
             self.__user_token, self.__xfingerprint = Login(self.s, self.discord, self.log).GetToken(email=email, password=password, secret=secret, code=code) #update token from "" to actual value
             time.sleep(1)            
         self.s.headers.update({"Authorization": self.__user_token}) #update headers
-        #step 6: gateway (object initialization)
+        #step 7: gateway (object initialization)
         self.gateway = GatewayServer(self.websocketurl, self.__user_token, self.__super_properties, self.__proxy_host, self.__proxy_port, self.log)
-        #step 7: embed (object initialization)
+        #step 8: embed (object initialization)
         self.Embedder = Embedder
-        #step 8: somewhat prepare for science events
+        #step 9: somewhat prepare for science events
         self.Science = ""
 
 ##########################################################
@@ -299,7 +304,9 @@ class Client:
         return User(self.discord,self.s,self.log).leaveHypesquad()
 
     def setLocale(self, locale):
-        return User(self.discord,self.s,self.log).setLocale(locale)
+        response = User(self.discord,self.s,self.log).setLocale(locale)
+        self.s.headers["Accept-Language"] = locale
+        self.s.cookies["locale"] = locale
 
     def calculateTOTPcode(self, secret="default"): #need to put this function here (instead of in login folder or user folder) because it updates the secret (if and only if secret == "")
         if secret == "default":

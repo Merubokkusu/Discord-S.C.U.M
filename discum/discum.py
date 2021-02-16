@@ -305,8 +305,9 @@ class Client:
 
     def setLocale(self, locale):
         response = User(self.discord,self.s,self.log).setLocale(locale)
-        self.s.headers["Accept-Language"] = locale
-        self.s.cookies["locale"] = locale
+        self.locale = locale
+        self.s.headers["Accept-Language"] = self.locale
+        self.s.cookies["locale"] = self.locale
 
     def calculateTOTPcode(self, secret="default"): #need to put this function here (instead of in login folder or user folder) because it updates the secret (if and only if secret == "")
         if secret == "default":

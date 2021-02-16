@@ -62,7 +62,7 @@ class Client:
             self.s.proxies.update(self.proxies)
         #step 4: super-properties (part of headers)
         self.__super_properties = SuperProperties(self.s, buildnum="request", log=self.log).GetSuperProperties(self.__user_agent)
-        self.s.headers.update({"X-Super-Properties": base64.b64encode(str(self.__super_properties).encode())})
+        self.s.headers.update({"X-Super-Properties": base64.b64encode(str(self.__super_properties).encode()).decode("utf-8")})
         #step 5: token/authorization/fingerprint (also part of headers, except for fingerprint)
         if self.__user_token in ("",None,False): #assuming email and pass are given...
             self.__user_token, self.__xfingerprint = Login(self.s, self.discord, self.log).GetToken(email=email, password=password, secret=secret, code=code) #update token from "" to actual value

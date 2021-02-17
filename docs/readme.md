@@ -13,8 +13,6 @@ Note, here's a list of functions you should tread carefully when using if you do
 - bot.createDM
 - bot.requestFriend
 - bot.joinGuild
-
-In general, try to space out your requests. If you get a 429 response (rate limit) then slow down (try not to get any 429 responses in the first place).
 ___________
 # Overview:
 

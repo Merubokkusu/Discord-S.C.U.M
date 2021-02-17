@@ -8,6 +8,14 @@ __________
 - [Extending discum](https://github.com/Merubokkusu/Discord-S.C.U.M/blob/master/docs/extending.md) (add discord API wraps)
 - [Reading discum](https://github.com/Merubokkusu/Discord-S.C.U.M/blob/master/docs/reading.md) (structure of discum)
 ___________
+## Some quick tips:
+Note, here's a list of functions you should tread carefully when using if you don't want to get your account disabled:        
+- bot.createDM
+- bot.requestFriend
+- bot.joinGuild
+
+In general, try to space out your requests. If you get a 429 response (rate limit) then slow down (try not to get any 429 responses in the first place).
+___________
 # Overview:
 
 ### 296 functions:      

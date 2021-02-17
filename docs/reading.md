@@ -13,4 +13,4 @@ This was removed because of the inconsistency: if deletions are live-updated, th
 So...this brings us to a method that hasn't been implemented yet into discum (I have the code for it, but it's kinda messy rn). The following live-updates additions and deletions (after the current point in time):            
 ![idea](https://github.com/Merubokkusu/Discord-S.C.U.M/blob/master/docs/tempReadingImages/idea.png)            
 Essentially what it does is uses a linked list, which gives it that kind of flexibility. But, idk, what do you all think? Which method would be the most useful and the least annoying?             
-Anyway, feel free to make an issue to let us know (and why you think so). Thanks! :)            
+Anyway, feel free to make an issue to let us know (and why you think so - with some use cases). Thanks! :)            

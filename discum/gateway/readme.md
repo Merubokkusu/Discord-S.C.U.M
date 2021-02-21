@@ -1,13 +1,14 @@
-There's a lot of data in session settings. Here's some code that tests every part of sessionsettings.py:
+There's a lot of data in session settings. Here's some code that tests (almost) every part of sessionsettings.py:
 ```python
 import discum
 bot = discum.Client(token='420tokentokentokentoken.token.tokentokentokentokentoken', log=False)
 
 @bot.gateway.command
-def test(resp, guildID='420', userID='420', categoryID='420', channelID='420', DMID='420'):
-    if resp['t'] == "READY_SUPPLEMENTAL":
-        s = bot.gateway.SessionSettings
-        print(s.read())
+def test(resp, guildID='322850917248663552', userID='766083688755757067', categoryID='635997713934188564', channelID='803053810565644328', DMID='786255839115608084'):
+    if resp.raw['t'] == "READY_SUPPLEMENTAL":
+        s = bot.gateway.session
+        print(s.read()[0].keys()) #ready data parsed keys
+        print(s.read()[1].keys()) #ready supplemental data parsed keys
         print(s.user)
         print(s.guilds)
         print(s.guildIDs)
@@ -21,14 +22,11 @@ def test(resp, guildID='420', userID='420', categoryID='420', channelID='420', D
         print(s.incomingFriendRequestIDs)
         print(s.outgoingFriendRequests)
         print(s.outgoingFriendRequestIDs)
-        print(s.allFriendMergedPresences)
-        print(s.allFriendMergedPresenceIDs)
         print(s.DMs)
         print(s.DMIDs)
         print(s.userGuildSettings)
         print(s.userSettings)
         print(s.optionsForUserSettings)
-        print(s.mergedPresences)
         print(s.analyticsToken)
         print(s.connectedAccounts)
         print(s.consents)
@@ -39,8 +37,6 @@ def test(resp, guildID='420', userID='420', categoryID='420', channelID='420', D
         print(s.geoOrderedRtcRegions)
         print(s.cachedUsers)
         print(s.tutorial)
-        print(s.mergedPresences)
-        print(s.positions)
         print(s.guild(guildID).data)
         print(s.guild(guildID).owner)
         print(s.guild(guildID).boostLvl)
@@ -74,7 +70,8 @@ def test(resp, guildID='420', userID='420', categoryID='420', channelID='420', D
         print(s.guild(guildID).description)
         print(s.guild(guildID).vanityUrlCode)
         print(s.guild(guildID).preferredLocale)
-        print(s.guild(guildID).allChannels)
+        print(s.guild(guildID).channelsAndCategories)
+        print(s.guild(guildID).channelAndCategoryIDs)
         print(s.guild(guildID).categories)
         print(s.guild(guildID).categoryIDs)
         print(s.guild(guildID).categoryData(categoryID))
@@ -82,15 +79,8 @@ def test(resp, guildID='420', userID='420', categoryID='420', channelID='420', D
         print(s.guild(guildID).channelIDs)
         print(s.guild(guildID).channelData(channelID))
         print(s.guild(guildID).voiceStates)
-        print(s.guild(guildID).notOfflineCachedMembers)
-        print(s.guild(guildID).notOfflineCachedMemberIDs)
-        print(s.guild(guildID).notOfflineCachedMemberData("1234")) #test
-        print(s.guild(guildID).mergedPresences)
-        print(s.guild(guildID).mergedPresenceIDs)
-        print(s.guild(guildID).mergedPresenceData("1234")) #test
         print(s.guild(guildID).position)
         print(s.relationship(userID).data)
-        print(s.relationship(userID).friendMergedPresenceData)
         print(s.DM(DMID).data)
         print(s.DM(DMID).recipients)
         print(s.userGuildSetting(guildID).data)

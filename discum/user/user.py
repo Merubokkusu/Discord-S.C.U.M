@@ -80,7 +80,7 @@ class User(object):
 	'''
 	Profile Edits
 	'''	
-	def setStatus(self,status): #status options are: online, idle, dnd, invisible
+	def setStatusHelper(self,status): #Dont run this function by itself; status options are: online, idle, dnd, invisible
 		url = self.discord+"users/@me/settings"
 		if status in ("online", "idle", "dnd", "invisible"):
 			body = {"status": status}

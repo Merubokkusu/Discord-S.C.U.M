@@ -4,18 +4,25 @@ import time
 import random
 import base64
 import zlib
+import copy
+
+#some http wraps that help gateway functions:
+from ..user.user import User
 
 if __import__('sys').version.split(' ')[0] < '3.0.0':
     import thread
 else:
     import _thread as thread
 
-from .session import session
+from .session import Session
 from .response import Resp
 from .request import Request
 
+from .parse import Parse
+
 #other functions
 from .guild.combo import GuildCombo
+from .user.combo import UserCombo
 
 #gateway class
 class GatewayServer:
@@ -53,7 +60,7 @@ class GatewayServer:
         STREAM_SET_PAUSED =              22 #    ??
         REQUEST_APPLICATION_COMMANDS =   24 #    ??
 
-    def __init__(self, websocketurl, token, super_properties, proxy_host=None, proxy_port=None, log=True):
+    def __init__(self, websocketurl, token, super_properties, sessionobj="", RESTurl="", log=True): #session obj needed for proxies and some combo gateway functions (that also require http api wraps)
         self.token = token
         self.super_properties = super_properties
         self.auth = {
@@ -75,8 +82,11 @@ class GatewayServer:
                 }
             }
 
-        self.proxy_host = None if proxy_host in (None,False) else proxy_host
-        self.proxy_port = None if proxy_port in (None,False) else proxy_port
+        self.RESTurl = RESTurl #for helper http requests
+        self.sessionobj = sessionobj #for helper http requests
+
+        self.proxy_host = None if "https" not in sessionobj.proxies else sessionobj.proxies["https"][8:].split(":")[0]
+        self.proxy_port = None if "https" not in sessionobj.proxies else sessionobj.proxies["https"][8:].split(":")[1]
 
         self.log = log
 
@@ -84,8 +94,7 @@ class GatewayServer:
         self.session_id = None
         self.sequence = 0
         self.READY = False #becomes True once READY_SUPPLEMENTAL is received
-        self.settings_ready = {}
-        self.settings_ready_supp = {}
+        self.session = Session({},{})
 
         #websocket.enableTrace(True) #for debugging
         self.ws = self._get_ws_app(websocketurl)
@@ -101,6 +110,7 @@ class GatewayServer:
         self.memberFetchingStatus = {"first": []}
 
         self.request = Request(self)
+        self.parse = Parse
 
     #WebSocketApp, more info here: https://github.com/websocket-client/websocket-client/blob/master/websocket/_app.py#L79
     def _get_ws_app(self, websocketurl):
@@ -147,6 +157,7 @@ class GatewayServer:
     def on_message(self, ws, message):
         self.sequence += 1
         response = self.decompress(message)
+        resp = Resp(copy.deepcopy(response))
         if self.log: print('%s< %s%s' % (self.LogLevel.RECEIVE, response, self.LogLevel.DEFAULT))
         if response['op'] == self.OPCODE.HELLO: #only happens once, first message sent to client
             self.interval = (response["d"]["heartbeat_interval"])/1000 #if this fails make an issue and I'll revert it back to the old method (slightly smaller wait time than heartbeat)
@@ -163,25 +174,16 @@ class GatewayServer:
         if self.interval == None:
             if self.log: print("Identify failed.")
             self.close()
-        if response['t'] == "READY":
+        if resp.event.ready:
             self.session_id = response['d']['session_id']
-            self.settings_ready = response['d']
-            self.session = session(self.settings_ready, {}) #so that you can parse session settings right after ready (if you dont listen for ready supp data)
-        elif response['t'] == "READY_SUPPLEMENTAL":
+            self.settings_ready = resp.parsed.ready() #parsed
+            self.session = Session(self.settings_ready, {})
+        elif resp.event.ready_supplemental:
             self.resumable = True #completely successful identify
-            self.settings_ready_supp = response['d']
-            self.session.settings_ready_supp = self.settings_ready_supp
+            self.settings_ready_supp = resp.parsed.ready_supplemental() #parsed
+            self.session = Session(self.settings_ready, self.settings_ready_supp) #reinitialize i guess
             self.READY = True
-        elif response['t'] == "GUILD_CREATE":
-            guild_data = response['d']
-            guild_data['members'] = {} #the member data originally stored in here is far from complete so might as well throw it away tbh and prepare for member fetching
-            if response['d']['id'] in self.session.guildIDs:
-                self.session.guild(response['d']['id']).setData(guild_data)
-            else:
-                self.session.add(guild_data)
-        elif response['t'] in ("VOICE_SERVER_UPDATE", "VOICE_STATE_UPDATE"):
-            self.voice_data.update(response['d']) #called twice, resulting in a dictionary with 12 keys
-        resp = Resp(response)
+        self.sessionUpdates(resp)
         thread.start_new_thread(self._response_loop, (resp,))
 
     def on_error(self, ws, error):
@@ -218,7 +220,7 @@ class GatewayServer:
         if callable(func):
             self._after_message_hooks.append(func)
             return func
-        elif isinstance(func, dict): #because I can't figure out out to neatly pass params to decorators :(. Normal behavior still works; use as usual.\
+        elif isinstance(func, dict): #because I can't figure out out to neatly pass params to decorators :(. Normal behavior still works; use as usual.
             priority = func.pop('priority', len(self._after_message_hooks))
             self._after_message_hooks.insert(priority, func)
             return func['function']
@@ -261,8 +263,6 @@ class GatewayServer:
         self.session_id = None
         self.sequence = 0
         self.READY = False #becomes True once READY_SUPPLEMENTAL is received
-        self.settings_ready = {}
-        self.settings_ready_supp = {}
         self._last_err = None
         self.voice_data = {}
         self.resumable = False #you can't resume anyways without session_id and sequence
@@ -293,6 +293,19 @@ class GatewayServer:
             self.ws.run_forever(ping_interval=10, ping_timeout=5, http_proxy_host=self.proxy_host, http_proxy_port=self.proxy_port)
 
 ##########################################################
+    def sessionUpdates(self, resp):
+        if resp.event.guild:
+            guildData = resp.parsed.guild_create(my_user_id=self.session.user['id']) #user id needed for updating personal roles in that guild
+            guildID = guildData['id']
+            self.session.setGuildData(guildID, guildData)
+        elif resp.event.guild_deleted:
+            self.session.guild(resp.raw['d']['id']).updateData({"removed": True})
+        elif resp.event.settings_updated:
+            self.session.updateUserSettings(resp.raw['d'])
+        elif resp.event.session_replaced:
+            newStatus = resp.parsed.sessions_replace(session_id=self.session_id) #contains both status and activities
+            self.session.updateUserSettings(newStatus)
+##########################################################
 
     '''
     Guild/Server stuff
@@ -311,6 +324,9 @@ class GatewayServer:
         return startIndex, method #return startIndex and multipliers
 
     def fetchMembers(self, guild_id, channel_id, method="overlap", keep=[], considerUpdates=True, startIndex=0, stopIndex=1000000000, reset=True, wait=None, priority=0):
+        if guild_id not in self.session.guildIDs:
+            if self.log: print("Cannot fetch members of a guild you're not in.")
+            return
         if guild_id in self.memberFetchingStatus:
             del self.memberFetchingStatus[guild_id] #just resetting tracker on the specific guild_id
         self.command(
@@ -334,6 +350,42 @@ class GatewayServer:
 
     def finishedMemberFetching(self, guild_id):
         return self.memberFetchingStatus.get(guild_id) == "done"
+
+
+    '''
+    User stuff
+    '''
+    def setStatus(self, status):
+        UserCombo(self).setStatus(status)
+        thread.start_new_thread(User(self.RESTurl,self.sessionobj,self.log).setStatusHelper, (status,))
+
+    #def setPlayingStatus(self, game, metadata={}): #will update later
+
+    def removePlayingStatus(self):
+        UserCombo(self).removePlayingStatus()
+
+    #def setStreamingStatus(self, stream, metadata={}): #will update later
+
+    def removeStreamingStatus(self):
+        UserCombo(self).removeStreamingStatus()
+
+    #def setListeningStatus(self, song, metadata={}): #will update later
+
+    def removeListeningStatus(self):
+        UserCombo(self).removeListeningStatus()
+
+    #def setWatchingStatus(self, show, metadata={}): #will update later
+
+    def removeWatchingStatus(self):
+        UserCombo(self).removeWatchingStatus()
+
+    def setCustomStatus(self, customstatus, metadata={}): #this function isn't complete yet as metadata isn't used, will fix later
+        UserCombo(self).setCustomStatus(customstatus)
+        thread.start_new_thread(User(self.RESTurl,self.sessionobj,self.log).setStatusHelper, (customstatus,))
+
+    def removeCustomStatus(self):
+        UserCombo(self).removeCustomStatus()
+        thread.start_new_thread(User(self.RESTurl,self.sessionobj,self.log).setStatusHelper, ("",))
 
     '''
     test stuff (these show how to add combo functions)

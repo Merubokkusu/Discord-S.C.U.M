@@ -74,7 +74,7 @@ class Client:
             time.sleep(1)            
         self.s.headers.update({"Authorization": self.__user_token}) #update headers
         #step 7: gateway (object initialization)
-        self.gateway = GatewayServer(self.websocketurl, self.__user_token, self.__super_properties, self.__proxy_host, self.__proxy_port, self.log)
+        self.gateway = GatewayServer(self.websocketurl, self.__user_token, self.__super_properties, self.s, self.discord, self.log) #self.s contains proxy host and proxy port already
         #step 8: embed (object initialization)
         self.Embedder = Embedder
         #step 9: somewhat prepare for science events
@@ -252,9 +252,9 @@ class Client:
     '''
     Profile edits
     '''
-    # set status
-    def setStatus(self,status):
-        return User(self.discord,self.s,self.log).setStatus(status)
+    # set status; moved to gateway; dont run this function by itself
+    def setStatusHelper(self,status):
+        return User(self.discord,self.s,self.log).setStatusHelper(status)
 
     # set avatar
     def setAvatar(self,imagePath):

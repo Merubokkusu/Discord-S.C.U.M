@@ -66,7 +66,7 @@ https://github.com/Merubokkusu/Discord-S.C.U.M/tree/master/docs
 # Example usage
 ```python
 import discum     
-bot = discum.Client(token='420tokentokentokentoken.token.tokentokentokentokentoken', log=False)
+bot = discum.Client(token='420tokentokentokentoken.token.tokentokentokentokentoken', log=True)
 
 bot.sendMessage("238323948859439", "Hello :)")
 
@@ -111,7 +111,7 @@ Contributions are welcome. You can submit issues, make pull requests, or suggest
 
 ## FAQ
 Q: Why am I getting Attribute Errors?          
-A: Most likely you've installed discum through pip, which is not always updated. To get the most recent version, install through github. However, if you're getting an ```AttributeError: 'GatewayServer' object has no attribute 'session'``` all this means is that you haven't connected to the gateway yet (using ```bot.gateway.run()```). (there's no gateway session if you haven't connected ever)   
+A: Most likely you've installed discum through pip, which is not always updated. To get the most recent version, install through github. However, if you're getting an ```AttributeError: 'GatewayServer' object has no attribute 'session'``` all this means is that you haven't connected to the gateway yet (using ```bot.gateway.run()```). (there's no gateway session if you haven't connected ever).    
 
 Q: Does discum support BOT accounts?         
 A: No. Discum only supports user accounts.      
@@ -123,7 +123,7 @@ Q: How to fix "\[SSL: CERTIFICATE_VERIFY_FAILED]" errors?
 A: https://stackoverflow.com/a/53310545/14776493       
 
 Q: I'm getting ```KeyError: 'members'``` when running ```bot.gateway.session.guild(guild_ID).members```. Why?      
-A: You need to run bot.gateway.fetchMembers(...) and bot.gateway.run() first. See the docs and examples here: https://github.com/Merubokkusu/Discord-S.C.U.M/blob/master/docs/fetchingGuildMembers.md     
+A: KeyErrors happened on previous versions where the "members" key was not set until you ran ```bot.gateway.fetchMembers(...); bot.gateway.run()```. Due to this causing some confusion, the latest versions do not display this KeyError (instead, the value of "members" is an empty dictionary to start with). Of course, you still have to fetch the members (a gateway operation) in order to get the members.
 
 Q: I'm getting ```requests.exceptions.ConnectionError: ('Connection aborted.', ConnectionResetError(54, 'Connection reset by peer'))```. How to fix?          
 A: Just run the command again and it should work.       

@@ -1,6 +1,5 @@
 from ..RESTapiwrap import *
 from .totp import TOTP
-import requests
 import time
 
 class Login:
@@ -8,19 +7,9 @@ class Login:
     Manages HTTP authentication
     '''
     def __init__(self, s, discordurl, log):
-        self.s = s
         self.discord = discordurl
         self.log = log
-        if 'Authorization' in s.headers or 'X-Fingerprint' in s.headers:
-            self.editedS = requests.Session()
-            self.editedS.headers.update(s.headers)
-            if 'Authorization' in self.editedS.headers:
-                del self.editedS.headers['Authorization']
-            if 'X-Fingerprint' in self.editedS.headers:
-                del self.editedS.headers['X-Fingerprint']
-            self.editedS.proxies.update(s.proxies)
-        else:
-            self.editedS = s
+        self.editedS = editedReqSession(s, {"remove": ["Authorization", "X-Fingerprint"]})
 
     def GetXFingerprint(self):
         url = self.discord + "experiments"
@@ -34,7 +23,6 @@ class Login:
     def GetToken(self, email, password, undelete=False, captcha=None, source=None, gift_code_sku_id=None, secret="", code=""):
         url = self.discord + "auth/login"
         self.xfingerprint = self.GetXFingerprint()
-        self.s.headers.update({"X-Fingerprint": self.xfingerprint})
         self.editedS.headers.update({"X-Fingerprint": self.xfingerprint})
         body = {
             "email": email,

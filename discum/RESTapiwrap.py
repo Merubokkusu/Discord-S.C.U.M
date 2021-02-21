@@ -1,3 +1,4 @@
+import copy #only used if header modification is used
 import json
 import inspect
 import brotli #just in case
@@ -9,6 +10,16 @@ def brdecompress(payload):
 	except:
 		return payload
 
+def editedReqSession(reqsession, headerModifications):
+	editedSession = copy.deepcopy(reqsession)
+	if "add" in headerModifications:
+		editedSession.headers.update(headerModifications["update"])
+	if "remove" in headerModifications:
+		for header in headerModifications["remove"]:
+			if header in editedSession.headers:
+				del editedSession.headers[header]
+	return editedSession
+
 class LogLevel:
 	INFO = '\033[94m'
 	OK = '\033[92m'
@@ -18,7 +29,7 @@ class LogLevel:
 #The wrap that all http request api functions in discum use
 class Wrapper:
 	@staticmethod
-	def sendRequest(reqsession, method, url, body=None, files=None, log=True):
+	def sendRequest(reqsession, method, url, body=None, files=None, headerModifications={}, log=True): #headerModifications = {"add":{}, "remove":[]}
 		if hasattr(reqsession, method): #just checks if post, get, whatever is a valid requests method
 			stack = inspect.stack()
 			function_name = "({}->{})".format(str(stack[1][0].f_locals['self']).split(' ')[0], stack[1][3])
@@ -41,7 +52,10 @@ class Wrapper:
 				if log:
 					print('{} [+] {} {}'.format(LogLevel.INFO, function_name, "<file data>"))
 					print(LogLevel.DEFAULT)
-			response = getattr(reqsession, method)(url=url, **data)
+			prepReqSession = reqsession
+			if headerModifications not in ({}, None): #header modifications, like endpoints that don't need auth or superproperties or stuff like that
+				prepReqSession = editedReqSession(prepReqSession, headerModifications)
+			response = getattr(prepReqSession, method)(url=url, **data) #where the actual request happens
 			if response.headers.get('Content-Encoding') == "br": #decompression; gzip/deflate is automatically handled by requests module
 				response._content = brdecompress(response.content)
 			if log: #(received) log message, response

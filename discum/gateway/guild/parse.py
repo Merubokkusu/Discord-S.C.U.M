@@ -31,5 +31,23 @@ class GuildParse(object):
 					memberdata['updates'].append(chunk['item'])
 		#and that's it. mostly some renaming and shuffling around to help with usage and reading :)
 		return memberdata
-				
 
+	@staticmethod
+	def guild_create(response, my_user_id):
+		guilddata = dict(response["d"])
+		#take care of position
+		guilddata["my_data"] = response["members"]
+		guilddata.pop("members") #this is actually not the member list, lol. But it usually contains our position/role in that guild so...still good info
+		for index,member in enumerate(guilddata["my_data"]): 
+			if member["user"]["id"] == my_user_id:
+				guilddata["my_data"][index].pop("user")
+				guilddata["my_data"][index]["user_id"] = my_user_id
+			else:
+				del guilddata["my_data"][index]
+		#take care of emojis
+		guilddata["emojis"] = {i["id"]:i for i in response["emojis"]}
+		#take care of roles
+		guilddata["roles"] = {j["id"]:j for j in response["roles"]}
+		#take care of channels
+		guilddata["channels"] = {k["id"]:k for k in response["channels"]}
+		return guilddata

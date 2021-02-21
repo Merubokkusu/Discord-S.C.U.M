@@ -14,7 +14,7 @@ class Other:
 
     def getDiscordStatus(self):
         url = "https://status.discord.com/api/v2/scheduled-maintenances/upcoming.json"
-        return Wrapper.sendRequest(self.s, 'get', url, log=self.log)
+        return Wrapper.sendRequest(self.s, 'get', url, headerModifications={"remove":["Authorization", "X-Super-Properties"]}, log=self.log)
 
     def getDetectables(self):
         url = self.discord + "applications/detectable"
@@ -30,4 +30,4 @@ class Other:
         url = "https://discord.com/assets/version.stable.json"
         if isinstance(underscore, str):
             url += "?_="+underscore
-        return Wrapper.sendRequest(self.s, 'get', url, log=self.log)
+        return Wrapper.sendRequest(self.s, 'get', url, headerModifications={"remove":["Authorization", "X-Super-Properties"]}, log=self.log)

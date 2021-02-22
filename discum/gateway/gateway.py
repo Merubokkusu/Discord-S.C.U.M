@@ -357,7 +357,7 @@ class GatewayServer:
     '''
     def setStatus(self, status):
         UserCombo(self).setStatus(status)
-        thread.start_new_thread(User(self.RESTurl,self.sessionobj,self.log).setStatusHelper, (status,))
+        User(self.RESTurl,self.sessionobj,self.log).setStatusHelper(status)
 
     #def setPlayingStatus(self, game, metadata={}): #will update later
 
@@ -381,11 +381,11 @@ class GatewayServer:
 
     def setCustomStatus(self, customstatus, metadata={}): #this function isn't complete yet as metadata isn't used, will fix later
         UserCombo(self).setCustomStatus(customstatus)
-        thread.start_new_thread(User(self.RESTurl,self.sessionobj,self.log).setStatusHelper, (customstatus,))
+        User(self.RESTurl,self.sessionobj,self.log).setStatusHelper(customstatus)
 
     def removeCustomStatus(self):
         UserCombo(self).removeCustomStatus()
-        thread.start_new_thread(User(self.RESTurl,self.sessionobj,self.log).setStatusHelper, ("",))
+        User(self.RESTurl,self.sessionobj,self.log).setStatusHelper("")
 
     '''
     test stuff (these show how to add combo functions)

@@ -324,9 +324,9 @@ class GatewayServer:
         return startIndex, method #return startIndex and multipliers
 
     def fetchMembers(self, guild_id, channel_id, method="overlap", keep=[], considerUpdates=True, startIndex=0, stopIndex=1000000000, reset=True, wait=None, priority=0):
-        if guild_id not in self.session.guildIDs:
-            if self.log: print("Cannot fetch members of a guild you're not in.")
-            return
+        #if guild_id not in self.session.guildIDs:
+        #    if self.log: print("Cannot fetch members of a guild you're not in.")
+        #    return
         if guild_id in self.memberFetchingStatus:
             del self.memberFetchingStatus[guild_id] #just resetting tracker on the specific guild_id
         self.command(

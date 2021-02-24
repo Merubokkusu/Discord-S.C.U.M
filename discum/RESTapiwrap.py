@@ -29,7 +29,7 @@ class LogLevel:
 #The wrap that all http request api functions in discum use
 class Wrapper:
 	@staticmethod
-	def sendRequest(reqsession, method, url, body=None, files=None, headerModifications={}, log=True): #headerModifications = {"add":{}, "remove":[]}
+	def sendRequest(reqsession, method, url, body=None, files=None, headerModifications={}, timeout=None, log=True): #headerModifications = {"add":{}, "remove":[]}
 		if hasattr(reqsession, method): #just checks if post, get, whatever is a valid requests method
 			stack = inspect.stack()
 			function_name = "({}->{})".format(str(stack[1][0].f_locals['self']).split(' ')[0], stack[1][3])
@@ -55,7 +55,15 @@ class Wrapper:
 			prepReqSession = reqsession
 			if headerModifications not in ({}, None): #header modifications, like endpoints that don't need auth or superproperties or stuff like that
 				prepReqSession = editedReqSession(prepReqSession, headerModifications)
-			response = getattr(prepReqSession, method)(url=url, **data) #where the actual request happens
+			if timeout == None:
+				response = getattr(prepReqSession, method)(url=url, **data) #where the actual request happens
+			else:
+				data['timeout'] = timeout
+				try:
+					response = getattr(prepReqSession, method)(url=url, **data)
+					return
+				except:
+					return
 			if response.headers.get('Content-Encoding') == "br": #decompression; gzip/deflate is automatically handled by requests module
 				response._content = brdecompress(response.content)
 			if log: #(received) log message, response

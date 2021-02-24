@@ -80,7 +80,7 @@ class User(object):
 	'''
 	Profile Edits
 	'''	
-	def setStatusHelper(self,status): #Dont run this function by itself; status options are: online, idle, dnd, invisible
+	def setStatusHelper(self,status, timeout=None): #Dont run this function by itself; status options are: online, idle, dnd, invisible
 		url = self.discord+"users/@me/settings"
 		if status in ("online", "idle", "dnd", "invisible"):
 			body = {"status": status}
@@ -88,7 +88,7 @@ class User(object):
 			body = {"custom_status": None}
 		else:
 			body = {"custom_status":{"text": str(status)}}
-		return Wrapper.sendRequest(self.s, 'patch', url, body, log=self.log)
+		return Wrapper.sendRequest(self.s, 'patch', url, body, timeout=timeout, log=self.log)
 
 	def setAvatar(self, imagePath): #local image
 		url = self.discord+"users/@me"

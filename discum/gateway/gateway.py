@@ -292,7 +292,7 @@ class GatewayServer:
             self._zlib = zlib.decompressobj()
             self.ws.run_forever(ping_interval=10, ping_timeout=5, http_proxy_host=self.proxy_host, http_proxy_port=self.proxy_port)
 
-##########################################################
+    ######################################################
     def sessionUpdates(self, resp):
         if resp.event.guild:
             guildData = resp.parsed.guild_create(my_user_id=self.session.user['id']) #user id needed for updating personal roles in that guild
@@ -305,7 +305,7 @@ class GatewayServer:
         elif resp.event.session_replaced:
             newStatus = resp.parsed.sessions_replace(session_id=self.session_id) #contains both status and activities
             self.session.updateUserSettings(newStatus)
-##########################################################
+    ######################################################
 
     '''
     Guild/Server stuff
@@ -324,9 +324,6 @@ class GatewayServer:
         return startIndex, method #return startIndex and multipliers
 
     def fetchMembers(self, guild_id, channel_id, method="overlap", keep=[], considerUpdates=True, startIndex=0, stopIndex=1000000000, reset=True, wait=None, priority=0):
-        #if guild_id not in self.session.guildIDs:
-        #    if self.log: print("Cannot fetch members of a guild you're not in.")
-        #    return
         if guild_id in self.memberFetchingStatus:
             del self.memberFetchingStatus[guild_id] #just resetting tracker on the specific guild_id
         self.command(
@@ -356,8 +353,8 @@ class GatewayServer:
     User stuff
     '''
     def setStatus(self, status):
+        User(self.RESTurl,self.sessionobj,self.log).setStatusHelper(status, timeout=0.02)
         UserCombo(self).setStatus(status)
-        User(self.RESTurl,self.sessionobj,self.log).setStatusHelper(status)
 
     #def setPlayingStatus(self, game, metadata={}): #will update later
 
@@ -380,12 +377,12 @@ class GatewayServer:
         UserCombo(self).removeWatchingStatus()
 
     def setCustomStatus(self, customstatus, metadata={}): #this function isn't complete yet as metadata isn't used, will fix later
+        User(self.RESTurl,self.sessionobj,self.log).setStatusHelper(customstatus, timeout=0.02)
         UserCombo(self).setCustomStatus(customstatus)
-        User(self.RESTurl,self.sessionobj,self.log).setStatusHelper(customstatus)
 
     def removeCustomStatus(self):
+        User(self.RESTurl,self.sessionobj,self.log).setStatusHelper("", timeout=0.02)
         UserCombo(self).removeCustomStatus()
-        User(self.RESTurl,self.sessionobj,self.log).setStatusHelper("")
 
     '''
     test stuff (these show how to add combo functions)

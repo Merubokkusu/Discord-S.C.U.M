@@ -7,10 +7,10 @@ import json
 from ..RESTapiwrap import *
 
 if __import__('sys').version.split(' ')[0] < '3.0.0':
-    from urllib import quote_plus
+    from urllib import quote_plus, urlencode
     from urlparse import urlparse
 else:
-    from urllib.parse import quote_plus, urlparse
+    from urllib.parse import quote_plus, urlparse, urlencode
 
 class Messages(object):
     def __init__(self, discord, s, log): #s is the requests session object
@@ -107,41 +107,28 @@ class Messages(object):
         else:
             self.sendFile(channelID, file, isurl=isurl, message=message, tts=tts, message_reference={"channel_id":channelID,"message_id":messageID}, sticker_ids=sticker_ids)
 
-    def searchMessages(self,guildID,channelID,userID,mentionsUserID,has,beforeDate,afterDate,textSearch,afterNumResults): #classic discord search function, results with key "hit" are the results you searched for, afterNumResults (aka offset) is multiples of 25 and indicates after which messages (type int), filterResults defaults to False
+    def searchMessages(self,guildID,channelID,userID,mentionsUserID,has,beforeDate,afterDate,textSearch,afterNumResults, limit, extraParams): #classic discord search function, results with key "hit" are the results you searched for, afterNumResults (aka offset) is multiples of 25 and indicates after which messages (type int), filterResults defaults to False
         url = self.discord+"guilds/"+guildID+"/messages/search?"
-        queryparams = ""
-        if any(v != None for v in [channelID,userID,mentionsUserID,has,beforeDate,afterDate,textSearch,afterNumResults]):
-            if channelID != None and isinstance(channelID,list):
-                for item in channelID:
-                    if isinstance(item,int):
-                        queryparams += "channel_id="+str(item)+"&"
-                    elif isinstance(item,str) and len(item)>0:
-                        queryparams += "channel_id="+item+"&"
-            if userID != None and isinstance(userID,list):
-                for item in userID:
-                    if isinstance(item,int):
-                        queryparams += "author_id="+str(item)+"&"
-                    elif isinstance(item,str) and len(item)>0:
-                        queryparams += "author_id="+item+"&"
-            if mentionsUserID != None and isinstance(mentionsUserID,list):
-                for item in mentionsUserID:
-                    if isinstance(item,int):
-                        queryparams += "mentions="+str(item)+"&"
-                    elif isinstance(item,str) and len(item)>0:
-                        queryparams += "mentions="+item+"&"
-            if has != None and isinstance(has,list):
-                for item in has:
-                    if isinstance(item,str) and len(item)>0:
-                        queryparams += "has="+item+"&"
-            if beforeDate != None and isinstance(beforeDate,int):
-                queryparams += "max_id="+str(beforeDate)+"&"
-            if afterDate != None and isinstance(afterDate,int):
-                queryparams += "min_id="+str(afterDate)+"&"
-            if textSearch != None and isinstance(textSearch,str):
-                queryparams += "content="+quote_plus(textSearch)+"&"
-            if afterNumResults != None and isinstance(afterNumResults,int):
-                queryparams += "offset="+str(afterNumResults)
-            url += queryparams
+        allqueryparams = []
+        colParamNames = ["channel_id", "author_id", "mentions", "has"]
+        collectionParams = [channelID, userID, mentionsUserID, has]
+        for ind in range(len(collectionParams)):
+            if not hasattr(collectionParams[ind], "__iter__") or isinstance(collectionParams[ind], str):
+                collectionParams[ind] = [str(collectionParams[ind])]
+            allqueryparams.extend([(colParamNames[ind], i) for i in collectionParams[ind]])
+        if beforeDate!=None:
+            allqueryparams.append(("max_id", str(beforeDate)))
+        if afterDate!=None:
+            allqueryparams.append(("min_id", str(afterDate)))
+        if textSearch!=None:
+            allqueryparams.append(("content", str(textSearch)))
+        if afterNumResults!=None:
+            allqueryparams.append(("offset", str(afterNumResults)))
+        if limit!=None:
+            allqueryparams.append(("limit", str(limit)))
+        querystring = urlencode(allqueryparams)
+        querystring += extraParams
+        url += querystring
         return Wrapper.sendRequest(self.s, 'get', url, log=self.log)
 
     def filterSearchResults(self,searchResponse): #only input is the requests response object outputted from searchMessages, returns type list

@@ -162,8 +162,8 @@ class Client:
         return Messages(self.discord,self.s,self.log).reply(channelID, messageID, message, nonce, tts, embed, allowed_mentions, sticker_ids, file, isurl)
 
     #search messages
-    def searchMessages(self,guildID,channelID=None,userID=None,mentionsUserID=None,has=None,beforeDate=None,afterDate=None,textSearch=None,afterNumResults=None):
-        return Messages(self.discord,self.s,self.log).searchMessages(guildID,channelID,userID,mentionsUserID,has,beforeDate,afterDate,textSearch,afterNumResults)
+    def searchMessages(self,guildID,channelID=[],userID=[],mentionsUserID=[],has=[],beforeDate=None,afterDate=None,textSearch=None,afterNumResults=None, limit=None, extraParams=""):
+        return Messages(self.discord,self.s,self.log).searchMessages(guildID,channelID,userID,mentionsUserID,has,beforeDate,afterDate,textSearch,afterNumResults,limit,extraParams)
 
     #filter searchMessages, takes in the output of searchMessages (a requests response object) and outputs a list of target messages
     def filterSearchResults(self,searchResponse):

@@ -16,7 +16,7 @@ Note, here's a list of functions you should tread carefully when using if you do
 ___________
 # Overview:
 
-### 296 functions:      
+### 303 functions:      
 ```
 # client initialization
 discum.Client(email="", password="", secret="", code="", token="", proxy_host=None, proxy_port=None, user_agent="random", locale="en-US", log=True)
@@ -42,7 +42,7 @@ bot.getMessage(channelID, messageID)
 bot.sendMessage(channelID, message, nonce="calculate", tts=False, embed=None, message_reference=None, allowed_mentions=None, sticker_ids=None)
 bot.sendFile(channelID,filelocation,isurl=False,message="", tts=False, message_reference=None, sticker_ids=None)
 bot.reply(channelID, messageID, message, nonce="calculate", tts=False, embed=None, allowed_mentions={"parse":["users","roles","everyone"],"replied_user":False}, sticker_ids=None, file=None, isurl=False)
-bot.searchMessages(guildID,channelID=None,userID=None,mentionsUserID=None,has=None,beforeDate=None,afterDate=None,textSearch=None,afterNumResults=None)
+bot.searchMessages(guildID,channelID=[],userID=[],mentionsUserID=[],has=[],beforeDate=None,afterDate=None,textSearch=None,afterNumResults=None, limit=None, extraParams="")
 bot.filterSearchResults(searchResponse)
 bot.typingAction(channelID)
 bot.deleteMessage(channelID,messageID)
@@ -64,7 +64,6 @@ bot.requestFriend(user)
 bot.acceptFriend(userID)
 bot.removeRelationship(userID)
 bot.blockUser(userID)
-bot.setStatus(status)
 bot.setAvatar(imagePath)
 bot.setUsername(username)
 bot.setEmail(email)
@@ -130,32 +129,64 @@ bot.gateway.run(auto_reconnect=True)
 bot.gateway.send(data)
 bot.gateway.close()
 bot.gateway.resetSession()
+
 bot.gateway.session.read()
 bot.gateway.session.user
 bot.gateway.session.guilds
-bot.gateway.session.guildIDs
-bot.gateway.session.positions #your roles in each guild. 
+bot.gateway.session.allGuildIDs #even from guilds that you've removed during the current session
+bot.gateway.session.guildIDs #only the guilds you're currently in
+bot.gateway.session.setGuildData(guildID, guildData)
+bot.gateway.session.relationships
+bot.gateway.session.relationshipIDs
+bot.gateway.session.friends
+bot.gateway.session.friendIDs
+bot.gateway.session.blocked
+bot.gateway.session.blockedIDs
+bot.gateway.session.incomingFriendRequests
+bot.gateway.session.incomingFriendRequestIDs
+bot.gateway.session.outgoingFriendRequests
+bot.gateway.session.outgoingFriendRequestIDs
+bot.gateway.session.onlineFriends
+bot.gateway.session.onlineFriendIDs
+bot.gateway.session.DMs
+bot.gateway.session.DMIDs
+bot.gateway.session.userGuildSettings
+bot.gateway.session.userSettings
+bot.gateway.session.optionsForUserSettings
+bot.gateway.session.updateUserSettings(data)
+bot.gateway.session.analyticsToken
+bot.gateway.session.connectedAccounts
+bot.gateway.session.consents
+bot.gateway.session.experiments
+bot.gateway.session.friendSuggestionCount
+bot.gateway.session.guildExperiments
+bot.gateway.session.readStates
+bot.gateway.session.geoOrderedRtcRegions
+bot.gateway.session.cachedUsers
+bot.gateway.session.tutorial
 bot.gateway.session.guild(guildID).data
+bot.gateway.session.guild(guildID).setData(newData)
+bot.gateway.session.guild(guildID).updateData(data)
 bot.gateway.session.guild(guildID).unavailable
-bot.gateway.session.guild(guildID).setData
-bot.gateway.session.guild(guildID).modify
 bot.gateway.session.guild(guildID).hasMembers
 bot.gateway.session.guild(guildID).members
+bot.gateway.session.guild(guildID).memberIDs
 bot.gateway.session.guild(guildID).resetMembers
-bot.gateway.session.guild(guildID).updateOneMember
-bot.gateway.session.guild(guildID).updateMembers
+bot.gateway.session.guild(guildID).updateOneMember(userID, userProperties)
+bot.gateway.session.guild(guildID).updateMembers(memberdata) #where member data is a dictionary
 bot.gateway.session.guild(guildID).owner
 bot.gateway.session.guild(guildID).boostLvl
 bot.gateway.session.guild(guildID).emojis
+bot.gateway.session.guild(guildID).emojiIDs
 bot.gateway.session.guild(guildID).banner
 bot.gateway.session.guild(guildID).discoverySplash
-bot.gateway.session.guild(guildID).msgNotificationSettings
+bot.gateway.session.guild(guildID).msgNotificationSettings #returns an int, 0=all messages, 1=only mentions
 bot.gateway.session.guild(guildID).rulesChannelID
-bot.gateway.session.guild(guildID).verificationLvl
-bot.gateway.session.guild(guildID).features
+bot.gateway.session.guild(guildID).verificationLvl #returns an int, 0-4
+bot.gateway.session.guild(guildID).features #returns a list of strings
 bot.gateway.session.guild(guildID).joinTime
 bot.gateway.session.guild(guildID).region
-bot.gateway.session.guild(guildID).applicationID
+bot.gateway.session.guild(guildID).applicationID #if guild was created by a bot
 bot.gateway.session.guild(guildID).afkChannelID
 bot.gateway.session.guild(guildID).icon
 bot.gateway.session.guild(guildID).name
@@ -176,7 +207,8 @@ bot.gateway.session.guild(guildID).memberCount
 bot.gateway.session.guild(guildID).description
 bot.gateway.session.guild(guildID).vanityUrlCode
 bot.gateway.session.guild(guildID).preferredLocale
-bot.gateway.session.guild(guildID).allChannels
+bot.gateway.session.guild(guildID).channelsAndCategories
+bot.gateway.session.guild(guildID).channelAndCategoryIDs
 bot.gateway.session.guild(guildID).categories
 bot.gateway.session.guild(guildID).categoryIDs
 bot.gateway.session.guild(guildID).categoryData(categoryID)
@@ -184,47 +216,11 @@ bot.gateway.session.guild(guildID).channels
 bot.gateway.session.guild(guildID).channelIDs
 bot.gateway.session.guild(guildID).channelData(channelID)
 bot.gateway.session.guild(guildID).voiceStates
-bot.gateway.session.guild(guildID).notOfflineCachedMembers #cached members, so, essentially, useless
-bot.gateway.session.guild(guildID).notOfflineCachedMemberIDs #cached members, so, essentially, useless
-bot.gateway.session.guild(guildID).notOfflineCachedMemberData(userID) #cached members, so, essentially, useless
-bot.gateway.session.guild(guildID).mergedPresences #these are also useless, but theyre in the api so gotta wrap them
-bot.gateway.session.guild(guildID).mergedPresenceIDs #useless
-bot.gateway.session.guild(guildID).mergedPresenceData(userID) #useless
-bot.gateway.session.guild(guildID).position #your roles in a specific guild
-bot.gateway.session.relationships
-bot.gateway.session.relationshipIDs
-bot.gateway.session.friends
-bot.gateway.session.friendIDs
-bot.gateway.session.blocked
-bot.gateway.session.blockedIDs
-bot.gateway.session.incomingFriendRequests
-bot.gateway.session.incomingFriendRequestIDs
-bot.gateway.session.outgoingFriendRequests
-bot.gateway.session.outgoingFriendRequestIDs
-bot.gateway.session.allFriendMergedPresences
-bot.gateway.session.allFriendMergedPresenceIDs
+bot.gateway.session.guild(guildID).position
 bot.gateway.session.relationship(userID).data
-bot.gateway.session.relationship(userID).friendMergedPresenceData
-bot.gateway.session.DMs
-bot.gateway.session.DMIDs
 bot.gateway.session.DM(DMID).data
 bot.gateway.session.DM(DMID).recipients
-bot.gateway.session.userGuildSettings
 bot.gateway.session.userGuildSetting(guildID).data
-bot.gateway.session.userSettings
-bot.gateway.session.optionsForUserSettings
-bot.gateway.session.mergedPresences
-bot.gateway.session.analyticsToken
-bot.gateway.session.connectedAccounts
-bot.gateway.session.consents
-bot.gateway.session.experiments
-bot.gateway.session.friendSuggestionCount
-bot.gateway.session.guildExperiments
-bot.gateway.session.readStates
-bot.gateway.session.geoOrderedRtcRegions
-bot.gateway.session.cachedUsers
-bot.gateway.session.tutorial
-bot.gateway.session.mergedPresences #useless
 
 ## Event checking
 resp.event.achievement_updated
@@ -316,15 +312,29 @@ resp.event.voice_state_updated
 resp.event.webhooks_updated
 
 ## other functions
-resp.parsed.auto()
+bot.gateway.setStatus(status)
+bot.gateway.setCustomStatus(customstatus)
+bot.gateway.removeCustomStatus()
+bot.gateway.removePlayingStatus()
+bot.gateway.removeStreamingStatus()
+bot.gateway.removeListeningStatus()
+bot.gateway.removeWatchingStatus()
 bot.gateway.fetchMembers(guild_id, channel_id, method="overlap", keep=[], considerUpdates=True, startIndex=0, stopIndex=1000000000, reset=True, wait=None, priority=0)
 bot.gateway.getMemberFetchingParams(targetRangeStarts)
 bot.gateway.finishedMemberFetching(guild_id)
+
+bot.gateway.request.setStatus(status, activities=[], afk=False, since=0)
 bot.gateway.request.lazyGuild(guild_id, channel_ranges, typing=None, threads=None, activities=None, members=None)
 bot.gateway.request.searchGuildMembers(guild_ids, query, limit=10, presences=True)
-resp.parsed.guild_member_list_update()
-resp.parsed.message_create()
 bot.gateway.request.DMchannel(channel_id)
 bot.gateway.request.call(channelID, guildID=None, mute=False, deaf=False, video=False)
 bot.gateway.request.endCall()
+
+resp.parsed.auto()
+resp.parsed.ready()
+resp.parsed.ready_supplemental()
+resp.parsed.guild_member_list_update()
+resp.parsed.guild_create(my_user_id="0")
+resp.parsed.message_create()
+resp.parsed.sessions_replace(session_id="0")
 ```

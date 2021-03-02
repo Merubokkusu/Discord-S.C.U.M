@@ -335,15 +335,78 @@ bot.removeRelationship(ID)
 ```python
 bot.blockUser(ID)
 ```
-##### set status ("online", "idle", "dnd", "invisible", None, or "some custom status")
-```setStatus(status)```
+##### set status ("online", "idle", "dnd", "invisible")
+```gateway.setStatus(status)```
 ```python
-bot.setStatus("online")
-bot.setStatus("idle")
-bot.setStatus("dnd")
-bot.setStatus("invisible")
-bot.setStatus(None)
-bot.setStatus("some custom status here")
+@bot.gateway.command
+def setStatusTest(resp):
+  if resp.event.ready_supplemental:
+    bot.gateway.setStatus("online")
+    bot.gateway.setStatus("idle")
+    bot.gateway.setStatus("dnd")
+    bot.gateway.setStatus("invisible")
+
+bot.gateway.run()
+```
+##### set custom status
+```gateway.setCustomStatus(status)```
+```python
+@bot.gateway.command
+def setStatusTest(resp):
+  if resp.event.ready_supplemental:
+    bot.gateway.setCustomStatus("hello world")
+
+bot.gateway.run()
+```
+##### remove custom status
+```gateway.removeCustomStatus(status)```
+```python
+@bot.gateway.command
+def removeCustomStatus(resp):
+  if resp.event.ready_supplemental:
+    bot.gateway.removeCustomStatus()
+
+bot.gateway.run()
+```
+##### remove playing status
+```gateway.removePlayingStatus(status)```
+```python
+@bot.gateway.command
+def removeCustomStatus(resp):
+  if resp.event.ready_supplemental:
+    bot.gateway.removePlayingStatus()
+
+bot.gateway.run()
+```
+##### remove streaming status
+```gateway.removeStreamingStatus(status)```
+```python
+@bot.gateway.command
+def removeCustomStatus(resp):
+  if resp.event.ready_supplemental:
+    bot.gateway.removeStreamingStatus()
+
+bot.gateway.run()
+```
+##### remove listening status
+```gateway.removeListeningStatus(status)```
+```python
+@bot.gateway.command
+def removeCustomStatus(resp):
+  if resp.event.ready_supplemental:
+    bot.gateway.removeListeningStatus()
+
+bot.gateway.run()
+```
+##### remove watching status
+```gateway.removeWatchingStatus(status)```
+```python
+@bot.gateway.command
+def removeCustomStatus(resp):
+  if resp.event.ready_supplemental:
+    bot.gateway.removeWatchingStatus()
+
+bot.gateway.run()
 ```
 ##### set username
 ```setUsername(username)```
@@ -538,7 +601,6 @@ bot.gateway.session.user
 bot.gateway.session.consents
 bot.gateway.session.experiments
 bot.gateway.session.cachedUsers
-bot.gateway.session.mergedPresences
 bot.gateway.session.geoOrderedRtcRegions
 bot.gateway.session.tutorial #when you create a new acc and discord gives your client a tutorial
 bot.gateway.session.readStates
@@ -570,11 +632,8 @@ bot.gateway.session.incomingFriendRequests
 bot.gateway.session.incomingFriendRequestIDs
 bot.gateway.session.outgoingFriendRequests
 bot.gateway.session.outgoingFriendRequestIDs
-bot.gateway.session.allFriendMergedPresences
-bot.gateway.session.allFriendMergedPresenceIDs
 bot.gateway.session.friendSuggestionCount
 bot.gateway.session.relationship(userID).data
-bot.gateway.session.relationship(userID).friendMergedPresenceData
 ```
 ##### session (DMs)
 ```python
@@ -778,12 +837,6 @@ bot.gateway.session.guild(guildID).channels
 bot.gateway.session.guild(guildID).channelIDs
 bot.gateway.session.guild(guildID).channelData(channelID)
 bot.gateway.session.guild(guildID).voiceStates
-bot.gateway.session.guild(guildID).notOfflineCachedMembers
-bot.gateway.session.guild(guildID).notOfflineCachedMemberIDs
-bot.gateway.session.guild(guildID).notOfflineCachedMemberData(userID)
-bot.gateway.session.guild(guildID).mergedPresences
-bot.gateway.session.guild(guildID).mergedPresenceIDs
-bot.gateway.session.guild(guildID).mergedPresenceData(userID)
 bot.gateway.session.guild(guildID).position #your roles in a specific guild
 ```
 ### Science

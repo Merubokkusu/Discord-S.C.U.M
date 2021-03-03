@@ -19,7 +19,7 @@ ___________
 ### 303 functions:      
 ```
 # client initialization
-discum.Client(email="", password="", secret="", code="", token="", proxy_host=None, proxy_port=None, user_agent="random", locale="en-US", log=True)
+discum.Client(email="", password="", secret="", code="", token="", proxy_host=None, proxy_port=None, user_agent="random", locale="en-US", build_num="request", log=True)
 ```
 
 ```

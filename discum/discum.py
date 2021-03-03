@@ -18,7 +18,7 @@ import requests
 import random
 
 class Client:
-    def __init__(self, email="", password="", secret="", code="", token="", proxy_host=None, proxy_port=None, user_agent="random", locale="en-US", log=True):
+    def __init__(self, email="", password="", secret="", code="", token="", proxy_host=None, proxy_port=None, user_agent="random", locale="en-US", build_num="request", log=True):
         #step 1: vars
         self.log = log
         self.locale = locale
@@ -66,7 +66,7 @@ class Client:
         #step 4: cookies
         self.s.cookies.update({"locale": self.locale})
         #step 5: super-properties (part of headers)
-        self.__super_properties = SuperProperties(self.s, buildnum="request", log=self.log).GetSuperProperties(self.__user_agent)
+        self.__super_properties = SuperProperties(self.s, buildnum=build_num, log=self.log).GetSuperProperties(self.__user_agent)
         self.s.headers.update({"X-Super-Properties": base64.b64encode(str(self.__super_properties).encode()).decode("utf-8")})
         #step 6: token/authorization/fingerprint (also part of headers, except for fingerprint)
         if self.__user_token in ("",None,False): #assuming email and pass are given...

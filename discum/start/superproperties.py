@@ -44,13 +44,13 @@ class SuperProperties:
             "referrer_current": "",
             "referring_domain_current": "",
             "release_channel": "stable",
-            "client_build_number": 73777,
+            "client_build_number": 78247,
             "client_event_source": None
         }
         if self.buildnum == "request":
             reqbuildnum = self.RequestBuildNumber()
             if reqbuildnum != None:
                 sp["client_build_number"] = reqbuildnum
-        elif isinstance(self.buildnum, int):
-            sp["client_build_number"] = self.buildnum
+        else:
+            sp["client_build_number"] = str(self.buildnum)
         return sp

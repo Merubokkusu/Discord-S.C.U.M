@@ -6,7 +6,6 @@ How to add extra API wraps to discum?
 
 ### http APIs:
 There are 2 parts to this: (1) writing the wrapper and (2) wrapping that wrapper. The second part is simply for naming and organization purposes.
-Currently, the guild, messages, user folders contain the wrappers. For example, the wrapper for the createDM function can be placed in the messages.py file in the messages folder.
 
 ##### 1) The wrapper is coded. 
 Here's the format of each type of wrapper (depends on type of http request):

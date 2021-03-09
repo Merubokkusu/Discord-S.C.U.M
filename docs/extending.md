@@ -49,9 +49,9 @@ def wrapper(**params):
 def createDM(self,recipients):
     return Messages(self.discord,self.s,self.log).createDM(recipients)
 ```
-self.discord is the discord url (https://discord.com/api/v8/)
-self.s is your current client's requests session
-self.log tells the discum whether or not to log stuff
+self.discord is the discord url (https://discord.com/api/v8/)     
+self.s is your current client's requests session     
+self.log tells the discum whether or not to log stuff     
 ### gateway APIs
 The gateway functions (located in the gateway folder) are structured in a somewhat similar matter. The main difference is that combo wrappers (functions that use a combination of request functions and parse functions) are located in gateway.py. Request wrappers are in the request.py file and parse wrappers are in the parse.py file.
 Functions are organized into dms, guild, media, messages, and user folders. In each folder are 4 files: \_\_init__.py, combo.py, parse.py, and request.py.

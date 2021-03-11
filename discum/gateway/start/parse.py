@@ -16,16 +16,16 @@ class StartParse(object): #really hope this doesn't take too long to run...
 		ready_data["guilds"] = {k["id"]:k for k in guilds}
 		for personal_role, guild in zip(response["d"]["merged_members"], guilds):
 			if "unavailable" not in ready_data["guilds"][guild["id"]]:
-				#take care of personal role/nick
-				ready_data["guilds"][guild["id"]]["my_data"] = personal_role
 				#take care of emojis
 				ready_data["guilds"][guild["id"]]["emojis"] = {l["id"]:l for l in guild["emojis"]}
 				#take care of roles
 				ready_data["guilds"][guild["id"]]["roles"] = {m["id"]:m for m in guild["roles"]}
 				#take care of channels
 				ready_data["guilds"][guild["id"]]["channels"] = {n["id"]:n for n in guild["channels"]}
-				#take care of members
-				ready_data["guilds"][guild["id"]]["members"] = {}
+			#take care of personal role/nick
+			ready_data["guilds"][guild["id"]]["my_data"] = personal_role
+			#take care of members
+			ready_data["guilds"][guild["id"]]["members"] = {}
 		return ready_data
 
 	@staticmethod

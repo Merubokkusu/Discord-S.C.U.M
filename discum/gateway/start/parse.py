@@ -33,5 +33,5 @@ class StartParse(object): #really hope this doesn't take too long to run...
 		ready_supp_data = dict(response["d"])
 		ready_supp_data["online_friends"] =  {o["user_id"]:o for o in response["d"]["merged_presences"]["friends"]}
 		ready_supp_data.pop("guilds")
-		ready_supp_data["voice_states"] = {p["id"]:p["voice_states"] for p in response["d"]["guilds"]} #id is the guild_id
+		ready_supp_data["voice_states"] = {p["id"]:p.get("voice_states",[]) for p in response["d"]["guilds"]} #id is the guild_id
 		return ready_supp_data

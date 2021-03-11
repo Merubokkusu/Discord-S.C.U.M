@@ -37,7 +37,7 @@ class GuildParse(object):
 		guilddata = dict(response["d"])
 		#take care of position
 		guilddata["my_data"] = response["d"].get("members", [])
-		guilddata.pop("members", None) #this is actually not the member list, lol. But it usually contains our position/role in that guild so...still good info
+		guilddata["members"] = {} #this is actually not the member list, lol. But it usually contains our position/role in that guild so...still good info
 		for index,member in enumerate(guilddata["my_data"]): 
 			if member["user"]["id"] == my_user_id:
 				guilddata["my_data"][index].pop("user")

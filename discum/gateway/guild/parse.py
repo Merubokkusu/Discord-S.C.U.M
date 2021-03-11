@@ -36,7 +36,7 @@ class GuildParse(object):
 	def guild_create(response, my_user_id):
 		guilddata = dict(response["d"])
 		#take care of position
-		guilddata["my_data"] = response.get("members", [])
+		guilddata["my_data"] = response["d"].get("members", [])
 		guilddata.pop("members", None) #this is actually not the member list, lol. But it usually contains our position/role in that guild so...still good info
 		for index,member in enumerate(guilddata["my_data"]): 
 			if member["user"]["id"] == my_user_id:
@@ -45,9 +45,9 @@ class GuildParse(object):
 			else:
 				del guilddata["my_data"][index]
 		#take care of emojis
-		guilddata["emojis"] = {i["id"]:i for i in response["emojis"]}
+		guilddata["emojis"] = {i["id"]:i for i in response["d"]["emojis"]}
 		#take care of roles
-		guilddata["roles"] = {j["id"]:j for j in response["roles"]}
+		guilddata["roles"] = {j["id"]:j for j in response["d"]["roles"]}
 		#take care of channels
-		guilddata["channels"] = {k["id"]:k for k in response["channels"]}
+		guilddata["channels"] = {k["id"]:k for k in response["d"]["channels"]}
 		return guilddata

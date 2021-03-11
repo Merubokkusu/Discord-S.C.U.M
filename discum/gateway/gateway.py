@@ -297,7 +297,9 @@ class GatewayServer:
         if resp.event.guild:
             guildData = resp.parsed.guild_create(my_user_id=self.session.user['id']) #user id needed for updating personal roles in that guild
             guildID = guildData['id']
+            voiceStateData = guildData.pop('voice_states', [])
             self.session.setGuildData(guildID, guildData)
+            self.session.setVoiceState(guildID, voiceStateData)
         elif resp.event.guild_deleted:
             self.session.guild(resp.raw['d']['id']).updateData({"removed": True})
         elif resp.event.settings_updated:

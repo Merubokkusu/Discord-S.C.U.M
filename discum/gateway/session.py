@@ -33,6 +33,9 @@ class Session:
     def setGuildData(self, guildID, guildData):
         self.settings_ready['guilds'][guildID] = guildData
 
+    def setVoiceState(self, guildID, voiceStateData):
+    	self.settings_ready_supp['voice_states'][guildID] = voiceStateData
+
     ###***RELATIONSHIPS***### (general)
     @property
     def relationships(self):

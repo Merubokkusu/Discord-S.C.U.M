@@ -28,6 +28,9 @@ class Parse(object):
 	def guild_create(self, my_user_id="0"): #personal user id needed to update personal roles for that guild
 		return GuildParse.guild_create(self.response, my_user_id)
 
+	def guild_members_chunk(self):
+		return GuildParse.guild_members_chunk(self.response)
+
 	def message_create(self):
 		return MessageParse.message_create(self.response)
 

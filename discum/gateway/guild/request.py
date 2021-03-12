@@ -4,7 +4,7 @@ class GuildRequest(object):
 	def __init__(self, gatewayobject):
 		self.gatewayobject = gatewayobject
 
-	def lazyGuild(self, guild_id, channel_ranges, typing=None, threads=None, activities=None, members=None): #https://arandomnewaccount.gitlab.io/discord-unofficial-docs/lazy_guilds.html
+	def lazyGuild(self, guild_id, channel_ranges, typing, threads, activities, members): #https://arandomnewaccount.gitlab.io/discord-unofficial-docs/lazy_guilds.html
 		data = {
 		    "op": self.gatewayobject.OPCODE.LAZY_REQUEST,
 		    "d": {
@@ -26,7 +26,17 @@ class GuildRequest(object):
 			data["d"].pop("members")
 		self.gatewayobject.send(data)
 
-	def searchGuildMembers(self, guild_ids, query, limit=10, presences=True):
+	def searchGuildMembers(self, guild_ids, query, limit, presences, user_ids): #note that query can only be "" if you have admin perms (otherwise you'll get inconsistent responses from discord)
 		if isinstance(guild_ids, str):
 			guild_ids = [guild_ids]
-		self.gatewayobject.send({"op":self.gatewayobject.OPCODE.REQUEST_GUILD_MEMBERS,"d":{"guild_id":guildIDs,"query":query,"limit":limit,"presences":presences}})
+		data = {
+		    "op": self.gatewayobject.OPCODE.REQUEST_GUILD_MEMBERS,
+		    "d": {"guild_id": guild_ids},
+		}
+		if isinstance(user_ids, list): #there are 2 types of op8 that the client can send
+			data["d"]["user_ids"] = user_ids
+		else:
+			data["d"]["query"] = query
+			data["d"]["limit"] = limit
+			data["d"]["presences"] = presences
+		self.gatewayobject.send(data)

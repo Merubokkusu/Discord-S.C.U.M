@@ -51,3 +51,20 @@ class GuildParse(object):
 		#take care of channels
 		guilddata["channels"] = {k["id"]:k for k in response["d"]["channels"]}
 		return guilddata
+
+	@staticmethod
+	def guild_members_chunk(response): #interesting event..will have to look into more
+		guild_id = response["d"]["guild_id"]
+		memberchunkdata = {guild_id:[], "chunk_count":response["d"]["chunk_count"], "chunk_index":response["d"]["chunk_index"]}
+		if "not_found" in response["d"]:
+			memberchunkdata["not_found"] = response["d"]["not_found"] #list of user ids
+		presences = {}
+		if "presences"in response["d"]:
+			rawpresences = dict(response["d"]["presences"])
+			presences = {i["user"]["id"]:i for i in rawpresences}
+		for user in response["d"]["members"]:
+			completeddata = user 
+			defaultpresence = {"user": {"id": user["user"]["id"]}, "status": "offline", "client_status": {}, "activities": []} #offline status
+			userdata["presence"] = presences.pop(user["user"]["id"], defaultpresence)
+			memberchunkdata[guild_id].append(user)
+		return memberchunkdata

@@ -349,12 +349,12 @@ def setStatusTest(resp):
 bot.gateway.run()
 ```
 ##### set playing status, set streaming status, set listening status, set watching status, and clear activities
-```gateway.setCustomStatus(customstatus, emoji=None, animatedEmoji=False, expires_at=None)```
-```gateway.setPlayingStatus(game)```
-```gateway.setStreamingStatus(stream, url)```
-```gateway.setListeningStatus(song)```
-```gateway.setWatchingStatus(show)```
-```gateway.clearActivities()```
+```gateway.setCustomStatus(customstatus, emoji=None, animatedEmoji=False, expires_at=None)```      
+```gateway.setPlayingStatus(game)```      
+```gateway.setStreamingStatus(stream, url)```      
+```gateway.setListeningStatus(song)```      
+```gateway.setWatchingStatus(show)```      
+```gateway.clearActivities()```      
 
 ```python
 @bot.gateway.command

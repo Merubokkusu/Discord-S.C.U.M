@@ -1,4 +1,5 @@
 import base64
+import datetime
 from ..RESTapiwrap import *
 
 class User(object):
@@ -54,6 +55,10 @@ class User(object):
 			url += "?with_analytics_token="+with_analytics_token
 		return Wrapper.sendRequest(self.s, 'get', url, log=self.log)
 
+	def getConnectedAccounts(self):
+		url = self.discord+"users/@me/connections"
+		return Wrapper.sendRequest(self.s, 'get', url, log=self.log)
+
 	def getUserAffinities(self):
 		url = self.discord+"users/@me/affinities/users"
 		return Wrapper.sendRequest(self.s, 'get', url, log=self.log)
@@ -80,14 +85,31 @@ class User(object):
 	'''
 	Profile Edits
 	'''	
-	def setStatusHelper(self,status, timeout=None): #Dont run this function by itself; status options are: online, idle, dnd, invisible
+	def setStatusHelper(self, status, timeout=None): #Dont run this function by itself; status options are: online, idle, dnd, invisible
 		url = self.discord+"users/@me/settings"
 		if status in ("online", "idle", "dnd", "invisible"):
 			body = {"status": status}
-		elif status in ('', None):
-			body = {"custom_status": None}
-		else:
-			body = {"custom_status":{"text": str(status)}}
+		return Wrapper.sendRequest(self.s, 'patch', url, body, timeout=timeout, log=self.log)
+
+	def setCustomStatusHelper(self, customstatus, emoji, expires_at, timeout=None): #Dont run this function by itself
+		url = self.discord+"users/@me/settings"
+		body = {"custom_status": {}}
+		if customstatus not in (None, ""):
+			body["custom_status"]["text"] = customstatus
+		if emoji != None:
+			if ":" in emoji:
+				name, ID = emoji.split(":")
+				body["custom_status"]["emoji_name"] = name
+				body["custom_status"]["emoji_id"] = ID
+			else:
+				body["custom_status"]["emoji_name"] = emoji
+		if expires_at != None: #assume unix timestamp
+			expires_at = float(expires_at)
+			dt = datetime.datetime.fromtimestamp(expires_at)
+			timestamp = dt.isoformat("T")+"Z"
+			body["custom_status"]["expires_at"] = timestamp
+		if body["custom_status"] == {}:
+			body["custom_status"] = None
 		return Wrapper.sendRequest(self.s, 'patch', url, body, timeout=timeout, log=self.log)
 
 	def setAvatar(self, imagePath): #local image
@@ -262,7 +284,14 @@ class User(object):
 	'''
 	Billing Settings - Gift Inventory
 	'''
-	
+
+	'''
+	Game Activity
+	'''
+	def enableActivityDisplay(self, enable, timeout=None):
+		url = self.discord+"users/@me/settings"
+		body = {"show_current_game": enable}
+		Wrapper.sendRequest(self.s, 'patch', url, body, timeout=timeout, log=self.log)
 	'''
 	Logout
 	'''

@@ -16,7 +16,7 @@ Note, here's a list of functions you should tread carefully when using if you do
 ___________
 # Overview:
 
-### 303 functions:      
+### 309 functions:      
 ```
 # client initialization
 discum.Client(email="", password="", secret="", code="", token="", proxy_host=None, proxy_port=None, user_agent="random", locale="en-US", build_num="request", log=True)
@@ -313,19 +313,24 @@ resp.event.webhooks_updated
 
 ## other functions
 bot.gateway.setStatus(status)
-bot.gateway.setCustomStatus(customstatus)
+bot.gateway.setCustomStatus(customstatus, emoji=None, animatedEmoji=False, expires_at=None)
 bot.gateway.removeCustomStatus()
+bot.gateway.setPlayingStatus(game)
 bot.gateway.removePlayingStatus()
+bot.gateway.setStreamingStatus(stream, url)
 bot.gateway.removeStreamingStatus()
+bot.gateway.setListeningStatus(song)
 bot.gateway.removeListeningStatus()
+bot.gateway.setWatchingStatus(show)
 bot.gateway.removeWatchingStatus()
+bot.gateway.clearActivities()
 bot.gateway.fetchMembers(guild_id, channel_id, method="overlap", keep=[], considerUpdates=True, startIndex=0, stopIndex=1000000000, reset=True, wait=None, priority=0)
 bot.gateway.getMemberFetchingParams(targetRangeStarts)
 bot.gateway.finishedMemberFetching(guild_id)
 
 bot.gateway.request.setStatus(status, activities=[], afk=False, since=0)
 bot.gateway.request.lazyGuild(guild_id, channel_ranges, typing=None, threads=None, activities=None, members=None)
-bot.gateway.request.searchGuildMembers(guild_ids, query, limit=10, presences=True)
+bot.gateway.request.searchGuildMembers(guild_ids, query="", limit=10, presences=True, user_ids=None)
 bot.gateway.request.DMchannel(channel_id)
 bot.gateway.request.call(channelID, guildID=None, mute=False, deaf=False, video=False)
 bot.gateway.request.endCall()
@@ -334,6 +339,7 @@ resp.parsed.auto()
 resp.parsed.ready()
 resp.parsed.ready_supplemental()
 resp.parsed.guild_member_list_update()
+resp.parsed.guild_members_chunk()
 resp.parsed.guild_create(my_user_id="0")
 resp.parsed.message_create()
 resp.parsed.sessions_replace(session_id="0")

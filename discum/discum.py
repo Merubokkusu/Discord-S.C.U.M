@@ -252,10 +252,6 @@ class Client:
     '''
     Profile edits
     '''
-    # set status; moved to gateway; dont run this function by itself
-    def setStatusHelper(self,status):
-        return User(self.discord,self.s,self.log).setStatusHelper(status)
-
     # set avatar
     def setAvatar(self,imagePath):
         return User(self.discord,self.s,self.log).setAvatar(imagePath)
@@ -284,6 +280,9 @@ class Client:
 
     def info(self, with_analytics_token=None):
         return User(self.discord,self.s,self.log).info(with_analytics_token)
+
+    def getConnectedAccounts(self):
+    	return User(self.discord,self.s,self.log).getConnectedAccounts()
 
     def getUserAffinities(self):
         return User(self.discord,self.s,self.log).getUserAffinities()
@@ -355,7 +354,7 @@ class Client:
     def setMessageDisplay(self, CozyOrCompact): #"cozy" or "compact"
         return User(self.discord,self.s,self.log).setMessageDisplay(CozyOrCompact)
 
-    def enableDevMode(self, enable): #boolean, default=False
+    def enableDevMode(self, enable=True): #boolean
         return User(self.discord,self.s,self.log).enableDevMode(enable)
 
     def activateApplicationTestMode(self, applicationID):
@@ -367,31 +366,31 @@ class Client:
     def getBackupCodes(self, regenerate=False):
         return User(self.discord,self.s,self.log).getBackupCodes(self.__user_password, regenerate)
 
-    def enableInlineMedia(self, enable): #boolean, default=True
+    def enableInlineMedia(self, enable=True): #boolean, default=True
         return User(self.discord,self.s,self.log).enableInlineMedia(enable)
 
-    def enableLargeImagePreview(self, enable): #boolean, default=True
+    def enableLargeImagePreview(self, enable=True): #boolean, default=True
         return User(self.discord,self.s,self.log).enableLargeImagePreview(enable)
 
-    def enableGifAutoPlay(self, enable): #boolean, default=True
+    def enableGifAutoPlay(self, enable=True): #boolean, default=True
         return User(self.discord,self.s,self.log).enableGifAutoPlay(enable)
 
-    def enableLinkPreview(self, enable): #boolean, default=True
+    def enableLinkPreview(self, enable=True): #boolean, default=True
         return User(self.discord,self.s,self.log).enableLinkPreview(enable)
 
-    def enableReactionRendering(self, enable): #boolean, default=True
+    def enableReactionRendering(self, enable=True): #boolean, default=True
         return User(self.discord,self.s,self.log).enableReactionRendering(enable)
 
-    def enableAnimatedEmoji(self, enable): #boolean, default=True
+    def enableAnimatedEmoji(self, enable=True): #boolean, default=True
         return User(self.discord,self.s,self.log).enableAnimatedEmoji(enable)
 
-    def enableEmoticonConversion(self, enable): #boolean, default=True
+    def enableEmoticonConversion(self, enable=True): #boolean, default=True
         return User(self.discord,self.s,self.log).enableEmoticonConversion(enable)
 
     def setStickerAnimation(self, setting): #string, default="always"
         return User(self.discord,self.s,self.log).setStickerAnimation(setting)
 
-    def enableTTS(self, enable): #boolean, default=True
+    def enableTTS(self, enable=True): #boolean, default=True
         return User(self.discord,self.s,self.log).enableTTS(enable)
 
     def getBillingHistory(self, limit=20):
@@ -405,6 +404,9 @@ class Client:
 
     def getStripeClientSecret(self):
         return User(self.discord,self.s,self.log).getStripeClientSecret()
+
+    def enableActivityDisplay(self, enable=True):
+    	return User(self.discord,self.s,self.log).enableActivityDisplay(enable)
 
     def logout(self, provider=None, voip_provider=None):
         return User(self.discord,self.s,self.log).logout(provider, voip_provider)

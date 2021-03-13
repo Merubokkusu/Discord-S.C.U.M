@@ -348,13 +348,30 @@ def setStatusTest(resp):
 
 bot.gateway.run()
 ```
-##### set custom status
-```gateway.setCustomStatus(status)```
+##### set playing status, set streaming status, set listening status, set watching status, and clear activities
+```gateway.setCustomStatus(customstatus, emoji=None, animatedEmoji=False, expires_at=None)```
+```gateway.setPlayingStatus(game)```
+```gateway.setStreamingStatus(stream, url)```
+```gateway.setListeningStatus(song)```
+```gateway.setWatchingStatus(show)```
+```gateway.clearActivities()```
+
 ```python
 @bot.gateway.command
-def setStatusTest(resp):
-  if resp.event.ready_supplemental:
-    bot.gateway.setCustomStatus("hello world")
+def activitiesTest(resp):
+	if resp.event.ready_supplemental:
+		time.sleep(5) #this line requires that you import time
+		bot.gateway.clearActivities()
+		time.sleep(5)
+		bot.gateway.setPlayingStatus('PythonCraft')
+		time.sleep(5)
+		bot.gateway.setStreamingStatus('Best Game Ever', 'https://www.youtube.com/watch?v=dQw4w9WgXcQ&ab_channel=RickAstleyVEVO')
+		time.sleep(5)
+		bot.gateway.setListeningStatus('Spotify')
+		time.sleep(5)
+		bot.gateway.setWatchingStatus('YouTube')
+		time.sleep(5)
+		bot.gateway.setCustomStatus('o', '🌍')
 
 bot.gateway.run()
 ```

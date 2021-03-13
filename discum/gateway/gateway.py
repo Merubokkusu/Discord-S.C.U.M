@@ -354,37 +354,55 @@ class GatewayServer:
     '''
     User stuff
     '''
-    def setStatus(self, status):
+    def setStatus(self, status): #can only be run while connected to gateway
         User(self.RESTurl,self.sessionobj,self.log).setStatusHelper(status, timeout=0.02)
         UserCombo(self).setStatus(status)
 
-    #def setPlayingStatus(self, game, metadata={}): #will update later
+    def setPlayingStatus(self, game): #can only be run while connected to gateway, will update metadata later
+        if not self.session.userSettings['show_current_game']:
+            User(self.RESTurl,self.sessionobj,self.log).enableActivityDisplay(enable=True, timeout=0.02)
+        UserCombo(self).setPlayingStatus(game)
 
-    def removePlayingStatus(self):
+    def removePlayingStatus(self): #can only be run while connected to gateway
         UserCombo(self).removePlayingStatus()
 
-    #def setStreamingStatus(self, stream, metadata={}): #will update later
+    def setStreamingStatus(self, stream, url): #can only be run while connected to gateway, will update metadata later
+        if not self.session.userSettings['show_current_game']:
+            User(self.RESTurl,self.sessionobj,self.log).enableActivityDisplay(enable=True, timeout=0.02)
+        UserCombo(self).setStreamingStatus(stream, url)
 
-    def removeStreamingStatus(self):
+    def removeStreamingStatus(self): #can only be run while connected to gateway
         UserCombo(self).removeStreamingStatus()
 
-    #def setListeningStatus(self, song, metadata={}): #will update later
+    def setListeningStatus(self, song): #can only be run while connected to gateway, will update metadata later
+        if not self.session.userSettings['show_current_game']:
+            User(self.RESTurl,self.sessionobj,self.log).enableActivityDisplay(enable=True, timeout=0.02)
+        UserCombo(self).setListeningStatus(song)
 
-    def removeListeningStatus(self):
+    def removeListeningStatus(self): #can only be run while connected to gateway
         UserCombo(self).removeListeningStatus()
 
-    #def setWatchingStatus(self, show, metadata={}): #will update later
+    def setWatchingStatus(self, show): #can only be run while connected to gateway, will update metadata later
+        if not self.session.userSettings['show_current_game']:
+            User(self.RESTurl,self.sessionobj,self.log).enableActivityDisplay(enable=True, timeout=0.02)
+        UserCombo(self).setWatchingStatus(show)
 
-    def removeWatchingStatus(self):
+    def removeWatchingStatus(self): #can only be run while connected to gateway
         UserCombo(self).removeWatchingStatus()
 
-    def setCustomStatus(self, customstatus, metadata={}): #this function isn't complete yet as metadata isn't used, will fix later
-        User(self.RESTurl,self.sessionobj,self.log).setStatusHelper(customstatus, timeout=0.02)
-        UserCombo(self).setCustomStatus(customstatus)
+    def setCustomStatus(self, customstatus, emoji=None, animatedEmoji=False, expires_at=None): #can only be run while connected to gateway
+        User(self.RESTurl,self.sessionobj,self.log).setCustomStatusHelper(customstatus, emoji, expires_at, timeout=0.02)
+        UserCombo(self).setCustomStatus(customstatus, emoji, animatedEmoji)
 
     def removeCustomStatus(self):
-        User(self.RESTurl,self.sessionobj,self.log).setStatusHelper("", timeout=0.02)
+        User(self.RESTurl,self.sessionobj,self.log).setCustomStatusHelper("", timeout=0.02)
         UserCombo(self).removeCustomStatus()
+
+    def clearActivities(self):
+    	if self.session.userSettings['custom_status'] != None:
+    		User(self.RESTurl,self.sessionobj,self.log).setCustomStatusHelper("", emoji=None, expires_at=None, timeout=0.02)
+    	UserCombo(self).clearActivities()
+
 
     '''
     test stuff (these show how to add combo functions)

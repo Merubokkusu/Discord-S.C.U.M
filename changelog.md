@@ -5,7 +5,6 @@
 - added sessions_replace parsing function (to better sync the client and discord when updating activities)
 - added parsing functions for ready and ready_supplemental
 - added guild_members_chunk event parsing
-- added 
 - added headerModification ability to RESTapiwrap (because some api wraps do not require the authorization header)
 - added ability to speed up client initialization by setting the build number (this is useful for running multiple bots):
     ```python

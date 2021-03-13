@@ -6,7 +6,7 @@ class UserCombo(object):
 
 	def getCurrentUnixTs(self):
 		date = datetime.datetime.now()
-		unixts = time.mktime(date.timetuple())
+		unixts = int(time.mktime(date.timetuple())*1000) #milliseconds
 		return unixts
 
 	def constructEmojiDict(self, emoji, animatedEmoji):

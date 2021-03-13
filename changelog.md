@@ -1,4 +1,50 @@
 # Changelog
+# 1.2.0
+### Added
+- added guild_create parsing function
+- added sessions_replace parsing function (to better sync the client and discord when updating activities)
+- added parsing functions for ready and ready_supplemental
+- added guild_members_chunk event parsing
+- added 
+- added headerModification ability to RESTapiwrap (because some api wraps do not require the authorization header)
+- added ability to speed up client initialization by setting the build number (this is useful for running multiple bots):
+    ```python
+    bot = discum.Client(token=tokenlist[0])
+    build_num = bot._Client__super_properties['client_build_number']
+    clients = [bot]
+    for token in tokenlist[1:]:
+        clients.append(discum.Client(token=token, build_num=build_num))
+    ```
+- added ability to set and remove statuses and activities (gateway functions):
+    ```python
+    bot.gateway.setStatus(status)
+    bot.gateway.setCustomStatus(customstatus, emoji=None, animatedEmoji=False, expires_at=None)
+    bot.gateway.removeCustomStatus()
+    bot.gateway.setPlayingStatus(game)
+    bot.gateway.removePlayingStatus()
+    bot.gateway.setStreamingStatus(stream, url)
+    bot.gateway.removeStreamingStatus()
+    bot.gateway.setListeningStatus(song)
+    bot.gateway.removeListeningStatus()
+    bot.gateway.setWatchingStatus(show)
+    bot.gateway.removeWatchingStatus()
+    bot.gateway.clearActivities()
+    ```
+### Changed
+- reformatted session data
+  - ready event:
+    - merged_members field used to predict current role in guild
+    - relationships is a dict instead of a list
+    - private_channels (DMs) is a dict instead of a list
+    - guilds is a dict instead of a list
+    - within guilds: emojis, roles, and channels are dicts instead of lists
+  - ready_supplemental event:
+    - online_friends is a dict instead of a list
+    - voice_states is a dict instead of a list
+- moved setting status commands to gateway
+- cleaned searchMessages http function
+### Removed
+- all "merged" functions from /discum/gateway/session.py
 # 1.1.0
 ### Added
 - 3 http api wraps: leaveGuild, createInvite, revokeBan

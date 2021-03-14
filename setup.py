@@ -11,12 +11,9 @@ from shutil import rmtree
 
 from setuptools import find_packages, setup, Command
 
-class FileNotFoundError(OSError):
-    pass
-
 # Package meta-data.
 NAME = 'discum'
-DESCRIPTION = 'A Discord Self-Bot API'
+DESCRIPTION = 'A Discord API Wrapper for Userbots/Selfbots written in Python.'
 URL = 'https://github.com/Merubokkusu/Discord-S.C.U.M'
 EMAIL = 'loser@merubokkusu.com'
 AUTHOR = 'Merubokkusu'
@@ -51,7 +48,7 @@ here = os.path.abspath(os.path.dirname(__file__))
 try:
     with io.open(os.path.join(here, 'readme.md'), encoding='utf-8') as f:
         long_description = '\n' + f.read()
-except FileNotFoundError:
+except:
     long_description = DESCRIPTION
 
 # Load the package's __version__.py module as a dictionary.

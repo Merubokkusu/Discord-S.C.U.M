@@ -278,16 +278,20 @@ class GatewayServer:
                     if self.log: print("Connection Dropped. Attempting to resume last valid session in %s seconds." % waitTime)
                     time.sleep(waitTime)
                 else:
+                    self.resetSession()
                     if self.log: print("Connection Dropped. Retrying in 10 seconds.")
                     time.sleep(10)
                 continue
             elif not self.resumable: #this happens if you send an IDENTIFY but discord says INVALID_SESSION in response
+                self.resetSession()
                 if self.log: print("Connection Dropped. Retrying in 10 seconds.")
                 time.sleep(10)
                 continue
-            else:
-                self.resumable = True
-                return 0
+            else: #either ctrl-c or discord refuses your connection or self.ws.close(). Resuming doesn't work here so there's no point in trying.
+                self.resetSession()
+                if self.log: print("Connection Forcibly Closed. Reconnecting in 10 seconds.")
+                time.sleep(10)
+                self.run(auto_reconnect) #recursive call
         if not auto_reconnect:
             self._zlib = zlib.decompressobj()
             self.ws.run_forever(ping_interval=10, ping_timeout=5, http_proxy_host=self.proxy_host, http_proxy_port=self.proxy_port)

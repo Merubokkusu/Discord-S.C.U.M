@@ -403,9 +403,9 @@ class GatewayServer:
         UserCombo(self).removeCustomStatus()
 
     def clearActivities(self):
-    	if self.session.userSettings['custom_status'] != None:
-    		User(self.RESTurl,self.sessionobj,self.log).setCustomStatusHelper("", emoji=None, expires_at=None, timeout=0.02)
-    	UserCombo(self).clearActivities()
+        if self.session.userSettings['custom_status'] != None:
+            User(self.RESTurl,self.sessionobj,self.log).setCustomStatusHelper("", emoji=None, expires_at=None, timeout=0.02)
+        UserCombo(self).clearActivities()
 
 
     '''

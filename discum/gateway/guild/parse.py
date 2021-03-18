@@ -65,6 +65,6 @@ class GuildParse(object):
 		for user in response["d"]["members"]:
 			completeddata = user 
 			defaultpresence = {"user": {"id": user["user"]["id"]}, "status": "offline", "client_status": {}, "activities": []} #offline status
-			userdata["presence"] = presences.pop(user["user"]["id"], defaultpresence)
-			memberchunkdata[guild_id].append(user)
+			completeddata["presence"] = presences.pop(user["user"]["id"], defaultpresence)
+			memberchunkdata[guild_id].append(completeddata)
 		return memberchunkdata

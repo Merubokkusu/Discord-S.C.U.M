@@ -16,7 +16,7 @@ A simple, easy to use, non-restrictive Discord API Wrapper for Selfbots/Userbots
 - [Documentation](#Documentation)
 - [Example Usage](#Example-usage)
 - [Links](#Links)
-- [To Do](#To-Do)
+- [Checklist](#Checklist)
 - [Contributing](#Contributing)
 - [FAQ](#FAQ)
 - [Notes](#Notes)
@@ -92,7 +92,7 @@ bot.gateway.run(auto_reconnect=True)
 [GitHub](https://github.com/Merubokkusu/Discord-S.C.U.M)      
 [PyPi](https://pypi.org/project/discum/)      
 
-# To Do
+# Checklist
 - [x] Sending basic text messages
 - [X] Sending Images
 - [x] Sending Embeds

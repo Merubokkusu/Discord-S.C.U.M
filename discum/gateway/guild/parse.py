@@ -38,12 +38,10 @@ class GuildParse(object):
 		#take care of position
 		guilddata["my_data"] = response["d"].get("members", [])
 		guilddata["members"] = {} #this is actually not the member list, lol. But it usually contains our position/role in that guild so...still good info
-		for index,member in enumerate(guilddata["my_data"]): 
-			if member["user"]["id"] == my_user_id:
-				guilddata["my_data"][index].pop("user")
-				guilddata["my_data"][index]["user_id"] = my_user_id
-			else:
-				del guilddata["my_data"][index]
+		guilddata["my_data"] = [a for a in guilddata if a["user"]["id"]==my_user_id]
+		if len(guilddata["my_data"]) == 1:
+			guilddata["my_data"].pop("user", None)
+			guilddata["my_data"]["user_id"] = my_user_id
 		#take care of emojis
 		guilddata["emojis"] = {i["id"]:i for i in response["d"]["emojis"]}
 		#take care of roles
@@ -54,8 +52,7 @@ class GuildParse(object):
 
 	@staticmethod
 	def guild_members_chunk(response): #interesting event..will have to look into more
-		guild_id = response["d"]["guild_id"]
-		memberchunkdata = {guild_id:[], "chunk_count":response["d"]["chunk_count"], "chunk_index":response["d"]["chunk_index"]}
+		memberchunkdata = {"members":[], "guild_id": response["d"]["guild_id"], "chunk_count":response["d"]["chunk_count"], "chunk_index":response["d"]["chunk_index"]}
 		if "not_found" in response["d"]:
 			memberchunkdata["not_found"] = response["d"]["not_found"] #list of user ids
 		presences = {}
@@ -66,5 +63,5 @@ class GuildParse(object):
 			completeddata = user 
 			defaultpresence = {"user": {"id": user["user"]["id"]}, "status": "offline", "client_status": {}, "activities": []} #offline status
 			completeddata["presence"] = presences.pop(user["user"]["id"], defaultpresence)
-			memberchunkdata[guild_id].append(completeddata)
+			memberchunkdata["members"].append(completeddata)
 		return memberchunkdata

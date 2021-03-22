@@ -3,6 +3,7 @@ from .start.parse import StartParse
 from .guild.parse import GuildParse
 from .user.parse import UserParse
 from .messages.parse import MessageParse
+from .channels.parse import ChannelParse
 
 import copy
 
@@ -36,3 +37,9 @@ class Parse(object):
 
 	def sessions_replace(self, session_id="0"):
 		return UserParse.sessions_replace(self.response, session_id)
+
+	def channel_create(self):
+		return ChannelParse.channel_create(self.response)
+
+	def channel_delete(self):
+		return ChannelParse.channel_delete(self.response)

@@ -12,6 +12,11 @@ class Session:
     def read(self): #returns all Session settings
         return [self.settings_ready, self.settings_ready_supp]
 
+    def saveMemory(self): #deletes some unused data
+        self.settings_ready['users'] = []
+        self.settings_ready_supp['merged_members'] = []
+        self.settings_ready_supp['merged_presences']['guilds'] = []
+
     ###***USER***###
     @property
     def user(self):
@@ -24,17 +29,26 @@ class Session:
 
     @property
     def allGuildIDs(self): #even if you're not in that guild
-        return list(self.settings_ready['guilds'].keys())
+        return list(self.settings_ready['guilds'])
 
     @property
     def guildIDs(self): #only for guilds that you're in
-        return [guildID for guildID in self.settings_ready['guilds'].keys() if "removed" not in self.settings_ready['guilds'][guildID]]
+        return [guildID for guildID in self.guilds if "removed" not in self.guilds[guildID]]
 
     def setGuildData(self, guildID, guildData):
         self.settings_ready['guilds'][guildID] = guildData
 
-    def setVoiceState(self, guildID, voiceStateData):
-    	self.settings_ready_supp['voice_states'][guildID] = voiceStateData
+    def removeGuildData(self, guildID):
+        self.settings_ready['guilds'].pop(guildID, None)
+
+    def setDmData(self, channelID, channelData):
+        self.settings_ready['private_channels'][channelID] = channelData
+
+    def removeDmData(self, channelID):
+        self.settings_ready['private_channels'].pop(channelID, None)
+
+    def setVoiceStateData(self, guildID, voiceStateData):
+        self.settings_ready_supp['voice_states'][guildID] = voiceStateData
 
     ###***RELATIONSHIPS***### (general)
     @property
@@ -43,7 +57,7 @@ class Session:
     
     @property
     def relationshipIDs(self):
-        return list(self.settings_ready['relationships'].keys())
+        return list(self.settings_ready['relationships'])
 
     #friends
     @property
@@ -56,7 +70,7 @@ class Session:
     
     @property
     def friendIDs(self):
-        return list(self.friends.keys())
+        return list(self.friends)
 
     #blocked    
     @property
@@ -69,7 +83,7 @@ class Session:
     
     @property
     def blockedIDs(self):
-        return list(self.blocked.keys())
+        return list(self.blocked)
     
     #incoming    
     @property
@@ -82,7 +96,7 @@ class Session:
     
     @property
     def incomingFriendRequestIDs(self):
-        return list(self.incomingFriendRequests.keys())
+        return list(self.incomingFriendRequests)
 
     #outgoing
     @property
@@ -95,7 +109,7 @@ class Session:
     
     @property
     def outgoingFriendRequestIDs(self):
-        return list(self.outgoingFriendRequests.keys())
+        return list(self.outgoingFriendRequests)
 
     #friend merged presences    
     @property
@@ -104,7 +118,7 @@ class Session:
     
     @property
     def onlineFriendIDs(self):
-        return list(self.onlineFriends.keys())
+        return list(self.onlineFriends)
         
 
     ###***DMs***### (general)
@@ -114,7 +128,7 @@ class Session:
 
     @property
     def DMIDs(self):
-        return list(self.DMs.keys())
+        return list(self.DMs)
         
 
     ###***USER SETTINGS***### (general)
@@ -128,7 +142,7 @@ class Session:
     
     @property
     def optionsForUserSettings(self):
-        return list(self.settings_ready['user_settings'].keys())
+        return list(self.settings_ready['user_settings'])
         
     def updateUserSettings(self, data):
         self.settings_ready['user_settings'].update(data)
@@ -204,7 +218,7 @@ class guild(Session):
 
     @property
     def memberIDs(self):
-        return list(self.members.keys())
+        return list(self.members)
 
     def resetMembers(self):
         Session.settings_ready['guilds'][self.guildID]['members'] = {}
@@ -229,7 +243,7 @@ class guild(Session):
 
     @property
     def emojiIDs(self):
-        return list(self.emojis.keys())
+        return list(self.emojis)
 
     @property
     def banner(self):
@@ -347,16 +361,29 @@ class guild(Session):
     def preferredLocale(self):
         return Session.settings_ready['guilds'][self.guildID]['preferred_locale']
 
+    def updateChannelData(self, channelID, channelData): #can also be used to update categories
+        Session.settings_ready['guilds'][self.guildID]['channels'][channelID].update(channelData)
+
+    def setChannelData(self, channelID, channelData): #can also be used to update categories
+        Session.settings_ready['guilds'][self.guildID]['channels'][channelID] = channelData
+
+    def removeChannelData(self, channelID):
+        Session.settings_ready['guilds'][self.guildID]['channels'].pop(channelID, None)
+
     @property
-    def channelsAndCategories(self): #returns all categories and all channels, all the data about that, wall of data so it can be a bit overwhelming, useful if you want to check how many channels your server has since discord counts categories as channels
+    def allChannelAndCategoryIDs(self): #returns all categories and all channels, all the data about that, wall of data so it can be a bit overwhelming, useful if you want to check how many channels your server has since discord counts categories as channels
         return Session.settings_ready['guilds'][self.guildID]['channels']
 
     @property
     def channelAndCategoryIDs(self):
-        return list(self.channelsAndCategories.keys())
-    
+        return [channelID for channelID in self.channelsAndCategories if "removed" not in self.channelsAndCategories[channelID]]
+
     @property
-    def categories(self): #all data about all guild categories, can be overwhelming
+    def channelAndCategoryIDs(self):
+        return list(self.channelsAndCategories)
+
+    @property
+    def categories(self): #all data about guild categories, can be overwhelming
         all_categories = {}
         for i in self.channelsAndCategories: #https://discord.com/developers/docs/resources/channel#channel-object-channel-types
             if self.channelsAndCategories[i]['type'] == 4:
@@ -365,10 +392,10 @@ class guild(Session):
 
     @property
     def categoryIDs(self):
-        return list(self.categories.keys())
+        return list(self.categories)
 
-    def categoryData(self, categoryID):
-        return self.channelsAndCategories[categoryID]
+    def category(self, categoryID):
+        return self.categories[categoryID]
 
     @property
     def channels(self): #all data about all guild channels, can be overwhelming
@@ -380,10 +407,10 @@ class guild(Session):
 
     @property
     def channelIDs(self):
-        return list(self.channels.keys())
+        return list(self.channels)
 
-    def channelData(self, channelID):
-        return self.channelsAndCategories[channelID]
+    def channel(self, channelID):
+        return self.channels[channelID]
 
     @property
     def voiceStates(self): #https://discord.com/developers/docs/resources/voice#voice-state-object
@@ -410,6 +437,9 @@ class DM(Session):
     @property
     def data(self):
         return Session.settings_ready['private_channels'][self.DMID]
+
+    def updateData(self, data):
+        Session.settings_ready['private_channels'][self.DMID].update(data)
 
     @property
     def recipients(self): #returns everyone in that DM except you

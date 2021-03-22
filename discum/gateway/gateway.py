@@ -24,6 +24,25 @@ from .parse import Parse
 from .guild.combo import GuildCombo
 from .user.combo import UserCombo
 
+#exceptions
+class InvalidSessionException(Exception):
+    pass
+
+class ConnectionManuallyClosedException(Exception):
+	pass
+
+def exceptionChecker(e, types, andOr="OR"):
+	if andOr=="AND":
+		for i in types:
+			if not isinstance(e,i):
+				return False
+		return True
+	elif andOr=="OR":
+		for i in types:
+			if isinstance(e,i):
+				return True
+		return False
+
 #gateway class
 class GatewayServer:
 
@@ -81,13 +100,13 @@ class GatewayServer:
                     "user_guild_settings_version": -1
                 }
             }
-
         self.RESTurl = RESTurl #for helper http requests
         self.sessionobj = sessionobj #for helper http requests
 
         self.proxy_host = None if "https" not in sessionobj.proxies else sessionobj.proxies["https"][8:].split(":")[0]
         self.proxy_port = None if "https" not in sessionobj.proxies else sessionobj.proxies["https"][8:].split(":")[1]
 
+        self.keepData = ("dms", "guilds", "guild_channels")
         self.log = log
 
         self.interval = None
@@ -164,6 +183,7 @@ class GatewayServer:
             thread.start_new_thread(self._heartbeat, ())
         elif response['op'] == self.OPCODE.INVALID_SESSION:
             if self.log: print("Invalid session.")
+            self._last_err = InvalidSessionException("Invalid Session Error.")
             if self.resumable:
                 self.resumable = False
                 self.sequence = 0
@@ -175,6 +195,7 @@ class GatewayServer:
             if self.log: print("Identify failed.")
             self.close()
         if resp.event.ready:
+            self._last_err = None
             self.session_id = response['d']['session_id']
             self.settings_ready = resp.parsed.ready() #parsed
             self.session = Session(self.settings_ready, {})
@@ -212,9 +233,10 @@ class GatewayServer:
     def close(self):
         self.connected = False
         self.READY = False #reset self.READY
-        if self.log: print('websocket closed') #sometimes this message will print twice. Don't worry, that's not an error.
+        if not isinstance(self._last_err, InvalidSessionException):
+        	self._last_err = ConnectionManuallyClosedException("Disconnection initiated by client using close function.")
+        if self.log: print('websocket closed') #don't worry if this message prints twice
         self.ws.close()
-
 
     def command(self, func):
         if callable(func):
@@ -269,45 +291,83 @@ class GatewayServer:
 
     #modified version of function run_4ever from https://github.com/scrubjay55/Reddit_ChatBot_Python/blob/master/Reddit_ChatBot_Python/Utils/WebSockClient.py (Apache License 2.0)
     def run(self, auto_reconnect=True):
-        while auto_reconnect:
+        try:
             self._zlib = zlib.decompressobj()
             self.ws.run_forever(ping_interval=10, ping_timeout=5, http_proxy_host=self.proxy_host, http_proxy_port=self.proxy_port)
-            if isinstance(self._last_err, websocket._exceptions.WebSocketAddressException) or isinstance(self._last_err, websocket._exceptions.WebSocketTimeoutException):
-                if self.resumable:
-                    waitTime = random.randrange(1,6)
-                    if self.log: print("Connection Dropped. Attempting to resume last valid session in %s seconds." % waitTime)
-                    time.sleep(waitTime)
-                else:
-                    self.resetSession()
-                    if self.log: print("Connection Dropped. Retrying in 10 seconds.")
-                    time.sleep(10)
-                continue
-            elif not self.resumable: #this happens if you send an IDENTIFY but discord says INVALID_SESSION in response
-                self.resetSession()
-                if self.log: print("Connection Dropped. Retrying in 10 seconds.")
-                time.sleep(10)
-                continue
-            else: #either ctrl-c or discord refuses your connection or self.ws.close(). Resuming doesn't work here so there's no point in trying.
-                self.resetSession()
-                if self.log: print("Connection Forcibly Closed. Reconnecting in 10 seconds.")
-                time.sleep(10)
-                self.run(auto_reconnect) #recursive call
-        if not auto_reconnect:
-            self._zlib = zlib.decompressobj()
-            self.ws.run_forever(ping_interval=10, ping_timeout=5, http_proxy_host=self.proxy_host, http_proxy_port=self.proxy_port)
+            if self._last_err!=None:
+                raise self._last_err
+        except KeyboardInterrupt:
+            self._last_err = KeyboardInterrupt("Keyboard Interrupt Error")
+            if self.log: print("Connection forcibly closed using Keyboard Interrupt.")
+            assert True
+        except Exception as e:
+            if auto_reconnect:
+                if not exceptionChecker(e, [KeyboardInterrupt]):
+                    if exceptionChecker(e, [websocket._exceptions.WebSocketAddressException, websocket._exceptions.WebSocketTimeoutException], "OR"):
+                        self._last_err = None
+                        waitTime = random.randrange(1,6)
+                        if self.log: print("Connection Dropped. Attempting to resume last valid session in %s seconds." % waitTime)
+                        time.sleep(waitTime)
+                        self.run()
+                    elif not exceptionChecker(e, [ConnectionManuallyClosedException]):
+                        self.resetSession()
+                        if self.log: print("Connection Dropped. Retrying in 10 seconds.")
+                        time.sleep(10)
+                        self.run()
+                    else:
+                        if self.log: print("Connection forcibly closed using close function.")
+            else:
+            	pass
 
     ######################################################
     def sessionUpdates(self, resp):
+        #***guilds
+        #guild created
         if resp.event.guild:
             guildData = resp.parsed.guild_create(my_user_id=self.session.user['id']) #user id needed for updating personal roles in that guild
             guildID = guildData['id']
             voiceStateData = guildData.pop('voice_states', [])
             self.session.setGuildData(guildID, guildData)
-            self.session.setVoiceState(guildID, voiceStateData)
+            self.session.setVoiceStateData(guildID, voiceStateData)
+        #guild deleted
         elif resp.event.guild_deleted:
-            self.session.guild(resp.raw['d']['id']).updateData({"removed": True})
+            if "guilds" in self.keepData:
+                self.session.guild(resp.raw['d']['id']).updateData({"removed": True})  #add the indicator
+            else:
+                self.session.removeGuildData(resp.raw['d']['id'])
+
+        #***channels (dms and guilds)
+        #channel created (either dm or guild channel)
+        elif resp.event.channel:
+            channelData = resp.parsed.channel_create()
+            channelID = channelData['id']
+            if channelData["type"] in ("dm", "group_dm"): #dm
+                self.session.setDmData(channelID, channelData)
+            else: #other channels
+                guildID = channelData.pop("guild_id")
+                self.session.guild(guildID).setChannelData(channelID, channelData)
+        #channel deleted (either dm or guild channel)
+        elif resp.event.channel_deleted:
+            channelData = resp.parsed.channel_delete() #updated data :) ...unlike guild_delete events
+            channelData["removed"] = True #add the indicator
+            channelID = channelData["id"]
+            if channelData["type"] in ("dm", "group_dm"): #dm
+                if "dms" in self.keepData:
+                    self.session.DM(channelID).updateData(channelData)
+                else:
+                    self.session.removeDmData(channelID)
+            else: #other channels (guild channels)
+                guildID = channelData.pop("guild_id")
+                if "guild_channels" in self.keepData:
+                    self.session.guild(guildID).updateChannelData(channelID, channelData)
+                else:
+                    self.session.guild(guildID).removeChannelData(channelID)
+
+        #***user updates
+        #user settings updated
         elif resp.event.settings_updated:
             self.session.updateUserSettings(resp.raw['d'])
+        #user session replaced (useful for syncing activities btwn client and server)
         elif resp.event.session_replaced:
             newStatus = resp.parsed.sessions_replace(session_id=self.session_id) #contains both status and activities
             self.session.updateUserSettings(newStatus)
@@ -316,7 +376,6 @@ class GatewayServer:
     '''
     Guild/Server stuff
     '''
-
     def getMemberFetchingParams(self, targetRangeStarts): #more for just proof of concept. targetRangeStarts must not contain duplicates and must be a list of integers
         targetRangeStarts = {i:1 for i in targetRangeStarts} #remove duplicates but preserve order
         if targetRangeStarts.get(0)!=None and targetRangeStarts.get(100)!=None:

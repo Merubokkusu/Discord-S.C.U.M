@@ -371,16 +371,16 @@ class guild(Session):
         Session.settings_ready['guilds'][self.guildID]['channels'].pop(channelID, None)
 
     @property
-    def allChannelAndCategoryIDs(self): #returns all categories and all channels, all the data about that, wall of data so it can be a bit overwhelming, useful if you want to check how many channels your server has since discord counts categories as channels
+    def channelsAndCategories(self): #returns all categories and all channels, all the data about that, wall of data so it can be a bit overwhelming, useful if you want to check how many channels your server has since discord counts categories as channels
         return Session.settings_ready['guilds'][self.guildID]['channels']
+
+    @property
+    def allChannelAndCategoryIDs(self): #all of them, even ones you've been removed from
+        return list(self.channelsAndCategories)
 
     @property
     def channelAndCategoryIDs(self):
         return [channelID for channelID in self.channelsAndCategories if "removed" not in self.channelsAndCategories[channelID]]
-
-    @property
-    def channelAndCategoryIDs(self):
-        return list(self.channelsAndCategories)
 
     @property
     def categories(self): #all data about guild categories, can be overwhelming

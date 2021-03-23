@@ -294,8 +294,7 @@ class GatewayServer:
         try:
             self._zlib = zlib.decompressobj()
             self.ws.run_forever(ping_interval=10, ping_timeout=5, http_proxy_host=self.proxy_host, http_proxy_port=self.proxy_port)
-            if self._last_err!=None:
-                raise self._last_err
+            raise self._last_err
         except KeyboardInterrupt:
             self._last_err = KeyboardInterrupt("Keyboard Interrupt Error")
             if self.log: print("Connection forcibly closed using Keyboard Interrupt.")

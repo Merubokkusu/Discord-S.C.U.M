@@ -29,19 +29,13 @@ class InvalidSessionException(Exception):
     pass
 
 class ConnectionManuallyClosedException(Exception):
-	pass
+    pass
 
-def exceptionChecker(e, types, andOr="OR"):
-	if andOr=="AND":
-		for i in types:
-			if not isinstance(e,i):
-				return False
-		return True
-	elif andOr=="OR":
-		for i in types:
-			if isinstance(e,i):
-				return True
-		return False
+def exceptionChecker(e, types): #this is an A or B or ... check
+    for i in types:
+        if isinstance(e,i):
+            return True
+    return False
 
 #gateway class
 class GatewayServer:
@@ -131,7 +125,7 @@ class GatewayServer:
         self.request = Request(self)
         self.parse = Parse
 
-    #WebSocketApp, more info here: https://github.com/websocket-client/websocket-client/blob/master/websocket/_app.py#L79
+    #WebSocketApp, more info here: https://github.com/websocket-client/websocket-client/blob/master/websocket/_app.py#L84
     def _get_ws_app(self, websocketurl):
         sec_websocket_key = base64.b64encode(bytes(random.getrandbits(8) for _ in range(16))).decode() #https://websockets.readthedocs.io/en/stable/_modules/websockets/handshake.html
         headers = {
@@ -289,34 +283,36 @@ class GatewayServer:
         self.voice_data = {}
         self.resumable = False #you can't resume anyways without session_id and sequence
 
-    #modified version of function run_4ever from https://github.com/scrubjay55/Reddit_ChatBot_Python/blob/master/Reddit_ChatBot_Python/Utils/WebSockClient.py (Apache License 2.0)
+    #kinda influenced by https://github.com/scrubjay55/Reddit_ChatBot_Python/blob/master/Reddit_ChatBot_Python/WebSockClient.py (Apache License 2.0)
     def run(self, auto_reconnect=True):
-        try:
+        if auto_reconnect:
+            while True:
+                try:
+                    self._zlib = zlib.decompressobj()
+                    self.ws.run_forever(ping_interval=10, ping_timeout=5, http_proxy_host=self.proxy_host, http_proxy_port=self.proxy_port)
+                    raise self._last_err
+                except KeyboardInterrupt:
+                    self._last_err = KeyboardInterrupt("Keyboard Interrupt Error")
+                    if self.log: print("Connection forcibly closed using Keyboard Interrupt.")
+                    break
+                except Exception as e:
+                    if auto_reconnect:
+                        if not exceptionChecker(e, [KeyboardInterrupt]):
+                            if exceptionChecker(e, [websocket._exceptions.WebSocketAddressException, websocket._exceptions.WebSocketTimeoutException]):
+                                self._last_err = None
+                                waitTime = random.randrange(1,6)
+                                if self.log: print("Connection Dropped. Attempting to resume last valid session in %s seconds." % waitTime)
+                                time.sleep(waitTime)
+                            elif not exceptionChecker(e, [ConnectionManuallyClosedException]):
+                                self.resetSession()
+                                if self.log: print("Connection Dropped. Retrying in 10 seconds.")
+                                time.sleep(10)
+                            else:
+                                if self.log: print("Connection forcibly closed using close function.")
+                                break
+        else:
             self._zlib = zlib.decompressobj()
             self.ws.run_forever(ping_interval=10, ping_timeout=5, http_proxy_host=self.proxy_host, http_proxy_port=self.proxy_port)
-            raise self._last_err
-        except KeyboardInterrupt:
-            self._last_err = KeyboardInterrupt("Keyboard Interrupt Error")
-            if self.log: print("Connection forcibly closed using Keyboard Interrupt.")
-            assert True
-        except Exception as e:
-            if auto_reconnect:
-                if not exceptionChecker(e, [KeyboardInterrupt]):
-                    if exceptionChecker(e, [websocket._exceptions.WebSocketAddressException, websocket._exceptions.WebSocketTimeoutException], "OR"):
-                        self._last_err = None
-                        waitTime = random.randrange(1,6)
-                        if self.log: print("Connection Dropped. Attempting to resume last valid session in %s seconds." % waitTime)
-                        time.sleep(waitTime)
-                        self.run()
-                    elif not exceptionChecker(e, [ConnectionManuallyClosedException]):
-                        self.resetSession()
-                        if self.log: print("Connection Dropped. Retrying in 10 seconds.")
-                        time.sleep(10)
-                        self.run()
-                    else:
-                        if self.log: print("Connection forcibly closed using close function.")
-            else:
-            	pass
 
     ######################################################
     def sessionUpdates(self, resp):

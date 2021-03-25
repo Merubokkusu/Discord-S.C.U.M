@@ -1,5 +1,8 @@
 # Fetching Guild Members
-Alright so this really needs a page of its own because it's special. There's no actual api endpoint to get the guild members, so instead what discum does is fetch the member list, piece by piece. Discum also provides some params for the fetchMembers function that allow you to modify fetching behavior (in almost any way you want).
+Alright so this really needs a page of its own because it's special. There's no actual api endpoint to get the guild members, so instead what discum does is fetch the member list, piece by piece. Discum also provides some params for the fetchMembers function that allow you to modify fetching behavior (in almost any way you want).      
+    
+Note that for large guilds (```bot.gateway.session.guild('GUILD_ID').large == True```), the member list only contains the not-offline members.       
+
 # Links/Table of Contents
 - [Usage](https://github.com/Merubokkusu/Discord-S.C.U.M/blob/master/docs/using.md#fetch-guild-members)
 - [Reasoning/Make your own fetchMembers function](https://arandomnewaccount.gitlab.io/discord-unofficial-docs/lazy_guilds.html)

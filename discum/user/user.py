@@ -82,6 +82,10 @@ class User(object):
 		url = self.discord+"users/@me/sticker-packs"
 		return Wrapper.sendRequest(self.s, 'get', url, log=self.log)
 
+	def getNotes(self, userID):
+		url = self.discord+"users/@me/notes/"+userID
+		return Wrapper.sendRequest(self.s, 'get', url, log=self.log)
+
 	'''
 	Profile Edits
 	'''	

@@ -108,7 +108,7 @@ class GuildCombo(object):
 					self.updateCurrent(guild_id) #current = previous+1
 					if wait!=None: time.sleep(wait)
 					self.gatewayobj.request.lazyGuild(guild_id, {channel_id: ranges})
-				elif resp.event.guild_member_list:
+				if resp.event.guild_member_list:
 					parsed = resp.parsed.guild_member_list_update()
 					if parsed['guild_id'] == guild_id and ('SYNC' in parsed['types'] or 'UPDATE' in parsed['types']):
 						endFetching = False
@@ -133,7 +133,9 @@ class GuildCombo(object):
 							elif i == 'INVALIDATE':
 								if parsed['locations'][ind] in ranges or parsed['member_count'] == 0:
 									endFetching = True
-						if ranges==[[0],[0]] or index>=stopIndex or ranges[-2][-1]>self.gatewayobj.session.guild(guild_id).memberCount or ranges[-1][-1]>self.gatewayobj.session.guild(guild_id).memberCount or endFetching: #putting whats most likely to happen first
+						numFetched = len(self.gatewayobj.session.guild(guild_id).members)
+						roundedUpFetched = numFetched-(numFetched%-100) #https://stackoverflow.com/a/14092788/14776493
+						if ranges==[[0],[0]] or index>=stopIndex or roundedUpFetched>=self.gatewayobj.session.guild(guild_id).memberCount or endFetching: #putting whats most likely to happen first
 							self.gatewayobj.memberFetchingStatus[guild_id] = "done"
 							self.gatewayobj.removeCommand(
 							    {

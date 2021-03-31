@@ -296,6 +296,12 @@ class Client:
     def removeMentionFromInbox(self, messageID):
         return User(self.discord,self.s,self.log).removeMentionFromInbox(messageID)
 
+    def getMyStickers(self):
+    	return User(self.discord,self.s,self.log).getMyStickers()
+
+    def getNotes(self, userID):
+    	return User(self.discord,self.s,self.log).getNotes(userID)
+
     def setHypesquad(self, house):
         return User(self.discord,self.s,self.log).setHypesquad(house)
 

@@ -338,6 +338,10 @@ class guild(Session):
         return Session.settings_ready['guilds'][self.guildID]['large']
 
     @property
+    def threads(self):
+        return Session.settings_ready['guilds'][self.guildID]['threads']
+
+    @property
     def explicitContentFilter(self): #https://discord.com/developers/docs/resources/guild#guild-object-explicit-content-filter-level
         return Session.settings_ready['guilds'][self.guildID]['explicit_content_filter']
 

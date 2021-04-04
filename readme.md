@@ -102,7 +102,7 @@ bot.gateway.run(auto_reconnect=True)
 - [X] On-Message (and other on-anything gateway) capabilities
 - [X] Getting guild members
 - [ ] add more http api wraps
-- [ ] move to async (eventually)
+- [ ] improve documentation
 - [ ] Making phone calls, sending audio/video data thru those calls
 - [ ] Everything
 

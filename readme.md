@@ -125,8 +125,8 @@ A: https://stackoverflow.com/a/53310545/14776493
 Q: I'm getting ```KeyError: 'members'``` when running ```bot.gateway.session.guild(guild_ID).members```. Why?      
 A: KeyErrors happened on previous versions where the "members" key was not set until you ran ```bot.gateway.fetchMembers(...); bot.gateway.run()```. Due to this causing some confusion, the latest versions do not display this KeyError (instead, the value of "members" is an empty dictionary to start with). Of course, you still have to fetch the members (a gateway operation) in order to get the members.
 
-Q: ```import _brotli ImportError: DLL load failed: The specified module could not be found.``` How to fix?
-A: https://github.com/google/brotli/issues/782
+Q: ```import _brotli ImportError: DLL load failed: The specified module could not be found.``` How to fix?       
+A: https://github.com/google/brotli/issues/782        
 
 Q: I'm getting ```requests.exceptions.ConnectionError: ('Connection aborted.', ConnectionResetError(54, 'Connection reset by peer'))```. How to fix?          
 A: Just run the command again and it should work.   

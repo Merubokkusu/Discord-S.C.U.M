@@ -79,5 +79,5 @@ class Guild(object):
 	def agreeGuildRules(self, guildID, form_fields, version):
 		url = "https://discord.com/api/v8/guilds/"+guildID+"/requests/@me"
 		form_fields[0]['response'] = True
-		body = {"version":version, "form_fields":json.dumps(form_fields)}
+		body = {"version":version, "form_fields":form_fields}
 		return Wrapper.sendRequest(self.s, 'put', url, body, log=self.log)

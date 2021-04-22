@@ -16,6 +16,8 @@ class GuildRequest(object):
 		        "channels": channel_ranges,
 		    },
 		}
+		if channel_ranges == None:
+			data["d"].pop("channels")
 		if typing == None:
 			data["d"].pop("typing")
 		if threads == None:

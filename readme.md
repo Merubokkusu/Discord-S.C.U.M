@@ -128,8 +128,5 @@ A: KeyErrors happened on previous versions where the "members" key was not set u
 Q: ```import _brotli ImportError: DLL load failed: The specified module could not be found.``` How to fix?       
 A: https://github.com/google/brotli/issues/782        
 
-Q: I'm getting ```requests.exceptions.ConnectionError: ('Connection aborted.', ConnectionResetError(54, 'Connection reset by peer'))```. How to fix?          
-A: Just run the command again and it should work.   
-
 ## Notes
 In recent years, token logging has become more common (as many people don't check code before they run it). I've seen many closed-source selfbots, and while surely some are well intentioned, others not so much. Discum (discord api wrapper) is open-sourced and organized to provide transparency, but even so, we encourage you to look at the code. Not only will looking at the code help you to better understand how discord's api is structured, but it'll also let you know exactly what you're running. If you have any questions about Discum, feel free to ask us.

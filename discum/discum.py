@@ -30,8 +30,9 @@ class Client:
         self.userData = {}
         self.__proxy_host = None if proxy_host in (None,False) else proxy_host
         self.__proxy_port = None if proxy_port in (None,False) else proxy_port
-        self.discord = 'https://discord.com/api/v8/'
-        self.websocketurl = 'wss://gateway.discord.gg/?encoding=json&v=8&compress=zlib-stream'
+        self.api_version = 9
+        self.discord = 'https://discord.com/api/v'+str(self.api_version)+'/'
+        self.websocketurl = 'wss://gateway.discord.gg/?encoding=json&v='+str(self.api_version)+'&compress=zlib-stream'
         #step 2: user agent
         if user_agent != "random":
             self.__user_agent = user_agent
@@ -66,7 +67,7 @@ class Client:
         #step 4: cookies
         self.s.cookies.update({"locale": self.locale})
         #step 5: super-properties (part of headers)
-        self.__super_properties = SuperProperties(self.s, buildnum=build_num, log=self.log).GetSuperProperties(self.__user_agent)
+        self.__super_properties = SuperProperties(self.s, buildnum=build_num, log=self.log).GetSuperProperties(self.__user_agent, self.locale)
         self.s.headers.update({"X-Super-Properties": base64.b64encode(str(self.__super_properties).encode()).decode("utf-8")})
         #step 6: token/authorization/fingerprint (also part of headers, except for fingerprint)
         if self.__user_token in ("",None,False): #assuming email and pass are given...
@@ -116,8 +117,8 @@ class Client:
     def getBuildNumber(self):
         return SuperProperties(self.s, "request", self.log).RequestBuildNumber()
 
-    def getSuperProperties(self, user_agent, buildnum="request"):
-        return SuperProperties(self.s, buildnum, self.log).GetSuperProperties(user_agent)
+    def getSuperProperties(self, user_agent, locale, buildnum="request"):
+        return SuperProperties(self.s, buildnum, self.log).GetSuperProperties(user_agent, locale) #self.locale
 
     def getGatewayUrl(self):
         return Other(self.s, self.discord, self.log).getGatewayUrl()
@@ -464,15 +465,16 @@ class Client:
     def science(self, events): #the real prep for science events happens down here, and only once for each client obj
         if self.Science == "":
             try:
-                #get xfingerprint
-                if self.__xfingerprint == "":
-                    self.__xfingerprint = Login(self.s, self.discord, self.log).GetXFingerprint()
-                    time.sleep(1)
                 #get analytics token
-                self.userData = User(self.discord,self.s,self.log).info(with_analytics_token=True).json() #this is essentially the connection test. We need it cause we can get important data without connecting to the gateway.
-                connectiontest = self.userData["analytics_token"]
+                response = User(self.discord,self.s,self.log).info(with_analytics_token=True)
+                if response.status_code == 401:
+                	raise
+                self.userData = response.json() #this is essentially the connection test. We need it cause we can get important data without connecting to the gateway.
             except:
                 self.userData = {"analytics_token": None, "id": "0"} #if token invalid
+                #get xfingerprint
+                if self.__xfingerprint == "":
+                	self.__xfingerprint = Login(self.s, self.discord, self.log).GetXFingerprint()
             #initialize Science object
             self.Science = Science(self.discord, self.s, self.log, self.userData["analytics_token"], self.userData["id"], self.__xfingerprint)
         return self.Science.science(events)

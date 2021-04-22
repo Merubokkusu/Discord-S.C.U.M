@@ -66,18 +66,18 @@ class Guild(object):
 	Once the equivalent gateway command/request is added, the getGuildMember function will be removed from here.
 	'''
 	def getGuildMember(self, guildID, userID):
-		url = self.discord+"/guilds/%s/members/%s" % (guildID, userID)
+		url = self.discord+"guilds/%s/members/%s" % (guildID, userID)
 		return Wrapper.sendRequest(self.s, 'get', url, log=self.log)
 
 	#get member verification data
 	def getMemberVerificationData(self, guildID, with_guild=False, invite_code=None):
-		url = "https://discord.com/api/v8/guilds/"+guildID+"/member-verification?with_guild="+str(with_guild).lower()
+		url = self.discord+"guilds/"+guildID+"/member-verification?with_guild="+str(with_guild).lower()
 		if invite_code != None:
 			url += "&invite_code="+invite_code
 		return Wrapper.sendRequest(self.s, 'get', url, log=self.log)
 
 	def agreeGuildRules(self, guildID, form_fields, version):
-		url = "https://discord.com/api/v8/guilds/"+guildID+"/requests/@me"
+		url = self.discord+"guilds/"+guildID+"/requests/@me"
 		form_fields[0]['response'] = True
 		body = {"version":version, "form_fields":form_fields}
 		return Wrapper.sendRequest(self.s, 'put', url, body, log=self.log)

@@ -34,23 +34,14 @@ class Science(object):
         url = self.discord +"science"
         for event in events:
             if "type" not in event:
-                event["type"] = "keyboard_shortcut_used" #random default type, will make an event helper later
+                event["type"] = "keyboard_mode_toggled" #random default type
             if "properties" not in event or "client_send_timestamp" not in event["properties"] or "client_track_timestamp" not in event["properties"] or "client_uuid" not in event["properties"]:
                 event["properties"] = self.getTrackingProperties()
             else:
                 self.UUIDobj.eventNum += 1
         body = {'token': self.analytics_token, 'events':events}
         if self.analytics_token == None: #if not logged in. ex: bot=discum.Client(token='poop')
-            body.pop('token')
-            import requests
-            s = requests.Session()
-            s.proxies.update(self.s.proxies)
-            for header in self.s.headers:
-                if header != "Authorization":
-                    s.headers[header] = self.s.headers[header]
-                else:
-                    s.headers["Authorization"] = None
-                    s.headers["X-fingerprint"] = self.xfingerprint
+            headerModifications = {"add":{"X-fingerprint": self.xfingerprint}, "remove": "Authorization"}
+            return Wrapper.sendRequest(self.s, 'post', url, body, headerModifications=headerModifications, log=self.log)
         else:
-            s = self.s
-        return Wrapper.sendRequest(s, 'post', url, body, log=self.log)
+            return Wrapper.sendRequest(self.s, 'post', url, body, log=self.log)

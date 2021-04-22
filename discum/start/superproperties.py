@@ -28,7 +28,7 @@ class SuperProperties:
             if self.log: print('Could not retrieve discord build number.')
             return None
 
-    def GetSuperProperties(self, user_agent):
+    def GetSuperProperties(self, user_agent, locale):
         parseduseragent = ua_parser.user_agent_parser.Parse(user_agent)
         browser_ver_list = [parseduseragent["user_agent"]["major"], parseduseragent["user_agent"]["minor"], parseduseragent["user_agent"]["patch"]]
         os_ver_list = [parseduseragent["os"]["major"], parseduseragent["os"]["minor"], parseduseragent["os"]["patch"]]
@@ -36,6 +36,7 @@ class SuperProperties:
             "os": parseduseragent["os"]["family"],
             "browser": parseduseragent["user_agent"]["family"],
             "device": "",
+            "system_locale": locale,
             "browser_user_agent": parseduseragent["string"],
             "browser_version": ".".join(filter(None, browser_ver_list)),
             "os_version": ".".join(filter(None, os_ver_list)),
@@ -44,7 +45,7 @@ class SuperProperties:
             "referrer_current": "",
             "referring_domain_current": "",
             "release_channel": "stable",
-            "client_build_number": 78247,
+            "client_build_number": 82866,
             "client_event_source": None
         }
         if self.buildnum == "request":

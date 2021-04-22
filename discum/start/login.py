@@ -9,7 +9,7 @@ class Login:
     def __init__(self, s, discordurl, log):
         self.discord = discordurl
         self.log = log
-        self.editedS = editedReqSession(s, {"remove": ["Authorization", "X-Fingerprint"]})
+        self.editedS = Wrapper.editedReqSession(s, {"remove": ["Authorization", "X-Fingerprint"]})
 
     def GetXFingerprint(self):
         url = self.discord + "experiments"

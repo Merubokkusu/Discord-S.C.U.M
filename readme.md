@@ -26,7 +26,7 @@ A simple, easy to use, non-restrictive Discord API Wrapper for Selfbots/Userbots
 - easy-to-use (make selfbots/userbots)
 - easy-to-extend/edit (adding more api wrappers)
 - readable (organized 😃 )
-- pretty undetectable (all api wraps, with the exception of getGuildMember, point to user(/"private") apis)
+- all api wraps, with the exception of getGuildMember, point to user/"private" apis
 - on-event (gateway) capabilities
 - [extremely customizable fetchMembers function](https://github.com/Merubokkusu/Discord-S.C.U.M/blob/master/docs/fetchingGuildMembers.md)
 - support for python 2.7

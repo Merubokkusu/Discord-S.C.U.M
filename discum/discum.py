@@ -67,10 +67,14 @@ class Client:
         #step 4: cookies
         self.s.cookies.update({"locale": self.locale})
         #step 5: super-properties (part of headers)
-        self.__super_properties = SuperProperties(self.s, buildnum=build_num, log=self.log).GetSuperProperties(self.__user_agent, self.locale)
+        tokenProvided = self.__user_token not in ("",None,False)
+        if not tokenProvided: #assuming email and pass are given...
+        	self.__super_properties = SuperProperties(self.s, buildnum=build_num, log=self.log).GetSuperProperties(self.__user_agent, self.locale)
+        else:
+        	self.__super_properties = SuperProperties(self.s, buildnum=build_num, log=self.log).GetSuperProperties(self.__user_agent, None)
         self.s.headers.update({"X-Super-Properties": base64.b64encode(str(self.__super_properties).encode()).decode("utf-8")})
         #step 6: token/authorization/fingerprint (also part of headers, except for fingerprint)
-        if self.__user_token in ("",None,False): #assuming email and pass are given...
+        if not tokenProvided:
             self.__user_token, self.__xfingerprint = Login(self.s, self.discord, self.log).GetToken(email=email, password=password, secret=secret, code=code) #update token from "" to actual value
             time.sleep(1)            
         self.s.headers.update({"Authorization": self.__user_token}) #update headers
@@ -117,7 +121,7 @@ class Client:
     def getBuildNumber(self):
         return SuperProperties(self.s, "request", self.log).RequestBuildNumber()
 
-    def getSuperProperties(self, user_agent, locale, buildnum="request"):
+    def getSuperProperties(self, user_agent, buildnum="request", locale=None):
         return SuperProperties(self.s, buildnum, self.log).GetSuperProperties(user_agent, locale) #self.locale
 
     def getGatewayUrl(self):

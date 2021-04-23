@@ -45,9 +45,11 @@ class SuperProperties:
             "referrer_current": "",
             "referring_domain_current": "",
             "release_channel": "stable",
-            "client_build_number": 82866,
+            "client_build_number": 83036,
             "client_event_source": None
         }
+        if locale == None:
+        	sp.pop("system_locale")
         if self.buildnum == "request":
             reqbuildnum = self.RequestBuildNumber()
             if reqbuildnum != None:

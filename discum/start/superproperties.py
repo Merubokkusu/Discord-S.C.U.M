@@ -13,7 +13,7 @@ class SuperProperties:
         self.buildnum = buildnum
         self.log = log
 
-    def RequestBuildNumber(self):
+    def requestBuildNumber(self):
         if self.log: print("Retrieving Discord's build number...")
         discord_login_page_exploration = self.s.get('https://discord.com/login').text
         time.sleep(1)
@@ -28,7 +28,7 @@ class SuperProperties:
             if self.log: print('Could not retrieve discord build number.')
             return None
 
-    def GetSuperProperties(self, user_agent, locale):
+    def getSuperProperties(self, user_agent, locale):
         parseduseragent = ua_parser.user_agent_parser.Parse(user_agent)
         browser_ver_list = [parseduseragent["user_agent"]["major"], parseduseragent["user_agent"]["minor"], parseduseragent["user_agent"]["patch"]]
         os_ver_list = [parseduseragent["os"]["major"], parseduseragent["os"]["minor"], parseduseragent["os"]["patch"]]
@@ -51,7 +51,7 @@ class SuperProperties:
         if locale == None:
         	sp.pop("system_locale")
         if self.buildnum == "request":
-            reqbuildnum = self.RequestBuildNumber()
+            reqbuildnum = self.requestBuildNumber()
             if reqbuildnum != None:
                 sp["client_build_number"] = reqbuildnum
         else:

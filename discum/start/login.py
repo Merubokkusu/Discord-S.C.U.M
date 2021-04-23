@@ -11,7 +11,7 @@ class Login:
         self.log = log
         self.editedS = Wrapper.editedReqSession(s, {"remove": ["Authorization", "X-Fingerprint"]})
 
-    def GetXFingerprint(self):
+    def getXFingerprint(self):
         url = self.discord + "experiments"
         reqxfinger = Wrapper.sendRequest(self.editedS, 'get', url, log=self.log)
         xfingerprint = json.loads(reqxfinger.content).get('fingerprint')
@@ -20,9 +20,9 @@ class Login:
                 print('xfingerprint could not be fetched.')
         return xfingerprint
 
-    def GetToken(self, email, password, undelete=False, captcha=None, source=None, gift_code_sku_id=None, secret="", code=""):
+    def getToken(self, email, password, undelete=False, captcha=None, source=None, gift_code_sku_id=None, secret="", code=""):
         url = self.discord + "auth/login"
-        self.xfingerprint = self.GetXFingerprint()
+        self.xfingerprint = self.getXFingerprint()
         self.editedS.headers.update({"X-Fingerprint": self.xfingerprint})
         body = {
             "email": email,

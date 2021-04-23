@@ -69,13 +69,13 @@ class Client:
         #step 5: super-properties (part of headers)
         tokenProvided = self.__user_token not in ("",None,False)
         if not tokenProvided: #assuming email and pass are given...
-        	self.__super_properties = SuperProperties(self.s, buildnum=build_num, log=self.log).GetSuperProperties(self.__user_agent, self.locale)
+        	self.__super_properties = SuperProperties(self.s, buildnum=build_num, log=self.log).getSuperProperties(self.__user_agent, self.locale)
         else:
-        	self.__super_properties = SuperProperties(self.s, buildnum=build_num, log=self.log).GetSuperProperties(self.__user_agent, None)
+        	self.__super_properties = SuperProperties(self.s, buildnum=build_num, log=self.log).getSuperProperties(self.__user_agent, None)
         self.s.headers.update({"X-Super-Properties": base64.b64encode(str(self.__super_properties).encode()).decode("utf-8")})
         #step 6: token/authorization/fingerprint (also part of headers, except for fingerprint)
         if not tokenProvided:
-            self.__user_token, self.__xfingerprint = Login(self.s, self.discord, self.log).GetToken(email=email, password=password, secret=secret, code=code) #update token from "" to actual value
+            self.__user_token, self.__xfingerprint = Login(self.s, self.discord, self.log).getToken(email=email, password=password, secret=secret, code=code) #update token from "" to actual value
             time.sleep(1)            
         self.s.headers.update({"Authorization": self.__user_token}) #update headers
         #step 7: gateway (object initialization)
@@ -113,16 +113,16 @@ class Client:
     start
     '''
     def login(self, email, password, undelete=False, captcha=None, source=None, gift_code_sku_id=None, secret="", code=""):
-        return Login(self.s, self.discord, self.log).GetToken(email, password, undelete, captcha, source, gift_code_sku_id, secret, code)
+        return Login(self.s, self.discord, self.log).getToken(email, password, undelete, captcha, source, gift_code_sku_id, secret, code)
 
     def getXFingerprint(self):
-        return Login(self.s, self.discord, self.log).GetXFingerprint()
+        return Login(self.s, self.discord, self.log).getXFingerprint()
 
     def getBuildNumber(self):
-        return SuperProperties(self.s, "request", self.log).RequestBuildNumber()
+        return SuperProperties(self.s, "request", self.log).requestBuildNumber()
 
     def getSuperProperties(self, user_agent, buildnum="request", locale=None):
-        return SuperProperties(self.s, buildnum, self.log).GetSuperProperties(user_agent, locale) #self.locale
+        return SuperProperties(self.s, buildnum, self.log).getSuperProperties(user_agent, locale) #self.locale
 
     def getGatewayUrl(self):
         return Other(self.s, self.discord, self.log).getGatewayUrl()
@@ -478,7 +478,7 @@ class Client:
                 self.userData = {"analytics_token": None, "id": "0"} #if token invalid
                 #get xfingerprint
                 if self.__xfingerprint == "":
-                	self.__xfingerprint = Login(self.s, self.discord, self.log).GetXFingerprint()
+                	self.__xfingerprint = Login(self.s, self.discord, self.log).getXFingerprint()
             #initialize Science object
             self.Science = Science(self.discord, self.s, self.log, self.userData["analytics_token"], self.userData["id"], self.__xfingerprint)
         return self.Science.science(events)

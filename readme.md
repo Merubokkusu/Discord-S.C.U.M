@@ -7,7 +7,8 @@ A simple, easy to use, non-restrictive Discord API Wrapper for Selfbots/Userbots
 ![https://files.catbox.moe/3ns003.png](https://files.catbox.moe/3ns003.png)
         
 \* You can send issues to discordtehe@gmail.com (arandomnewaccount will respond). If you put them in the issues tab, either arandomnewaccount will edit your message to "respond" because he can't post public comments or Merubokkusu will respond. Please at least read the README before submitting an issue.       
-** Currently really busy so might take a while to respond.
+** Currently really busy so might take a while to respond.        
+##### *** IMPORTANT: if you want to use bot.createDM, bot.requestFriend, and bot.joinGuild, be very careful. For now (until discord's selfbotting detection gets a little more documented), using a browser automator (selenium, pyppeteer, etc) for these 3 actions is a good choice (when in doubt, try to mimic the real client). Anyway, if you find something interesting/useful regarding discord's selfbot detection, feel free to share here: https://github.com/Merubokkusu/Discord-S.C.U.M/issues/41 :)
 
 ## Table of Contents
 - [Key Features](#Key-features)

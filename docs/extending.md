@@ -8,6 +8,8 @@ How to add extra API wraps to discum?
 There are 2 parts to this: (1) writing the wrapper and (2) wrapping that wrapper. The second part is simply for naming and organization purposes.
 
 ##### 1) The wrapper is coded. 
+This happens in one of the nested files. So like if you wanted to add in a wrapper for a messages api endpoint, just to be organized, you'd add it into 
+discum -> messages -> messages.py -> Messages class.           
 Here's the format of each type of wrapper (depends on type of http request):
 
 ###### GET: 
@@ -49,7 +51,7 @@ def wrapper(**params):
 def createDM(self,recipients):
     return Messages(self.discord,self.s,self.log).createDM(recipients)
 ```
-self.discord is the discord url (https://discord.com/api/v8/)     
+self.discord is the discord url (https://discord.com/api/v9/)     
 self.s is your current client's requests session     
 self.log tells the discum whether or not to log stuff     
 ### gateway APIs
@@ -60,10 +62,20 @@ The 3 types of wrappers are request, parse, and combo.
 ###### request:
 here's an example of a request wrapper (from discum > gateway > guild > request.py)
 ```python
-def searchGuildMembers(self, guild_ids, query, limit=10, presences=True):
-    if isinstance(guild_ids, str):
-        guild_ids = [guild_ids]
-    self.gatewayobject.send({"op":self.gatewayobject.OPCODE.REQUEST_GUILD_MEMBERS,"d":{"guild_id":guildIDs,"query":query,"limit":limit,"presences":presences}})
+def searchGuildMembers(self, guild_ids, query, limit, presences, user_ids): #note that query can only be "" if you have admin perms (otherwise you'll get inconsistent responses from discord)
+	if isinstance(guild_ids, str):
+		guild_ids = [guild_ids]
+	data = {
+	    "op": self.gatewayobject.OPCODE.REQUEST_GUILD_MEMBERS,
+	    "d": {"guild_id": guild_ids},
+	}
+	if isinstance(user_ids, list): #there are 2 types of op8 that the client can send
+		data["d"]["user_ids"] = user_ids
+	else:
+		data["d"]["query"] = query
+		data["d"]["limit"] = limit
+		data["d"]["presences"] = presences
+	self.gatewayobject.send(data)
 ```
 The only required part of these functions is the ```self.gatewayobject.send``` part. This sends messages to discum thru the gateway.
 ###### parse
@@ -94,7 +106,7 @@ def message_create(response):
     message["type"] = types[response["d"]["type"]] #number to str
     return message
 ```
-Function names are just lowercase types, so for type GUILD_MEMBER_LIST_UPDATE, the function is named guild_member_list_update.
+Function names for parsing functions are just lowercased types, so for type GUILD_MEMBER_LIST_UPDATE, the function is named guild_member_list_update.
 The other required parts are that (1) the method is static (unless you choose to make an \_\_init__ function), (2) response is always the first parameter, and (3) the function returns something.
 ###### combo
 Combo functions such as the fetchMembers function in discum > gateway > guild > combo.py tend to use both request wrappers and parse wrappers. fetchMembers also parses more than 1 response and removes itself from the command list once it finishes fetching members. For a simple example of this automatically-self-removing command, see https://github.com/Merubokkusu/Discord-S.C.U.M/blob/master/discum/gateway/guild/combo.py#L133.

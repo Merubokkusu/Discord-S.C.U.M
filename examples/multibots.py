@@ -3,7 +3,7 @@
 #we can pass in the bot object into the closeAfterReadySupp gateway function.
 import discum
 
-with open("../../../tokenlist.txt") as f:
+with open("tokenlist.txt") as f:
 	tokenlist = f.read().splitlines()
 
 def closeAfterReadySupp(resp, bot):

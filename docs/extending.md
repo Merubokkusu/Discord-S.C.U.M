@@ -77,7 +77,7 @@ def searchGuildMembers(self, guild_ids, query, limit, presences, user_ids): #not
 		data["d"]["presences"] = presences
 	self.gatewayobject.send(data)
 ```
-The only required part of these functions is the ```self.gatewayobject.send``` part. This sends messages to discum thru the gateway.
+The only required part of these functions is the ```self.gatewayobject.send``` part. This sends messages to discord thru the gateway.
 ###### parse
 here's an example of a parse function (from discum > gateway > messages > parse.py)
 ```python

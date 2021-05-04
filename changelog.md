@@ -1,4 +1,16 @@
 # Changelog
+# 1.2.1
+### Added
+- channel\_create and channel\_delete parser methods
+- channel\_create and channel\_delete gateway.session updates
+- multibots example
+### Changed
+- gateway.run(auto_reconnect=True) now only disconnects on gateway.close() and ctrl-c
+- fetch members now checks how many members have been fetched instead of how many members were requested for (important for knowing when to stop fetching members for small guilds)
+- organized RESTapiwrap.py
+- updated api version to v9
+- updated superproperties creation to include system-locale key only if token is not used for bot initialization
+
 # 1.2.0
 ### Added
 - added guild_create parsing function

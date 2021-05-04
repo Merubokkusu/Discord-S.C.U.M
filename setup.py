@@ -18,7 +18,7 @@ URL = 'https://github.com/Merubokkusu/Discord-S.C.U.M'
 EMAIL = 'loser@merubokkusu.com'
 AUTHOR = 'Merubokkusu'
 REQUIRES_PYTHON = '>=2.7.0'
-VERSION = '1.2.0'
+VERSION = '1.2.1'
 
 # What packages are required for this module to be executed?
 REQUIRED = [

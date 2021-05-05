@@ -45,6 +45,7 @@ from github:
 ```
 python -m pip install --user --upgrade git+https://github.com/Merubokkusu/Discord-S.C.U.M.git
 ```          
+The pypi version is not recommended since it is currently not up to date.        
 Note that older versions (specifically, before 0.3.1) do not mimic the official discord client as well as the latest version          
 [and therefore could get your account disabled](https://github.com/Merubokkusu/Discord-S.C.U.M/issues/27#issuecomment-779171666). When in doubt, just install the latest version.
 #### Prerequisites (installed automatically using above methods)

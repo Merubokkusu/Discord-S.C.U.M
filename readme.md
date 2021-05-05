@@ -41,14 +41,10 @@ A simple, easy to use, non-restrictive Discord API Wrapper for Selfbots/Userbots
   Note, using a selfbot is against Discord's Terms of Service and you could get banned for using one if you're not careful. Also, this needs to be said: discum does not have rate limit handling. The main reasons for this are that discum is made to (1) be (relatively) simple and (2) give the developer/user freedom (generally I'd recommend a bit more than 1 second in between tasks of the same type, but if you'd like a longer or shorter wait time that's up to you). We (Merubokkusu and anewrandomaccount) do not take any responsibility for any consequences you might face while using discum. We also do not take any responsibility for any damage caused (to servers/channels) through the use of Discum. Discum is a tool; how you use this tool is on you.
 
 ## Installation  
-from github (recommended):
+from github:
 ```
 python -m pip install --user --upgrade git+https://github.com/Merubokkusu/Discord-S.C.U.M.git
-```
-or from PyPI:      
-```python
-python -m pip install --user --upgrade discum
-```               
+```          
 Note that older versions (specifically, before 0.3.1) do not mimic the official discord client as well as the latest version          
 [and therefore could get your account disabled](https://github.com/Merubokkusu/Discord-S.C.U.M/issues/27#issuecomment-779171666). When in doubt, just install the latest version.
 #### Prerequisites (installed automatically using above methods)

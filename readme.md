@@ -16,6 +16,7 @@ A simple, easy to use, non-restrictive Discord API Wrapper for Selfbots/Userbots
 - [Installation](#Installation)
   - [Prerequisites](#prerequisites-installed-automatically-using-above-methods)
 - [Documentation](#Documentation)
+- [Contributing](#Contributing)
 - [Example Usage](#Example-usage)
 - [Links](#Links)
 - [Checklist](#Checklist)
@@ -60,8 +61,11 @@ Note that older versions (specifically, before 0.3.1) do not mimic the official 
 - random_user_agent
 
 ## Documentation
-Don't refer to the wiki, refer to these docs instead:
-https://github.com/Merubokkusu/Discord-S.C.U.M/tree/master/docs
+This project's documentation can be found at
+[https://github.com/Merubokkusu/Discord-S.C.U.M/tree/master/docs](https://github.com/Merubokkusu/Discord-S.C.U.M/tree/master/docs)
+
+## Contributing
+Please see the [contribution guidelines](https://github.com/Merubokkusu/Discord-S.C.U.M/blob/master/contributing.md)
 
 # Example usage
 ```python

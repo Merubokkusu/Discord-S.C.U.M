@@ -13,7 +13,7 @@ question can be answered from the following 5 steps:
 - [ ] The [project FAQ](https://github.com/Merubokkusu/Discord-S.C.U.M#faq)
 - [ ] Search for your question in [old existing issues](https://github.com/Merubokkusu/Discord-S.C.U.M/issues)
 - [ ] If you encountered an error message, try googling the error message and see if you find an answer
-- [ ] Check if the same issue exists if you uninstall the websocket-client
+- [ ] Check if the same issue exists if you uninstall the Discord-S.C.U.M
 library on your system (using `pip uninstall discum` or maybe
 `pip3 uninstall discum`) and install the
 [latest master branch](https://github.com/Merubokkusu/Discord-S.C.U.M)

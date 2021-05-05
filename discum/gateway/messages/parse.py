@@ -18,8 +18,13 @@ class MessageParse(object):
 		    12: "channel_follow_added",
 		    14: "guild_discovery_disqualified",
 		    15: "guild_discovery_requalified",
+		    16: "guild_discovery_grace_period_initial_warning",
+		    17: "guild_discovery_grace_period_final_warning",
+		    18: "thread_created",
 		    19: "reply",
-		    20: "application_command"
+		    20: "application_command",
+		    21: "thread_starter_message",
+		    22: "guild_invite_reminder"
 		}
 		message["type"] = types[response["d"]["type"]] #number to str
 		return message

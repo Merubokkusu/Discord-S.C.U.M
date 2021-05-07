@@ -112,6 +112,9 @@ bot.gateway.run(auto_reconnect=True)
 Contributions are welcome. You can submit issues, make pull requests, or suggest features. Ofc not all suggestions will be implemented (because discum is intended to be a transparent, relatively-raw discord user api wrapper), but all suggestions will be looked into.            
 
 ## FAQ
+Q: I'm getting ```if log["console"]: TypeError: 'bool' object is not subscriptable```. Why?
+A: A recent commit to the github repo has a version-breaking change: log is now a dictionary instead of a boolean. The reason for this is to allow the dev/user to specify a log file if they wish. You can either update your code according to https://github.com/Merubokkusu/Discord-S.C.U.M/blob/master/docs/using.md#logging or use https://github.com/Merubokkusu/Discord-S.C.U.M/releases/tag/v1.2.1 for now. However, I recommend updating when v1.2.2 comes out.
+
 Q: Why am I getting Attribute Errors?          
 A: Most likely you've installed discum through pip, which is not always updated. To get the most recent version, install through github. However, if you're getting an ```AttributeError: 'GatewayServer' object has no attribute 'session'``` all this means is that you haven't connected to the gateway yet (using ```bot.gateway.run()```). (there's no gateway session if you haven't connected ever).    
 

@@ -2,9 +2,9 @@ import filetype
 import requests
 import os
 
-if __import__('sys').version.split(' ')[0] < '3.0.0':
+try:
     from urlparse import urlparse
-else:
+except ImportError:
     from urllib.parse import urlparse
 
 class Fileparse(object):

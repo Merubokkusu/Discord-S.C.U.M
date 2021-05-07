@@ -4,7 +4,7 @@ import os
 
 try:
     from urlparse import urlparse
-except ImporError:
+except ImportError:
     from urllib.parse import urlparse
 
 class Fileparse(object):

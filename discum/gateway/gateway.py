@@ -181,8 +181,9 @@ class GatewayServer:
             self.send({"op": self.OPCODE.RESUME, "d": {"token": self.token, "session_id": self.session_id, "seq": self.sequence-1 if self.sequence>0 else self.sequence}})
 
     def on_message(self, ws, message):
-        self.sequence += 1
         response = self.decompress(message)
+        if response['op'] != self.OPCODE.HEARTBEAT_ACK:
+            self.sequence += 1
         resp = Resp(copy.deepcopy(response))
         Logger.log('[gateway] < {}'.format(response), LogLevel.RECEIVE, self.log)
         if response['op'] == self.OPCODE.HELLO: #only happens once, first message sent to client
@@ -192,7 +193,7 @@ class GatewayServer:
             if self._last_ack != None:
                 self.latency = time.perf_counter() - self._last_ack
         elif response['op'] == self.OPCODE.HEARTBEAT:
-            self.send({"op": self.OPCODE.HEARTBEAT,"d": self.sequence-1 if self.sequence>0 else self.sequence})
+            self.send({"op": self.OPCODE.HEARTBEAT,"d": self.sequence})
         elif response['op'] == self.OPCODE.INVALID_SESSION:
             Logger.log("[gateway] Invalid session.", None, self.log)
             self._last_err = InvalidSessionException("Invalid Session Error.")
@@ -246,7 +247,7 @@ class GatewayServer:
             time.sleep(self.interval)
             if not self.connected:
                 break
-            self.send({"op": self.OPCODE.HEARTBEAT,"d": self.sequence-1 if self.sequence>0 else self.sequence})
+            self.send({"op": self.OPCODE.HEARTBEAT,"d": self.sequence})
             self._last_ack = time.perf_counter()
 
     #just a wrapper for ws.send

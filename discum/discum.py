@@ -284,48 +284,7 @@ class Client:
     def setDiscriminator(self, discriminator): #USER PASSWORD NEEDS TO BE SET BEFORE THIS IS RUN
         return User(self.discord,self.s,self.log).setDiscriminator(discriminator, password=self.__user_password)
 
-    '''
-    other user stuff
-    '''
-    def getProfile(self, userID):
-        return User(self.discord,self.s,self.log).getProfile(userID)
-
-    def info(self, with_analytics_token=None):
-        return User(self.discord,self.s,self.log).info(with_analytics_token)
-
-    def getConnectedAccounts(self):
-    	return User(self.discord,self.s,self.log).getConnectedAccounts()
-
-    def getUserAffinities(self):
-        return User(self.discord,self.s,self.log).getUserAffinities()
-
-    def getGuildAffinities(self):
-        return User(self.discord,self.s,self.log).getGuildAffinities()
-
-    def getMentions(self, limit=25, roleMentions=True, everyoneMentions=True):
-        return User(self.discord,self.s,self.log).getMentions(limit, roleMentions, everyoneMentions)
-
-    def removeMentionFromInbox(self, messageID):
-        return User(self.discord,self.s,self.log).removeMentionFromInbox(messageID)
-
-    def getMyStickers(self):
-    	return User(self.discord,self.s,self.log).getMyStickers()
-
-    def getNotes(self, userID):
-    	return User(self.discord,self.s,self.log).getNotes(userID)
-
-    def setHypesquad(self, house):
-        return User(self.discord,self.s,self.log).setHypesquad(house)
-
-    def leaveHypesquad(self):
-        return User(self.discord,self.s,self.log).leaveHypesquad()
-
-    def setLocale(self, locale):
-        response = User(self.discord,self.s,self.log).setLocale(locale)
-        self.locale = locale
-        self.s.headers["Accept-Language"] = self.locale
-        self.s.cookies["locale"] = self.locale
-
+    #2FA
     def calculateTOTPcode(self, secret="default"): #need to put this function here (instead of in login folder or user folder) because it updates the secret (if and only if secret == "")
         if secret == "default":
             if self.__totp_secret == "":
@@ -360,6 +319,71 @@ class Client:
             self.__totp_secret = ""
         return result
 
+    def getBackupCodes(self, regenerate=False):
+        return User(self.discord,self.s,self.log).getBackupCodes(self.__user_password, regenerate)
+
+    def disableAccount(self, password):
+        return User(self.discord,self.s,self.log).disableAccount(password)
+
+    def deleteAccount(self, password):
+        return User(self.discord,self.s,self.log).deleteAccount(password)
+
+    '''
+    Privacy & Safety
+    '''
+    def setDMscanLvl(self, level=1): # 0<=level<=2
+        return User(self.discord,self.s,self.log).setDMscanLvl(level)
+
+    def allowDMsFromServerMembers(self, allow=True, disallowedGuildIDs=None):
+        return User(self.discord,self.s,self.log).allowDMsFromServerMembers(allow, disallowedGuildIDs)
+
+    def allowFriendRequestsFrom(self, types=["everyone", "mutual_friends", "mutual_guilds"]):
+        return User(self.discord,self.s,self.log).allowFriendRequestsFrom(types)
+
+    def analyticsConsent(self, grant=[], revoke=[]):
+        return User(self.discord,self.s,self.log).analyticsConsent(grant, revoke)
+
+    #############
+
+    def getProfile(self, userID):
+        return User(self.discord,self.s,self.log).getProfile(userID)
+
+    def info(self, with_analytics_token=None):
+        return User(self.discord,self.s,self.log).info(with_analytics_token)
+
+    def getConnectedAccounts(self):
+        return User(self.discord,self.s,self.log).getConnectedAccounts()
+
+    def getUserAffinities(self):
+        return User(self.discord,self.s,self.log).getUserAffinities()
+
+    def getGuildAffinities(self):
+        return User(self.discord,self.s,self.log).getGuildAffinities()
+
+    def getMentions(self, limit=25, roleMentions=True, everyoneMentions=True):
+        return User(self.discord,self.s,self.log).getMentions(limit, roleMentions, everyoneMentions)
+
+    def removeMentionFromInbox(self, messageID):
+        return User(self.discord,self.s,self.log).removeMentionFromInbox(messageID)
+
+    def getMyStickers(self):
+        return User(self.discord,self.s,self.log).getMyStickers()
+
+    def getNotes(self, userID):
+        return User(self.discord,self.s,self.log).getNotes(userID)
+
+    def setHypesquad(self, house):
+        return User(self.discord,self.s,self.log).setHypesquad(house)
+
+    def leaveHypesquad(self):
+        return User(self.discord,self.s,self.log).leaveHypesquad()
+
+    def setLocale(self, locale):
+        response = User(self.discord,self.s,self.log).setLocale(locale)
+        self.locale = locale
+        self.s.headers["Accept-Language"] = self.locale
+        self.s.cookies["locale"] = self.locale
+
     def getRTCregions(self):
         return User(self.discord,self.s,self.log).getRTCregions()
 
@@ -380,9 +404,6 @@ class Client:
 
     def getApplicationData(self, applicationID, with_guild=False):
         return User(self.discord,self.s,self.log).getApplicationData(applicationID, with_guild)
-
-    def getBackupCodes(self, regenerate=False):
-        return User(self.discord,self.s,self.log).getBackupCodes(self.__user_password, regenerate)
 
     def enableInlineMedia(self, enable=True): #boolean, default=True
         return User(self.discord,self.s,self.log).enableInlineMedia(enable)

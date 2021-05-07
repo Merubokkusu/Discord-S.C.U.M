@@ -74,9 +74,6 @@ class User(object):
 		url = self.discord+"users/@me/notes/"+userID
 		return Wrapper.sendRequest(self.s, 'get', url, log=self.log)
 
-	'''
-	Profile Edits
-	'''	
 	def setStatusHelper(self, status, timeout=None): #Dont run this function by itself; status options are: online, idle, dnd, invisible
 		url = self.discord+"users/@me/settings"
 		if status in ("online", "idle", "dnd", "invisible"):
@@ -104,7 +101,11 @@ class User(object):
 			body["custom_status"] = None
 		return Wrapper.sendRequest(self.s, 'patch', url, body, timeout=timeout, log=self.log)
 
-	def setAvatar(self, imagePath): #local image
+	# USER SETTINGS
+	'''
+	My Account
+	'''	
+	def setAvatar(self, imagePath): #local image, set to None to delete avatar
 		url = self.discord+"users/@me"
 		with open(imagePath, "rb") as image:
 			encodedImage = base64.b64encode(image.read()).decode('utf-8')
@@ -130,9 +131,67 @@ class User(object):
 		url = self.discord+"users/@me"
 		body = {"password":password, "discriminator":discriminator}
 		return Wrapper.sendRequest(self.s, 'patch', url, body, log=self.log)
+
+	def enable2FA(self, code, secret, password): #returns new token plus backup codes
+		url = self.discord+"users/@me/mfa/totp/enable"
+		body = {"code": code, "secret": secret, "password": password}
+		return Wrapper.sendRequest(self.s, 'post', url, body, log=self.log)
+
+	def disable2FA(self, code):
+		url = self.discord+"users/@me/mfa/totp/disable"
+		body = {"code": code}
+		return Wrapper.sendRequest(self.s, 'post', url, body, log=self.log)
+
+	def getBackupCodes(self, password, regenerate=False):
+		url = self.discord+"users/@me/mfa/codes"
+		body = {"password": password, "regenerate": regenerate}
+		return Wrapper.sendRequest(self.s, 'post', url, body, log=self.log)
+
+	def disableAccount(self, password):
+		url = self.discord+"users/@me/disable"
+		body = {"password": password}
+		return Wrapper.sendRequest(self.s, 'post', url, body, log=self.log)
+
+	def deleteAccount(self, password):
+		url = self.discord+"users/@me/delete"
+		body = {"password": password}
+		return Wrapper.sendRequest(self.s, 'post', url, body, log=self.log)
+
 	'''
-	More settings stuff
+	Privacy & Safety
 	'''
+	def setDMscanLvl(self, level):
+		url = self.discord+"users/@me/settings"
+		body = {"explicit_content_filter": int(level)}
+		return Wrapper.sendRequest(self.s, 'patch', url, body, log=self.log)
+
+	def allowDMsFromServerMembers(self, allow, disallowedGuildIDs):
+		url = self.discord+"users/@me/settings"
+		body = {"restricted_guilds":disallowedGuildIDs, "default_guilds_restricted":not allow}
+		if not disallowedGuildIDs: #if False or None
+			body.pop("restricted_guilds")
+		return Wrapper.sendRequest(self.s, 'patch', url, body, log=self.log)
+
+	def allowFriendRequestsFrom(self, types):
+		url = self.discord+"users/@me/settings"
+		body = {"friend_source_flags": {"all": True, "mutual_friends": True, "mutual_guilds": True}}
+		types = [i.lower().strip() for i in types]
+		if "everyone" not in types:
+			body["friend_source_flags"]["all"] = False
+		if "mutual_friends" not in types:
+			body["friend_source_flags"]["mutual_friends"] = False
+		if "mutual_guilds" not in types:
+			body["friend_source_flags"]["mutual_guilds"] = False
+		return Wrapper.sendRequest(self.s, 'patch', url, body, log=self.log)
+
+	def analyticsConsent(self, grant, revoke): #personalization, usage_statistics
+		url = self.discord+"users/@me/consent"
+		body = {"grant":grant,"revoke":revoke}
+		return Wrapper.sendRequest(self.s, 'post', url, body, log=self.log)
+
+
+	################
+
 	def setHypesquad(self, house):
 		url = self.discord+"hypesquad/online"
 		if house.lower() == "bravery":
@@ -151,16 +210,6 @@ class User(object):
 		url = self.discord+"users/@me/settings"
 		body = {"locale": locale}
 		return Wrapper.sendRequest(self.s, 'patch', url, body, log=self.log)
-
-	def enable2FA(self, code, secret, password): #returns new token plus backup codes
-		url = self.discord+"users/@me/mfa/totp/enable"
-		body = {"code": code, "secret": secret, "password": password}
-		return Wrapper.sendRequest(self.s, 'post', url, body, log=self.log)
-
-	def disable2FA(self, code):
-		url = self.discord+"users/@me/mfa/totp/disable"
-		body = {"code": code}
-		return Wrapper.sendRequest(self.s, 'post', url, body, log=self.log)
 
 	def getRTCregions(self):
 		url = "https://latency.discord.media/rtc"
@@ -196,11 +245,6 @@ class User(object):
 	def getApplicationData(self, applicationID, with_guild=False):
 		url = self.discord+"applications/"+applicationID+"/public?with_guild="+str(with_guild).lower()
 		return Wrapper.sendRequest(self.s, 'get', url, log=self.log)
-
-	def getBackupCodes(self, password, regenerate=False):
-		url = self.discord+"users/@me/mfa/codes"
-		body = {"password": password, "regenerate": regenerate}
-		return Wrapper.sendRequest(self.s, 'post', url, body, log=self.log)
 
 	'''
 	App Settings - Text&Images

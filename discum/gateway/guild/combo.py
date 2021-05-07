@@ -3,6 +3,7 @@
 #also, no need for importing GuildRequest because gatewayobj has that (self.gatewayobj.request... does the trick)
 
 import time
+from ...logger import *
 
 class GuildCombo(object):
 	def __init__(self, gatewayobj):
@@ -120,7 +121,7 @@ class GuildCombo(object):
 									if 'member' in item:
 										member_id, member_properties = self.reformat_member(item, keep=keep)
 										self.gatewayobj.session.guild(guild_id).updateOneMember(member_id, member_properties)
-										if self.gatewayobj.log: print('<SYNC> updated member '+member_id)
+										Logger.log('[gateway] [fetchMembers] <SYNC> updated member '+member_id, None, self.gatewayobj.log)
 								if not self.gatewayobj.finishedMemberFetching(guild_id) and (index-self.gatewayobj.memberFetchingStatus[guild_id][0])==1:
 									if wait!=None: time.sleep(wait)
 									self.updatePrevious(guild_id) #previous = current
@@ -129,7 +130,7 @@ class GuildCombo(object):
 									if key == 'member':
 										member_id, member_properties = self.reformat_member(parsed['updates'][ind][key], keep=keep)
 										self.gatewayobj.session.guild(guild_id).updateOneMember(member_id, member_properties)
-										if self.gatewayobj.log: print('<UPDATE> updated member '+member_id)
+										Logger.log('[gateway] [fetchMembers] <UPDATE> updated member '+member_id, None, self.gatewayobj.log)
 							elif i == 'INVALIDATE':
 								if parsed['locations'][ind] in ranges or parsed['member_count'] == 0:
 									endFetching = True
@@ -160,11 +161,11 @@ class GuildCombo(object):
 	#the following 2 are test functions to show how the fetchMembers combo function works, might be removed in a later update
 	def testfunc(self, resp):
 		self.gatewayobj.removeCommand(self.testfunc)
-		print('testfunc')
+		Logger.log('testfunc', None, self.gatewayobj.log)
 		pass
 
 	def testfuncPOG(self, resp, pog):
-		print('testfuncPOG')
+		Logger.log('testfuncPOG', None, self.gatewayobj.log)
 		if pog:
 			self.gatewayobj.removeCommand(self.testfuncPOG)
 		pass

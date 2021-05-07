@@ -7,18 +7,6 @@ class User(object):
 		self.discord = discord
 		self.s = s
 		self.log = log
-		
-	#def getDMs(self): #websockets does this now
-	#	url = self.discord+"users/@me/channels"
-	#	return self.s.get(url)
-
-	#def getGuilds(self): #websockets does this now
-	#	url = self.discord+"users/@me/guilds"
-	#	return self.s.get(url)
-
-	#def getRelationships(self): #websockets does this now
-	#	url = self.discord+"users/@me/relationships"
-	#	return self.s.get(url)
 
 	def requestFriend(self,user):
 		if "#" in user:

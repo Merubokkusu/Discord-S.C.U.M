@@ -9,9 +9,9 @@ import copy
 #some http wraps that help gateway functions:
 from ..user.user import User
 
-if __import__('sys').version.split(' ')[0] < '3.0.0':
+try:
     import thread
-else:
+except ImportError:
     import _thread as thread
 
 from .session import Session
@@ -20,13 +20,19 @@ from .request import Request
 
 from .parse import Parse
 
-#other functions
+#gateway combo functions
 from .guild.combo import GuildCombo
 from .user.combo import UserCombo
+
+#log to console/file
+from ..logger import * #imports LogLevel and Logger
 
 #exceptions
 class InvalidSessionException(Exception):
     pass
+
+class NeedToReconnectException(Exception):
+	pass
 
 class ConnectionManuallyClosedException(Exception):
     pass
@@ -40,12 +46,6 @@ def exceptionChecker(e, types): #this is an A or B or ... check
 #gateway class
 class GatewayServer:
 
-    class LogLevel:
-        SEND = '\033[94m'
-        RECEIVE = '\033[92m'
-        WARNING = '\033[93m'
-        DEFAULT = '\033[m'
-
     class OPCODE:
         # Name                           Code    Client Action   Description
         DISPATCH =                       0  #    Receive         dispatches an event
@@ -55,7 +55,7 @@ class GatewayServer:
         VOICE_STATE_UPDATE =             4  #    Send            used to join/move/leave voice channels
         VOICE_SERVER_PING =              5  #    Send            used for voice ping checking
         RESUME =                         6  #    Send            used to resume a closed connection
-        RECONNECT =                      7  #    Receive         used to tell bots to reconnect...so..useless for discum
+        RECONNECT =                      7  #    Receive         used to tell when to reconnect (sometimes...)
         REQUEST_GUILD_MEMBERS =          8  #    Send            used to request guild members (when searching for members in the search bar of a guild)
         INVALID_SESSION =                9  #    Receive         used to notify client they have an invalid session id
         HELLO =                          10 #    Receive         sent immediately after connecting, contains heartbeat and server debug information
@@ -100,7 +100,7 @@ class GatewayServer:
         self.proxy_host = None if "https" not in sessionobj.proxies else sessionobj.proxies["https"][8:].split(":")[0]
         self.proxy_port = None if "https" not in sessionobj.proxies else sessionobj.proxies["https"][8:].split(":")[1]
 
-        self.keepData = ("dms", "guilds", "guild_channels")
+        self.keepData = ("dms", "guilds", "guild_channels") #keep data even after leaving dm, guild, or guild channel
         self.log = log
 
         self.interval = None
@@ -148,7 +148,7 @@ class GatewayServer:
                                     on_open=lambda ws: self.on_open(ws),
                                     on_message=lambda ws, msg: self.on_message(ws, msg),
                                     on_error=lambda ws, msg: self.on_error(ws, msg),
-                                    on_close=lambda ws: self.on_close(ws)
+                                    on_close=lambda ws, close_code, close_msg: self.on_close(ws, close_code, close_msg)
                                     )
         return ws
 
@@ -160,8 +160,13 @@ class GatewayServer:
     def on_open(self, ws):
         self.connected = True
         self.memberFetchingStatus = {"first": []}
-        if self.log: print("Connected to websocket.")
+        Logger.log("Connected to websocket.", None, self.log)
         if not self.resumable:
+        	#send presences if 1 or more activites in previous session. Whether or not you're invisible doesn't matter apparently.
+            if len(self.session.settings_ready) != 0:
+                if self.session.userSettings.get("activities") not in (None, {}):
+                    self.auth["presence"]["status"] = self.session.userSettings.get("status")
+                    self.auth["presence"]["activities"] = UserCombo(self).constructActivitiesList()
             self.send({"op": self.OPCODE.IDENTIFY, "d": self.auth})
         else:
             self.resumable = False
@@ -171,12 +176,12 @@ class GatewayServer:
         self.sequence += 1
         response = self.decompress(message)
         resp = Resp(copy.deepcopy(response))
-        if self.log: print('%s< %s%s' % (self.LogLevel.RECEIVE, response, self.LogLevel.DEFAULT))
+        Logger.log('[gateway] < {}'.format(response), LogLevel.RECEIVE, self.log)
         if response['op'] == self.OPCODE.HELLO: #only happens once, first message sent to client
             self.interval = (response["d"]["heartbeat_interval"])/1000 #if this fails make an issue and I'll revert it back to the old method (slightly smaller wait time than heartbeat)
             thread.start_new_thread(self._heartbeat, ())
         elif response['op'] == self.OPCODE.INVALID_SESSION:
-            if self.log: print("Invalid session.")
+            Logger.log("Invalid session.", None, self.log)
             self._last_err = InvalidSessionException("Invalid Session Error.")
             if self.resumable:
                 self.resumable = False
@@ -185,8 +190,12 @@ class GatewayServer:
             else:
                 self.sequence = 0
                 self.close()
+        elif response['op'] == self.OPCODE.RECONNECT:
+        	Logger.log("Received opcode 7 (reconnect).", None, self.log)
+        	self._last_err = NeedToReconnectException("Discord sent an opcode 7 (reconnect).")
+        	self.close()
         if self.interval == None:
-            if self.log: print("Identify failed.")
+            Logger.log("Identify failed.", None, self.log)
             self.close()
         if resp.event.ready:
             self._last_err = None
@@ -202,17 +211,20 @@ class GatewayServer:
         thread.start_new_thread(self._response_loop, (resp,))
 
     def on_error(self, ws, error):
-        if self.log: print('%s%s%s' % (self.LogLevel.WARNING, error, self.LogLevel.DEFAULT))
+        Logger.log('[gateway] < {}'.format(error), LogLevel.WARNING, self.log)
         self._last_err = error
 
-    def on_close(self, ws):
+    def on_close(self, ws, close_code, close_msg):
         self.connected = False
         self.READY = False #reset self.READY
-        if self.log: print('websocket closed')
+        if close_code or close_msg:
+        	Logger.log("close status code: " + str(close_code), None, self.log)
+        	Logger.log("close message: " + str(close_msg), None, self.log)
+        Logger.log('websocket closed', None, self.log)
 
     #Discord needs heartbeats, or else connection will sever
     def _heartbeat(self):
-        if self.log: print("entering heartbeat")
+        Logger.log("entering heartbeat", None, self.log)
         while self.connected:
             time.sleep(self.interval)
             if not self.connected:
@@ -221,15 +233,15 @@ class GatewayServer:
 
     #just a wrapper for ws.send
     def send(self, payload):
-        if self.log: print('%s> %s%s' % (self.LogLevel.SEND, payload, self.LogLevel.DEFAULT))
+        Logger.log('[gateway] > {}'.format(payload), LogLevel.SEND, self.log)
         self.ws.send(json.dumps(payload))
 
     def close(self):
         self.connected = False
         self.READY = False #reset self.READY
-        if not isinstance(self._last_err, InvalidSessionException):
-        	self._last_err = ConnectionManuallyClosedException("Disconnection initiated by client using close function.")
-        if self.log: print('websocket closed') #don't worry if this message prints twice
+        if not exceptionChecker(self._last_err, [InvalidSessionException, NeedToReconnectException]):
+            self._last_err = ConnectionManuallyClosedException("Disconnection initiated by client using close function.")
+        Logger.log('websocket closed', None, self.log) #don't worry if this message prints twice
         self.ws.close()
 
     def command(self, func):
@@ -268,7 +280,7 @@ class GatewayServer:
                 else:
                     del self._after_message_hooks[commandsCopy.index(func)]
         except ValueError:
-            if self.log: print('%s not found in _after_message_hooks.' % func)
+            Logger.log('{} not found in _after_message_hooks.'.format(func), None, self.log)
             pass
 
     def clearCommands(self):
@@ -293,7 +305,7 @@ class GatewayServer:
                     raise self._last_err
                 except KeyboardInterrupt:
                     self._last_err = KeyboardInterrupt("Keyboard Interrupt Error")
-                    if self.log: print("Connection forcibly closed using Keyboard Interrupt.")
+                    Logger.log("Connection forcibly closed using Keyboard Interrupt.", None, self.log)
                     break
                 except Exception as e:
                     if auto_reconnect:
@@ -301,14 +313,14 @@ class GatewayServer:
                             if exceptionChecker(e, [websocket._exceptions.WebSocketAddressException, websocket._exceptions.WebSocketTimeoutException]):
                                 self._last_err = None
                                 waitTime = random.randrange(1,6)
-                                if self.log: print("Connection Dropped. Attempting to resume last valid session in %s seconds." % waitTime)
+                                Logger.log("Connection Dropped. Attempting to resume last valid session in {} seconds.".format(waitTime), None, self.log)
                                 time.sleep(waitTime)
                             elif not exceptionChecker(e, [ConnectionManuallyClosedException]):
                                 self.resetSession()
-                                if self.log: print("Connection Dropped. Retrying in 10 seconds.")
+                                Logger.log("Connection Dropped. Retrying in 10 seconds.", None, self.log)
                                 time.sleep(10)
                             else:
-                                if self.log: print("Connection forcibly closed using close function.")
+                                Logger.log("Connection forcibly closed using close function.", None, self.log)
                                 break
         else:
             self._zlib = zlib.decompressobj()
@@ -413,52 +425,57 @@ class GatewayServer:
     User stuff
     '''
     def setStatus(self, status): #can only be run while connected to gateway
-        User(self.RESTurl,self.sessionobj,self.log).setStatusHelper(status, timeout=0.02)
+        User(self.RESTurl,self.sessionobj,self.log).setStatusHelper(status)
         UserCombo(self).setStatus(status)
 
+    #Currently does not work due to discord api changes :/ They seem to be cross checking inputs with connections but not sure yet...
     def setPlayingStatus(self, game): #can only be run while connected to gateway, will update metadata later
         if not self.session.userSettings['show_current_game']:
-            User(self.RESTurl,self.sessionobj,self.log).enableActivityDisplay(enable=True, timeout=0.02)
+            User(self.RESTurl,self.sessionobj,self.log).enableActivityDisplay(enable=True)
         UserCombo(self).setPlayingStatus(game)
 
     def removePlayingStatus(self): #can only be run while connected to gateway
         UserCombo(self).removePlayingStatus()
 
+    #Currently does not work due to discord api changes :/ They seem to be cross checking inputs with connections but not sure yet...
     def setStreamingStatus(self, stream, url): #can only be run while connected to gateway, will update metadata later
         if not self.session.userSettings['show_current_game']:
-            User(self.RESTurl,self.sessionobj,self.log).enableActivityDisplay(enable=True, timeout=0.02)
+            User(self.RESTurl,self.sessionobj,self.log).enableActivityDisplay(enable=True)
         UserCombo(self).setStreamingStatus(stream, url)
 
     def removeStreamingStatus(self): #can only be run while connected to gateway
         UserCombo(self).removeStreamingStatus()
 
+    #Currently does not work due to discord api changes :/ They seem to be cross checking inputs with connections but not sure yet...
     def setListeningStatus(self, song): #can only be run while connected to gateway, will update metadata later
         if not self.session.userSettings['show_current_game']:
-            User(self.RESTurl,self.sessionobj,self.log).enableActivityDisplay(enable=True, timeout=0.02)
+            User(self.RESTurl,self.sessionobj,self.log).enableActivityDisplay(enable=True)
         UserCombo(self).setListeningStatus(song)
 
     def removeListeningStatus(self): #can only be run while connected to gateway
         UserCombo(self).removeListeningStatus()
 
+    #Currently does not work due to discord api changes :/ They seem to be cross checking inputs with connections but not sure yet...
     def setWatchingStatus(self, show): #can only be run while connected to gateway, will update metadata later
         if not self.session.userSettings['show_current_game']:
-            User(self.RESTurl,self.sessionobj,self.log).enableActivityDisplay(enable=True, timeout=0.02)
+            User(self.RESTurl,self.sessionobj,self.log).enableActivityDisplay(enable=True)
         UserCombo(self).setWatchingStatus(show)
 
     def removeWatchingStatus(self): #can only be run while connected to gateway
         UserCombo(self).removeWatchingStatus()
 
     def setCustomStatus(self, customstatus, emoji=None, animatedEmoji=False, expires_at=None): #can only be run while connected to gateway
-        User(self.RESTurl,self.sessionobj,self.log).setCustomStatusHelper(customstatus, emoji, expires_at, timeout=0.02)
+        User(self.RESTurl,self.sessionobj,self.log).setStatusHelper(self.session.userSettings['status'])
+        User(self.RESTurl,self.sessionobj,self.log).setCustomStatusHelper(customstatus, emoji, expires_at)
         UserCombo(self).setCustomStatus(customstatus, emoji, animatedEmoji)
 
     def removeCustomStatus(self):
-        User(self.RESTurl,self.sessionobj,self.log).setCustomStatusHelper("", timeout=0.02)
+        User(self.RESTurl,self.sessionobj,self.log).setCustomStatusHelper("")
         UserCombo(self).removeCustomStatus()
 
     def clearActivities(self):
         if self.session.userSettings['custom_status'] != None:
-            User(self.RESTurl,self.sessionobj,self.log).setCustomStatusHelper("", emoji=None, expires_at=None, timeout=0.02)
+            User(self.RESTurl,self.sessionobj,self.log).setCustomStatusHelper("", emoji=None, expires_at=None)
         UserCombo(self).clearActivities()
 
 

@@ -1,9 +1,9 @@
 from ..RESTapiwrap import *
 
-if __import__('sys').version.split(' ')[0] < '3.0.0':
-    from urllib import quote
-else:
+try:
     from urllib.parse import quote
+except ImportError:
+    from urllib import quote
 
 class Guild(object):
 	def __init__(self, discord, s, log): #s is the requests session object

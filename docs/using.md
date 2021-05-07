@@ -356,6 +356,9 @@ bot.gateway.run()
 ```gateway.setWatchingStatus(show)```      
 ```gateway.clearActivities()```      
 
+* currently, setPlayingStatus, setStreamingStatus, setListeningStatus, and setWatchingStatus do not work due to api v9 discord changes. This will be fixed in the future if a fix is found.
+Fortunately, setCustomStatus and clearActivities still work fine.
+
 ```python
 @bot.gateway.command
 def activitiesTest(resp):

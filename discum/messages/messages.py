@@ -6,11 +6,11 @@ import time, datetime
 import json
 from ..RESTapiwrap import *
 
-if __import__('sys').version.split(' ')[0] < '3.0.0':
+try:
+    from urllib.parse import quote_plus, urlparse, urlencode
+except ImportError:
     from urllib import quote_plus, urlencode
     from urlparse import urlparse
-else:
-    from urllib.parse import quote_plus, urlparse, urlencode
 
 class Messages(object):
     def __init__(self, discord, s, log): #s is the requests session object

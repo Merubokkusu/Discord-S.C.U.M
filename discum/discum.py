@@ -1,3 +1,4 @@
+#REST api wrpas
 from .start.login import Login
 from .start.superproperties import SuperProperties
 from .start.other import Other
@@ -10,15 +11,21 @@ from .user.user import User
 from .stickers.stickers import Stickers
 from .science.science import Science
 
+#gateway wraps
 from .gateway.gateway import *
 
+#logging to console/file
+from .logger import * #imports LogLevel and Logger
+
+#other imports
 import time
 import base64
 import requests
 import random
 
+#client initialization
 class Client:
-    def __init__(self, email="", password="", secret="", code="", token="", proxy_host=None, proxy_port=None, user_agent="random", locale="en-US", build_num="request", log=True):
+    def __init__(self, email="", password="", secret="", code="", token="", proxy_host=None, proxy_port=None, user_agent="random", locale="en-US", build_num="request", log={"console":True, "file":False}):
         #step 1: vars
         self.log = log
         self.locale = locale
@@ -27,7 +34,7 @@ class Client:
         self.__user_password = password
         self.__totp_secret = secret
         self.__xfingerprint = ""
-        self.userData = {}
+        self.userData = {} #used if science requests are used
         self.__proxy_host = None if proxy_host in (None,False) else proxy_host
         self.__proxy_port = None if proxy_port in (None,False) else proxy_port
         self.api_version = 9
@@ -39,7 +46,7 @@ class Client:
         else:
             import random_user_agent.user_agent #only really want to import this if needed
             self.__user_agent = random_user_agent.user_agent.UserAgent(limit=100).get_random_user_agent()
-            if self.log: print('Randomly generated user agent: '+self.__user_agent)
+            Logger.log('Randomly generated user agent: '+self.__user_agent, None, log)
         #step 3: http request headers
         headers = {
             "Origin": "https://discord.com",
@@ -94,10 +101,10 @@ class Client:
         url=self.discord+'users/@me?with_analytics_token=true'
         connection = self.s.get(url)
         if connection.status_code == 200:
-            if self.log: print("Connected")
+            Logger.log("Connected", None, log)
             self.userData = connection.json()
         else:
-            if self.log: print("Incorrect Token")
+            Logger.log("Incorrect Token", None, log)
         return connection
 
     '''

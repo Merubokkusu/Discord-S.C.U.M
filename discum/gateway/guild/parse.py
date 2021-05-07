@@ -40,8 +40,8 @@ class GuildParse(object):
 		guilddata["members"] = {} #we dont actually get sent the member list from guild creates. however, this usually contains our position/role in that guild so...still good info
 		guilddata["my_data"] = [a for a in guilddata["my_data"] if a["user"]["id"]==my_user_id]
 		if len(guilddata["my_data"]) == 1:
-			guilddata["my_data"].pop("user", None)
-			guilddata["my_data"]["user_id"] = my_user_id
+			guilddata["my_data"][0].pop("user", None)
+			guilddata["my_data"][0]["user_id"] = my_user_id
 		#take care of emojis
 		guilddata["emojis"] = {i["id"]:i for i in response["d"]["emojis"]}
 		#take care of roles

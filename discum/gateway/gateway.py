@@ -32,7 +32,10 @@ class InvalidSessionException(Exception):
     pass
 
 class NeedToReconnectException(Exception):
-	pass
+    pass
+
+class ConnectionResumableException(Exception): #for certain close codes. "exception"
+    pass
 
 class ConnectionManuallyClosedException(Exception):
     pass
@@ -122,6 +125,11 @@ class GatewayServer:
 
         self.memberFetchingStatus = {"first": []}
 
+        #latency
+        self._last_ack = None
+        self.latency = None
+
+        #gateway requests and parsing
         self.request = Request(self)
         self.parse = Parse
 
@@ -160,9 +168,9 @@ class GatewayServer:
     def on_open(self, ws):
         self.connected = True
         self.memberFetchingStatus = {"first": []}
-        Logger.log("Connected to websocket.", None, self.log)
+        Logger.log("[gateway] Connected to websocket.", None, self.log)
         if not self.resumable:
-        	#send presences if 1 or more activites in previous session. Whether or not you're invisible doesn't matter apparently.
+            #send presences if 1 or more activites in previous session. Whether or not you're invisible doesn't matter apparently.
             if len(self.session.settings_ready) != 0:
                 if self.session.userSettings.get("activities") not in (None, {}):
                     self.auth["presence"]["status"] = self.session.userSettings.get("status")
@@ -180,8 +188,13 @@ class GatewayServer:
         if response['op'] == self.OPCODE.HELLO: #only happens once, first message sent to client
             self.interval = (response["d"]["heartbeat_interval"])/1000 #if this fails make an issue and I'll revert it back to the old method (slightly smaller wait time than heartbeat)
             thread.start_new_thread(self._heartbeat, ())
+        elif response['op'] == self.OPCODE.HEARTBEAT_ACK:
+            if self._last_ack != None:
+                self.latency = time.perf_counter() - self._last_ack
+        elif response['op'] == self.OPCODE.HEARTBEAT:
+            self.send({"op": self.OPCODE.HEARTBEAT,"d": self.sequence-1 if self.sequence>0 else self.sequence})
         elif response['op'] == self.OPCODE.INVALID_SESSION:
-            Logger.log("Invalid session.", None, self.log)
+            Logger.log("[gateway] Invalid session.", None, self.log)
             self._last_err = InvalidSessionException("Invalid Session Error.")
             if self.resumable:
                 self.resumable = False
@@ -191,11 +204,11 @@ class GatewayServer:
                 self.sequence = 0
                 self.close()
         elif response['op'] == self.OPCODE.RECONNECT:
-        	Logger.log("Received opcode 7 (reconnect).", None, self.log)
-        	self._last_err = NeedToReconnectException("Discord sent an opcode 7 (reconnect).")
-        	self.close()
+            Logger.log("[gateway] Received opcode 7 (reconnect).", None, self.log)
+            self._last_err = NeedToReconnectException("Discord sent an opcode 7 (reconnect).")
+            self.close()
         if self.interval == None:
-            Logger.log("Identify failed.", None, self.log)
+            Logger.log("[gateway] Identify failed.", None, self.log)
             self.close()
         if resp.event.ready:
             self._last_err = None
@@ -218,18 +231,23 @@ class GatewayServer:
         self.connected = False
         self.READY = False #reset self.READY
         if close_code or close_msg:
-        	Logger.log("close status code: " + str(close_code), None, self.log)
-        	Logger.log("close message: " + str(close_msg), None, self.log)
-        Logger.log('websocket closed', None, self.log)
+        	Logger.log("[gateway] close status code: " + str(close_code), None, self.log)
+        	Logger.log("[gateway] close message: " + str(close_msg), None, self.log)
+        	if not (4000<close_code<=4010):
+        		self._last_err = ConnectionResumableException("Connection is resumable.")
+        if close_code in (None, 1000, 1001, 1006):
+        	self._last_err = ConnectionManuallyClosedException("Disconnection initiated by client using close function.")
+        Logger.log('[gateway] websocket closed', None, self.log)
 
     #Discord needs heartbeats, or else connection will sever
     def _heartbeat(self):
-        Logger.log("entering heartbeat", None, self.log)
+        Logger.log("[gateway] entering heartbeat", None, self.log)
         while self.connected:
             time.sleep(self.interval)
             if not self.connected:
                 break
             self.send({"op": self.OPCODE.HEARTBEAT,"d": self.sequence-1 if self.sequence>0 else self.sequence})
+            self._last_ack = time.perf_counter()
 
     #just a wrapper for ws.send
     def send(self, payload):
@@ -241,7 +259,7 @@ class GatewayServer:
         self.READY = False #reset self.READY
         if not exceptionChecker(self._last_err, [InvalidSessionException, NeedToReconnectException]):
             self._last_err = ConnectionManuallyClosedException("Disconnection initiated by client using close function.")
-        Logger.log('websocket closed', None, self.log) #don't worry if this message prints twice
+        Logger.log('[gateway] websocket closed', None, self.log) #don't worry if this message prints twice
         self.ws.close()
 
     def command(self, func):
@@ -294,6 +312,7 @@ class GatewayServer:
         self._last_err = None
         self.voice_data = {}
         self.resumable = False #you can't resume anyways without session_id and sequence
+        self._last_ack = None
 
     #kinda influenced by https://github.com/scrubjay55/Reddit_ChatBot_Python/blob/master/Reddit_ChatBot_Python/WebSockClient.py (Apache License 2.0)
     def run(self, auto_reconnect=True):
@@ -305,7 +324,7 @@ class GatewayServer:
                     raise self._last_err
                 except KeyboardInterrupt:
                     self._last_err = KeyboardInterrupt("Keyboard Interrupt Error")
-                    Logger.log("Connection forcibly closed using Keyboard Interrupt.", None, self.log)
+                    Logger.log("[gateway] Connection forcibly closed using Keyboard Interrupt.", None, self.log)
                     break
                 except Exception as e:
                     if auto_reconnect:
@@ -313,14 +332,14 @@ class GatewayServer:
                             if exceptionChecker(e, [websocket._exceptions.WebSocketAddressException, websocket._exceptions.WebSocketTimeoutException]):
                                 self._last_err = None
                                 waitTime = random.randrange(1,6)
-                                Logger.log("Connection Dropped. Attempting to resume last valid session in {} seconds.".format(waitTime), None, self.log)
+                                Logger.log("[gateway] Connection Dropped. Attempting to resume last valid session in {} seconds.".format(waitTime), None, self.log)
                                 time.sleep(waitTime)
                             elif not exceptionChecker(e, [ConnectionManuallyClosedException]):
                                 self.resetSession()
-                                Logger.log("Connection Dropped. Retrying in 10 seconds.", None, self.log)
+                                Logger.log("[gateway] Connection Dropped. Retrying in 10 seconds.", None, self.log)
                                 time.sleep(10)
                             else:
-                                Logger.log("Connection forcibly closed using close function.", None, self.log)
+                                Logger.log("[gateway] Connection forcibly closed using close function.", None, self.log)
                                 break
         else:
             self._zlib = zlib.decompressobj()

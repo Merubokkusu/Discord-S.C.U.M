@@ -27,7 +27,7 @@ or from pypi:
 pip install discum -U
 ```
 #### Initiate client
-```discum.Client(email="", password="", secret="", code="", token="", proxy_host=None, proxy_port=None, user_agent="random", locale="en-US", build_num="request", log=True)```      
+```discum.Client(email="", password="", secret="", code="", token="", proxy_host=None, proxy_port=None, user_agent="random", locale="en-US", build_num="request", log={"console":True, "file":False})```      
 \* note: discord is starting to (sometimes) require captchas for the login (even when not using proxies). Therefore, it's recommended that you provide the email, password, and token (or just the token if you're not using the profile-editing functions).
 ```python
 import discum
@@ -37,12 +37,16 @@ bot = discum.Client(email='email@email.com',password='password', log=False)
 Logging essentially makes discum's communications transparent. All sent data and received (decompressed) data is printed. Purple texts are sent data and green texts are received data. Uncolored texts (usually black or white, depending on your terminal settings) are extra logs.
 ```python
 #for http APIs:
-bot.log = True
-bot.log = False
+bot.log["console"] = True
+bot.log["console"] = False
+bot.log["file"] = "log.txt"
+bot.log["file"] = False
 
 #for websocket/gateway APIs:
-bot.gateway.log = True
-bot.gateway.log = False
+bot.gateway.log["console"] = True
+bot.gateway.log["console"] = False
+bot.gateway.log["file"] = "gatewaylog.txt"
+bot.gateway.log["file"] = False
 ```
 
 #### Gateway

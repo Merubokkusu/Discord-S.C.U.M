@@ -26,7 +26,7 @@ REQUIRED = [
     'requests_toolbelt',
     'brotli',
     'filetype',
-    'websocket-client=0.59.0',
+    'websocket-client==0.59.0',
     'ua-parser',
     'random_user_agent'
 ]

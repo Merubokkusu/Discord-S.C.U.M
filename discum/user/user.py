@@ -8,7 +8,7 @@ class User(object):
 		self.s = s
 		self.log = log
 
-	def requestFriend(self,user):
+	def requestFriend(self, user):
 		if "#" in user:
 			url = self.discord+"users/@me/relationships"
 			body = {"username": user.split("#")[0], "discriminator": int(user.split("#")[1])}
@@ -18,27 +18,27 @@ class User(object):
 			body = {}
 			return Wrapper.sendRequest(self.s, 'put', url, body, log=self.log)
 
-	def acceptFriend(self,userID):
+	def acceptFriend(self, userID):
 		url = self.discord+"users/@me/relationships/"+userID
 		body = {}
 		return Wrapper.sendRequest(self.s, 'put', url, body, log=self.log)
 
-	def removeRelationship(self,userID): #for removing friends, unblocking people
+	def removeRelationship(self, userID): #for removing friends, unblocking people
 		url = self.discord+"users/@me/relationships/"+userID
 		return Wrapper.sendRequest(self.s, 'delete', url, log=self.log)
 
-	def blockUser(self,userID):
+	def blockUser(self, userID):
 		url = self.discord+"users/@me/relationships/"+userID
 		body = {"type": 2}
 		return Wrapper.sendRequest(self.s, 'put', url, body, log=self.log)
 
-	def getProfile(self,userID):
+	def getProfile(self, userID):
 		url = self.discord+"users/"+userID+"/profile"
 		return Wrapper.sendRequest(self.s, 'get', url, log=self.log)
 
-	def info(self, with_analytics_token=None): #simple. bot.info() for own user data
+	def info(self, with_analytics_token): #simple. bot.info() for own user data
 		url = self.discord+"users/@me"
-		if with_analytics_token!=None:
+		if with_analytics_token:
 			with_analytics_token = str(with_analytics_token).lower()
 			url += "?with_analytics_token="+with_analytics_token
 		return Wrapper.sendRequest(self.s, 'get', url, log=self.log)
@@ -56,7 +56,7 @@ class User(object):
 		url = self.discord+"users/@me/affinities/guilds"
 		return Wrapper.sendRequest(self.s, 'get', url, log=self.log)
 
-	def getMentions(self, limit=25, roleMentions=True, everyoneMentions=True):
+	def getMentions(self, limit, roleMentions, everyoneMentions):
 		roleMentions = str(roleMentions).lower()
 		everyoneMentions = str(everyoneMentions).lower()
 		url = self.discord+"users/@me/mentions?limit="+str(limit)+"&roles="+roleMentions+"&everyone="+everyoneMentions
@@ -142,7 +142,7 @@ class User(object):
 		body = {"code": code}
 		return Wrapper.sendRequest(self.s, 'post', url, body, log=self.log)
 
-	def getBackupCodes(self, password, regenerate=False):
+	def getBackupCodes(self, password, regenerate):
 		url = self.discord+"users/@me/mfa/codes"
 		body = {"password": password, "regenerate": regenerate}
 		return Wrapper.sendRequest(self.s, 'post', url, body, log=self.log)
@@ -242,7 +242,7 @@ class User(object):
 		url = self.discord+"applications/"+applicationID+"/skus"
 		return Wrapper.sendRequest(self.s, 'get', url, log=self.log)
 
-	def getApplicationData(self, applicationID, with_guild=False):
+	def getApplicationData(self, applicationID, with_guild):
 		url = self.discord+"applications/"+applicationID+"/public?with_guild="+str(with_guild).lower()
 		return Wrapper.sendRequest(self.s, 'get', url, log=self.log)
 
@@ -302,7 +302,7 @@ class User(object):
 	'''
 	Billing Settings - Billing
 	'''
-	def getBillingHistory(self, limit=20):
+	def getBillingHistory(self, limit):
 		url = self.discord+"users/@me/billing/payments?limit="+str(limit)
 		return Wrapper.sendRequest(self.s, 'get', url, log=self.log)
 
@@ -331,7 +331,7 @@ class User(object):
 	'''
 	Logout
 	'''
-	def logout(self, provider=None, voip_provider=None):
+	def logout(self, provider, voip_provider):
 		url = self.discord+"auth/logout"
 		body = {"provider": provider, "voip_provider": voip_provider}
 		return Wrapper.sendRequest(self.s, 'post', url, body, log=self.log)

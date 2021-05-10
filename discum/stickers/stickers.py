@@ -6,7 +6,7 @@ class Stickers(object):
 		self.s = s
 		self.log = log
 
-	def getStickers(self, directoryID="758482250722574376", store_listings=False, locale="en-US"):
+	def getStickers(self, directoryID, store_listings, locale):
 		store_listings = str(store_listings).lower()
 		url = self.discord+"sticker-packs/directory-v2/"+directoryID+"?with_store_listings="+store_listings+"&locale="+locale
 		return Wrapper.sendRequest(self.s, 'get', url, log=self.log)

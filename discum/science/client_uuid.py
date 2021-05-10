@@ -12,7 +12,7 @@ class Client_UUID(object): #Huge thanks to github user fweak for helping me figu
         self.eventNum = eventNum
         self.UUID = ""
 
-    def calculate(self, eventNum="default", userID="default", increment=True):
+    def calculate(self, eventNum, userID, increment):
         if eventNum == "default":
             eventNum = self.eventNum
         if userID == "default":
@@ -38,7 +38,7 @@ class Client_UUID(object): #Huge thanks to github user fweak for helping me figu
         self.creationTime = int(time.mktime(datetime.datetime.now().timetuple()) * 1000) if creationTime == "now" else creationTime
         if resetEventNum:
             self.eventNum = 0
-        return self.calculate()
+        return self.calculate(eventNum="default", userID="default", increment=True)
 
     @staticmethod
     def parse(client_uuid):

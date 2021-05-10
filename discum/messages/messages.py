@@ -45,7 +45,7 @@ class Messages(object):
         return Wrapper.sendRequest(self.s, 'get', url, log=self.log)
 
     #text message
-    def sendMessage(self, channelID, message, nonce, tts=False, embed=None, message_reference=None, allowed_mentions=None, sticker_ids=None):
+    def sendMessage(self, channelID, message, nonce, tts, embed, message_reference, allowed_mentions, sticker_ids):
         url = self.discord+"channels/"+channelID+"/messages"
         if nonce == "calculate":
             body = {"content": message, "tts": tts, "nonce": self.calculateNonce()}
@@ -62,7 +62,7 @@ class Messages(object):
         return Wrapper.sendRequest(self.s, 'post', url, body, log=self.log)
 
     #send file
-    def sendFile(self,channelID,filelocation,isurl=False,message="", tts=False, message_reference=None, sticker_ids=None):
+    def sendFile(self,channelID,filelocation,isurl,message, tts, message_reference, sticker_ids):
         mimetype, extensiontype, fd = Fileparse(self.s,self.log).parse(filelocation,isurl) #guess extension from file data
         if mimetype == 'invalid': #error out
             return
@@ -101,13 +101,13 @@ class Messages(object):
         self.s.headers.update({"Content-Type":"application/json"})
         return response
 
-    def reply(self, channelID, messageID, message, nonce, tts=False, embed=None, allowed_mentions={"parse":["users","roles","everyone"],"replied_user":False}, sticker_ids=None, file=None, isurl=False):
+    def reply(self, channelID, messageID, message, nonce, tts, embed, allowed_mentions, sticker_ids, file, isurl):
         if file == None:
             self.sendMessage(channelID, message, nonce=nonce, tts=tts, embed=embed, message_reference={"channel_id":channelID,"message_id":messageID}, allowed_mentions=allowed_mentions, sticker_ids=sticker_ids)
         else:
             self.sendFile(channelID, file, isurl=isurl, message=message, tts=tts, message_reference={"channel_id":channelID,"message_id":messageID}, sticker_ids=sticker_ids)
 
-    def searchMessages(self,guildID,channelID,userID,mentionsUserID,has,beforeDate,afterDate,textSearch,afterNumResults, limit, extraParams): #classic discord search function, results with key "hit" are the results you searched for, afterNumResults (aka offset) is multiples of 25 and indicates after which messages (type int), filterResults defaults to False
+    def searchMessages(self, guildID, channelID, userID, mentionsUserID, has, beforeDate, afterDate, textSearch, afterNumResults, limit, extraParams): #classic discord search function, results with key "hit" are the results you searched for, afterNumResults (aka offset) is multiples of 25 and indicates after which messages (type int), filterResults defaults to False
         url = self.discord+"guilds/"+guildID+"/messages/search?"
         allqueryparams = []
         colParamNames = ["channel_id", "author_id", "mentions", "has"]
@@ -131,7 +131,7 @@ class Messages(object):
         url += querystring
         return Wrapper.sendRequest(self.s, 'get', url, log=self.log)
 
-    def filterSearchResults(self,searchResponse): #only input is the requests response object outputted from searchMessages, returns type list
+    def filterSearchResults(self, searchResponse): #only input is the requests response object outputted from searchMessages, returns type list
         jsonresponse = searchResponse.json()['messages']
         filteredMessages = []
         for group in jsonresponse:
@@ -140,49 +140,49 @@ class Messages(object):
                     filteredMessages.append(result)
         return filteredMessages
 
-    def typingAction(self,channelID): #sends the typing action for 10 seconds (or until you change the page)
+    def typingAction(self, channelID): #sends the typing action for 10 seconds (or until you change the page)
         url = self.discord+"channels/"+channelID+"/typing"
         return Wrapper.sendRequest(self.s, 'post', url, log=self.log)
 
-    def editMessage(self,channelID,messageID,newMessage):
+    def editMessage(self, channelID, messageID, newMessage):
         url = self.discord+"channels/"+channelID+"/messages/"+messageID
         body = {"content": newMessage}
         return Wrapper.sendRequest(self.s, 'patch', url, body, log=self.log)
 
-    def deleteMessage(self,channelID,messageID):
+    def deleteMessage(self, channelID, messageID):
         url = self.discord+"channels/"+channelID+"/messages/"+messageID
         return Wrapper.sendRequest(self.s, 'delete', url, log=self.log)
 
-    def pinMessage(self,channelID,messageID):
+    def pinMessage(self, channelID, messageID):
         url = self.discord+"channels/"+channelID+"/pins/"+messageID
         return Wrapper.sendRequest(self.s, 'put', url, log=self.log)
 
-    def unPinMessage(self,channelID,messageID):
+    def unPinMessage(self, channelID, messageID):
         url = self.discord+"channels/"+channelID+"/pins/"+messageID
         return Wrapper.sendRequest(self.s, 'delete', url, log=self.log)
 
-    def getPins(self,channelID): #get pinned messages
+    def getPins(self, channelID): #get pinned messages
         url = self.discord+"channels/"+channelID+"/pins"
         return Wrapper.sendRequest(self.s, 'get', url, log=self.log)
 
-    def addReaction(self,channelID,messageID,emoji):
+    def addReaction(self, channelID, messageID, emoji):
         parsedEmoji = quote_plus(emoji)
         url = self.discord+"channels/"+channelID+"/messages/"+messageID+"/reactions/"+parsedEmoji+"/%40me"
         return Wrapper.sendRequest(self.s, 'put', url, log=self.log)
 
-    def removeReaction(self,channelID,messageID,emoji):
+    def removeReaction(self, channelID, messageID, emoji):
         parsedEmoji = quote_plus(emoji)
         url = self.discord+"channels/"+channelID+"/messages/"+messageID+"/reactions/"+parsedEmoji+"/%40me"
         return Wrapper.sendRequest(self.s, 'delete', url, log=self.log)
 
     #acknowledge message (mark message read)
-    def ackMessage(self,channelID,messageID,ackToken):
+    def ackMessage(self, channelID, messageID, ackToken):
         url = self.discord+"channels/"+channelID+"/messages/"+messageID+"/ack"
         body = {"token": ackToken}
         return Wrapper.sendRequest(self.s, 'post', url, body, log=self.log)
 
     #unacknowledge message (mark message unread)
-    def unAckMessage(self,channelID,messageID,numMentions):
+    def unAckMessage(self, channelID, messageID, numMentions):
         url = self.discord+"channels/"+channelID+"/messages/"+messageID+"/ack"
         body = {"manual": True, "mention_count": numMentions}
         return Wrapper.sendRequest(self.s, 'post', url, body, log=self.log)
@@ -192,6 +192,6 @@ class Messages(object):
         body = {"read_states": data}
         return Wrapper.sendRequest(self.s, 'post', url, body, log=self.log)
 
-    def getTrendingGifs(self, provider="tenor", locale="en-US", media_format="mp4"):
+    def getTrendingGifs(self, provider, locale, media_format):
         url = self.discord+"gifs/trending?provider="+provider+"&locale="+locale+"&media_format="+media_format
         return Wrapper.sendRequest(self.s, 'get', url, log=self.log)

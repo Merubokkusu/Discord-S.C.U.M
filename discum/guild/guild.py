@@ -70,7 +70,7 @@ class Guild(object):
 		return Wrapper.sendRequest(self.s, 'get', url, log=self.log)
 
 	#get member verification data
-	def getMemberVerificationData(self, guildID, with_guild=False, invite_code=None):
+	def getMemberVerificationData(self, guildID, with_guild, invite_code):
 		url = self.discord+"guilds/"+guildID+"/member-verification?with_guild="+str(with_guild).lower()
 		if invite_code != None:
 			url += "&invite_code="+invite_code

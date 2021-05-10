@@ -4,11 +4,13 @@ import ua_parser.user_agent_parser
 import re
 import time
 
+from ..logger import Logger
+
 class SuperProperties:
     '''
     https://luna.gitlab.io/discord-unofficial-docs/science.html#super-properties-object
     '''
-    def __init__(self, s, buildnum="request", log=True):
+    def __init__(self, s, buildnum="request", log={"console":True, "file":False}):
         self.s = s
         self.buildnum = buildnum
         self.log = log
@@ -22,10 +24,10 @@ class SuperProperties:
             req_file_build = self.s.get(file_with_build_num).text
             index_of_build_num = req_file_build.find('buildNumber')+14
             discord_build_num = int(req_file_build[index_of_build_num:index_of_build_num+5])
-            if self.log: print('Discord is currently on build number '+str(discord_build_num))
+            Logger.log('Discord is currently on build number '+str(discord_build_num), None, self.log)
             return discord_build_num
         except:
-            if self.log: print('Could not retrieve discord build number.')
+            Logger.log('Could not retrieve discord build number.', None, self.log)
             return None
 
     def getSuperProperties(self, user_agent, locale):

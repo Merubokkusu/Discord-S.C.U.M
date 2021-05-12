@@ -57,5 +57,5 @@ class SuperProperties:
             if reqbuildnum != None:
                 sp["client_build_number"] = reqbuildnum
         else:
-            sp["client_build_number"] = str(self.buildnum)
+            sp["client_build_number"] = int(self.buildnum)
         return sp

@@ -217,7 +217,6 @@ class GatewayServer:
             self.settings_ready = resp.parsed.ready() #parsed
             self.session = Session(self.settings_ready, {})
         elif resp.event.ready_supplemental:
-            self.resumable = True #completely successful identify
             self.settings_ready_supp = resp.parsed.ready_supplemental() #parsed
             self.session = Session(self.settings_ready, self.settings_ready_supp) #reinitialize i guess
             self.READY = True
@@ -235,9 +234,10 @@ class GatewayServer:
         	Logger.log("[gateway] close status code: " + str(close_code), None, self.log)
         	Logger.log("[gateway] close message: " + str(close_msg), None, self.log)
         	if not (4000<close_code<=4010):
+        		self.resumable = True
         		self._last_err = ConnectionResumableException("Connection is resumable.")
-        if close_code in (None, 1000, 1001, 1006):
-        	self._last_err = ConnectionManuallyClosedException("Disconnection initiated by client using close function.")
+        	if close_code in (None, 1000, 1001, 1006):
+        		self._last_err = ConnectionManuallyClosedException("Disconnection initiated by client using close function.")
         Logger.log('[gateway] websocket closed', None, self.log)
 
     #Discord needs heartbeats, or else connection will sever
@@ -330,18 +330,19 @@ class GatewayServer:
                 except Exception as e:
                     if auto_reconnect:
                         if not exceptionChecker(e, [KeyboardInterrupt]):
-                            if exceptionChecker(e, [websocket._exceptions.WebSocketAddressException, websocket._exceptions.WebSocketTimeoutException]):
+                            if exceptionChecker(e, [ConnectionResumableException]):
                                 self._last_err = None
                                 waitTime = random.randrange(1,6)
                                 Logger.log("[gateway] Connection Dropped. Attempting to resume last valid session in {} seconds.".format(waitTime), None, self.log)
                                 time.sleep(waitTime)
-                            elif not exceptionChecker(e, [ConnectionManuallyClosedException]):
+                            elif exceptionChecker(e, [ConnectionManuallyClosedException]):
+                                Logger.log("[gateway] Connection forcibly closed using close function.", None, self.log)
+                                break
+                            else:
                                 self.resetSession()
                                 Logger.log("[gateway] Connection Dropped. Retrying in 10 seconds.", None, self.log)
                                 time.sleep(10)
-                            else:
-                                Logger.log("[gateway] Connection forcibly closed using close function.", None, self.log)
-                                break
+
         else:
             self._zlib = zlib.decompressobj()
             self.ws.run_forever(ping_interval=10, ping_timeout=5, http_proxy_host=self.proxy_host, http_proxy_port=self.proxy_port)

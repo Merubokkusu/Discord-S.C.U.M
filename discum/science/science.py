@@ -27,7 +27,7 @@ class Science(object):
             trackingProperties["client_send_timestamp"] = now+random.randint(40, 1000)
         else:
             trackingProperties["client_send_timestamp"] = now+duration
-        trackingProperties["client_uuid"] = self.UUIDobj.calculate()
+        trackingProperties["client_uuid"] = self.UUIDobj.calculate(eventNum="default", userID="default", increment=True)
         return trackingProperties
 
     def science(self, events): #https://luna.gitlab.io/discord-unofficial-docs/science_events.html

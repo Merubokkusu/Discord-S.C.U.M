@@ -385,6 +385,7 @@ class Client:
         self.locale = locale
         self.s.headers["Accept-Language"] = self.locale
         self.s.cookies["locale"] = self.locale
+        return response
 
     def getRTCregions(self):
         return User(self.discord,self.s,self.log).getRTCregions()

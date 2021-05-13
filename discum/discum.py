@@ -20,6 +20,7 @@ from .logger import * #imports LogLevel and Logger
 #other imports
 import time
 import base64
+import json
 import requests
 import random
 
@@ -79,7 +80,7 @@ class Client:
             self.__super_properties = SuperProperties(self.s, buildnum=build_num, log=self.log).getSuperProperties(self.__user_agent, self.locale)
         else:
             self.__super_properties = SuperProperties(self.s, buildnum=build_num, log=self.log).getSuperProperties(self.__user_agent, None)
-        self.s.headers.update({"X-Super-Properties": base64.b64encode(str(self.__super_properties).encode()).decode("utf-8")})
+        self.s.headers.update({"X-Super-Properties": base64.b64encode(json.dumps(self.__super_properties).encode()).decode("utf-8")})
         #step 6: token/authorization/fingerprint (also part of headers, except for fingerprint)
         if not tokenProvided:
             loginResponse, self.__xfingerprint = Login(self.s, self.discord, self.log).login(email=email, password=password, secret=secret, code=code) 

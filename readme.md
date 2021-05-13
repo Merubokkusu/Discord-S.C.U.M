@@ -1,7 +1,7 @@
 # DisCum
 ![version](https://img.shields.io/badge/github%20version-1.2.1-blue) [![python versions](https://img.shields.io/badge/python-2.7%20%7C%203.5%20%7C%203.6%20%7C%203.7%20%7C%203.8%20%7C%203.9-blue)](https://github.com/Merubokkusu/Discord-S.C.U.M)       
 [![PyPI version](https://badge.fury.io/py/discum.svg)](https://badge.fury.io/py/discum) [![python versions](https://img.shields.io/badge/python-2.7%20%7C%203.5%20%7C%203.6%20%7C%203.7%20%7C%203.8%20%7C%203.9-green)](https://pypi.org/project/discum)      
-A simple, easy to use, non-restrictive, synchronous Discord API Wrapper for Selfbots/Userbots written in Python.
+A simple, easy to use, non-restrictive, synchronous Discord API Wrapper for Selfbots/Userbots written in Python.      
 -using requests and websockets :)
 
 ![https://files.catbox.moe/3ns003.png](https://files.catbox.moe/3ns003.png)

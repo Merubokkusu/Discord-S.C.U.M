@@ -17,7 +17,7 @@ class SuperProperties:
         self.log = log
 
     def requestBuildNumber(self):
-        if self.log: print("Retrieving Discord's build number...")
+        Logger.log("Retrieving Discord's build number...", None, self.log)
         discord_login_page_exploration = Wrapper.sendRequest(self.editedS, 'get', "https://discord.com/login", log=False).text #log set to False cause this takes up console space w/o giving meaningful info
         time.sleep(1)
         try: #getting the build num is kinda experimental since who knows if discord will change where the build number is located...

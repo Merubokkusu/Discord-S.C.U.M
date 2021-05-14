@@ -108,7 +108,7 @@ bot.gateway.run(auto_reconnect=True)
 
 ## FAQ
 Q: Why am I getting Attribute Errors?          
-A: Most likely you've installed discum through pip, which is not always updated. To get the most recent version, install through github. However, if you're getting an ```AttributeError: 'GatewayServer' object has no attribute 'session'``` all this means is that you haven't connected to the gateway yet (using ```bot.gateway.run()```). (there's no gateway session if you haven't connected ever).    
+A: Most likely you've installed discum through pip, which is not always updated. To get the most recent version, install through github. For gateway.session related errors, you need to connect to the gateway at least once to receive session data.    
 
 Q: Does discum support BOT accounts?         
 A: No. Discum only supports user accounts.      

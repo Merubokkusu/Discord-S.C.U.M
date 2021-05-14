@@ -1,14 +1,14 @@
 # DisCum
 ![version](https://img.shields.io/badge/github%20version-1.2.1-blue) [![python versions](https://img.shields.io/badge/python-2.7%20%7C%203.5%20%7C%203.6%20%7C%203.7%20%7C%203.8%20%7C%203.9-blue)](https://github.com/Merubokkusu/Discord-S.C.U.M)       
 [![PyPI version](https://badge.fury.io/py/discum.svg)](https://badge.fury.io/py/discum) [![python versions](https://img.shields.io/badge/python-2.7%20%7C%203.5%20%7C%203.6%20%7C%203.7%20%7C%203.8%20%7C%203.9-green)](https://pypi.org/project/discum)      
-A simple, easy to use, non-restrictive, synchronous Discord API Wrapper for Selfbots/Userbots written in Python.      
+A simple, easy to use, non-restrictive, synchronous Discord API Wrapper for Selfbots/Userbots written in Python.       
 -using requests and websockets :)
 
 ![https://files.catbox.moe/3ns003.png](https://files.catbox.moe/3ns003.png)
         
 \* You can send issues to discordtehe@gmail.com (arandomnewaccount will respond). If you put them in the issues tab, either arandomnewaccount will edit your message to "respond" because he can't post public comments or Merubokkusu will respond. Please at least read the README before submitting an issue.       
 ** Currently really busy so might take a while to respond.        
-##### *** IMPORTANT: if you want to use bot.createDM, bot.requestFriend, and bot.joinGuild, be very careful. For now (until discord's selfbotting detection gets a little more documented), using a browser automator (selenium, pyppeteer, etc) for these 3 actions is a good choice (when in doubt, try to mimic the real client). Anyway, if you find something interesting/useful regarding discord's selfbot detection, feel free to share here: https://github.com/Merubokkusu/Discord-S.C.U.M/issues/41 :)
+##### *** risky actions: #66
 
 ## Table of Contents
 - [Key Features](#Key-features)
@@ -30,39 +30,37 @@ A simple, easy to use, non-restrictive, synchronous Discord API Wrapper for Self
 - readable (organized 😃 )
 - all api wraps, with the exception of getGuildMember, point to user/"private" apis
 - on-event (gateway) capabilities
-- [extremely customizable fetchMembers function](docs/using/fetchingGuildMembers.md)
+- [extremely customizable fetchMembers function](docs/fetchingGuildMembers.md)
 - support for python 2.7
 
 ## About
-  Discum is a Discord selfbot api wrapper (in case you didn't know, selfbotting = automating a user account). Whenever you login to discord, your client communicates with Discord's servers using Discord's http api (http(s) requests) and gateway server (websockets). Discum allows you have this communication with Discord with python. 
+  Discum is a Discord self/userbot api wrapper (in case you didn't know, self/userbotting = automating a user account). Whenever you login to discord, your client communicates with Discord's servers using Discord's http api (http(s) requests) and gateway server (websockets). Discum allows you have this communication with Discord using python. 
   
-  The main difference between Discum and other Discord api wrapper libraries (like discord.py) is that discum is written and maintained to work on user accounts (so, perfect for selfbots). We test all code on here and develop discum to be readable, expandable, and useable.     
+  The main difference between Discum and other Discord api wrapper libraries (like discord.py) is that discum is written and maintained to work on user accounts (so, perfect for selfbots/userbots). We test code on here and develop discum to be readable, expandable, and useable. Functions that are risky to use are clearly stated as such in the docs.    
   
-  Note, using a selfbot is against Discord's Terms of Service and you could get banned for using one if you're not careful. Also, this needs to be said: discum does not have rate limit handling. The main reasons for this are that discum is made to (1) be (relatively) simple and (2) give the developer/user freedom (generally I'd recommend a bit more than 1 second in between tasks of the same type, but if you'd like a longer or shorter wait time that's up to you). We (Merubokkusu and anewrandomaccount) do not take any responsibility for any consequences you might face while using discum. We also do not take any responsibility for any damage caused (to servers/channels) through the use of Discum. Discum is a tool; how you use this tool is on you.
+  Note, using a selfbot is against Discord's Terms of Service and you could get banned for using one if you're not careful. Also, this needs to be said: discum does not have rate limit handling. The main reasons for this are that discum is made to (1) be (relatively) simple and (2) give the developer/user freedom with how to handle the rate limits. We (Merubokkusu and anewrandomaccount) do not take any responsibility for any consequences you might face while using discum. We also do not take any responsibility for any damage caused (to servers/channels) through the use of Discum. Discum is a tool; how you use this tool is on you.
 
 ## Installation  
 from github (recommended):
 ```
 python -m pip install --user --upgrade git+https://github.com/Merubokkusu/Discord-S.C.U.M.git
 ```          
-The pypi version is not recommended since it is currently not up to date.        
-Note that older versions (specifically, before 0.3.1) do not mimic the official discord client as well as the latest version          
-[and therefore could get your account disabled](https://github.com/Merubokkusu/Discord-S.C.U.M/issues/27#issuecomment-779171666). When in doubt, just install the latest version.
+
 #### Prerequisites (installed automatically using above methods)
 - requests
 - requests_toolbelt
 - brotli
-- websocket_client
+- websocket_client==0.59.0
 - filetype
 - ua-parser
-- random_user_agent
+- random\_user\_agent
 
 ## Documentation
-This project's documentation can be found at
 [https://github.com/Merubokkusu/Discord-S.C.U.M/tree/master/docs](docs)
 
 ## Contributing
-Please see the [contribution guidelines](contributing.md)
+Contributions are welcome. You can submit issues, make pull requests, or suggest features. Ofc not all suggestions will be implemented (because discum is intended to be a transparent, relatively-raw discord user api wrapper), but all suggestions will be looked into.        
+Please see the [contribution guidelines](https://github.com/Merubokkusu/Discord-S.C.U.M/blob/master/contributing.md)
 
 # Example usage
 ```python
@@ -89,9 +87,9 @@ bot.gateway.run(auto_reconnect=True)
 ```
 
 # Links
-[Documentation](https://github.com/Merubokkusu/Discord-S.C.U.M/tree/master/docs)      
-[More examples](https://github.com/Merubokkusu/Discord-S.C.U.M/tree/master/examples)      
-[Changelog](https://github.com/Merubokkusu/Discord-S.C.U.M/blob/master/changelog.md)      
+[Documentation](docs)      
+[More examples](examples)      
+[Changelog](changelog.md)      
 [GitHub](https://github.com/Merubokkusu/Discord-S.C.U.M)      
 [PyPi](https://pypi.org/project/discum/)      
 
@@ -103,13 +101,10 @@ bot.gateway.run(auto_reconnect=True)
 - [X] Profile Editing (Name,Status,Avatar)
 - [X] On-Message (and other on-anything gateway) capabilities
 - [X] Getting guild members
+- [X] improve documentation
 - [ ] add more http api wraps
-- [ ] improve documentation
 - [ ] Making phone calls, sending audio/video data thru those calls
 - [ ] Everything
-
-## Contributing
-Contributions are welcome. You can submit issues, make pull requests, or suggest features. Ofc not all suggestions will be implemented (because discum is intended to be a transparent, relatively-raw discord user api wrapper), but all suggestions will be looked into.            
 
 ## FAQ
 Q: Why am I getting Attribute Errors?          

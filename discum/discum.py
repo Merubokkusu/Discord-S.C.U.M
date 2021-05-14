@@ -1,4 +1,4 @@
-#REST api wrpas
+#REST api wraps
 from .start.login import Login
 from .start.superproperties import SuperProperties
 from .start.other import Other
@@ -10,6 +10,8 @@ from .messages.embed import Embedder
 from .user.user import User
 from .stickers.stickers import Stickers
 from .science.science import Science
+
+from .RESTapiwrap import *
 
 #gateway wraps
 from .gateway.gateway import *
@@ -97,16 +99,15 @@ class Client:
 ##########################################################
 
     '''
-    test connection
+    test token
     '''
-    def connectionTest(self):
-        url=self.discord+'users/@me?with_analytics_token=true'
-        connection = self.s.get(url)
+    def checkToken(self, token):
+        editedS = Wrapper.editedReqSession(self.s, {"add":{"Authorization":token}})
+        connection = User(self.discord, editedS, self.log).info(with_analytics_token=True)
         if connection.status_code == 200:
-            Logger.log("Connected", None, self.log)
-            self.userData = connection.json()
+            Logger.log("Valid token.", None, self.log)
         else:
-            Logger.log("Incorrect Token", None, self.log)
+            Logger.log("Invalid token.", None, self.log)
         return connection
 
     '''

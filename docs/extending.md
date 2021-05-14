@@ -14,34 +14,34 @@ Here's the format of each type of wrapper (depends on type of http request):
 
 ###### GET: 
 ```python
-def wrapper(**params):
+def wrapper(*args):
     url = "url"
     return Wrapper.sendRequest(self.s, 'get', url, log=self.log)
 ```
 ###### POST: 
 ```python
-def wrapper(**params):
+def wrapper(*args):
     url = "url"
     body = {"something": something, ...}
     return Wrapper.sendRequest(self.s, 'post', url, body, log=self.log)
 ```
 ###### PUT: 
 ```python
-def wrapper(**params):
+def wrapper(*args):
     url = "url"
     body = {"something": something, ...}
     return Wrapper.sendRequest(self.s, 'put', url, body, log=self.log)
 ```
 ###### PATCH: 
 ```python
-def wrapper(**params):
+def wrapper(*args):
     url = "url"
     body = {"something": something, ...}
     return Wrapper.sendRequest(self.s, 'patch', url, body, log=self.log)
 ```
 ###### DELETE: 
 ```python
-def wrapper(**params):
+def wrapper(*args):
     url = "url"
     return Wrapper.sendRequest(self.s, 'delete', url, log=self.log)
 ```

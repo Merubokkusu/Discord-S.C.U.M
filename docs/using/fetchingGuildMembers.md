@@ -4,7 +4,7 @@ Alright so this really needs a page of its own because it's special. There's no 
 Note that for large guilds (```bot.gateway.session.guild('GUILD_ID').large == True```), the member list only contains the not-offline members.       
 
 # Links/Table of Contents
-- [Usage](https://github.com/Merubokkusu/Discord-S.C.U.M/blob/master/docs/using.md#fetch-guild-members)
+- [Usage](#fetch-guild-members)
 - [Reasoning/Make your own fetchMembers function](https://arandomnewaccount.gitlab.io/discord-unofficial-docs/lazy_guilds.html)
 - [What happens when fetchMembers is run](#what-happens)
 - [Calculating # of fetchable members](#calculating--of-fetchable-members)
@@ -14,7 +14,7 @@ Note that for large guilds (```bot.gateway.session.guild('GUILD_ID').large == Tr
 
 ### what happens:
 1) the member-fetching tracker for that particular guild gets reset
-2) the [fetchMembers combo function](https://github.com/Merubokkusu/Discord-S.C.U.M/blob/37a4c66713aac5111fa5fe14aebb866197cf2877/discum/gateway/guild/combo.py#L67) gets inserted at position 0 (or whatever priority you select) in the gateway command list
+2) the [fetchMembers combo function](https://github.com/Merubokkusu/Discord-S.C.U.M/blob/master/discum/gateway/guild/combo.py#L83) gets inserted at position 0 (or whatever priority you select) in the gateway command list
 3) the fetchMembers combo function starts running once ready_supplemental has been received
 4) the fetchMembers combo function removes itself from the command list once finished
 

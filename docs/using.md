@@ -1,899 +1,164 @@
-# Using Discum
-to make selfbots & userbots
-# Table of Contents
-- [Quickstart](#Quickstart) 
-  - [Installation](#Install)
-  - [Initiate client](#Initiate-Client)
-  - [Switch logging On/Off](#logging)
-  - [Gateway](#Gateway)
-- [Starting](#Start)
-- [Messages](#Messages)
-- [Stickers](#Stickers)
-- [User Actions](#User-Actions)
-- [Guilds](#Guild)
-- [Science](#Science)
-- [Calling](#mediacalling)
+Table of Contents
+=================
 
-## Quickstart:
-#### Install:
-from Github (you can also select a specific release version: https://github.com/Merubokkusu/Discord-S.C.U.M/releases):
-```
-git clone https://github.com/Merubokkusu/Discord-S.C.U.M.git
-cd Discord-S.C.U.M
-pip install .
-```
-or from pypi:
-```
-pip install discum -U
-```
-#### Initiate client
-```discum.Client(email="", password="", secret="", code="", token="", proxy_host=None, proxy_port=None, user_agent="random", locale="en-US", build_num="request", log={"console":True, "file":False})```      
-\* note: discord is starting to (sometimes) require captchas for the login (even when not using proxies). Therefore, it's recommended that you provide the email, password, and token (or just the token if you're not using the profile-editing functions).
-```python
-import discum
-bot = discum.Client(email='email@email.com',password='password', log=False)
-```
-#### Logging
-Logging essentially makes discum's communications transparent. All sent data and received (decompressed) data is printed. Purple texts are sent data and green texts are received data. Uncolored texts (usually black or white, depending on your terminal settings) are extra logs.
-```python
-#for http APIs:
-bot.log["console"] = True
-bot.log["console"] = False
-bot.log["file"] = "log.txt"
-bot.log["file"] = False
+-   [Get Started](using/Get_Started.md)
+    -   [installing discum](using/Get_Started.md#installing)
+    -   [client initialization](using/Get_Started.md#initializing-your-client)
+    -   [some examples](using/Get_Started.md#examples)
+-   [General Functions and Variables](using/General.md)
+    -   [logging](using/General.md#logging)
+    -   [general variables](using/General.md#general-variables)
+    -   [gateway variables](using/General.md#gateway-variables)
+        -   [session settings/data](using/General.md#botgatewaysession)
+    -   [check token](using/General.md#checktoken)
+    -   [convert between snowflake and unixts](using/General.md#snowflake_to_unixts-and-unixts_to_snowflake)
+    -   [gateway functions](using/General.md#gateway-functions)
+        - [add functions to gateway command list](using/General.md#gatewaycommand)
+        - [remove functions from gateway command list](using/General.md#gatewayremoveCommand)
+        - [clear gateway command list](using/General.md#gatewayclearCommands)
+        - [connect to the gateway](using/General.md#gatewayrun)
+        - [reset gateway session](using/General.md#gatewayresetSession)
+        - [send payload to gateway](using/General.md#gatewaysend)
+        - [auto parse gateway responses](using/General.md#respparsedauto)
+        - [event checking](using/events.md)
 
-#for websocket/gateway APIs:
-bot.gateway.log["console"] = True
-bot.gateway.log["console"] = False
-bot.gateway.log["file"] = "gatewaylog.txt"
-bot.gateway.log["file"] = False
-```
+-   Start
+    -   [request discord build number](using/REST_Actions.md#getbuildnumber)
+    -   [calculate superproperties](using/REST_Actions.md#getsuperproperties)
+    -   [get xfingerprint](using/REST_Actions.md#getxfingerprint)
+    -   [login](using/REST_Actions.md#login)
+    -   [get gateway url](using/REST_Actions.md#getgatewayurl)
+    -   [get status of discord's servers](using/REST_Actions.md#getdiscordstatus)
+    -   [get "detectables"](using/REST_Actions.md#getdetectables)
+    -   [get OAuth2 tokens](using/REST_Actions.md#getoauth2tokens)
+    -   [get hash of stable discord version](using/REST_Actions.md#getversionstablehash)
+    -   [{gateway} parse READY](using/Gateway_Actions.md#respparsedready)
+    -   [{gateway} parse READY\_SUPPLEMENTAL](using/Gateway_Actions.md#respparsedready_supplemental)
+-   User
+    -   [{risky action} send friend request](using/REST_Actions.md#requestfriend)
+    -   [accept friend request](using/REST_Actions.md#acceptfriend)
+    -   [unfriend/unblock/remove friend request/reject friend request](using/REST_Actions.md#removerelationship)
+    -   [block user](using/REST_Actions.md#blockuser)
+    -   [get user profile](using/REST_Actions.md#getprofile)
+    -   [get client info](using/REST_Actions.md#info)
+    -   [get connected accounts](using/REST_Actions.md#getconnectedaccounts)
+    -   [get user affinities](using/REST_Actions.md#getuseraffinities)
+    -   [get guild affinities](using/REST_Actions.md#getguildaffinities)
+    -   [get mentions from inbox](using/REST_Actions.md#getmentions)
+    -   [remove mention from inbox](using/REST_Actions.md#removementionfrominbox)
+    -   [get my stickers](using/REST_Actions.md#getmystickers)
+    -   [get user notes](using/REST_Actions.md#getnotes)
+    -   [change username](using/REST_Actions.md#setusername)
+    -   [change email](using/REST_Actions.md#setemail)
+    -   [change password](using/REST_Actions.md#setpassword)
+    -   [change discriminator](using/REST_Actions.md#setdiscriminator)
+    -   [{risky action} change avatar](using/REST_Actions.md#setavatar)
+    -   [get Time-based One Time Password (TOTP) url](using/REST_Actions.md#gettotpurl)
+    -   [calculate Time-based One Time Password (TOTP) code](using/REST_Actions.md#calculatetotpcode)
+    -   [enable 2FA](using/REST_Actions.md#enable2fa)
+    -   [disable 2FA](using/REST_Actions.md#disable2fa)
+    -   [get 2FA backup codes](using/REST_Actions.md#getbackupcodes)
+    -   [disable account](using/REST_Actions.md#disableaccount)
+    -   [delete account](using/REST_Actions.md#deleteaccount)
+    -   [set DM scan level](using/REST_Actions.md#setdmscanlvl)
+    -   [allow DMs from guild members](using/REST_Actions.md#allowdmsfromservermembers)
+    -   [allow friend requests from...](using/REST_Actions.md#allowfriendrequestsfrom)
+    -   [discord analytics consent](using/REST_Actions.md#analyticsconsent)
+    -   [set hypesquad](using/REST_Actions.md#sethypesquad)
+    -   [leave hypesquad](using/REST_Actions.md#leavehypesquad)
+    -   [set locale](using/REST_Actions.md#setlocale)
+    -   [get RTC regions](using/REST_Actions.md#getrtcregions)
+    -   [set AFK timeout](using/REST_Actions.md#setafktimeout)
+    -   [set theme (light/dark)](using/REST_Actions.md#settheme)
+    -   [set msg display (cozy/compact)](using/REST_Actions.md#setmessagedisplay)
+    -   [enable dev mode](using/REST_Actions.md#enabledevmode)
+    -   [activate application test mode](using/REST_Actions.md#activateapplicationtestmode)
+    -   [get application data](using/REST_Actions.md#getapplicationdata)
+    -   [enable inline media](using/REST_Actions.md#enableinlinemedia)
+    -   [enable large image preview](using/REST_Actions.md#enablelargeimagepreview)
+    -   [enable gif autoplay](using/REST_Actions.md#enablegifautoplay)
+    -   [enable link preview](using/REST_Actions.md#enablelinkpreview)
+    -   [enable reaction rendering](using/REST_Actions.md#enablereactionrendering)
+    -   [enable animated emoji](using/REST_Actions.md#enableanimatedemoji)
+    -   [enable emoticon conversion](using/REST_Actions.md#enableemoticonconversion)
+    -   [set sticker animation config](using/REST_Actions.md#setstickeranimation)
+    -   [enable text-to-speech (tts)](using/REST_Actions.md#enabletts)
+    -   [get billing history](using/REST_Actions.md#getbillinghistory)
+    -   [get payment sources](using/REST_Actions.md#getpaymentsources)
+    -   [get billing subscriptions](using/REST_Actions.md#getbillingsubscriptions)
+    -   [get stripe client secret](using/REST_Actions.md#getstripeclientsecret)
+    -   [enable activity display](using/REST_Actions.md#enableactivitydisplay)
+    -   [logout](using/REST_Actions.md#logout)
+    -   [{gateway} set status](using/Gateway_Actions.md#gatewaysetstatus)
+    -   [{gateway} set custom status](using/Gateway_Actions.md#gatewaysetcustomstatus)
+    -   [{_currently does not work_} set playing status](using/Gateway_Actions.md#gatewaysetplayingstatus)
+    -   [{_currently does not work_} set streaming status](using/Gateway_Actions.md#gatewaysetstreamingstatus)
+    -   [{_currently does not work_} set listening status](using/Gateway_Actions.md#gatewaysetlisteningstatus)
+    -   [{_currently does not work_} set watching status](using/Gateway_Actions.md#gatewaysetwatchingstatus)
+    -   [{gateway} remove playing status](using/Gateway_Actions.md#gatewayremoveplayingstatus)
+    -   [{gateway} remove streaming status](using/Gateway_Actions.md#gatewayremovestreamingstatus)
+    -   [{gateway} remove listening status](using/Gateway_Actions.md#gatewayremovelisteningstatus)
+    -   [{gateway} remove watching status](using/Gateway_Actions.md#gatewayremovewatchingstatus)
+    -   [{gateway} clear activities](using/Gateway_Actions.md#gatewayclearactivities)
+    -   [{gateway} parse SESSIONS\_REPLACE event](using/Gateway_Actions.md#gatewayparsesessions_replace)
+-   [Science/Analytics](using/REST_Actions.md#scienceanalytics)
+    -   [send science requests](using/REST_Actions.md#science)
+    -   [calculate client UUID](using/REST_Actions.md#calculateclientuuid)
+    -   [refresh client UUID](using/REST_Actions.md#refreshclientuuid)
+    -   [parse client UUID](using/REST_Actions.md#parseclientuuid)
+-   Guild
+    -   [get info from invite code](using/REST_Actions.md#getinfofrominvitecode)
+    -   [{risky action} join guild](using/REST_Actions.md#joinguild)
+    -   [leave guild](using/REST_Actions.md#leaveguild)
+    -   [create invite code](using/REST_Actions.md#createinvite)
+    -   [kick user](using/REST_Actions.md#kick)
+    -   [ban user](using/REST_Actions.md#ban)
+    -   [revoke ban](using/REST_Actions.md#revokeban)
+    -   [search member in guild (warning: bot api)](using/REST_Actions.md#getguildmember)
+    -   [get guild verification form](using/REST_Actions.md#getmemberverificationdata)
+    -   [agree to guild rules](using/REST_Actions.md#agreeguildrules)
+    -   [{gateway} fetch guild members](using/Gateway_Actions.md#gatewayfetchmembers)
+    -   [{gateway} guild member fetching parameter helper (POC)](using/Gateway_Actions.md#gatewaygetmemberfetchingparams)
+    -   [{gateway} check if guild member fetching is finished](using/Gateway_Actions.md#gatewayfinishedmemberfetching)
+    -   [{gateway} lazy guild request (opcode 14)](using/Gateway_Actions.md#gatewayrequestlazyguild)
+    -   [{gateway} guild member search request (opcode 8)](using/Gateway_Actions.md#gatewayrequestsearchguildmembers)
+    -   [{gateway} parse GUILD\_MEMBER\_LIST\_UPDATE](using/Gateway_Actions.md#gatewayparseguild_member_list_update)
+    -   [{gateway} parse GUILD\_CREATE](using/Gateway_Actions.md#gatewayparseguild_create)
+    -   [{gateway} parse GUILD\_MEMBERS\_CHUNK](using/Gateway_Actions.md#gatewayparseguild_members_chunk)
+-   Dms
+    -   [{risky action} privately message a user (create DM)](using/REST_Actions.md#createdm)
+    -   [{gateway} view DM channel request (opcode 13)](using/Gateway_Actions.md#gatewayrequestdmchannel)
+-   [Channels](using/Gateway_Actions.md#channels)
+    -   [{gateway} parse CHANNEL\_CREATE](using/Gateway_Actions.md#gatewayparsechannel_create)
+    -   [{gateway} parse CHANNEL\_DELETE](using/Gateway_Actions.md#gatewayparsechannel_delete)
+-   Messages
+    -   [retrieve past messages](using/REST_Actions.md#getmessages)
+    -   [retrieve msg using msg ID](using/REST_Actions.md#getmessage)
+    -   [send embed](using/REST_Actions.md#embedder)
+    -   [send message](using/REST_Actions.md#sendmessage)
+    -   [send file](using/REST_Actions.md#sendfile)
+    -   [reply to message](using/REST_Actions.md#reply)
+    -   [search past messages](using/REST_Actions.md#searchmessages)
+    -   [parse/filter search results](using/REST_Actions.md#filtersearchresults)
+    -   [typing...](using/REST_Actions.md#typingaction)
+    -   [edit message](using/REST_Actions.md#editmessage)
+    -   [delete message](using/REST_Actions.md#deletemessage)
+    -   [pin message](using/REST_Actions.md#pinmessage)
+    -   [unpin message](using/REST_Actions.md#unpinmessage)
+    -   [get pinned messages](using/REST_Actions.md#getpins)
+    -   [add reaction](using/REST_Actions.md#addreaction)
+    -   [remove reaction](using/REST_Actions.md#removereaction)
+    -   [mark message as read (acknowledge)](using/REST_Actions.md#ackmessage)
+    -   [mark message as unread](using/REST_Actions.md#unackmessage)
+    -   [mark multiple messages as read (bulk acknowledge)](using/REST_Actions.md#bulkack)
+    -   [get trending gifs](using/REST_Actions.md#gettrendinggifs)
+    -   [{gateway} parse MESSAGE\_CREATE](using/Gateway_Actions.md#gatewayparsemessage_create)
+-   [Stickers](using/REST_Actions.md#stickers)
+    -   [get stickers](using/REST_Actions.md#getstickers)
+    -   [get sticker apng file](using/REST_Actions.md#getstickerfile)
+    -   [get sticker json data](using/REST_Actions.md#getstickerjson)
+    -   [get sticker pack data](using/REST_Actions.md#getstickerpack)
+-   [Media/Calling](using/Gateway_Actions.md#mediacalling)
+    -   [{gateway} start call](using/Gateway_Actions.md#gatewayrequestcall)
+    -   [{gateway} end call](using/Gateway_Actions.md#gatewayrequestendcall)
 
-#### Gateway
-##### change commands
-```python
-#appending/inserting functions to gateway command list
-def myfunction(resp):
-    pass
-bot.gateway.command(function)
-
-or 
-
-@bot.gateway.command
-def myfunction(resp):
-    pass
-'''
-you can also set a priority for that function and even pass extra parameters to it (priority & params are optional)
-note: resp is always excluded from the params dict
-'''
-def myfunction(resp, guild_id, channel_id, log=True):
-    if log: print(guild_id, channel_id)
-bot.gateway.command(
-    {
-        "function": myfunction,
-        "priority": 0,
-        "params": {"guild_id": "123123123", "channel_id": "321321321", "log": True},
-    }
-)  
-```
-```python
-#remove function from gateway command list
-bot.gateway.removeCommand(function, exactMatch=True, allMatches=False)
-#default is exact match and only remove first match
-#if you set exactMatch to False and just input a function (callable), removeCommand will ignore the params
-```
-```python
-#clear gateway command list
-bot.gateway.clearCommands()
-```
-##### connecting & disconnecting
-```python
-bot.gateway.run(auto_reconnect=True)
-bot.gateway.close() #use this while the gateway server is running to close the connection
-```
-##### resetting current session
-Do not run this while the gateway is running. Only run this after you've stopped the gateway server.
-```python
-bot.gateway.resetSession()
-```
-##### session data (ready and ready_supplemental)
-```python
-bot.gateway.session.read()
-```
-##### auto-parse messages
-```python
-resp.parsed.auto()
-```
-## Start
-The endpoints below are classified as "start" since they can/are run normally by the client at the start of a session.
-##### login
-```login(email, password, undelete=False, captcha=None, source=None, gift_code_sku_id=None)```
-```python
-bot.login('email@email.com', 'password') #returns: token, x-fingerprint; note, a key-error will happen if discord wants you to enter captcha details
-```
-##### getXFingerprint
-```getXFingerprint()```
-```python
-bot.getXFingerprint()
-```
-##### getBuildNumber
-```getBuildNumber()```
-```python
-bot.getBuildNumber()
-```
-##### getSuperProperties
-```getSuperProperties(user_agent, buildnum="request")```
-```python
-bot.getSuperProperties('Opera/8.17 (Windows NT 5.1; sl-SI) Presto/2.8.215 Version/11.00')
-```
-##### getGatewayUrl
-```getGatewayUrl()```
-```python
-bot.getGatewayUrl()
-```
-##### getDiscordStatus
-```getDiscordStatus()```
-```python
-bot.getDiscordStatus()
-```
-##### getDetectables
-```getDetectables()```
-```python
-bot.getDetectables()
-```
-##### getOauth2Tokens
-```getOauth2Tokens()```
-```python
-bot.getOauth2Tokens()
-```
-##### getVersionStableHash
-```getVersionStableHash(underscore=None)```
-```python
-bot.getVersionStableHash()
-```
-
-## Messages
-##### create DM
-```createDM(userIDs)```
-```python
-bot.createDM(['444444444444444444'])
-bot.createDM(['222222222222222222','000000000000000000'])
-```
-##### get messages in a channel
-```getMessages(ChannelID,num=1,beforeDate=None,aroundMessage=None)```
-```python
-bot.getMessages("383003333751856129") #if beforeDate or aroundMessage not given, then most recent message(s) will be returned
-```
-##### get a single message
-```getMessage(channelID, messageID)```
-```python
-bot.getMessage('222222222222222222','000000000000000000')
-```
-##### send text message
-```sendMessage(channelID, message, nonce="calculate", tts=False, embed=None, message_reference=None, allowed_mentions=None, sticker_ids=None)```
-```python
-bot.sendMessage("383003333751856129","Hello You :)")
-```
-* bold message: \*\*text\*\*
-* italicized message: \*text\*
-* strikethrough message: \~\~text\~\~
-* quoted message: \> text
-* code: \`text\`
-* spoiler: \|\|text\|\|
-##### send file
-```sendFile(channelID,filelocation,isurl=False,message="", tts=False, message_reference=None, sticker_ids=None)```
-```python
-bot.sendFile("383003333751856129","https://thiscatdoesnotexist.com/",True)
-```
-* spoiler images: rename image to SPOILER_imagename.jpg (or whatever extension it has)
-##### reply with a message and/or file
-```reply(channelID, messageID, message, nonce="calculate", tts=False, embed=None, allowed_mentions={"parse":["users","roles","everyone"],"replied_user":False}, sticker_ids=None, file=None, isurl=False)```
-```python
-bot.reply('222222222222222222','000000000000000000', 'this is a reply', sticker_ids=['444444444444444444'], file="https://thiscatdoesnotexist.com/", isurl=True)
-```
-##### send embed
-```python
-embed = bot.Embedder()
-embed.title("This is a test")
-embed.image('https://cdn.dribbble.com/users/189524/screenshots/2105870/04-example_800x600_v4.gif')
-embed.fields('Hello!',':yum:')
-embed.fields(':smile:','Testing :)')
-embed.author('Tester')
-bot.sendMessage("383006063751856129", embed=embed.read())
-```
-##### search messages     
-(if only guildID is provided, this will return most recent messages in that guild). format 25 grouped results per page, ~4 messages in each group, target messages have key "hit" in them). If you'd like to filter searchMessages to only return the messages you searched for, use filterSearchResults
-```searchMessages(guildID,channelID=None,userID=None,mentionsUserID=None,has=None,beforeDate=None,afterDate=None,textSearch=None,afterNumResults=None)```
-```python
-bot.searchMessages("267624335836053506",textSearch="hello")
-```
-* params: 
-  * channelID,userID,mentionsUserID are lists of either ints or strings
-  * has is a list of strings
-  * beforeDate and afterDate are ints
-  * textSearch is a string
-  * afterNumResults is an int (multiples of 25)
-##### filter search results
-```filterSearchResults(searchResponse)```
-```python
-searchResponse = bot.searchMessages("267624335836053506",textSearch="hello")
-bot.filterSearchResults(searchResponse)
-```
-##### send typing action
-```typingAction(channelID)```
-```python
-bot.typingAction("267624335836053506")
-```
-##### delete message
-```deleteMessage(channelID,messageID)```
-```python
-bot.deleteMessage("267624335836053506","711254483669352469")
-```
-##### edit message
-```editMessage(channelID, messageID, newMessage)```
-```python
-bot.editMessage("267624335836053506","711254483669352469","hi")
-```
-##### pin message
-```pinMessage(channelID,messageID)```
-```python
-bot.pinMessage("267624335836053506","711254483669352469")
-```
-##### un-pin message
-```unPinMessage(channelID,messageID)```
-```python
-bot.unPinMessage("267624335836053506","711254483669352469")
-```
-##### get pinned messages
-```getPins(channelID)```
-```python
-bot.getPins("267624335836053506")
-```
-##### add reaction
-```addReaction(channelID,messageID,emoji)```
-```python
-bot.addReaction("111111111111111111","222222222222222222","👻")
-bot.addReaction("111111111111111111","222222222222222222","wowee:720507026014450205") #emoji name:emoji id
-```
-##### remove reaction
-```removeReaction(channelID,messageID,emoji)```
-```python
-bot.removeReaction("111111111111111111","222222222222222222","👻")
-bot.removeReaction("111111111111111111","222222222222222222","wowee:720507026014450205") #emoji name:emoji id
-```
-##### acknowledge message (mark message read)
-```ackMessage(channelID,messageID,ackToken=None)```
-```python
-bot.ackMessage("222222222222222222","333333333333333333")
-```
-- you can technically put any string number (str(num)) as the messageID
-##### unacknowledge message (mark message unread)
-```unAckMessage(channelID,messageID,numMentions=0)```
-```python
-bot.unAckMessage("222222222222222222","333333333333333333",250)
-```
-- numMentions can be any positive integer (but discord registers any input above 250 as 250)      
-- you can technically put any string number (str(num)) as the messageID
-##### bulk acknowledge messages
-```bulkAck(data)```
-```python
-bot.bulkAck([{"222222222222222222":"333333333333333333"},{"121212121212121212":"939393939393939393"}])
-```
-##### getTrendingGifs
-```getTrendingGifs(provider="tenor", locale="en-US", media_format="mp4")```
-```python
-bot.getTrendingGifs()
-```
-##### parse message (MESSAGE_CREATE)
-```python
-resp.parsed.message_create()
-```
-
-## Stickers
-##### get sticker datas
-```getStickers(directoryID="758482250722574376", store_listings=False, locale="en-US")```
-```python
-bot.getStickers()
-```
-##### get sticker data file (animated png data)
-```getStickerFile(stickerID, stickerAsset)```
-```python
-bot.getStickerFile("749052944682582036", "5bc6cc8f8002e733e612ef548e7cbe0c")
-```
-##### get sticker json data
-```getStickerJson(stickerID, stickerAsset)```
-```python
-bot.getStickerJson("749052944682582036", "5bc6cc8f8002e733e612ef548e7cbe0c")
-```
-##### get sticker pack data
-```getStickerPack(stickerPackID)```
-```python
-bot.stickerPackID('749043879713701898')
-```
-
-## User
-##### get (my) data
-```info(with_analytics_token=None)```
-```python
-bot.info(True)
-```
-##### send friend request
-```requestFriend(userID)```
-```requestFriend(username+"#"+discriminator)```
-```python
-bot.requestFriend("222222222222222222")
-bot.requestFriend("userwow#0001") #random username used here
-```
-##### accept friend request
-```acceptFriend(userID)```
-```python
-bot.acceptFriend(ID)
-```
-##### remove friend / unblock user / delete outgoing friend request / reject incoming friend request
-```removeRelationship(userID)```
-```python
-bot.removeRelationship(ID)
-```
-##### block user
-```blockUser(userID)```
-```python
-bot.blockUser(ID)
-```
-##### set status ("online", "idle", "dnd", "invisible")
-```gateway.setStatus(status)```
-```python
-@bot.gateway.command
-def setStatusTest(resp):
-  if resp.event.ready_supplemental:
-    bot.gateway.setStatus("online")
-    bot.gateway.setStatus("idle")
-    bot.gateway.setStatus("dnd")
-    bot.gateway.setStatus("invisible")
-
-bot.gateway.run()
-```
-##### set playing status, set streaming status, set listening status, set watching status, and clear activities
-```gateway.setCustomStatus(customstatus, emoji=None, animatedEmoji=False, expires_at=None)```      
-```gateway.setPlayingStatus(game)```      
-```gateway.setStreamingStatus(stream, url)```      
-```gateway.setListeningStatus(song)```      
-```gateway.setWatchingStatus(show)```      
-```gateway.clearActivities()```      
-
-* currently, setPlayingStatus, setStreamingStatus, setListeningStatus, and setWatchingStatus do not work due to api v9 discord changes. This will be fixed in the future if a fix is found.
-Fortunately, setCustomStatus and clearActivities still work fine.
-
-```python
-@bot.gateway.command
-def activitiesTest(resp):
-	if resp.event.ready_supplemental:
-		time.sleep(5) #this line requires that you import time
-		bot.gateway.clearActivities()
-		time.sleep(5)
-		bot.gateway.setPlayingStatus('PythonCraft')
-		time.sleep(5)
-		bot.gateway.setStreamingStatus('Best Game Ever', 'https://www.youtube.com/watch?v=dQw4w9WgXcQ&ab_channel=RickAstleyVEVO')
-		time.sleep(5)
-		bot.gateway.setListeningStatus('Spotify')
-		time.sleep(5)
-		bot.gateway.setWatchingStatus('YouTube')
-		time.sleep(5)
-		bot.gateway.setCustomStatus('o', '🌍')
-
-bot.gateway.run()
-```
-##### remove custom status
-```gateway.removeCustomStatus(status)```
-```python
-@bot.gateway.command
-def removeCustomStatus(resp):
-  if resp.event.ready_supplemental:
-    bot.gateway.removeCustomStatus()
-
-bot.gateway.run()
-```
-##### remove playing status
-```gateway.removePlayingStatus(status)```
-```python
-@bot.gateway.command
-def removeCustomStatus(resp):
-  if resp.event.ready_supplemental:
-    bot.gateway.removePlayingStatus()
-
-bot.gateway.run()
-```
-##### remove streaming status
-```gateway.removeStreamingStatus(status)```
-```python
-@bot.gateway.command
-def removeCustomStatus(resp):
-  if resp.event.ready_supplemental:
-    bot.gateway.removeStreamingStatus()
-
-bot.gateway.run()
-```
-##### remove listening status
-```gateway.removeListeningStatus(status)```
-```python
-@bot.gateway.command
-def removeCustomStatus(resp):
-  if resp.event.ready_supplemental:
-    bot.gateway.removeListeningStatus()
-
-bot.gateway.run()
-```
-##### remove watching status
-```gateway.removeWatchingStatus(status)```
-```python
-@bot.gateway.command
-def removeCustomStatus(resp):
-  if resp.event.ready_supplemental:
-    bot.gateway.removeWatchingStatus()
-
-bot.gateway.run()
-```
-##### set username
-```setUsername(username)```
-```python
-bot.setUsername('helloworld')
-```
-##### set email
-```setEmail(email)```
-```python
-bot.setEmail('helloworld@email.com')
-```
-##### set password
-```setPassword(new_password)```
-```python
-bot.setPassword('thisismynewpass')
-```
-##### set discriminator
-```setDiscriminator(discriminator)```
-```python
-bot.setDiscriminator('0001')
-```
-##### get profile data
-```getProfile(userID)```
-```python
-bot.getProfile('110101010101010101')
-```
-##### get user affinities
-```getUserAffinities()```
-```python
-bot.getUserAffinities()
-```
-##### get user guild affinities
-```getGuildAffinities()```
-```python
-bot.getGuildAffinities()
-```
-##### get mentions (from inbox)
-```getMentions(limit=25, roleMentions=True, everyoneMentions=True)```
-```python
-bot.getMentions()
-```
-##### remove mention from inbox
-```removeMentionFromInbox(messageID)```
-```python
-bot.removeMentionFromInbox('5898989898989898')
-```
-##### set hypesquad badge
-```setHypesquad(house)```
-```python
-bot.setHypesquad("bravery")
-bot.setHypesquad("brilliance")
-bot.setHypesquad("balance")
-```
-### leave hypesquad
-```leaveHypesquad()```
-```python
-bot.leaveHypesquad()
-```
-### set locale
-```setLocale(locale)```
-```python
-bot.setLocale("en-US")
-```
-### enable 2FA (without sms)
-```python
-#optional: you can set a custom TOTP secret by either doing bot._Client__totp_secret = "whateversecretidk" or passing it in as a param when initializing your client
-bot.enable2FA()
-#now, to calculate the Time-Based code, you can do:
-bot.calculateTOTPcode(secret = bot._Client__totp_secret)
-#or, if you'd like to stick to an authenticator app and a qr code:
-bot.getTOTPurl(secret = bot._Client__totp_secret) #just paste this url into any qr-code generator. Or, you can just save the url.
-```
-### get backup codes
-```getBackupCodes(regenerate=False)```
-```python
-bot.getBackupCodes()
-```
-### disable 2FA
-```disable2FA(code="calculate", clearSecretAfter=False)```
-```python
-bot.disable2FA('123456')
-```
-### get RTC regions
-```getRTCregions()```
-```python
-bot.getRTCregions()
-```
-### set AFK timeout
-```setAFKtimeout(timeout_seconds)```
-```python
-bot.setAFKtimeout(500)
-```
-### set theme ("dark" or "light")
-```setTheme(theme)```
-```python
-bot.setTheme("dark")
-```
-### set message display ("cozy" or "compact")
-```setMessageDisplay(CozyOrCompact)```
-```python
-bot.setMessageDisplay("cozy")
-```
-### enable developer mode
-```enableDevMode(enable)```
-```python
-bot.enableDevMode(True)
-```
-### activate application test mode
-```activateApplicationTestMode(applicationID)```
-```python
-bot.activateApplicationTestMode('10101010101010')
-```
-### get application data
-```getApplicationData(applicationID, with_guild=False)```
-```python
-bot.getApplicationData('10101010101010')
-```
-### enable inline media
-```enableInlineMedia(enable)```
-```python
-bot.enableInlineMedia(True)
-```
-### preview large images
-```enableLargeImagePreview(enable)```
-```python
-bot.enableLargeImagePreview(True)
-```
-### enable gif auto-play
-```enableGifAutoPlay(enable)```
-```python
-bot.enableGifAutoPlay(True)
-```
-### enable link previewing
-```enableLinkPreview(enable)```
-```python
-bot.enableLinkPreview(True)
-```
-### render reactions
-```enableReactionRendering(enable)```
-```python
-bot.enableReactionRendering(True)
-```
-### enable animated emoji
-```enableAnimatedEmoji(enable)```
-```python
-bot.enableAnimatedEmoji(True)
-```
-### enable emoticon conversion
-```enableEmoticonConversion(enable)```
-```python
-bot.enableEmoticonConversion(True)
-```
-### set sticker animation ("always", "interaction", or "never")
-```setStickerAnimation(setting)```
-```python
-bot.setStickerAnimation("interaction")
-```
-### enable TTS command
-```enableTTS(enable)```
-```python
-bot.enableTTS(True)
-```
-### get billing history
-```getBillingHistory(limit=20)```
-```python
-bot.getBillingHistory()
-```
-### get payment sources
-```getPaymentSources()```
-```python
-bot.getPaymentSources()
-```
-### get billing subscriptions
-```getBillingSubscriptions()```
-```python
-bot.getBillingSubscriptions()
-```
-### get stripe client secret
-```getStripeClientSecret()```
-```python
-bot.getStripeClientSecret()
-```
-### logout
-```logout(provider=None, voip_provider=None)```
-```python
-bot.logout()
-```
-### session data (data sent to client in the READY and READY_SUPPLEMENTAL gateway events)
-##### session (user data)
-```python
-bot.gateway.session.user
-bot.gateway.session.consents
-bot.gateway.session.experiments
-bot.gateway.session.cachedUsers
-bot.gateway.session.geoOrderedRtcRegions
-bot.gateway.session.tutorial #when you create a new acc and discord gives your client a tutorial
-bot.gateway.session.readStates
-bot.gateway.session.analyticsToken
-bot.gateway.session.connectedAccounts
-```
-##### session (user settings (and user guild settings))
-```python
-bot.gateway.session.userSettings
-bot.gateway.session.optionsForUserSettings
-bot.gateway.session.userGuildSettings
-bot.gateway.session.userGuildSetting(guildID).data #for example, notification settings for a guild
-```
-##### session (relationships)
-| Relationship Type | description |
-| ------ | ------ |
-| 1 | friend |
-| 2 | block |
-| 3 | incoming friend request |
-| 4 | outgoing friend request | 
-```python
-bot.gateway.session.relationships
-bot.gateway.session.relationshipIDs
-bot.gateway.session.friends
-bot.gateway.session.friendIDs
-bot.gateway.session.blocked
-bot.gateway.session.blockedIDs
-bot.gateway.session.incomingFriendRequests
-bot.gateway.session.incomingFriendRequestIDs
-bot.gateway.session.outgoingFriendRequests
-bot.gateway.session.outgoingFriendRequestIDs
-bot.gateway.session.friendSuggestionCount
-bot.gateway.session.relationship(userID).data
-```
-##### session (DMs)
-```python
-bot.gateway.session.DMs
-bot.gateway.session.DMIDs
-bot.gateway.session.DM(DMID).data
-bot.gateway.session.DM(DMID).recipients
-```
-## Guild
-### get guild info from invite code
-```getInfoFromInviteCode(inviteCode)```
-```python
-bot.getInfoFromInviteCode('1a1a1')
-```
-### join guild using invite code
-```joinGuild(inviteCode)```
-```python
-bot.joinGuild('1a1a1')
-```
-### leave guild
-```leaveGuild(guildID)```
-```python
-bot.leaveGuild('guildID00000000000')
-```
-### create invite
-```createInvite(channelID, max_age_seconds=False, max_uses=False, grantTempMembership=False, checkInvite="", targetType="")```
-```python
-bot.createInvite('channelID00000000000')
-```
-### kick user
-```kick(guildID,userID,reason="")```
-```python
-bot.kick('guildID00000000000','userID11111111111','weeeee')
-bot.kick('guildID00000000000','userID11111111111')
-```
-### ban user
-```ban(guildID,userID,deleteMessagesDays=0,reason="")```
-```python
-bot.ban('guildID00000000000','userID11111111111',7,'weeeee')
-bot.ban('guildID00000000000','userID11111111111',7)
-bot.ban('guildID00000000000','userID11111111111',reason='weeeee')
-bot.ban('guildID00000000000','userID11111111111')
-```
-### unban user
-```revokeBan(guildID, userID)```
-```python
-bot.revokeBan('guildID00000000000','userID11111111111')
-```
-### member-verification (where you have to agree to a list of rules; some servers have it)
-```python
-memberVerificationData = bot.getMemberVerificationData(guildID="10101010101010").json()
-bot.agreeGuildRules(guildID="10101010101010", form_fields=memberVerificationData["form_fields"], version=memberVerificationData["version"])
-```
-### lookup userID in guild \*note: this api endpoint isn't normally used by user accounts
-```getGuildMember(guildID,userID)```
-```python
-bot.getGuildMember('guildID00000000000','userID11111111111')
-```
-### fetch guild members
-```gateway.fetchMembers(guild_id, channel_id, method="overlap", keep=[], considerUpdates=True, startIndex=0, stopIndex=1000000000, reset=True, wait=None, priority=0)```
-```python
-bot.gateway.fetchMembers('guildID00000000000', 'channelID00000000000') #all this does is insert a command to fetch members
-bot.gateway.run() #you still need to run the gateway to fetch the members
-```
-Note, if you'd like to close the gateway connection after fetching members, see this [example](https://github.com/Merubokkusu/Discord-S.C.U.M/blob/master/examples/gettingGuildMembers.py).      
-Although you technically could request for multiple guilds at the same time, this is not recommended (and you'd likely not get too favorable results from that).
-Before explaining the params, here're some things to keep in mind when using this function:
-1) There's no actual API endpoint for users to get guild members. [Instead, you have to request for and parse the member list, piece by piece.](https://arandomnewaccount.gitlab.io/discord-unofficial-docs/lazy_guilds.html) The fetchMembers function automates this and automatically removes itself from the command list once finished.
-2) Both guild id and channel id need to be provided. The member list is different for each channel. I'd recommend using general, announcements, or rules (some channel that most/everyone has access to).
-3) The member list does not necessarily contain all the members. For large guilds, the member list usually does not contain all the members. However, the member list is the most efficient way to get members.
-4) Discum's fetchMembers function is coded to mimic the official client behavior for fetching the member list. However, if you'd like to modify fetching behavior, there are params that let you do just that.
-
-params:
-- guild_id (str)
-- channel_id (str)
-- method (str/int/list/tuple):
-  - "overlap":
-    - 100 members per request
-    - fetches member list by requesting for overlapped member ranges (think of it like a sliding window). The member ranges in order of requested are
-      ```
-      [[0,99],[100,199]]
-      [[0,99],[100,199],[200,299]]
-      [[0,99],[200,299],[300,399]]
-      ...
-      ```
-    - this is how the official discord client fetches the member sidebar (as the user scrolls through the member list)
-  - "no overlap"
-    - 200 members per request
-    - fetches member list by requesting for non-overlapped member ranges. The member ranges in order of requested are
-      ```
-      [[0,99],[100,199]]
-      [[0,99],[200,299],[300,399]]
-      [[0,99],[400,499],[500,599]]
-      ...
-      ```
-    - 2 times faster than "overlap" method. However, it's more likely that you'll miss members due to nickname changes and presence updates.
-  - integer:
-    - "overlap" and "no overlap" tell the fetchMembers function to set its multiplier variable to 100 and 200 (ranges are calculated using the multiplier and index values). If you'd like to set a different multiplier, just set method equal to that number. The multiplier has to be a multiple of 100.
-  - list/tuple:
-    - if you don't want a constant multiplier, set method equal to a list/tuple containing the preferred multipliers in the order that you want them.
-- keep (list/str/None):
-  - list:
-    - all possible member properties are: 
-      ```
-       ['pending', 'deaf', 'hoisted_role', 'presence', 'joined_at', 'public_flags', 'username', 'avatar', 'discriminator', 'premium_since', 'roles', 'is_pending', 'mute', 'nick', 'bot']
-      ```
-    - set keep to the list of all the member properties you want to retain
-    - by default, keep is set to an empty list. This is done to save memory (which really does make a different for massive guilds).
-  - "all":
-    - keep all member properties
-  - None
-    - disregard member properties
-    - an empty list accomplishes the same thing
-- considerUpdates (boolean):
-  - presence updates for users come in GUILD_MEMBER_LIST_UPDATE type UPDATE events. For massive guilds (where fetching members can take a while), this can provide updated presence info (only while fetchMembers is running).
-  - this param is useless if 'presence' is not in the keep list
-- startIndex (integer):
-  - what index to start at. This is useful if fetchMembers doesn't fetch all fetchable members (usually due to rate limiting)
-- stopIndex (integer):
-  - what index to stop right before. The stop index is exclusive (like in list slice notation).
-- reset (boolean):
-  - if you'd like to fetchMembers multiple times without clearing the current member list, set this is False
-- wait (float/None):
-  - puts a wait time (in seconds) between member fetching requests to prevent getting rate limited
-- priority (int):
-  - tells discum where to insert the fetchMembers command. Default priority is 0 for fetchMembers.
-
-### get member fetching params
-This is a proof-of-concept to show that you can completely control member-requesting behavior in the fetchMembers function.
-```python
-startIndex, method = bot.gateway.getMemberFetchingParams([600, 500, 400])
-bot.gateway.fetchMembers("guildID","channelID",startIndex=startIndex, method=method, wait=3)
-```
-The above code will make requests for the following 3 range groups:
-```
-[[0,99],[600,699],[700,799]] #target start: 600
-[[0,99],[500,599],[600,699]] #target start: 500
-[[0,99],[400,499],[500,599]] #target start: 400
-```
-For more info, check out https://github.com/Merubokkusu/Discord-S.C.U.M/blob/master/docs/fetchingGuildMembers.md#fetching-the-member-list-backwards
-
-### check member fetching status
-```gateway.finishedMemberFetching(guild_id)```
-```python
-bot.gateway.finishedMemberFetching('guildID00000000000') #returns a boolean
-```
-for reference, member fetching status data is kept in the ```bot.memberFetchingStatus``` variable.
-
-### session data (data sent to client in the READY and READY_SUPPLEMENTAL gateway events)
-```python
-bot.gateway.session.guilds
-bot.gateway.session.guildExperiments
-bot.gateway.session.guildIDs
-bot.gateway.session.positions #your roles in each guild. 
-bot.gateway.session.guild(guildID).data
-bot.gateway.session.guild(guildID).unavailable
-bot.gateway.session.guild(guildID).setData(newData) #set guild data (and delete existing data)
-bot.gateway.session.guild(guildID).modify(modifications) #update guild data
-bot.gateway.session.guild(guildID).hasMembers #checks if members key exists
-bot.gateway.session.guild(guildID).members #available after fetchMembers has been run
-bot.gateway.session.guild(guildID).resetMembers()
-bot.gateway.session.guild(guildID).updateOneMember(userID, userProperties)
-bot.gateway.session.guild(guildID).updateMembers(memberdata)
-bot.gateway.session.guild(guildID).owner
-bot.gateway.session.guild(guildID).boostLvl
-bot.gateway.session.guild(guildID).emojis
-bot.gateway.session.guild(guildID).banner
-bot.gateway.session.guild(guildID).discoverySplash
-bot.gateway.session.guild(guildID).msgNotificationSettings
-bot.gateway.session.guild(guildID).rulesChannelID
-bot.gateway.session.guild(guildID).verificationLvl
-bot.gateway.session.guild(guildID).features
-bot.gateway.session.guild(guildID).joinTime
-bot.gateway.session.guild(guildID).region
-bot.gateway.session.guild(guildID).applicationID
-bot.gateway.session.guild(guildID).afkChannelID
-bot.gateway.session.guild(guildID).icon
-bot.gateway.session.guild(guildID).name
-bot.gateway.session.guild(guildID).maxVideoChannelUsers
-bot.gateway.session.guild(guildID).roles
-bot.gateway.session.guild(guildID).publicUpdatesChannelID
-bot.gateway.session.guild(guildID).systemChannelFlags
-bot.gateway.session.guild(guildID).mfaLvl
-bot.gateway.session.guild(guildID).afkTimeout
-bot.gateway.session.guild(guildID).hashes
-bot.gateway.session.guild(guildID).systemChannelID
-bot.gateway.session.guild(guildID).lazy
-bot.gateway.session.guild(guildID).numBoosts
-bot.gateway.session.guild(guildID).large
-bot.gateway.session.guild(guildID).explicitContentFilter
-bot.gateway.session.guild(guildID).splashHash
-bot.gateway.session.guild(guildID).memberCount
-bot.gateway.session.guild(guildID).description
-bot.gateway.session.guild(guildID).vanityUrlCode
-bot.gateway.session.guild(guildID).preferredLocale
-bot.gateway.session.guild(guildID).allChannels
-bot.gateway.session.guild(guildID).categories
-bot.gateway.session.guild(guildID).categoryIDs
-bot.gateway.session.guild(guildID).categoryData(categoryID)
-bot.gateway.session.guild(guildID).channels
-bot.gateway.session.guild(guildID).channelIDs
-bot.gateway.session.guild(guildID).channelData(channelID)
-bot.gateway.session.guild(guildID).voiceStates
-bot.gateway.session.guild(guildID).position #your roles in a specific guild
-```
-### Science
-aka Discord's tracking endpoint (https://luna.gitlab.io/discord-unofficial-docs/science.html - "Discord argues that they need to collect the data in the case the User allows the usage of the data later on. Which in [luna's] opinion is complete bullshit. Have a good day.")
-##### send tracking data
-```science(events)```
-```python
-bot.science([{}])
-```
-##### calculate client_uuid (more info here: https://docs.google.com/document/d/1b5aDx7S1iLHoeb6B56izZakbXItA84gUjFzK-0OBwy0/edit?usp=sharing)
-```calculateClientUUID(eventNum="default", userID="default", increment=True)```
-```python
-bot.calculateClientUUID()
-```
-##### refresh client_uuid
-```refreshClientUUID(resetEventNum=True)```
-```python
-bot.refreshClientUUID()
-```
-##### parse client_uuid
-```parseClientUUID(client_uuid)```
-```python
-bot.parseClientUUID('AAASXwTHGwfnejRw+qeUEncBAAAAAAAA') #client_uuids belonging to not-logged-in users are just snowflake timestamps
-```
-## Media/Calling
-(no function yet for streaming data)
-##### start call
-```bot.gateway.request.call(channelID, guildID=None, mute=False, deaf=False, video=False)```
-```python
-bot.gateway.request.call('channelID000000', guildID=None, mute=False, deaf=False, video=False)
-```
-##### end call
-```bot.gateway.request.endCall()```
-```python
-bot.gateway.request.endCall()
-```

@@ -30,7 +30,7 @@ A simple, easy to use, non-restrictive, synchronous Discord API Wrapper for Self
 - readable (organized 😃 )
 - all api wraps, with the exception of getGuildMember, point to user/"private" apis
 - on-event (gateway) capabilities
-- [extremely customizable fetchMembers function](docs/fetchingGuildMembers.md)
+- [extremely customizable fetchMembers function](docs/using/fetchingGuildMembers.md)
 - support for python 2.7
 
 ## About

@@ -30,7 +30,7 @@ A simple, easy to use, non-restrictive, synchronous Discord API Wrapper for Self
 - readable (organized 😃 )
 - all api wraps, with the exception of getGuildMember, point to user/"private" apis
 - on-event (gateway) capabilities
-- [extremely customizable fetchMembers function](https://github.com/Merubokkusu/Discord-S.C.U.M/blob/master/docs/fetchingGuildMembers.md)
+- [extremely customizable fetchMembers function](docs/using/fetchingGuildMembers.md)
 - support for python 2.7
 
 ## About
@@ -59,10 +59,10 @@ Note that older versions (specifically, before 0.3.1) do not mimic the official 
 
 ## Documentation
 This project's documentation can be found at
-[https://github.com/Merubokkusu/Discord-S.C.U.M/tree/master/docs](https://github.com/Merubokkusu/Discord-S.C.U.M/tree/master/docs)
+[https://github.com/Merubokkusu/Discord-S.C.U.M/tree/master/docs](docs)
 
 ## Contributing
-Please see the [contribution guidelines](https://github.com/Merubokkusu/Discord-S.C.U.M/blob/master/contributing.md)
+Please see the [contribution guidelines](contributing.md)
 
 # Example usage
 ```python

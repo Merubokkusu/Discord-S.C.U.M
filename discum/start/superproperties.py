@@ -48,7 +48,7 @@ class SuperProperties:
             "referrer_current": "",
             "referring_domain_current": "",
             "release_channel": "stable",
-            "client_build_number": 83036,
+            "client_build_number": 85094,
             "client_event_source": None
         }
         if locale == None:

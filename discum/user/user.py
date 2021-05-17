@@ -43,10 +43,6 @@ class User(object):
 			url += "?with_analytics_token="+with_analytics_token
 		return Wrapper.sendRequest(self.s, 'get', url, log=self.log)
 
-	def getConnectedAccounts(self):
-		url = self.discord+"users/@me/connections"
-		return Wrapper.sendRequest(self.s, 'get', url, log=self.log)
-
 	def getUserAffinities(self):
 		url = self.discord+"users/@me/affinities/users"
 		return Wrapper.sendRequest(self.s, 'get', url, log=self.log)
@@ -72,6 +68,10 @@ class User(object):
 
 	def getNotes(self, userID):
 		url = self.discord+"users/@me/notes/"+userID
+		return Wrapper.sendRequest(self.s, 'get', url, log=self.log)
+
+	def getRTCregions(self):
+		url = "https://latency.discord.media/rtc"
 		return Wrapper.sendRequest(self.s, 'get', url, log=self.log)
 
 	def setStatusHelper(self, status, timeout=None): #Dont run this function by itself; status options are: online, idle, dnd, invisible
@@ -189,37 +189,64 @@ class User(object):
 		body = {"grant":grant,"revoke":revoke}
 		return Wrapper.sendRequest(self.s, 'post', url, body, log=self.log)
 
-
-	################
-
-	def setHypesquad(self, house):
-		url = self.discord+"hypesquad/online"
-		if house.lower() == "bravery":
-			body = {"house_id": 1}
-		elif house.lower() == "brilliance":
-			body = {"house_id": 2}
-		elif house.lower() == "balance":
-			body = {"house_id": 3}
-		return Wrapper.sendRequest(self.s, 'post', url, body, log=self.log)
-
-	def leaveHypesquad(self):
-		url = self.discord+"hypesquad/online"
-		return Wrapper.sendRequest(self.s, 'delete', url, log=self.log)
-
-	def setLocale(self, locale):
+	def allowScreenReaderTracking(self, allow): #more discord tracking stuff
 		url = self.discord+"users/@me/settings"
-		body = {"locale": locale}
+		body = {"allow_accessibility_detection": allow}
 		return Wrapper.sendRequest(self.s, 'patch', url, body, log=self.log)
 
-	def getRTCregions(self):
-		url = "https://latency.discord.media/rtc"
+	def requestMyData(self):
+		url = self.discord+"users/@me/harvest"
+		return Wrapper.sendRequest(self.s, 'post', url, log=self.log)
+
+	'''
+	Connections
+	'''
+	def getConnectedAccounts(self):
+		url = self.discord+"users/@me/connections"
 		return Wrapper.sendRequest(self.s, 'get', url, log=self.log)
 
-	def setAFKtimeout(self, timeout_seconds):
-		url = self.discord+"users/@me/settings"
-		body = {"afk_timeout": timeout_seconds}
+	def getConnectionUrl(self, accountType):
+		url = self.discord+"connections/"+accountType+"/authorize"
+		return Wrapper.sendRequest(self.s, 'get', url, log=self.log)
+
+	def enableConnectionDisplayOnProfile(self, accountType, accountUsername, enable):
+		url = self.discord+"users/@me/connections/"+accountType+"/"+accountUsername
+		body = {"visibility": enable}
 		return Wrapper.sendRequest(self.s, 'patch', url, body, log=self.log)
 
+	def enableConnectionDisplayOnStatus(self, accountType, accountUsername, enable):
+		url = self.discord+"users/@me/connections/"+accountType+"/"+accountUsername
+		body = {"show_activity": enable}
+		return Wrapper.sendRequest(self.s, 'patch', url, body, log=self.log)
+
+	def removeConnection(self, accountType, accountUsername):
+		url = self.discord+"users/@me/connections/"+accountType+"/"+accountUsername
+		return Wrapper.sendRequest(self.s, 'delete', url, log=self.log)
+
+	# BILLING SETTINGS
+	'''
+	Billing
+	'''
+	def getBillingHistory(self, limit):
+		url = self.discord+"users/@me/billing/payments?limit="+str(limit)
+		return Wrapper.sendRequest(self.s, 'get', url, log=self.log)
+
+	def getPaymentSources(self):
+		url = self.discord+"users/@me/billing/payment-sources"
+		return Wrapper.sendRequest(self.s, 'get', url, log=self.log)
+
+	def getBillingSubscriptions(self):
+		url = self.discord+"users/@me/billing/subscriptions"
+		return Wrapper.sendRequest(self.s, 'get', url, log=self.log)
+
+	def getStripeClientSecret(self): #for adding new payment methods. Stripe api wraps are not included because discum is just a discord api wrapper.
+		url = self.discord+"users/@me/billing/stripe/setup-intents"
+		return Wrapper.sendRequest(self.s, 'post', url, log=self.log)
+
+	# APP SETTINGS
+	'''
+	Appearance
+	'''
 	def setTheme(self, theme):
 		url = self.discord+"users/@me/settings"
 		body = {"theme": theme.lower()}
@@ -233,55 +260,17 @@ class User(object):
 			body = {"message_display_compact": False}
 		return Wrapper.sendRequest(self.s, 'patch', url, body, log=self.log)
 
-	def enableDevMode(self, enable):
-		url = self.discord+"users/@me/settings"
-		body = {"developer_mode": enable}
-		return Wrapper.sendRequest(self.s, 'patch', url, body, log=self.log)
-
-	def activateApplicationTestMode(self, applicationID):
-		url = self.discord+"applications/"+applicationID+"/skus"
-		return Wrapper.sendRequest(self.s, 'get', url, log=self.log)
-
-	def getApplicationData(self, applicationID, with_guild):
-		url = self.discord+"applications/"+applicationID+"/public?with_guild="+str(with_guild).lower()
-		return Wrapper.sendRequest(self.s, 'get', url, log=self.log)
-
 	'''
-	App Settings - Text&Images
+	Accessibility
 	'''
-	def enableInlineMedia(self, enable):
-		url = self.discord+"users/@me/settings"
-		body = {"inline_embed_media": enable}
-		return Wrapper.sendRequest(self.s, 'patch', url, body, log=self.log)
-
-	def enableLargeImagePreview(self, enable):
-		url = self.discord+"users/@me/settings"
-		body = {"inline_attachment_media": enable}
-		return Wrapper.sendRequest(self.s, 'patch', url, body, log=self.log)
-
 	def enableGifAutoPlay(self, enable):
 		url = self.discord+"users/@me/settings"
 		body = {"gif_auto_play": enable}
 		return Wrapper.sendRequest(self.s, 'patch', url, body, log=self.log)
 
-	def enableLinkPreview(self, enable):
-		url = self.discord+"users/@me/settings"
-		body = {"render_embeds": enable}
-		return Wrapper.sendRequest(self.s, 'patch', url, body, log=self.log)
-
-	def enableReactionRendering(self, enable):
-		url = self.discord+"users/@me/settings"
-		body = {"render_reactions": enable}
-		return Wrapper.sendRequest(self.s, 'patch', url, body, log=self.log)
-
 	def enableAnimatedEmoji(self, enable):
 		url = self.discord+"users/@me/settings"
 		body = {"animate_emoji": enable}
-		return Wrapper.sendRequest(self.s, 'patch', url, body, log=self.log)
-
-	def enableEmoticonConversion(self, enable):
-		url = self.discord+"users/@me/settings"
-		body = {"convert_emoticons": enable}
 		return Wrapper.sendRequest(self.s, 'patch', url, body, log=self.log)
 
 	def setStickerAnimation(self, setting):
@@ -300,34 +289,107 @@ class User(object):
 		return Wrapper.sendRequest(self.s, 'patch', url, body, log=self.log)
 
 	'''
-	Billing Settings - Billing
+	Text & Images
 	'''
-	def getBillingHistory(self, limit):
-		url = self.discord+"users/@me/billing/payments?limit="+str(limit)
+
+	def enableLinkedImageDisplay(self, enable):
+		url = self.discord+"users/@me/settings"
+		body = {"inline_embed_media": enable}
+		return Wrapper.sendRequest(self.s, 'patch', url, body, log=self.log)
+
+	def enableImageDisplay(self, enable):
+		url = self.discord+"users/@me/settings"
+		body = {"inline_attachment_media": enable}
+		return Wrapper.sendRequest(self.s, 'patch', url, body, log=self.log)
+
+	def enableLinkPreview(self, enable):
+		url = self.discord+"users/@me/settings"
+		body = {"render_embeds": enable}
+		return Wrapper.sendRequest(self.s, 'patch', url, body, log=self.log)
+
+	def enableReactionRendering(self, enable):
+		url = self.discord+"users/@me/settings"
+		body = {"render_reactions": enable}
+		return Wrapper.sendRequest(self.s, 'patch', url, body, log=self.log)
+
+	def enableEmoticonConversion(self, enable):
+		url = self.discord+"users/@me/settings"
+		body = {"convert_emoticons": enable}
+		return Wrapper.sendRequest(self.s, 'patch', url, body, log=self.log)
+
+	'''
+	Notifications
+	'''
+	def setAFKtimeout(self, timeout_seconds):
+		url = self.discord+"users/@me/settings"
+		body = {"afk_timeout": timeout_seconds}
+		return Wrapper.sendRequest(self.s, 'patch', url, body, log=self.log)
+
+	'''
+	Language
+	'''
+	def setLocale(self, locale):
+		url = self.discord+"users/@me/settings"
+		body = {"locale": locale}
+		return Wrapper.sendRequest(self.s, 'patch', url, body, log=self.log)
+
+	'''
+	Advanced
+	'''
+	def enableDevMode(self, enable):
+		url = self.discord+"users/@me/settings"
+		body = {"developer_mode": enable}
+		return Wrapper.sendRequest(self.s, 'patch', url, body, log=self.log)
+
+	def activateApplicationTestMode(self, applicationID):
+		url = self.discord+"applications/"+applicationID+"/skus"
 		return Wrapper.sendRequest(self.s, 'get', url, log=self.log)
 
-	def getPaymentSources(self):
-		url = self.discord+"users/@me/billing/payment-sources"
+	def getApplicationData(self, applicationID, with_guild):
+		url = self.discord+"applications/"+applicationID+"/public?with_guild="+str(with_guild).lower()
 		return Wrapper.sendRequest(self.s, 'get', url, log=self.log)
 
-	def getBillingSubscriptions(self):
-		url = self.discord+"users/@me/billing/subscriptions"
-		return Wrapper.sendRequest(self.s, 'get', url, log=self.log)
-
-	def getStripeClientSecret(self): #for adding new payment methods. Stripe api wraps are not included because discum is just a discord api wrapper.
-		url = self.discord+"users/@me/billing/stripe/setup-intents"
-		return Wrapper.sendRequest(self.s, 'post', url, log=self.log)
+	# ACTIVITY SETTINGS
 	'''
-	Billing Settings - Gift Inventory
-	'''
-
-	'''
-	Game Activity
+	Activity Status
 	'''
 	def enableActivityDisplay(self, enable, timeout=None):
 		url = self.discord+"users/@me/settings"
 		body = {"show_current_game": enable}
 		Wrapper.sendRequest(self.s, 'patch', url, body, timeout=timeout, log=self.log)
+
+	# OTHER SETTINGS
+	'''
+	HypeSquad
+	'''
+	def setHypesquad(self, house):
+		url = self.discord+"hypesquad/online"
+		if house.lower() == "bravery":
+			body = {"house_id": 1}
+		elif house.lower() == "brilliance":
+			body = {"house_id": 2}
+		elif house.lower() == "balance":
+			body = {"house_id": 3}
+		return Wrapper.sendRequest(self.s, 'post', url, body, log=self.log)
+
+	def leaveHypesquad(self):
+		url = self.discord+"hypesquad/online"
+		return Wrapper.sendRequest(self.s, 'delete', url, log=self.log)
+
+	'''
+	Developer Options
+	'''
+	def getBuildOverrides(self):
+		url = "https://discord.com/__development/build_overrides"
+		return Wrapper.sendRequest(self.s, 'get', url, headerModifications={"remove":["Authorization", "X-Super-Properties", "X-Fingerprint"]}, log=self.log)
+
+	def enableSourceMaps(self, enable):
+		url = "https://discord.com/__development/source_maps"
+		if enable:
+			return Wrapper.sendRequest(self.s, 'put', url, headerModifications={"remove":["X-Super-Properties", "X-Fingerprint"]}, log=self.log)
+		else:
+			return Wrapper.sendRequest(self.s, 'delete', url, headerModifications={"remove":["X-Super-Properties", "X-Fingerprint"]}, log=self.log)
+
 	'''
 	Logout
 	'''

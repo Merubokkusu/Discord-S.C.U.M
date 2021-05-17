@@ -116,10 +116,6 @@ bot.info(True)
 ###### Parameters:
 - with\_analytics\_token (Optional[bool/None]) - this token is passed in the body of science/analytics requests. Defaults to None
 
-##### ```getConnectedAccounts```
-```python
-bot.getConnectedAccounts()
-```
 ##### ```getUserAffinities```
 ```python
 bot.getUserAffinities()
@@ -154,6 +150,11 @@ bot.getNotes('222222222222222222')
 ```
 ###### Parameters:
 - user ID (str)
+
+##### ```getRTCregions```
+```python
+bot.getRTCregions()
+```
 
 ##### ```setUsername```
 \*bot.\_Client\_\_user\_password needs to be set before running this
@@ -274,36 +275,80 @@ bot.analyticsConsent(grant="usage_statistics", revoke="personalization")
 - grant (Optional[list]) - defaults to []
 - revoke (Optional[list]) - defaults to []
 
-##### ```setHypesquad```
+##### ```allowScreenReaderTracking```
 ```python
-bot.setHypesquad("bravery")
-bot.setHypesquad("brilliance")
-bot.setHypesquad("balance")
+bot.allowScreenReaderTracking()
 ```
-###### Parameters:
-- house (str) - bravery, brilliance, or balance
 
-##### ```leaveHypesquad```
-```python
-bot.leaveHypesquad()
-```
-##### ```setLocale```
-```python
-bot.setLocale("en-US")
-```
 ###### Parameters:
-- locale (str)
+- allow (Optional[bool]) - defaults to True
 
-##### ```getRTCregions```
+##### ```requestMyData```
 ```python
-bot.getRTCregions()
+bot.requestMyData()
 ```
-##### ```setAFKtimeout```
+
+##### ```getConnectedAccounts```
 ```python
-bot.setAFKtimeout(500)
+bot.getConnectedAccounts()
+```
+
+##### ```getConnectionUrl```
+```python
+bot.getConnectionUrl("reddit")
+```
+
+###### Parameters:
+- accountType (str) - "twitch", "youtube", "battlenet", "steam", "reddit", "facebook", "twitter", "spotify", "xbox", or "github"
+
+##### ```enableConnectionDisplayOnProfile```
+```python
+bot.enableConnectionDisplayOnProfile("reddit", "skjdnfksjfkdjfskjdnksdjfhksdjfksjdksjnfd")
+```
+
+###### Parameters:
+- accountType (str) - "twitch", "youtube", "battlenet", "steam", "reddit", "facebook", "twitter", "spotify", "xbox", or "github"
+- accountUsername (str)
+- enable (Optional[str]) - defaults to True
+
+##### ```enableConnectionDisplayOnStatus```
+```python
+bot.enableConnectionDisplayOnStatus("reddit", "skjdnfksjfkdjfskjdnksdjfhksdjfksjdksjnfd")
+```
+
+###### Parameters:
+- accountType (str) - "twitch", "youtube", "battlenet", "steam", "reddit", "facebook", "twitter", "spotify", "xbox", or "github"
+- accountUsername (str)
+- enable (Optional[str]) - defaults to True
+
+##### ```removeConnection```
+```python
+bot.removeConnection("reddit", "skjdnfksjfkdjfskjdnksdjfhksdjfksjdksjnfd")
+```
+
+###### Parameters:
+- accountType (str) - "twitch", "youtube", "battlenet", "steam", "reddit", "facebook", "twitter", "spotify", "xbox", or "github"
+- accountUsername (str)
+
+##### ```getBillingHistory```
+```python
+bot.getBillingHistory()
 ```
 ###### Parameters:
-- timeout_seconds (int)
+- limit (Optional[int]) - defaults to 20
+
+##### ```getPaymentSources```
+```python
+bot.getPaymentSources()
+```
+##### ```getBillingSubscriptions```
+```python
+bot.getBillingSubscriptions()
+```
+##### ```getStripeClientSecret```
+```python
+bot.getStripeClientSecret()
+```
 
 ##### ```setTheme```
 ```python
@@ -318,6 +363,83 @@ bot.setMessageDisplay("cozy")
 ```
 ###### Parameters:
 - CozyOrCompact (str) - cozy or compact
+
+##### ```enableGifAutoPlay```
+```python
+bot.enableGifAutoPlay()
+```
+###### Parameters:
+- enable (Optional[bool]) - defaults to True
+
+##### ```enableAnimatedEmoji```
+```python
+bot.enableAnimatedEmoji()
+```
+###### Parameters:
+- enable (Optional[bool]) - defaults to True
+
+##### ```setStickerAnimation```
+```python
+bot.setStickerAnimation("interaction")
+```
+###### Parameters:
+- setting (str) - "always", "interaction", or "never"
+
+##### ```enableTTS```
+```python
+bot.enableTTS()
+```
+###### Parameters:
+- enable (Optional[bool]) - defaults to True
+
+##### ```enableLinkedImageDisplay```
+```python
+bot.enableLinkedImageDisplay()
+```
+###### Parameters:
+- enable (Optional[bool]) - defaults to True
+
+##### ```enableImageDisplay```
+```python
+bot.enableImageDisplay()
+```
+###### Parameters:
+- enable (Optional[bool]) - defaults to True
+
+##### ```enableLinkPreview```
+```python
+bot.enableLinkPreview()
+```
+###### Parameters:
+- enable (Optional[bool]) - defaults to True
+
+##### ```enableReactionRendering```
+```python
+bot.enableReactionRendering()
+```
+###### Parameters:
+- enable (Optional[bool]) - defaults to True
+
+##### ```enableEmoticonConversion```
+```python
+bot.enableEmoticonConversion()
+```
+###### Parameters:
+- enable (Optional[bool]) - defaults to True
+
+##### ```setAFKtimeout```
+```python
+bot.setAFKtimeout(500)
+```
+###### Parameters:
+- timeout_seconds (int)
+
+##### ```setLocale```
+```python
+bot.setLocale("en-US")
+```
+###### Parameters:
+- locale (str)
 
 ##### ```enableDevMode```
 ```python
@@ -341,92 +463,38 @@ bot.getApplicationData('10101010101010')
 - applicationID (str)
 - with\_guild (Optional[str]) - defaults to False
 
-##### ```enableInlineMedia```
-```python
-bot.enableInlineMedia()
-```
-###### Parameters:
-- enable (Optional[bool]) - defaults to True
-
-##### ```enableLargeImagePreview```
-```python
-bot.enableLargeImagePreview()
-```
-###### Parameters:
-- enable (Optional[bool]) - defaults to True
-
-##### ```enableGifAutoPlay```
-```python
-bot.enableGifAutoPlay()
-```
-###### Parameters:
-- enable (Optional[bool]) - defaults to True
-
-##### ```enableLinkPreview```
-```python
-bot.enableLinkPreview()
-```
-###### Parameters:
-- enable (Optional[bool]) - defaults to True
-
-##### ```enableReactionRendering```
-```python
-bot.enableReactionRendering()
-```
-###### Parameters:
-- enable (Optional[bool]) - defaults to True
-
-##### ```enableAnimatedEmoji```
-```python
-bot.enableAnimatedEmoji()
-```
-###### Parameters:
-- enable (Optional[bool]) - defaults to True
-
-##### ```enableEmoticonConversion```
-```python
-bot.enableEmoticonConversion()
-```
-###### Parameters:
-- enable (Optional[bool]) - defaults to True
-
-##### ```setStickerAnimation```
-```python
-bot.setStickerAnimation("interaction")
-```
-###### Parameters:
-- setting (str) - "always", "interaction", or "never"
-
-##### ```enableTTS```
-```python
-bot.enableTTS()
-```
-###### Parameters:
-- enable (Optional[bool]) - defaults to True
-
-##### ```getBillingHistory```
-```python
-bot.getBillingHistory()
-```
-###### Parameters:
-- limit (Optional[int]) - defaults to 20
-
-##### ```getPaymentSources```
-```python
-bot.getPaymentSources()
-```
-##### ```getBillingSubscriptions```
-```python
-bot.getBillingSubscriptions()
-```
-##### ```getStripeClientSecret```
-```python
-bot.getStripeClientSecret()
-```
 ##### ```enableActivityDisplay```
 ```python
 bot.enableActivityDisplay()
 ```
+###### Parameters:
+- enable (Optional[bool]) - defaults to True
+
+##### ```setHypesquad```
+```python
+bot.setHypesquad("bravery")
+bot.setHypesquad("brilliance")
+bot.setHypesquad("balance")
+```
+###### Parameters:
+- house (str) - bravery, brilliance, or balance
+
+##### ```leaveHypesquad```
+```python
+bot.leaveHypesquad()
+```
+
+##### ```getBuildOverrides```
+```python
+bot.getBuildOverrides()
+```
+
+##### ```enableSourceMaps```
+doesn't work if you're not a dev at discord
+```python
+bot.enableSourceMaps()
+```
+
 ###### Parameters:
 - enable (Optional[bool]) - defaults to True
 

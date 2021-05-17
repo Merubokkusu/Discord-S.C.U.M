@@ -265,6 +265,36 @@ class Client:
         return User(self.discord,self.s,self.log).blockUser(userID)
 
     '''
+    Other user stuff
+    '''
+    def getProfile(self, userID):
+        return User(self.discord,self.s,self.log).getProfile(userID)
+
+    def info(self, with_analytics_token=None):
+        return User(self.discord,self.s,self.log).info(with_analytics_token)
+
+    def getUserAffinities(self):
+        return User(self.discord,self.s,self.log).getUserAffinities()
+
+    def getGuildAffinities(self):
+        return User(self.discord,self.s,self.log).getGuildAffinities()
+
+    def getMentions(self, limit=25, roleMentions=True, everyoneMentions=True):
+        return User(self.discord,self.s,self.log).getMentions(limit, roleMentions, everyoneMentions)
+
+    def removeMentionFromInbox(self, messageID):
+        return User(self.discord,self.s,self.log).removeMentionFromInbox(messageID)
+
+    def getMyStickers(self):
+        return User(self.discord,self.s,self.log).getMyStickers()
+
+    def getNotes(self, userID):
+        return User(self.discord,self.s,self.log).getNotes(userID)
+
+    def getRTCregions(self):
+        return User(self.discord,self.s,self.log).getRTCregions()
+
+    '''
     Profile edits
     '''
     # set avatar
@@ -332,7 +362,7 @@ class Client:
         return User(self.discord,self.s,self.log).deleteAccount(password)
 
     '''
-    Privacy & Safety
+    User Settings, continued
     '''
     def setDMscanLvl(self, level=1): # 0<=level<=2
         return User(self.discord,self.s,self.log).setDMscanLvl(level)
@@ -346,95 +376,26 @@ class Client:
     def analyticsConsent(self, grant=[], revoke=[]):
         return User(self.discord,self.s,self.log).analyticsConsent(grant, revoke)
 
-    #############
+    def allowScreenReaderTracking(self, allow=True):
+        return User(self.discord,self.s,self.log).allowScreenReaderTracking(allow)
 
-    def getProfile(self, userID):
-        return User(self.discord,self.s,self.log).getProfile(userID)
-
-    def info(self, with_analytics_token=None):
-        return User(self.discord,self.s,self.log).info(with_analytics_token)
+    def requestMyData(self):
+        return User(self.discord,self.s,self.log).requestMyData()
 
     def getConnectedAccounts(self):
         return User(self.discord,self.s,self.log).getConnectedAccounts()
 
-    def getUserAffinities(self):
-        return User(self.discord,self.s,self.log).getUserAffinities()
+    def getConnectionUrl(self, accountType):
+        return User(self.discord,self.s,self.log).getConnectionUrl(accountType)
 
-    def getGuildAffinities(self):
-        return User(self.discord,self.s,self.log).getGuildAffinities()
+    def enableConnectionDisplayOnProfile(self, accountType, accountUsername, enable=True):
+        return User(self.discord,self.s,self.log).enableConnectionDisplayOnProfile(accountType, accountUsername, enable)
 
-    def getMentions(self, limit=25, roleMentions=True, everyoneMentions=True):
-        return User(self.discord,self.s,self.log).getMentions(limit, roleMentions, everyoneMentions)
+    def enableConnectionDisplayOnStatus(self, accountType, accountUsername, enable=True):
+        return User(self.discord,self.s,self.log).enableConnectionDisplayOnStatus(accountType, accountUsername, enable)
 
-    def removeMentionFromInbox(self, messageID):
-        return User(self.discord,self.s,self.log).removeMentionFromInbox(messageID)
-
-    def getMyStickers(self):
-        return User(self.discord,self.s,self.log).getMyStickers()
-
-    def getNotes(self, userID):
-        return User(self.discord,self.s,self.log).getNotes(userID)
-
-    def setHypesquad(self, house):
-        return User(self.discord,self.s,self.log).setHypesquad(house)
-
-    def leaveHypesquad(self):
-        return User(self.discord,self.s,self.log).leaveHypesquad()
-
-    def setLocale(self, locale):
-        response = User(self.discord,self.s,self.log).setLocale(locale)
-        self.locale = locale
-        self.s.headers["Accept-Language"] = self.locale
-        self.s.cookies["locale"] = self.locale
-        return response
-
-    def getRTCregions(self):
-        return User(self.discord,self.s,self.log).getRTCregions()
-
-    def setAFKtimeout(self, timeout_seconds):
-        return User(self.discord,self.s,self.log).setAFKtimeout(timeout_seconds)
-
-    def setTheme(self, theme): #"light" or "dark"
-        return User(self.discord,self.s,self.log).setTheme(theme)
-
-    def setMessageDisplay(self, CozyOrCompact): #"cozy" or "compact"
-        return User(self.discord,self.s,self.log).setMessageDisplay(CozyOrCompact)
-
-    def enableDevMode(self, enable=True): #boolean
-        return User(self.discord,self.s,self.log).enableDevMode(enable)
-
-    def activateApplicationTestMode(self, applicationID):
-        return User(self.discord,self.s,self.log).activateApplicationTestMode(applicationID)
-
-    def getApplicationData(self, applicationID, with_guild=False):
-        return User(self.discord,self.s,self.log).getApplicationData(applicationID, with_guild)
-
-    def enableInlineMedia(self, enable=True): #boolean, default=True
-        return User(self.discord,self.s,self.log).enableInlineMedia(enable)
-
-    def enableLargeImagePreview(self, enable=True): #boolean, default=True
-        return User(self.discord,self.s,self.log).enableLargeImagePreview(enable)
-
-    def enableGifAutoPlay(self, enable=True): #boolean, default=True
-        return User(self.discord,self.s,self.log).enableGifAutoPlay(enable)
-
-    def enableLinkPreview(self, enable=True): #boolean, default=True
-        return User(self.discord,self.s,self.log).enableLinkPreview(enable)
-
-    def enableReactionRendering(self, enable=True): #boolean, default=True
-        return User(self.discord,self.s,self.log).enableReactionRendering(enable)
-
-    def enableAnimatedEmoji(self, enable=True): #boolean, default=True
-        return User(self.discord,self.s,self.log).enableAnimatedEmoji(enable)
-
-    def enableEmoticonConversion(self, enable=True): #boolean, default=True
-        return User(self.discord,self.s,self.log).enableEmoticonConversion(enable)
-
-    def setStickerAnimation(self, setting): #string, default="always"
-        return User(self.discord,self.s,self.log).setStickerAnimation(setting)
-
-    def enableTTS(self, enable=True): #boolean, default=True
-        return User(self.discord,self.s,self.log).enableTTS(enable)
+    def removeConnection(self, accountType, accountUsername):
+        return User(self.discord,self.s,self.log).removeConnection(accountType, accountUsername)
 
     def getBillingHistory(self, limit=20):
         return User(self.discord,self.s,self.log).getBillingHistory(limit)
@@ -448,8 +409,72 @@ class Client:
     def getStripeClientSecret(self):
         return User(self.discord,self.s,self.log).getStripeClientSecret()
 
+    def setTheme(self, theme): #"light" or "dark"
+        return User(self.discord,self.s,self.log).setTheme(theme)
+
+    def setMessageDisplay(self, CozyOrCompact): #"cozy" or "compact"
+        return User(self.discord,self.s,self.log).setMessageDisplay(CozyOrCompact)
+
+    def enableGifAutoPlay(self, enable=True): #boolean, default=True
+        return User(self.discord,self.s,self.log).enableGifAutoPlay(enable)
+
+    def enableAnimatedEmoji(self, enable=True): #boolean, default=True
+        return User(self.discord,self.s,self.log).enableAnimatedEmoji(enable)
+
+    def setStickerAnimation(self, setting): #string, default="always"
+        return User(self.discord,self.s,self.log).setStickerAnimation(setting)
+
+    def enableTTS(self, enable=True): #boolean, default=True
+        return User(self.discord,self.s,self.log).enableTTS(enable)
+
+    def enableLinkedImageDisplay(self, enable=True): #boolean, default=True
+        return User(self.discord,self.s,self.log).enableLinkedImageDisplay(enable)
+
+    def enableImageDisplay(self, enable=True): #boolean, default=True
+        return User(self.discord,self.s,self.log).enableImageDisplay(enable)
+
+    def enableLinkPreview(self, enable=True): #boolean, default=True
+        return User(self.discord,self.s,self.log).enableLinkPreview(enable)
+
+    def enableReactionRendering(self, enable=True): #boolean, default=True
+        return User(self.discord,self.s,self.log).enableReactionRendering(enable)
+
+    def enableEmoticonConversion(self, enable=True): #boolean, default=True
+        return User(self.discord,self.s,self.log).enableEmoticonConversion(enable)
+
+    def setAFKtimeout(self, timeout_seconds):
+        return User(self.discord,self.s,self.log).setAFKtimeout(timeout_seconds)
+
+    def setLocale(self, locale):
+        response = User(self.discord,self.s,self.log).setLocale(locale)
+        self.locale = locale
+        self.s.headers["Accept-Language"] = self.locale
+        self.s.cookies["locale"] = self.locale
+        return response
+
+    def enableDevMode(self, enable=True): #boolean
+        return User(self.discord,self.s,self.log).enableDevMode(enable)
+
+    def activateApplicationTestMode(self, applicationID):
+        return User(self.discord,self.s,self.log).activateApplicationTestMode(applicationID)
+
+    def getApplicationData(self, applicationID, with_guild=False):
+        return User(self.discord,self.s,self.log).getApplicationData(applicationID, with_guild)
+
     def enableActivityDisplay(self, enable=True):
-    	return User(self.discord,self.s,self.log).enableActivityDisplay(enable)
+        return User(self.discord,self.s,self.log).enableActivityDisplay(enable)
+
+    def setHypesquad(self, house):
+        return User(self.discord,self.s,self.log).setHypesquad(house)
+
+    def leaveHypesquad(self):
+        return User(self.discord,self.s,self.log).leaveHypesquad()
+
+    def getBuildOverrides(self):
+        return User(self.discord,self.s,self.log).getBuildOverrides()
+
+    def enableSourceMaps(self, enable=True):
+        return User(self.discord,self.s,self.log).enableSourceMaps()
 
     def logout(self, provider=None, voip_provider=None):
         return User(self.discord,self.s,self.log).logout(provider, voip_provider)

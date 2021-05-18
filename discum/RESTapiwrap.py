@@ -36,13 +36,13 @@ class Wrapper:
 			Logger.log("Either brotli decompress failed or discord returned incorrect content encodings.", None, log) #yea, it happens :/
 			return payload
 
-	#header modifications, like endpoints that don't need auth, superproperties, etc; also for adding headers like xfingerprint
+	#header modifications, like endpoints that don't need auth, superproperties, etc; also for updating headers like xfingerprint
 	@staticmethod
 	def editedReqSession(reqsession, headerModifications):
 		if headerModifications not in ({}, None):
 			editedSession = copy.deepcopy(reqsession)
-			if "add" in headerModifications:
-				editedSession.headers.update(headerModifications["add"])
+			if "update" in headerModifications:
+				editedSession.headers.update(headerModifications["update"])
 			if "remove" in headerModifications:
 				for header in headerModifications["remove"]:
 					if header in editedSession.headers:
@@ -70,7 +70,7 @@ class Wrapper:
 		return None
 
 	@staticmethod
-	def sendRequest(reqsession, method, url, body=None, headerModifications={}, timeout=None, log={"console":True, "file":False}): #headerModifications = {"add":{}, "remove":[]}
+	def sendRequest(reqsession, method, url, body=None, headerModifications={}, timeout=None, log={"console":True, "file":False}): #headerModifications = {"update":{}, "remove":[]}
 		if hasattr(reqsession, method): #just checks if post, get, whatever is a valid requests method
 			# 1. find function
 			stack = inspect.stack()

@@ -102,7 +102,7 @@ class Client:
     test token
     '''
     def checkToken(self, token):
-        editedS = Wrapper.editedReqSession(self.s, {"add":{"Authorization":token}})
+        editedS = Wrapper.editedReqSession(self.s, {"update":{"Authorization":token}})
         connection = User(self.discord, editedS, self.log).info(with_analytics_token=True)
         if connection.status_code == 200:
             Logger.log("Valid token.", None, self.log)

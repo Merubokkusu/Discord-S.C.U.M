@@ -41,7 +41,7 @@ class Science(object):
                 self.UUIDobj.eventNum += 1
         body = {'token': self.analytics_token, 'events':events}
         if self.analytics_token == None: #if not logged in. ex: bot=discum.Client(token='poop')
-            headerModifications = {"add":{"X-fingerprint": self.xfingerprint}, "remove": "Authorization"}
+            headerModifications = {"update":{"X-fingerprint": self.xfingerprint}, "remove": ["Authorization"]}
             return Wrapper.sendRequest(self.s, 'post', url, body, headerModifications=headerModifications, log=self.log)
         else:
             return Wrapper.sendRequest(self.s, 'post', url, body, log=self.log)

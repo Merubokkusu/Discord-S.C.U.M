@@ -12,7 +12,7 @@ class SuperProperties:
     https://luna.gitlab.io/discord-unofficial-docs/science.html#super-properties-object
     '''
     def __init__(self, s, buildnum="request", log={"console":True, "file":False}):
-        self.editedS = Wrapper.editedReqSession(s, {"remove": ["Authorization"]})
+        self.editedS = Wrapper.editedReqSession(s, {"remove": ["Authorization", "X-Super-Properties"]})
         self.buildnum = buildnum
         self.log = log
 
@@ -48,7 +48,7 @@ class SuperProperties:
             "referrer_current": "",
             "referring_domain_current": "",
             "release_channel": "stable",
-            "client_build_number": 85094,
+            "client_build_number": 85108,
             "client_event_source": None
         }
         if locale == None:

@@ -8,7 +8,7 @@
 - [Functions](#Functions)
     - [check token](#check-token)
     - [convert between snowflake and unixts](#snowflake_to_unixts-and-unixts_to_snowflake)
-    - [gateway functions](#gatewayfunctions)
+    - [gateway functions](#gateway-functions)
         - [add functions to gateway command list](#gatewaycommand)
         - [remove functions from gateway command list](#gatewayremoveCommand)
         - [clear gateway command list](#gatewayclearCommands)

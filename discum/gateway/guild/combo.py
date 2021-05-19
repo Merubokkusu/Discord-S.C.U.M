@@ -19,7 +19,7 @@ class GuildCombo(object):
 		elif isinstance(keep, list) or isinstance(keep, tuple):
 			remove = list(set(allProperties) - set(keep))
 		elif isinstance(keep, str):
-			remove = [keep]
+			remove = [i for i in allProperties if i!=keep]
 		memberproperties = memberdata['member'] if 'member' in memberdata else memberdata
 		userdata = memberproperties.pop('user', {})
 		userID = userdata.pop('id', {})

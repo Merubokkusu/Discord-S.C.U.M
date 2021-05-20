@@ -68,9 +68,12 @@ class GuildCombo(object):
 		return self.gatewayobj.memberFetchingStatus[guild_id][1]
 
 	#fetchMembers helper function
-	def getRanges(self, index, multiplier):
+	def getRanges(self, index, multiplier, memberCount):
 		initialNum = int(index*multiplier)
-		return self.rangeCorrector([[initialNum, initialNum+99], [initialNum+100, initialNum+199]])
+		rangesList = [[initialNum, initialNum+99]]
+		if memberCount > initialNum+99:
+			rangesList.append([initialNum+100, initialNum+199])
+		return self.rangeCorrector(rangesList)
 
 	#fetchMembers helper function
 	def updateCurrent(self, guild_id):
@@ -105,7 +108,7 @@ class GuildCombo(object):
 						multiplier = method[index]
 					else:
 						endFetching = True #ends fetching right after resp parsed
-				ranges = self.getRanges(index, multiplier) if not endFetching else [[0],[0]]
+				ranges = self.getRanges(index, multiplier, self.gatewayobj.session.guild(guild_id).memberCount) if not endFetching else [[0],[0]]
 				#0th lazy request (separated from the rest because this happens "first")
 				if index == startIndex and not self.gatewayobj.session.guild(guild_id).unavailable:
 					self.updateCurrent(guild_id) #current = previous+1
@@ -119,6 +122,7 @@ class GuildCombo(object):
 							if i == 'SYNC':
 								if len(parsed['updates'][ind]) == 0 and parsed['locations'][ind] in ranges[1:]: #checks if theres nothing in the SYNC data
 									endFetching = True
+									break
 								for item in parsed['updates'][ind]:
 									if 'member' in item:
 										member_id, member_properties = self.reformat_member(item, keep=keep)
@@ -136,9 +140,10 @@ class GuildCombo(object):
 							elif i == 'INVALIDATE':
 								if parsed['locations'][ind] in ranges or parsed['member_count'] == 0:
 									endFetching = True
+									break
 						numFetched = len(self.gatewayobj.session.guild(guild_id).members)
 						roundedUpFetched = numFetched-(numFetched%-100) #https://stackoverflow.com/a/14092788/14776493
-						if ranges==[[0],[0]] or index>=stopIndex or roundedUpFetched>=self.gatewayobj.session.guild(guild_id).memberCount or endFetching: #putting whats most likely to happen first
+						if ranges==[[0],[0]] or index>=stopIndex or roundedUpFetched>=self.gatewayobj.session.guild(guild_id).memberCount or endFetching or ranges[1][0]+100>self.gatewayobj.session.guild(guild_id).memberCount: #putting whats most likely to happen first
 							self.gatewayobj.memberFetchingStatus[guild_id] = "done"
 							self.gatewayobj.removeCommand(
 							    {

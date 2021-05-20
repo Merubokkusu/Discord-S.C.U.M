@@ -1,4 +1,5 @@
 from ..RESTapiwrap import *
+from .permissions import *
 
 try:
     from urllib.parse import quote

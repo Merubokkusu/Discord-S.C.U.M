@@ -32,7 +32,7 @@ threads = [None] * num_clients
 results = [None] * num_clients
 
 for i in range(num_clients):
-	threads[i] = gateway_thread = threading.Thread(target=gatewayRunner, args=(clients[i] , results, i)) #https://stackoverflow.com/a/6894023/14776493
+	threads[i] = threading.Thread(target=gatewayRunner, args=(clients[i] , results, i)) #https://stackoverflow.com/a/6894023/14776493
 	threads[i].start()
 
 #results is a list containing all the client data (bot.gateway.session.user stuff)

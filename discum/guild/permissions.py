@@ -43,6 +43,10 @@ class PERMS:
 	ALL                     =   128849018879 #  all the perms
 
 class Permissions:
+	@staticmethod
+	def checkPermissions(permissions, check):
+		return (permissions & check) == check
+
 	#copied the code from https://discord.com/developers/docs/topics/permissions#permission-overwrites and played around with it
 	@staticmethod
 	def calculateBasePerms(memberID, guildID, guildOwnerID, guildRoles, memberRoles):

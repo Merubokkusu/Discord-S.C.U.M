@@ -1,4 +1,17 @@
 # Changelog
+# 1.3.0
+### Added
+- more message types to discum/gateway/messages/parse.py
+- gateway close code handlers
+- gateway latency calculation (bot.gateway.latency)
+- permissions code to the guild REST api wrap folder
+### Changed
+- removed timeout parameter from status update commands. setPlayingStatus, setStreamingStatus, setListeningStatus, and setWatchingStatus do not work currently. Will be fixed in the future if a fix is found.
+- use try-catch to find correct import instead of sys
+- fixed gateway heartbeat sequence
+- REST api response now prints even if a 401 status code is received
+- checkConnection() replaced with checkToken(token)
+- rewrote the docs
 # 1.2.1
 ### Added
 - channel\_create and channel\_delete parser methods

@@ -248,8 +248,8 @@ bot.unixts_to_snowflake("1620955878.87425")
 - snowflake or unixts (depending on which conversion you're using) (str/int/float)
 
 ###### Returns:
-bot.snowflake_to_unixts -> float
-bot.unixts_to_snowflake -> int
+bot.snowflake_to_unixts -> float        
+bot.unixts_to_snowflake -> int        
 
 ### gateway functions
 

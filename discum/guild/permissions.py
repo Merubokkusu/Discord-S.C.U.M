@@ -60,31 +60,31 @@ class Permissions:
 		return permissions
 
 	@staticmethod
-	def calculateOverrites(memberID, guildID, basePermissions, channelOverrites, memberRoles):
+	def calculateOverwrites(memberID, guildID, basePermissions, channelOverwrites, memberRoles):
 		# ADMINISTRATOR overrides any potential permission overwrites, so there is nothing to do here.
 		if basePermissions & PERMS.ADMINISTRATOR == PERMS.ADMINISTRATOR:
 			return PERMS.ALL
 
 		permissions = basePermissions
-		channelEveryoneOverrites = next((i for i in channelOverrites if i["id"]==guildID), False) #https://stackoverflow.com/a/8653568/14776493
-		if channelEveryoneOverrites:
-			permissions &= ~int(channelEveryoneOverrites["deny"])
-			permissions |= int(channelEveryoneOverrites["allow"])
+		channelEveryoneOverwrites = next((i for i in channelOverwrites if i["id"]==guildID), False) #https://stackoverflow.com/a/8653568/14776493
+		if channelEveryoneOverwrites:
+			permissions &= ~int(channelEveryoneOverwrites["deny"])
+			permissions |= int(channelEveryoneOverwrites["allow"])
 
 		# Apply role specific overwrites.
 		allow = 0
 		deny = 0
 		for memberRoleID in memberRoles: #for the pertinent roles
-			overriteRole = next((i for i in channelOverrites if i["id"]==memberRoleID), False) #get the corresponding channel overrides
-			if overriteRole:
-				allow |= int(overriteRole["allow"])
-				deny |= int(overriteRole["deny"])
+			overwriteRole = next((i for i in channelOverwrites if i["id"]==memberRoleID), False) #get the corresponding channel overrides
+			if overwriteRole:
+				allow |= int(overwriteRole["allow"])
+				deny |= int(overwriteRole["deny"])
 
 		permissions &= ~deny
 		permissions |= allow
 
 		# Apply member specific overwrite if it exist.
-		overwriteMember = next((i for i in channelOverrites if i["id"]==memberID), False)
+		overwriteMember = next((i for i in channelOverwrites if i["id"]==memberID), False)
 		if overwriteMember:
 			permissions &= ~int(overwriteMember["deny"])
 			permissions |= int(overwriteMember["allow"])
@@ -92,6 +92,6 @@ class Permissions:
 		return permissions
 
 	@staticmethod
-	def calculatePermissions(memberID, guildID, guildOwnerID, guildRoles, memberRoles, channelOverrites): #guildRoles (dictionary), memberRoles(list of strings), channelOverrites (list of dictionaries)
+	def calculatePermissions(memberID, guildID, guildOwnerID, guildRoles, memberRoles, channelOverwrites): #guildRoles (dictionary), memberRoles(list of strings), channelOverwrites (list of dictionaries)
 		basePermissions = Permissions.calculateBasePerms(memberID, guildID, guildOwnerID, guildRoles, memberRoles)
-		return Permissions.calculateOverrites(memberID, guildID, basePermissions, channelOverrites, memberRoles)
+		return Permissions.calculateOverwrites(memberID, guildID, basePermissions, channelOverwrites, memberRoles)

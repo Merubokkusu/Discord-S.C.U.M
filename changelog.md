@@ -5,7 +5,7 @@
 - gateway close code handlers
 - gateway latency calculation (bot.gateway.latency)
 - permissions code to the guild REST api wrap folder
-- finished user settings
+- finished user settings REST api wraps
 ### Changed
 - removed timeout parameter from status update commands. setPlayingStatus, setStreamingStatus, setListeningStatus, and setWatchingStatus do not work currently. Will be fixed in the future if a fix is found.
 - use try-catch to find correct import instead of sys

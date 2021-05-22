@@ -220,6 +220,18 @@ bot.gateway.finishedMemberFetching('guildID00000000000')
 ###### Returns:
 boolean
 
+##### ```gateway.findFirstVisibleTextChannel```
+run this either during a gateway connection (after ready_supplemental event) or after a gateway connection
+```python
+bot.gateway.findFirstVisibleTextChannel('guildID00000000000')
+```
+
+###### Parameters:
+- guildID (str)
+
+###### Returns:
+- channel ID string
+
 ##### ```gateway.subscribeToGuildEvents```
 if you're not receiving events (messages, voice states, etc) from a large guild, then this will fix that
 ```python

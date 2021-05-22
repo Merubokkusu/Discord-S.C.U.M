@@ -128,6 +128,7 @@ Table of Contents
     -   [{gateway} fetch guild members](using/Gateway_Actions.md#gatewayfetchmembers)
     -   [{gateway} guild member fetching parameter helper (POC)](using/Gateway_Actions.md#gatewaygetmemberfetchingparams)
     -   [{gateway} check if guild member fetching is finished](using/Gateway_Actions.md#gatewayfinishedmemberfetching)
+    -   [{gateway} find first visible guild text channel](using/Gateway_Actions.md#gatewayfindFirstVisibleTextChannel)
     -   [{gateway} subscribe to guild events (use if you're not getting events from large guilds)](using/Gateway_Actions.md#gatewaysubscribeToGuildEvents)
     -   [{gateway} lazy guild request (opcode 14)](using/Gateway_Actions.md#gatewayrequestlazyguild)
     -   [{gateway} guild member search request (opcode 8)](using/Gateway_Actions.md#gatewayrequestsearchguildmembers)

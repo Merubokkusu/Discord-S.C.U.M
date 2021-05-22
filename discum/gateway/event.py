@@ -147,7 +147,7 @@ class Event:
 		return self.response['t'] == 'GUILD_MEMBER_UPDATE'
 
 	@property
-	def guild_member_chunk(self): #used for op 8 (when searching in the search bar and members come up)
+	def guild_members_chunk(self): #used for op 8 (when searching in the search bar and members come up)
 		return self.response['t'] == 'GUILD_MEMBERS_CHUNK'
 
 	@property

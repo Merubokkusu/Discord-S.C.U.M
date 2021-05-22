@@ -1,5 +1,5 @@
 from ..RESTapiwrap import *
-from .totp import TOTP
+from ..utils.totp import TOTP
 import time
 
 from ..logger import Logger

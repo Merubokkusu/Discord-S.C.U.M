@@ -1,4 +1,4 @@
-from ..fileparse.fileparse import Fileparse
+from ..utils.fileparse import Fileparse
 from requests_toolbelt import MultipartEncoder
 import random,string
 import os.path

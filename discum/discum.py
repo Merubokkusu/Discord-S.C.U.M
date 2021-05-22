@@ -2,11 +2,9 @@
 from .start.login import Login
 from .start.superproperties import SuperProperties
 from .start.other import Other
-from .start.totp import TOTP
 
 from .guild.guild import Guild
 from .messages.messages import Messages
-from .messages.embed import Embedder
 from .user.user import User
 from .stickers.stickers import Stickers
 from .science.science import Science
@@ -15,6 +13,10 @@ from .RESTapiwrap import *
 
 #gateway wraps
 from .gateway.gateway import *
+
+#utils
+from .utils.totp import TOTP
+from .utils.embed import Embedder
 
 #logging to console/file
 from .logger import * #imports LogLevel and Logger

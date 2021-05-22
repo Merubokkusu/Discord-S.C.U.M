@@ -1,5 +1,5 @@
 from ..RESTapiwrap import *
-from .permissions import *
+from ..utils.permissions import PERMS, Permissions
 
 try:
     from urllib.parse import quote

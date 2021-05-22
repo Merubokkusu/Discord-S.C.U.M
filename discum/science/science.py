@@ -2,7 +2,7 @@ from ..RESTapiwrap import *
 import time, datetime
 import random
 
-from .client_uuid import Client_UUID
+from ..utils.client_uuid import Client_UUID
 
 class Science(object):
     def __init__(self, discord, s, log, analytics_token, userID, xfingerprint): #s is the requests session object

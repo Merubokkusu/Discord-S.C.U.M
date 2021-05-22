@@ -38,7 +38,7 @@
 | resp.event.interaction | INTERACTION_CREATE |
 | resp.event.guild_member_list | GUILD_MEMBER_LIST_UPDATE |
 | resp.event.guild_member_updated | GUILD_MEMBER_UPDATE |
-| resp.event.guild_member_chunk | GUILD_MEMBERS_CHUNK |
+| resp.event.guild_members_chunk | GUILD_MEMBERS_CHUNK |
 | resp.event.guild_member_removed | GUILD_MEMBER_REMOVE |
 | resp.event.role | GUILD_ROLE_CREATE |
 | resp.event.role_deleted | GUILD_ROLE_DELETE |

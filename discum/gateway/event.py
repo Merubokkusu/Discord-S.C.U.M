@@ -123,6 +123,22 @@ class Event:
 		return self.response['t'] == 'GUILD_INTEGRATIONS_UPDATE'
 
 	@property
+	def integration(self):
+		return self.response['t'] == 'INTEGRATION_CREATE'
+
+	@property
+	def integration_updated(self):
+		return self.response['t'] == 'INTEGRATION_UPDATE'
+
+	@property
+	def integration_deleted(self):
+		return self.response['t'] == 'INTEGRATION_DELETE'
+
+	@property
+	def interaction(self):
+		return self.response['t'] == 'INTERACTION_CREATE'
+
+	@property
 	def guild_member_list(self):
 		return self.response['t'] == 'GUILD_MEMBER_LIST_UPDATE'
 
@@ -350,3 +366,26 @@ class Event:
 	def webhooks_updated(self):
 		return self.response['t'] == 'WEBHOOKS_UPDATE'
 
+	@property
+	def thread(self):
+		return self.response['t'] == 'THREAD_CREATE'
+
+	@property
+	def thread_updated(self):
+		return self.response['t'] == 'THREAD_UPDATE'
+
+	@property
+	def thread_deleted(self):
+		return self.response['t'] == 'THREAD_DELETE'
+
+	@property
+	def thread_list_sync(self): #Sent when the current user gains access to a thread
+		return self.response['t'] == 'THREAD_LIST_SYNC'
+
+	@property
+	def thread_member_updated(self): #Sent when the thread member object for the current user is updated
+		return self.response['t'] == 'THREAD_MEMBER_UPDATE'
+
+	@property
+	def thread_members_updated(self): #Sent when anyone is added to or removed from a thread
+		return self.response['t'] == 'THREAD_MEMBERS_UPDATE'

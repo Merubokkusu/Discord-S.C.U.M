@@ -32,6 +32,10 @@
 | resp.event.guild_updated | GUILD_UPDATE |
 | resp.event.emojis_updated | GUILD_EMOJIS_UPDATE |
 | resp.event.guild_integrations_updated | GUILD_INTEGRATIONS_UPDATE |
+| resp.event.integration | INTEGRATION_CREATE |
+| resp.event.integration_updated | INTEGRATION_UPDATE |
+| resp.event.integration_deleted | INTEGRATION_DELETE |
+| resp.event.interaction | INTERACTION_CREATE |
 | resp.event.guild_member_list | GUILD_MEMBER_LIST_UPDATE |
 | resp.event.guild_member_updated | GUILD_MEMBER_UPDATE |
 | resp.event.guild_member_chunk | GUILD_MEMBERS_CHUNK |
@@ -89,3 +93,9 @@
 | resp.event.voice_server_updated | VOICE_SERVER_UPDATE |
 | resp.event.voice_state_updated | VOICE_STATE_UPDATE |
 | resp.event.webhooks_updated | WEBHOOKS_UPDATE |
+| resp.event.thread | THREAD_CREATE |
+| resp.event.thread_updated | THREAD_UPDATE |
+| resp.event.thread_deleted | THREAD_DELETE |
+| resp.event.thread_list_sync | THREAD_LIST_SYNC |
+| resp.event.thread_member_updated | THREAD_MEMBER_UPDATE |
+| resp.event.thread_members_updated | THREAD_MEMBERS_UPDATE |

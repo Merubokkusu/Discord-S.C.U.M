@@ -216,8 +216,22 @@ bot.gateway.finishedMemberFetching('guildID00000000000')
 ```
 ###### Parameters:
 - guild_id (str)
+
 ###### Returns:
 boolean
+
+##### ```gateway.subscribeToGuildEvents```
+if you're not receiving events (messages, voice states, etc) from a large guild, then this will fix that
+```python
+@bot.gateway.command
+def subTest(resp):
+	if resp.event.ready_supplemental:
+		bot.gateway.subscribeToGuildEvents(wait=1)
+```
+
+###### Parameters:
+- onlyLarge (Optional[bool]) - send opcode 14s to only large guilds (so, less messages sent to discord)
+- wait (Optional[int]) - wait time between sending opcode 14s
 
 ##### ```gateway.request.lazyGuild```
 ```python

@@ -314,6 +314,7 @@ class GatewayServer:
         self.voice_data = {}
         self.resumable = False #you can't resume anyways without session_id and sequence
         self._last_ack = None
+        self.memberFetchingStatus = {"first": []}
 
     #kinda influenced by https://github.com/scrubjay55/Reddit_ChatBot_Python/blob/master/Reddit_ChatBot_Python/WebSockClient.py (Apache License 2.0)
     def run(self, auto_reconnect=True):
@@ -441,6 +442,9 @@ class GatewayServer:
     def finishedMemberFetching(self, guild_id):
         return self.memberFetchingStatus.get(guild_id) == "done"
 
+    #sends a series of opcode 14s to tell discord that you're looking at guild channels
+    def subscribeToGuildEvents(self, onlyLarge=False, wait=None):
+    	GuildCombo(self).subscribeToGuildEvents(onlyLarge, wait)
 
     '''
     User stuff
@@ -498,13 +502,3 @@ class GatewayServer:
         if self.session.userSettings['custom_status'] != None:
             User(self.RESTurl,self.sessionobj,self.log).setCustomStatusHelper("", emoji=None, expires_at=None)
         UserCombo(self).clearActivities()
-
-
-    '''
-    test stuff (these show how to add combo functions)
-    '''
-    def testfunc(self):
-        self.command({'function': GuildCombo(self).testfunc, 'priority': 0})
-
-    def testfuncPOG(self, pog):
-        self.command({'function': GuildCombo(self).testfuncPOG, 'priority': 0, 'params': {'pog': pog}})

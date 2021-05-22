@@ -3,6 +3,7 @@
 #also, no need for importing GuildRequest because gatewayobj has that (self.gatewayobj.request... does the trick)
 
 import time
+from ...utils.permissions import PERMS, Permissions
 from ...logger import *
 
 class GuildCombo(object):
@@ -165,14 +166,33 @@ class GuildCombo(object):
 							self.updateCurrent(guild_id) #current = previous + 1
 							self.gatewayobj.request.lazyGuild(guild_id, {channel_id: ranges})
 
-	#the following 2 are test functions to show how the fetchMembers combo function works, might be removed in a later update
-	def testfunc(self, resp):
-		self.gatewayobj.removeCommand(self.testfunc)
-		Logger.log('testfunc', None, self.gatewayobj.log)
-		pass
 
-	def testfuncPOG(self, resp, pog):
-		Logger.log('testfuncPOG', None, self.gatewayobj.log)
-		if pog:
-			self.gatewayobj.removeCommand(self.testfuncPOG)
-		pass
+	#helper method for subscribeToGuildEvents
+	def findFirstVisibleTextChannel(self, guildID):
+		s = self.gatewayobj.session
+		channels = s.guild(guildID).channels
+		for channel in channels.values():
+			if channel['type'] == 'guild_text':
+				permissions = Permissions.calculatePermissions(s.user['id'], guildID, s.guild(guildID).owner, s.guild(guildID).roles, s.guild(guildID).position['roles'], channel["permission_overwrites"])
+				if Permissions.checkPermissions(permissions, PERMS.VIEW_CHANNEL):
+					return channel['id']
+		return None
+
+	def subscribeToGuildEvents(self, onlyLarge, wait):
+		if self.gatewayobj.READY:
+			s = self.gatewayobj.session
+			guildIDs = s.guildIDs
+			for guildID in guildIDs:
+				if onlyLarge and not s.guild(guildID).large:
+						continue
+				channelID = self.findFirstVisibleTextChannel(guildID)
+				if guildID == guildIDs[0]: #first guild subscribed to is different
+					if channelID: #if found
+						self.gatewayobj.memberFetchingStatus["first"].append(guildID)
+						self.gatewayobj.request.lazyGuild(guildID, {channelID: [[0,99]]}, typing=True, threads=False, activities=True, members=[])
+				else:
+					if wait: time.sleep(wait)
+					if channelID: #if found
+						self.gatewayobj.memberFetchingStatus["first"].append(guildID)
+						self.gatewayobj.request.lazyGuild(guildID, {channelID: [[0,99]]}, typing=True, activities=True)
+

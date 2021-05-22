@@ -1,3 +1,4 @@
+from ..types import Types
 #parses response from gateway
 
 #function names are just lowercase types, so for type GUILD_MEMBER_LIST_UPDATE, the function is guild_member_list_update
@@ -47,7 +48,7 @@ class GuildParse(object):
 		#take care of roles
 		guilddata["roles"] = {j["id"]:j for j in response["d"]["roles"]}
 		#take care of channels
-		guilddata["channels"] = {k["id"]:k for k in response["d"]["channels"]}
+		guilddata["channels"] = {k["id"]:dict(k,**{"type":Types.channelTypes[k["type"]]}) for k in response["d"]["channels"]}
 		return guilddata
 
 	@staticmethod

@@ -1,14 +1,15 @@
-#parse (remember to do static methods, unless you're changing the formatting)
+from ..types import Types
 
+#parse (remember to do static methods, unless you're changing the formatting)
 class StartParse(object): #really hope this doesn't take too long to run...
 	@staticmethod
 	def ready(response):
 		ready_data = dict(response["d"])
 		ready_data.pop("merged_members")
 		#parse relationships
-		ready_data["relationships"] = {i["id"]:i for i in response["d"]["relationships"]}
+		ready_data["relationships"] = {i["id"]:dict(i,**{"type":Types.relationshipTypes[i["type"]]}) for i in response["d"]["relationships"]}
 		#parse private channels
-		ready_data["private_channels"] = {j["id"]:j for j in response["d"]["private_channels"]}
+		ready_data["private_channels"] = {j["id"]:dict(j,**{"type":Types.channelTypes[j["type"]]}) for j in response["d"]["private_channels"]}
 		#add activities key to user settings
 		ready_data["user_settings"]["activities"] = {}
 		#parse guilds
@@ -21,9 +22,9 @@ class StartParse(object): #really hope this doesn't take too long to run...
 				#take care of roles
 				ready_data["guilds"][guild["id"]]["roles"] = {m["id"]:m for m in guild["roles"]}
 				#take care of channels
-				ready_data["guilds"][guild["id"]]["channels"] = {n["id"]:n for n in guild["channels"]}
+				ready_data["guilds"][guild["id"]]["channels"] = {n["id"]:dict(n,**{"type":Types.channelTypes[n["type"]]}) for n in guild["channels"]}
 			#take care of personal role/nick
-			ready_data["guilds"][guild["id"]]["my_data"] = personal_role
+			ready_data["guilds"][guild["id"]]["my_data"] = next((i for i in personal_role if i["user_id"]==response["d"]["user"]["id"]), {}) #personal_role
 			#take care of members
 			ready_data["guilds"][guild["id"]]["members"] = {}
 		return ready_data
@@ -31,7 +32,7 @@ class StartParse(object): #really hope this doesn't take too long to run...
 	@staticmethod
 	def ready_supplemental(response):
 		ready_supp_data = dict(response["d"])
-		ready_supp_data["online_friends"] =  {o["user_id"]:o for o in response["d"]["merged_presences"]["friends"]}
+		ready_supp_data["online_friends"] = {o["user_id"]:o for o in response["d"]["merged_presences"]["friends"]}
 		ready_supp_data.pop("guilds")
 		ready_supp_data["voice_states"] = {p["id"]:p.get("voice_states",[]) for p in response["d"]["guilds"]} #id is the guild_id
 		return ready_supp_data

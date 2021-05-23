@@ -50,31 +50,31 @@ def exceptionChecker(e, types): #this is an A or B or ... check
 class GatewayServer:
 
 	class OPCODE:
-		# Name						  Code	 Client Action   Description
-		DISPATCH =					   0  #	 Receive		 dispatches an event
-		HEARTBEAT =					   1  #	 Send/Receive	 used for ping checking
-		IDENTIFY =					   2  #	 Send			 used for client handshake
-		PRESENCE_UPDATE =			   3  #	 Send			 used to update the client status
-		VOICE_STATE_UPDATE =		   4  #	 Send			 used to join/move/leave voice channels
-		VOICE_SERVER_PING =			   5  #	 Send			 used for voice ping checking
-		RESUME =					   6  #	 Send			 used to resume a closed connection
-		RECONNECT =					   7  #	 Receive		 used to tell when to reconnect (sometimes...)
-		REQUEST_GUILD_MEMBERS =		   8  #	 Send			 used to request guild members (when searching for members in the search bar of a guild)
-		INVALID_SESSION =			   9  #	 Receive		 used to notify client they have an invalid session id
-		HELLO =						   10 #	 Receive		 sent immediately after connecting, contains heartbeat and server debug information
-		HEARTBEAT_ACK =				   11 #	 Sent            immediately following a client heartbeat that was received
-		#GUILD_SYNC =				   12 #	 Receive		 supposedly guild_sync but not used...idk
-		DM_UPDATE =					   13 #	 Send			 used to get dm features
-		LAZY_REQUEST =				   14 #	 Send			 discord responds back with GUILD_MEMBER_LIST_UPDATE type SYNC...
-		LOBBY_CONNECT =				   15 #	 ??
-		LOBBY_DISCONNECT =			   16 #	 ??
-		LOBBY_VOICE_STATES_UPDATE =	   17 #	 Receive
-		STREAM_CREATE =				   18 #	 ??
-		STREAM_DELETE =				   19 #	 ??
-		STREAM_WATCH =				   20 #	 ??
-		STREAM_PING =				   21 #	 Send
-		STREAM_SET_PAUSED =			   22 #	 ??
-		REQUEST_APPLICATION_COMMANDS = 24 #	 ??
+		# Name                         Code  Client Action   Description
+		DISPATCH =                     0  #  Receive         dispatches an event
+		HEARTBEAT =                    1  #  Send/Receive    used for ping checking
+		IDENTIFY =                     2  #  Send            used for client handshake
+		PRESENCE_UPDATE =              3  #  Send            used to update the client status
+		VOICE_STATE_UPDATE =           4  #  Send            used to join/move/leave voice channels
+		VOICE_SERVER_PING =            5  #  Send            used for voice ping checking
+		RESUME =                       6  #  Send            used to resume a closed connection
+		RECONNECT =                    7  #  Receive         used to tell when to reconnect (sometimes...)
+		REQUEST_GUILD_MEMBERS =        8  #  Send            used to request guild members (when searching for members in the search bar of a guild)
+		INVALID_SESSION =              9  #  Receive         used to notify client they have an invalid session id
+		HELLO =                        10 #  Receive         sent immediately after connecting, contains heartbeat and server debug information
+		HEARTBEAT_ACK =                11 #  Sent            immediately following a client heartbeat that was received
+		#GUILD_SYNC =                  12 #  Receive         supposedly guild_sync but not used...idk
+		DM_UPDATE =                    13 #  Send            used to get dm features
+		LAZY_REQUEST =                 14 #  Send            discord responds back with GUILD_MEMBER_LIST_UPDATE type SYNC...
+		LOBBY_CONNECT =                15 #  ??
+		LOBBY_DISCONNECT =             16 #  ??
+		LOBBY_VOICE_STATES_UPDATE =    17 #  Receive
+		STREAM_CREATE =                18 #  ??
+		STREAM_DELETE =                19 #  ??
+		STREAM_WATCH =                 20 #  ??
+		STREAM_PING =                  21 #  Send
+		STREAM_SET_PAUSED =            22 #  ??
+		REQUEST_APPLICATION_COMMANDS = 24 #  ??
 
 	def __init__(self, websocketurl, token, super_properties, sessionobj="", RESTurl="", log=True): #session obj needed for proxies and some combo gateway functions (that also require http api wraps)
 		self.token = token

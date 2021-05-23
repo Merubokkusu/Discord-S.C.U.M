@@ -53,16 +53,15 @@ class GuildParse(object):
 
 	@staticmethod
 	def guild_members_chunk(response): #interesting event..will have to look into more
-		memberchunkdata = {"members":[], "guild_id": response["d"]["guild_id"], "chunk_count":response["d"]["chunk_count"], "chunk_index":response["d"]["chunk_index"]}
+		memberChunkData = {"members":[], "guild_id": response["d"]["guild_id"], "chunk_count":response["d"]["chunk_count"], "chunk_index":response["d"]["chunk_index"]}
 		if "not_found" in response["d"]:
-			memberchunkdata["not_found"] = response["d"]["not_found"] #list of user ids
+			memberChunkData["not_found"] = response["d"]["not_found"] #list of user ids
 		presences = {}
-		if "presences"in response["d"]:
-			rawpresences = dict(response["d"]["presences"])
-			presences = {i["user"]["id"]:i for i in rawpresences}
+		if "presences" in response["d"]:
+			presences = {i["user"]["id"]:i for i in response["d"]["presences"]}
 		for user in response["d"]["members"]:
-			completeddata = user 
-			defaultpresence = {"user": {"id": user["user"]["id"]}, "status": "offline", "client_status": {}, "activities": []} #offline status
-			completeddata["presence"] = presences.pop(user["user"]["id"], defaultpresence)
-			memberchunkdata["members"].append(completeddata)
-		return memberchunkdata
+			completeData = dict(user) 
+			defaultPresence = {"user": {"id": user["user"]["id"]}, "status": "offline", "client_status": {}, "activities": []} #offline status
+			completeData["presence"] = presences.pop(user["user"]["id"], defaultPresence)
+			memberChunkData["members"].append(completeData)
+		return memberChunkData

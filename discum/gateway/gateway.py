@@ -117,6 +117,7 @@ class GatewayServer:
 
 		self._after_message_hooks = []
 		self._last_err = None
+		self._last_close_event = None
 
 		self.connected = False
 		self.resumable = False
@@ -231,6 +232,7 @@ class GatewayServer:
 		self.connected = False
 		self.READY = False #reset self.READY
 		if close_code or close_msg:
+			self._last_close_event = {"code": close_code, "reason": close_msg}
 			Logger.log("[gateway] close status code: " + str(close_code), None, self.log)
 			Logger.log("[gateway] close message: " + str(close_msg), None, self.log)
 			if not (4000<close_code<=4010):

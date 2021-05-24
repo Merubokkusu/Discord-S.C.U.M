@@ -78,6 +78,7 @@ bot.gateway.resumable #boolean
 bot.gateway._last_ack #when last HEARTBEAT_ACK was received
 bot.gateway.latency #seconds between HEARTBEAT and HEARTBEAT_ACK
 bot.gateway._last_err #last detected error
+bot.gateway._last_close_event #last close event
 ```
 
 ```python

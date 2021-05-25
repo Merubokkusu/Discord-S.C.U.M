@@ -1,5 +1,8 @@
 #search guild members aka opcode 8 aka replacement for bot.getGuildMember()
 
+import discum
+bot = discum.Client(token='something')
+
 #these functions are still in the test phase, but they'll eventually be moved into discum (after a few changes and bugs get found/removed)
 from discum.gateway.guild.combo import GuildCombo #for member formatting (reformat_member)
 
@@ -86,6 +89,8 @@ def test(resp):
 
 bot.gateway.run()
 
+print(bot.gateway.guildMemberSearches)
+
 bot.gateway.clearCommands()
 
 #search for userID(s) in guild(s)
@@ -97,5 +102,7 @@ def test(resp):
 		bot.gateway.close()
 
 bot.gateway.run()
+
+print(bot.gateway.guildMemberSearches)
 
 bot.gateway.clearCommands()

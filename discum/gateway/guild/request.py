@@ -40,5 +40,6 @@ class GuildRequest(object):
 		else:
 			data["d"]["query"] = query
 			data["d"]["limit"] = limit
+		if presences:
 			data["d"]["presences"] = presences
 		self.gatewayobject.send(data)

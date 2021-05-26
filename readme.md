@@ -124,6 +124,9 @@ A: KeyErrors happened on previous versions where the "members" key was not set u
 
 Q: ```import _brotli ImportError: DLL load failed: The specified module could not be found.``` How to fix?       
 A: https://github.com/google/brotli/issues/782        
-
+     
+Q: ```The owner of this website (discord.com) has banned your access based on your browser's signature...```. How to fix?        
+A: This is because of your user agent (https://stackoverflow.com/a/24914742/14776493). Either try again or reinitialize your client with a new user agent.       
+    
 ## Notes
 In recent years, token logging has become more common (as many people don't check code before they run it). I've seen many closed-source selfbots, and while surely some are well intentioned, others not so much. Discum (discord api wrapper) is open-sourced and organized to provide transparency, but even so, we encourage you to look at the code. Not only will looking at the code help you to better understand how discord's api is structured, but it'll also let you know exactly what you're running. If you have any questions about Discum, feel free to ask us.

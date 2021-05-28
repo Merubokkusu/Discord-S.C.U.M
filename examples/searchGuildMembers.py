@@ -14,7 +14,6 @@ def handleGuildMemberSearches(resp, guildIDs, saveAsQuery, isQueryOverridden, us
 		chunk = resp.parsed.auto()
 		match = False
 		if userIDs and "not_found" in chunk:
-			match = True
 			for i in guildIDs:
 				for member in chunk["members"]:
 					member_id, member_properties = GuildCombo(bot.gateway).reformat_member(member, keep="all")
@@ -29,7 +28,7 @@ def handleGuildMemberSearches(resp, guildIDs, saveAsQuery, isQueryOverridden, us
 						bot.gateway.guildMemberSearches[j]["queries"][saveAsQuery].add(member_id)
 						bot.gateway.session.guild(j).updateOneMember(member_id, member_properties)
 				else: #check results
-					if all([k["user"]["username"].lower().startswith(saveAsQuery) if "nick" not in k else k["nick"].lower().startswith(saveAsQuery) for k in chunk["members"]]):
+					if all([(k["user"]["username"].lower().startswith(saveAsQuery) or k["nick"].lower().startswith(saveAsQuery)) if k.get('nick') else k["user"]["username"].lower().startswith(saveAsQuery) for k in chunk["members"]]):
 						match = True
 						for member in chunk["members"]:
 							member_id, member_properties = GuildCombo(bot.gateway).reformat_member(member, keep="all")

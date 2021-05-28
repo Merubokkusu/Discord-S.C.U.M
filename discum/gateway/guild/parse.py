@@ -61,7 +61,7 @@ class GuildParse(object):
 			presences = {i["user"]["id"]:i for i in response["d"]["presences"]}
 		for user in response["d"]["members"]:
 			completeData = dict(user) 
-			defaultPresence = {"user": {"id": user["user"]["id"]}, "status": "offline", "client_status": {}, "activities": []} #offline status
-			completeData["presence"] = presences.pop(user["user"]["id"], defaultPresence)
+			defaultPresence = {"user": {"id": user.get("user").get("id")}, "status": "offline", "client_status": {}, "activities": []} #offline status
+			completeData["presence"] = presences.pop(user.get("user").get("id"), defaultPresence)
 			memberChunkData["members"].append(completeData)
 		return memberChunkData

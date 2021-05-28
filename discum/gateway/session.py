@@ -210,7 +210,7 @@ class guild(Session):
 
     @property
     def hasMembers(self):
-        return len(Session.settings_ready['guilds'][self.guildID]['members']) == 0
+        return len(Session.settings_ready['guilds'][self.guildID]['members']) >= 0
 
     @property
     def members(self):

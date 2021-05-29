@@ -4,6 +4,7 @@ import discum
 bot = discum.Client(token='something')
 
 #these functions are still in the test phase, but they'll eventually be moved into discum (after a few changes and bugs get found/removed)
+import re #for removing consecutive spaces
 from discum.gateway.guild.combo import GuildCombo #for member formatting (reformat_member)
 
 bot.gateway.guildMemberSearches = {}
@@ -28,7 +29,7 @@ def handleGuildMemberSearches(resp, guildIDs, saveAsQuery, isQueryOverridden, us
 						bot.gateway.guildMemberSearches[j]["queries"][saveAsQuery].add(member_id)
 						bot.gateway.session.guild(j).updateOneMember(member_id, member_properties)
 				else: #check results
-					if all([(k["user"]["username"].lower().startswith(saveAsQuery) or k["nick"].lower().startswith(saveAsQuery)) if k.get('nick') else k["user"]["username"].lower().startswith(saveAsQuery) for k in chunk["members"]]):
+					if all([(re.sub(' +', ' ', k["user"]["username"].lower()).startswith(saveAsQuery) or re.sub(' +', ' ', k["nick"].lower()).startswith(saveAsQuery)) if k.get('nick') else re.sub(' +', ' ', k["user"]["username"].lower()).startswith(saveAsQuery) for k in chunk["members"]]):
 						match = True
 						for member in chunk["members"]:
 							member_id, member_properties = GuildCombo(bot.gateway).reformat_member(member, keep="all")

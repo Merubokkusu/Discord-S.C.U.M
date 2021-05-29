@@ -125,6 +125,7 @@ class GatewayServer:
 		self.voice_data = {} #voice connections dependent on current (connected) session
 
 		self.memberFetchingStatus = {"first": []}
+		self.resetMembersOnSessionReconnect = True #reset members after each session
 
 		#latency
 		self._last_ack = None
@@ -216,6 +217,9 @@ class GatewayServer:
 			self._last_err = None
 			self.session_id = response['d']['session_id']
 			self.settings_ready = resp.parsed.ready() #parsed
+			if not self.resetMembersOnSessionReconnect and self.session.read()[0]:
+				for guildID in self.settings_ready['guilds']:
+					self.settings_ready['guilds'][guildID]['members'] = self.session.guild(guildID).members
 			self.session = Session(self.settings_ready, {})
 		elif resp.event.ready_supplemental:
 			self.settings_ready_supp = resp.parsed.ready_supplemental() #parsed
@@ -345,7 +349,6 @@ class GatewayServer:
 								self.resetSession()
 								Logger.log("[gateway] Connection Dropped. Retrying in 10 seconds.", None, self.log)
 								time.sleep(10)
-
 		else:
 			self._zlib = zlib.decompressobj()
 			self.ws.run_forever(ping_interval=10, ping_timeout=5, http_proxy_host=self.proxy_host, http_proxy_port=self.proxy_port)
@@ -358,6 +361,8 @@ class GatewayServer:
 			guildData = resp.parsed.guild_create(my_user_id=self.session.user['id']) #user id needed for updating personal roles in that guild
 			guildID = guildData['id']
 			voiceStateData = guildData.pop('voice_states', [])
+			if not self.resetMembersOnSessionReconnect and guildID in self.session.guildIDs:
+				guilddata['members'] = self.session.guild(guildID).members
 			self.session.setGuildData(guildID, guildData)
 			self.session.setVoiceStateData(guildID, voiceStateData)
 		#guild deleted

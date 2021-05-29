@@ -13,8 +13,8 @@ class Parse(object):
 		self.response = copy.deepcopy(response)
 
 	def auto(self): #auto parse, does not allow for custom inputs
-		if hasattr(self, self.response['t'].lower()):
-			return getattr(self, self.response['t'].lower())()
+		if hasattr(self, str(self.response['t']).lower()):
+			return getattr(self, str(self.response['t']).lower())()
 		return self.response['d'] #just return the value of d if there's no parse function for it yet
 
 	def ready(self):

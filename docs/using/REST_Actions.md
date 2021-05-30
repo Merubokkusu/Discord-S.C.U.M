@@ -83,24 +83,27 @@ bot.requestFriend("test#0000")
 
 ##### ```acceptFriend```
 ```python
-bot.acceptFriend(ID)
+bot.acceptFriend(ID, location)
 ```
 ###### Parameters:
 - userID (str)
+- location (Optional[str]) - "friends", "context menu", or "user profile". Defaults to "friends"
 
 ##### ```removeRelationship```
 ```python
-bot.removeRelationship(ID)
+bot.removeRelationship(ID, location)
 ```
 ###### Parameters:
 - userID (str)
+- location (Optional[str]) - "friends", "context menu", or "user profile". Defaults to "context menu"
 
 ##### ```blockUser```
 ```python
-bot.blockUser(ID)
+bot.blockUser(ID, location)
 ```
 ###### Parameters:
 - userID (str)
+- location (Optional[str]) - "friends", "context menu", or "user profile". Defaults to "context menu"
 
 ##### ```getProfile```
 ```python
@@ -108,6 +111,7 @@ bot.getProfile('222222222222222222')
 ```
 ###### Parameters:
 - userID (str)
+- with_mutual_guilds (Optional[bool/None]) - get mutual guilds. Defaults to True
 
 ##### ```info```
 ```python
@@ -554,6 +558,9 @@ bot.getInfoFromInviteCode('minecraft')
 ```
 ###### Parameters:
 - inviteCode (str) - just the invite code, NOT the entire link
+- with_counts (Optional[bool/None]) - get approx online and member counts. Defaults to True
+- with_expiration (Optional[bool/None]) - get invite expiration. Defaults to True
+- fromJoinGuildNav (Optional[bool]) - if joining guild from within guild app. Defaults to False
 
 ##### ```joinGuild```
 \*_risky action_
@@ -562,6 +569,8 @@ bot.joinGuild('1a1a1')
 ```
 ###### Parameters:
 - inviteCode (str) - just the invite code, NOT the entire link
+- location (Optional[str]) - "accept invite page" or "join guild". Defaults to "accept invite page"
+- wait (Optional[int]) - this function uses 2 endpoints: getInfoFromInviteCode and a raw join guild endpoint; wait specifies the time to wait inbetween these 2 requests. Defaults to 0. 
 
 ##### ```leaveGuild```
 ```python

@@ -1,6 +1,7 @@
 import base64
 import datetime
 from ..RESTapiwrap import *
+from ..utils.contextproperties import ContextProperties
 
 class User(object):
 	def __init__(self, discord, s, log): #s is the requests session object
@@ -12,35 +13,36 @@ class User(object):
 		if "#" in user:
 			url = self.discord+"users/@me/relationships"
 			body = {"username": user.split("#")[0], "discriminator": int(user.split("#")[1])}
-			return Wrapper.sendRequest(self.s, 'post', url, body, log=self.log)
+			return Wrapper.sendRequest(self.s, 'post', url, body, headerModifications={"update":{"X-Context-Properties": ContextProperties.get("add friend")}}, log=self.log)
 		else:
 			url = self.discord+"users/@me/relationships/"+user
 			body = {}
-			return Wrapper.sendRequest(self.s, 'put', url, body, log=self.log)
+			return Wrapper.sendRequest(self.s, 'put', url, body, headerModifications={"update":{"X-Context-Properties":ContextProperties.get("context menu")}}, log=self.log)
 
-	def acceptFriend(self, userID):
+	def acceptFriend(self, userID, location):
 		url = self.discord+"users/@me/relationships/"+userID
 		body = {}
-		return Wrapper.sendRequest(self.s, 'put', url, body, log=self.log)
+		return Wrapper.sendRequest(self.s, 'put', url, body, headerModifications={"update":{"X-Context-Properties":ContextProperties.get(location)}}, log=self.log)
 
-	def removeRelationship(self, userID): #for removing friends, unblocking people
+	def removeRelationship(self, userID, location): #for removing friends, unblocking people
 		url = self.discord+"users/@me/relationships/"+userID
-		return Wrapper.sendRequest(self.s, 'delete', url, log=self.log)
+		return Wrapper.sendRequest(self.s, 'delete', url, headerModifications={"update":{"X-Context-Properties":ContextProperties.get(location)}}, log=self.log)
 
-	def blockUser(self, userID):
+	def blockUser(self, userID, location):
 		url = self.discord+"users/@me/relationships/"+userID
 		body = {"type": 2}
-		return Wrapper.sendRequest(self.s, 'put', url, body, log=self.log)
+		return Wrapper.sendRequest(self.s, 'put', url, body, headerModifications={"update":{"X-Context-Properties":ContextProperties.get(location)}}, log=self.log)
 
-	def getProfile(self, userID):
+	def getProfile(self, userID, with_mutual_guilds):
 		url = self.discord+"users/"+userID+"/profile"
+		if with_mutual_guilds != None:
+			url += "?with_mutual_guilds="+repr(with_mutual_guilds).lower()
 		return Wrapper.sendRequest(self.s, 'get', url, log=self.log)
 
 	def info(self, with_analytics_token): #simple. bot.info() for own user data
 		url = self.discord+"users/@me"
-		if with_analytics_token:
-			with_analytics_token = str(with_analytics_token).lower()
-			url += "?with_analytics_token="+with_analytics_token
+		if with_analytics_token != None:
+			url += "?with_analytics_token="+repr(with_analytics_token).lower()
 		return Wrapper.sendRequest(self.s, 'get', url, log=self.log)
 
 	def getUserAffinities(self):

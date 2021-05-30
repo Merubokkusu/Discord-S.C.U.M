@@ -251,26 +251,26 @@ class Client:
 	User relationships
 	'''
 	#create outgoing friend request
-	def requestFriend(self,user): #you can input a userID(snowflake) or a user discriminator
+	def requestFriend(self, user): #you can input a userID(snowflake) or a user discriminator
 		return User(self.discord,self.s,self.log).requestFriend(user)
 
 	#accept incoming friend request
-	def acceptFriend(self,userID):
-		return User(self.discord,self.s,self.log).acceptFriend(userID)
+	def acceptFriend(self, userID, location="friends"):
+		return User(self.discord,self.s,self.log).acceptFriend(userID, location)
 
 	#remove friend OR unblock user
-	def removeRelationship(self,userID):
-		return User(self.discord,self.s,self.log).removeRelationship(userID)
+	def removeRelationship(self, userID, location="context menu"):
+		return User(self.discord,self.s,self.log).removeRelationship(userID, location)
 
 	#block user
-	def blockUser(self,userID):
-		return User(self.discord,self.s,self.log).blockUser(userID)
+	def blockUser(self, userID, location="context menu"):
+		return User(self.discord,self.s,self.log).blockUser(userID, location)
 
 	'''
 	Other user stuff
 	'''
-	def getProfile(self, userID):
-		return User(self.discord,self.s,self.log).getProfile(userID)
+	def getProfile(self, userID, with_mutual_guilds=True):
+		return User(self.discord,self.s,self.log).getProfile(userID, with_mutual_guilds)
 
 	def info(self, with_analytics_token=None):
 		return User(self.discord,self.s,self.log).info(with_analytics_token)
@@ -485,12 +485,12 @@ class Client:
 	Guild/Server stuff
 	'''
 	#get guild info from invite code
-	def getInfoFromInviteCode(self,inviteCode):
-		return Guild(self.discord,self.s,self.log).getInfoFromInviteCode(inviteCode)
+	def getInfoFromInviteCode(self,inviteCode, with_counts=True, with_expiration=True, fromJoinGuildNav=False):
+		return Guild(self.discord,self.s,self.log).getInfoFromInviteCode(inviteCode, with_counts, with_expiration, fromJoinGuildNav)
 
 	#join guild with invite code
-	def joinGuild(self,inviteCode):
-		return Guild(self.discord,self.s,self.log).joinGuild(inviteCode)
+	def joinGuild(self, inviteCode, location="accept invite page", wait=0):
+		return Guild(self.discord,self.s,self.log).joinGuild(inviteCode, location, wait)
 
 	#leave guild
 	def leaveGuild(self, guildID):

@@ -1,10 +1,13 @@
 from ..RESTapiwrap import *
 from ..utils.permissions import PERMS, Permissions
+from ..utils.contextproperties import ContextProperties
+
+import time
 
 try:
-    from urllib.parse import quote
+	from urllib.parse import quote
 except ImportError:
-    from urllib import quote
+	from urllib import quote
 
 class Guild(object):
 	def __init__(self, discord, s, log): #s is the requests session object
@@ -16,14 +19,29 @@ class Guild(object):
 	invite codes / server info
 	'''
 	#get guild info from invite code
-	def getInfoFromInviteCode(self,inviteCode):
-		url = self.discord+"invites/"+inviteCode+"?with_counts=true"
+	def getInfoFromInviteCode(self, inviteCode, with_counts, with_expiration, fromJoinGuildNav):
+		url = self.discord+"invites/"+inviteCode
+		if (with_counts!=None or with_expiration!=None or fromJoinGuildNav):
+			url += "?"
+			data = {}
+			if fromJoinGuildNav:
+				data["inputValue"] = inviteCode
+			if with_counts != None:
+				data["with_counts"] = with_counts
+			if with_expiration != None:
+				data["with_expiration"] = with_expiration
+			url += "&".join( "%s=%s" % (k, quote(repr(data[k]).lower())) for k in data)
 		return Wrapper.sendRequest(self.s, 'get', url, log=self.log)
 
-	#join guild with invite code
-	def joinGuild(self,inviteCode):
+	#just the join guild endpoint, default location mimics joining a guild from the ([+]Add a Server) button
+	def joinGuildRaw(self, inviteCode, guild_id, channel_id, channel_type, location="join guild"):
 		url = self.discord+"invites/"+inviteCode
-		return Wrapper.sendRequest(self.s, 'post', url, log=self.log)
+		return Wrapper.sendRequest(self.s, 'post', url, headerModifications={"update":{"X-Context-Properties":ContextProperties.get(location, guild_id=guild_id, channel_id=channel_id, channel_type=channel_type)}}, log=self.log)
+
+	def joinGuild(self, inviteCode, location, wait):
+		guildData = self.getInfoFromInviteCode(inviteCode, with_counts=True, with_expiration=True, fromJoinGuildNav=(location.lower()=="join guild")).json()
+		if wait: time.sleep(wait)
+		return self.joinGuildRaw(inviteCode, guildData["guild"]["id"], guildData["channel"]["id"], guildData["channel"]["type"], location)
 
 	def leaveGuild(self, guildID):
 		url = self.discord+"users/@me/guilds/"+guildID
@@ -40,7 +58,7 @@ class Guild(object):
 			body["validate"] = checkInvite
 		if targetType != "":
 			body["target_type"] = targetType
-		return Wrapper.sendRequest(self.s, 'post', url, body, log=self.log)
+		return Wrapper.sendRequest(self.s, 'post', url, body, headerModifications={"update":{"X-Context-Properties":ContextProperties.get("guild header")}}, log=self.log)
 
 	'''
 	server moderation
@@ -59,8 +77,6 @@ class Guild(object):
 	def revokeBan(self, guildID, userID):
 		url = self.discord+"guilds/"+guildID+"/bans/"+userID
 		return Wrapper.sendRequest(self.s, 'delete', url, log=self.log)
-
-
 
 	#lookup a user in a guild. thx Echocage for finding this api endpoint
 	'''Note, user clients do not run this api request, however it currently works without a problem. 

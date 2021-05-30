@@ -64,7 +64,7 @@ class Client:
 			"Referer": "https://discord.com/channels/@me",
 			"Sec-Fetch-Dest": "empty",
 			"Sec-Fetch-Mode": "cors",
-			"Sec-Fetch_Site": "same-origin",
+			"Sec-Fetch-Site": "same-origin",
 			"Connection": "keep-alive",
 			"Content-Type": "application/json"
 		}

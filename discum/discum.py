@@ -79,13 +79,10 @@ class Client:
 		#step 4: cookies
 		self.s.cookies.update({"locale": self.locale})
 		#step 5: super-properties (part of headers)
-		tokenProvided = self.__user_token not in ("",None,False)
-		if not tokenProvided: #assuming email and pass are given...
-			self.__super_properties = SuperProperties(self.s, buildnum=build_num, log=self.log).getSuperProperties(self.__user_agent, self.locale)
-		else:
-			self.__super_properties = SuperProperties(self.s, buildnum=build_num, log=self.log).getSuperProperties(self.__user_agent, None)
+		self.__super_properties = SuperProperties(self.s, buildnum=build_num, log=self.log).getSuperProperties(self.__user_agent, self.locale)
 		self.s.headers.update({"X-Super-Properties": base64.b64encode(json.dumps(self.__super_properties).encode()).decode("utf-8")})
 		#step 6: token/authorization/fingerprint (also part of headers, except for fingerprint)
+		tokenProvided = self.__user_token not in ("",None,False)
 		if not tokenProvided:
 			loginResponse, self.__xfingerprint = Login(self.s, self.discord, self.log).login(email=email, password=password, secret=secret, code=code) 
 			self.__user_token = loginResponse.get('token') #update token from "" to actual value

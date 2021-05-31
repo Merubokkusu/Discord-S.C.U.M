@@ -176,8 +176,8 @@ class Client:
 		return Messages(self.discord,self.s,self.log).reply(channelID, messageID, message, nonce, tts, embed, allowed_mentions, sticker_ids, file, isurl)
 
 	#search messages
-	def searchMessages(self, guildID, channelID=None, authorID=None, authorType=None, mentionsUserID=None, msgType=None, has=None, linkHostname=None, embedProvider=None, embedType=None, attachmentExtension=None, attachmentFilename=None, mentionsEveryone=None, includeNsfw=None, afterDate=None, beforeDate=None, textSearch=None, afterNumResults=None, limit=None):
-		return Messages(self.discord,self.s,self.log).searchMessages(guildID, channelID, authorID, authorType, mentionsUserID, msgType, has, linkHostname, embedProvider, embedType, attachmentExtension, attachmentFilename, mentionsEveryone, includeNsfw, afterDate, beforeDate, textSearch, afterNumResults, limit)
+	def searchMessages(self, guildID, channelID=None, authorID=None, authorType=None, mentionsUserID=None, has=None, linkHostname=None, embedProvider=None, embedType=None, attachmentExtension=None, attachmentFilename=None, mentionsEveryone=None, includeNsfw=None, afterDate=None, beforeDate=None, textSearch=None, afterNumResults=None, limit=None):
+		return Messages(self.discord,self.s,self.log).searchMessages(guildID, channelID, authorID, authorType, mentionsUserID, has, linkHostname, embedProvider, embedType, attachmentExtension, attachmentFilename, mentionsEveryone, includeNsfw, afterDate, beforeDate, textSearch, afterNumResults, limit)
 
 	#filter searchMessages, takes in the output of searchMessages (a requests response object) and outputs a list of target messages
 	def filterSearchResults(self,searchResponse):

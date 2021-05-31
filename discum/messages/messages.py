@@ -115,7 +115,7 @@ class Messages(object):
 		else:
 			self.sendFile(channelID, file, isurl=isurl, message=message, tts=tts, message_reference={"channel_id":channelID,"message_id":messageID}, sticker_ids=sticker_ids)
 
-	def searchMessages(self, guildID, channelID, authorID, authorType, mentionsUserID, msgType, has, linkHostname, embedProvider, embedType, attachmentExtension, attachmentFilename, mentionsEveryone, includeNsfw, afterDate, beforeDate, textSearch, afterNumResults, limit): #classic discord search function, results with key "hit" are the results you searched for, afterNumResults (aka offset) is multiples of 25 and indicates after which messages (type int), filterResults defaults to False
+	def searchMessages(self, guildID, channelID, authorID, authorType, mentionsUserID, has, linkHostname, embedProvider, embedType, attachmentExtension, attachmentFilename, mentionsEveryone, includeNsfw, afterDate, beforeDate, textSearch, afterNumResults, limit): #classic discord search function, results with key "hit" are the results you searched for, afterNumResults (aka offset) is multiples of 25 and indicates after which messages (type int), filterResults defaults to False
 		url = self.discord+"guilds/"+guildID+"/messages/search?"
 		allqueryparams = []
 		if channelID:
@@ -138,11 +138,6 @@ class Messages(object):
 				mentionsUserID = [mentionsUserID]
 			for i in mentionsUserID:
 				allqueryparams.append(("mentions", str(i)))
-		if msgType:
-			if isinstance(msgType, str):
-				msgType = [msgType]
-			for i in msgType:
-				allqueryparams.append(("type", str(i)))
 		if has:
 			if isinstance(has, str):
 				has = [has]
@@ -152,27 +147,27 @@ class Messages(object):
 			if isinstance(linkHostname, str):
 				linkHostname = [linkHostname]
 			for i in linkHostname:
-				allqueryparams.append(("link_hostnames", str(i)))
+				allqueryparams.append(("link_hostname", str(i)))
 		if embedProvider:
 			if isinstance(embedProvider, str):
 				embedProvider = [embedProvider]
 			for i in embedProvider:
-				allqueryparams.append(("embed_providers", str(i)))
+				allqueryparams.append(("embed_provider", str(i)))
 		if embedType:
 			if isinstance(embedType, str):
 				embedType = [embedType]
 			for i in embedType:
-				allqueryparams.append(("embed_types", str(i)))
+				allqueryparams.append(("embed_type", str(i)))
 		if attachmentExtension:
 			if isinstance(attachmentExtension, str):
 				attachmentExtension = [attachmentExtension]
 			for i in attachmentExtension:
-				allqueryparams.append(("attachment_extensions", str(i)))
+				allqueryparams.append(("attachment_extension", str(i)))
 		if attachmentFilename:
 			if isinstance(attachmentFilename, str):
 				attachmentFilename = [attachmentFilename]
 			for i in attachmentFilename:
-				allqueryparams.append(("attachment_filenames", str(i)))
+				allqueryparams.append(("attachment_filename", str(i)))
 		if mentionsEveryone:
 			allqueryparams.append(("mention_everyone", repr(mentionsEveryone).lower()))
 		if beforeDate:

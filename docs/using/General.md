@@ -84,6 +84,7 @@ bot.gateway._last_close_event #last close event
 ```python
 bot.gateway.memberFetchingStatus #used by fetchMembers and finishedMemberFetching to keep track of member fetching status
 bot.gateway.resetMembersOnSessionReconnect #some member fetching processes take longer than a session. To prevent member data from the previous session from being wiped, set this to True.
+bot.gateway.updateSessionData #set to False to stop session data from updating. This can break certain gateway actions that require session data.
 ```
 ```python
 bot.gateway.request #gateway request object

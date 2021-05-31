@@ -743,16 +743,23 @@ bot.searchMessages("guildID000000000",textSearch="hello")
 ```
 ###### Parameters:
 - guildID (str)
-- channelID (Optional[list]) - list of channel ID strings
-- userID (Optional[list]) - list of user ID strings
-- mentionsUserID (Optional[list]) - list of user ID strings
-- has (Optional[list]) - list of media type strings
-- beforeDate (Optional[str]) - discord snowflake
-- afterDate (Optional[str]) - discord snowflake
+- channelID (Optional[str/list]) - channel ID string(s)
+- authorID (Optional[str/list]) - author ID string(s)
+- authorType (Optional[str/list]) - author type(s): "user", "bot", and/or "webhook"
+- mentionsUserID (Optional[str/list]) - user ID string(s)
+- has (Optional[str/list]) - media type string(s): "link", "embed", "file", "video", "image", and/or "sound"
+- linkHostname (Optional[str/list]) - like "http://example.com" or "example.com"
+- embedProvider (Optional[str/list]) - the provider_name returned by https://oembed.com/, for example, "Flickr"
+- embedType (Optional[str/list]) - the type returned by https://oembed.com/, for example, "photo"
+- attachmentExtension (Optional[str/list])
+- attachmentFilename (Optional[str/list])
+- mentionsEveryone (Optional[bool]) - return msgs that actually mention everyone (only if said user had perms to mention everyone). Defaults to False
+- includeNsfw (Optional[bool]) - defaults to True
+- afterDate (Optional[str]) - discord snowflake string (highest msg id)
+- beforeDate (Optional[str]) - discord snowflake string (highest msg id)
 - textSearch (Optional[str])
 - afterNumResults (Optional[int]) - multiples of 25
 - limit (Optional[int]) - how many results to show
-- extraParams (Optional[str]) url formatted query for extra params. Was a bit lazy here; might fix later.
 
 ##### ```filterSearchResults```
 ```python

@@ -174,7 +174,7 @@ class Messages(object):
 			for i in attachmentFilename:
 				allqueryparams.append(("attachment_filenames", str(i)))
 		if mentionsEveryone:
-			allqueryparams.append(("mention_everyone", mentionsEveryone))
+			allqueryparams.append(("mention_everyone", repr(mentionsEveryone).lower()))
 		if beforeDate:
 			allqueryparams.append(("max_id", str(beforeDate)))
 		if afterDate:

@@ -126,6 +126,7 @@ class GatewayServer:
 
 		self.memberFetchingStatus = {"first": []}
 		self.resetMembersOnSessionReconnect = True #reset members after each session
+		self.updateSessionData = True
 
 		#latency
 		self._last_ack = None
@@ -225,7 +226,8 @@ class GatewayServer:
 			self.settings_ready_supp = resp.parsed.ready_supplemental() #parsed
 			self.session = Session(self.settings_ready, self.settings_ready_supp) #reinitialize i guess
 			self.READY = True
-		self.sessionUpdates(resp)
+		if self.updateSessionData:
+			self.sessionUpdates(resp)
 		thread.start_new_thread(self._response_loop, (resp,))
 
 	def on_error(self, ws, error):

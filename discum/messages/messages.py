@@ -115,27 +115,79 @@ class Messages(object):
 		else:
 			self.sendFile(channelID, file, isurl=isurl, message=message, tts=tts, message_reference={"channel_id":channelID,"message_id":messageID}, sticker_ids=sticker_ids)
 
-	def searchMessages(self, guildID, channelID, userID, mentionsUserID, has, beforeDate, afterDate, textSearch, afterNumResults, limit, extraParams): #classic discord search function, results with key "hit" are the results you searched for, afterNumResults (aka offset) is multiples of 25 and indicates after which messages (type int), filterResults defaults to False
+	def searchMessages(self, guildID, channelID, authorID, authorType, mentionsUserID, msgType, has, linkHostname, embedProvider, embedType, attachmentExtension, attachmentFilename, mentionsEveryone, includeNsfw, afterDate, beforeDate, textSearch, afterNumResults, limit): #classic discord search function, results with key "hit" are the results you searched for, afterNumResults (aka offset) is multiples of 25 and indicates after which messages (type int), filterResults defaults to False
 		url = self.discord+"guilds/"+guildID+"/messages/search?"
 		allqueryparams = []
-		colParamNames = ["channel_id", "author_id", "mentions", "has"]
-		collectionParams = [channelID, userID, mentionsUserID, has]
-		for ind in range(len(collectionParams)):
-			if not hasattr(collectionParams[ind], "__iter__") or isinstance(collectionParams[ind], str):
-				collectionParams[ind] = [str(collectionParams[ind])]
-			allqueryparams.extend([(colParamNames[ind], i) for i in collectionParams[ind]])
-		if beforeDate!=None:
+		if channelID:
+			if isinstance(channelID, str):
+				channelID = [channelID]
+			for i in channelID:
+				allqueryparams.append(("channel_id", str(i)))
+		if authorID:
+			if isinstance(authorID, str):
+				authorID = [authorID]
+			for i in authorID:
+				allqueryparams.append(("author_id", str(i)))
+		if authorType:
+			if isinstance(authorType, str):
+				authorType = [authorType]
+			for i in authorType:
+				allqueryparams.append(("author_type", str(i)))
+		if mentionsUserID:
+			if isinstance(mentionsUserID, str):
+				mentionsUserID = [mentionsUserID]
+			for i in mentionsUserID:
+				allqueryparams.append(("mentions", str(i)))
+		if msgType:
+			if isinstance(msgType, str):
+				msgType = [msgType]
+			for i in msgType:
+				allqueryparams.append(("type", str(i)))
+		if has:
+			if isinstance(has, str):
+				has = [has]
+			for i in has:
+				allqueryparams.append(("has", str(i)))
+		if linkHostname:
+			if isinstance(linkHostname, str):
+				linkHostname = [linkHostname]
+			for i in linkHostname:
+				allqueryparams.append(("link_hostnames", str(i)))
+		if embedProvider:
+			if isinstance(embedProvider, str):
+				embedProvider = [embedProvider]
+			for i in embedProvider:
+				allqueryparams.append(("embed_providers", str(i)))
+		if embedType:
+			if isinstance(embedType, str):
+				embedType = [embedType]
+			for i in embedType:
+				allqueryparams.append(("embed_types", str(i)))
+		if attachmentExtension:
+			if isinstance(attachmentExtension, str):
+				attachmentExtension = [attachmentExtension]
+			for i in attachmentExtension:
+				allqueryparams.append(("attachment_extensions", str(i)))
+		if attachmentFilename:
+			if isinstance(attachmentFilename, str):
+				attachmentFilename = [attachmentFilename]
+			for i in attachmentFilename:
+				allqueryparams.append(("attachment_filenames", str(i)))
+		if mentionsEveryone:
+			allqueryparams.append(("mention_everyone", mentionsEveryone))
+		if beforeDate:
 			allqueryparams.append(("max_id", str(beforeDate)))
-		if afterDate!=None:
+		if afterDate:
 			allqueryparams.append(("min_id", str(afterDate)))
-		if textSearch!=None:
+		if textSearch:
 			allqueryparams.append(("content", str(textSearch)))
-		if afterNumResults!=None:
+		if includeNsfw:
+			allqueryparams.append(("include_nsfw", True))
+		if afterNumResults:
 			allqueryparams.append(("offset", str(afterNumResults)))
 		if limit!=None:
 			allqueryparams.append(("limit", str(limit)))
 		querystring = urlencode(allqueryparams)
-		querystring += extraParams
 		url += querystring
 		return Wrapper.sendRequest(self.s, 'get', url, log=self.log)
 

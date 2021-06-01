@@ -27,6 +27,7 @@ class Accessibility:
 			feature = i.upper().replace(" ", "_")
 			if hasattr(ACCESSIBILITY_FEATURES, feature):
 				accessibilityNum |= getattr(ACCESSIBILITY_FEATURES, feature)
+		return accessibilityNum
 
 	@staticmethod
 	def checkAccessibilities(accessibilityNum, check):

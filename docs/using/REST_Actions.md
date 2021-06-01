@@ -753,8 +753,8 @@ bot.searchMessages("guildID000000000",textSearch="hello")
 - embedType (Optional[str/list]) - the type returned by https://oembed.com/, for example, "photo"
 - attachmentExtension (Optional[str/list])
 - attachmentFilename (Optional[str/list])
-- mentionsEveryone (Optional[bool]) - return msgs that actually mention everyone (only if said user had perms to mention everyone). Defaults to False
-- includeNsfw (Optional[bool]) - defaults to True
+- mentionsEveryone (Optional[bool]) - return msgs that actually mention everyone (only if said user had perms to mention everyone)
+- includeNsfw (Optional[bool])
 - afterDate (Optional[str]) - discord snowflake string (highest msg id)
 - beforeDate (Optional[str]) - discord snowflake string (highest msg id)
 - textSearch (Optional[str])

@@ -290,6 +290,7 @@ class GatewayServer:
 				function = func['function']
 				params = func['params'] if 'params' in func else {}
 				function(resp, **params)
+		return
 
 	def removeCommand(self, func, exactMatch=True, allMatches=False):
 		try:

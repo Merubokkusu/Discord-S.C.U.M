@@ -24,7 +24,7 @@ class Accessibility:
 	def calculateAccessibility(types):
 		accessibilityNum = 0
 		for i in types:
-			feature = i.lower().replace(" ", "_")
+			feature = i.upper().replace(" ", "_")
 			if hasattr(ACCESSIBILITY_FEATURES, feature):
 				accessibilityNum |= getattr(ACCESSIBILITY_FEATURES, feature)
 

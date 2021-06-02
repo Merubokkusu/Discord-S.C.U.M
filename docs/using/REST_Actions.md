@@ -683,6 +683,7 @@ embed.image('https://cdn.dribbble.com/users/189524/screenshots/2105870/04-exampl
 embed.fields('Hello!',':yum:')
 embed.fields(':smile:','Testing :)')
 embed.author('Tester')
+embed.color(15158332) # Colors must be integer
 bot.sendMessage("383006063751856129","", embed=embed.read())
 ```
 

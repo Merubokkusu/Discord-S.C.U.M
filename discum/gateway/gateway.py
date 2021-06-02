@@ -281,7 +281,7 @@ class GatewayServer:
 			return func['function']
 
 	#kinda influenced by https://github.com/scrubjay55/Reddit_ChatBot_Python/blob/master/Reddit_ChatBot_Python/WebSockClient.py (Apache License 2.0)
-	def _response_loop(self, resp):
+	def _response_loop(self, resp): #thx ToasterUwU for bringing up dummy threads
 		commandslist = self._after_message_hooks[:] #create a copy
 		for func in commandslist:
 			if callable(func):

@@ -35,7 +35,7 @@ def setStatusTest(resp):
 @bot.gateway.command
 def setStatusTest(resp):
     if resp.event.ready_supplemental:
-        bot.gateway.setStatus("online")
+        bot.gateway.setCustomStatus("Discording")
 ```
 ###### Parameters:
 - customstatus (str)

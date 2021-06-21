@@ -3,6 +3,7 @@
 #also, no need for importing GuildRequest because gatewayobj has that (self.gatewayobj.request... does the trick)
 
 import time
+import copy
 from ...utils.permissions import PERMS, Permissions
 from ...logger import *
 
@@ -21,7 +22,7 @@ class GuildCombo(object):
 			remove = list(set(allProperties) - set(keep))
 		elif isinstance(keep, str):
 			remove = [i for i in allProperties if i!=keep]
-		memberproperties = memberdata['member'] if 'member' in memberdata else memberdata
+		memberproperties = copy.deepcopy(memberdata['member']) if 'member' in memberdata else copy.deepcopy(memberdata)
 		userdata = memberproperties.pop('user', {})
 		userID = userdata.pop('id', {})
 		memberproperties.update(userdata)
@@ -86,6 +87,7 @@ class GuildCombo(object):
 		if not self.gatewayobj.finishedMemberFetching(guild_id):
 			self.gatewayobj.memberFetchingStatus[guild_id][0] = self.gatewayobj.memberFetchingStatus[guild_id][1]
 
+	#todo: make channel_id optional (make a helper method to find the "optimal" channel). Also...maybe rewrite fetchMembers to simply code a bit??
 	def fetchMembers(self, resp, guild_id, channel_id, method, keep, considerUpdates, startIndex, stopIndex, reset, wait): #process is a little simpler than it looks. Keep in mind that there's no actual api endpoint to get members so this is a bit hacky. However, the method used below mimics how the official client loads the member list.
 		if self.gatewayobj.READY:
 			if self.gatewayobj.memberFetchingStatus.get(guild_id) == None: #request for lazy request
@@ -168,31 +170,47 @@ class GuildCombo(object):
 
 
 	#helper method for subscribeToGuildEvents
-	def findFirstVisibleTextChannel(self, guildID):
+	def findVisibleChannels(self, guildID, types, findFirst):
+		channelIDs = []
+		if types == "all":
+			types = ['guild_text', 'dm', 'guild_voice', 'group_dm', 'guild_category', 'guild_news', 'guild_store', 'guild_news_thread', 'guild_public_thread', 'guild_private_thread', 'guild_stage_voice']
 		s = self.gatewayobj.session
 		channels = s.guild(guildID).channels
 		for channel in channels.values():
-			if channel['type'] == 'guild_text':
+			if channel['type'] in types:
 				permissions = Permissions.calculatePermissions(s.user['id'], guildID, s.guild(guildID).owner, s.guild(guildID).roles, s.guild(guildID).position['roles'], channel["permission_overwrites"])
 				if Permissions.checkPermissions(permissions, PERMS.VIEW_CHANNEL):
-					return channel['id']
-		return None
+					if findFirst:
+						return [channel['id']]
+					else:
+						channelIDs.append(channel['id'])
+		return channelIDs
 
 	def subscribeToGuildEvents(self, onlyLarge, wait):
 		if self.gatewayobj.READY:
 			s = self.gatewayobj.session
 			guildIDs = s.guildIDs
+			first = {"channel_ranges":{}, "typing":True, "threads":True, "activities":True, "members":[], "thread_member_lists":[]}
+			rest = {"channel_ranges":{}, "typing":True, "activities":True, "threads":True}
 			for guildID in guildIDs:
-				if onlyLarge and not s.guild(guildID).large:
-						continue
-				channelID = self.findFirstVisibleTextChannel(guildID)
-				if guildID == guildIDs[0]: #first guild subscribed to is different
-					if channelID: #if found
-						self.gatewayobj.memberFetchingStatus["first"].append(guildID)
-						self.gatewayobj.request.lazyGuild(guildID, {channelID: [[0,99]]}, typing=True, threads=False, activities=True, members=[])
+				#skip if needed (onlyLarge checking)
+				if onlyLarge and not (s.guild(guildID).unavailable or s.guild(guildID).large):
+					continue
+				#op 14 field construction
+				op14fields = {"guild_id":guildID}
+				if guildID == guildIDs[0]:
+					op14fields.update(first)
+					if not s.guild(guildID).unavailable:
+						findChannel = self.findVisibleChannels(guildID, types="all", findFirst=True)
+						if findChannel:
+							op14fields["channel_ranges"] = {findChannel[0]: [[0,99]]}
 				else:
-					if wait: time.sleep(wait)
-					if channelID: #if found
-						self.gatewayobj.memberFetchingStatus["first"].append(guildID)
-						self.gatewayobj.request.lazyGuild(guildID, {channelID: [[0,99]]}, typing=True, activities=True)
-
+					op14fields.update(rest)
+					if not s.guild(guildID).unavailable:
+						findChannel = self.findVisibleChannels(guildID, types="all", findFirst=True)
+						if findChannel:
+							op14fields["channel_ranges"] = {findChannel[0]: [[0,99]]}
+				#sending the request
+				if wait: time.sleep(wait)
+				self.gatewayobj.memberFetchingStatus["first"].append(guildID)
+				self.gatewayobj.request.lazyGuild(**op14fields)

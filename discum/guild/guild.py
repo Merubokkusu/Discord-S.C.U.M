@@ -60,6 +60,12 @@ class Guild(object):
 			body["target_type"] = targetType
 		return Wrapper.sendRequest(self.s, 'post', url, body, headerModifications={"update":{"X-Context-Properties":ContextProperties.get("guild header")}}, log=self.log)
 
+	def getGuilds(self, with_counts):
+		url = self.discord+"users/@me/guilds"
+		if with_counts != None:
+			url += "?with_counts="+repr(with_counts).lower()
+		return Wrapper.sendRequest(self.s, 'get', url, headerModifications={"update":{"X-Track":self.s.headers.get("X-Super-Properties")}, "remove":"X-Super-Properties"}, log=self.log)
+
 	'''
 	server moderation
 	'''

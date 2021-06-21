@@ -452,10 +452,10 @@ class GatewayServer:
 	def finishedMemberFetching(self, guild_id):
 		return self.memberFetchingStatus.get(guild_id) == "done"
 
-	def findFirstVisibleTextChannel(self, guildID):
+	def findVisibleChannels(self, guildID, types=['guild_text', 'dm', 'guild_voice', 'group_dm', 'guild_category', 'guild_news', 'guild_store', 'guild_news_thread', 'guild_public_thread', 'guild_private_thread', 'guild_stage_voice'], findFirst=False):
 		if len(self.session.read()[0]) == 0: #if never connected to gateway
 			return
-		return GuildCombo(self).findFirstVisibleTextChannel(guildID)
+		return GuildCombo(self).findVisibleChannels(guildID, types, findFirst)
 
 	#sends a series of opcode 14s to tell discord that you're looking at guild channels
 	def subscribeToGuildEvents(self, onlyLarge=False, wait=None):

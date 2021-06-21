@@ -134,6 +134,20 @@ class User(object):
 		body = {"password":password, "discriminator":discriminator}
 		return Wrapper.sendRequest(self.s, 'patch', url, body, log=self.log)
 
+	#as of right now, you need to be in the beta program for this to work
+	def setAboutMe(self, bio):
+		url = self.discord+"users/@me"
+		body = {"bio": bio}
+		return Wrapper.sendRequest(self.s, 'patch', url, body, log=self.log)
+
+	#as of right now, you need to be in the beta program for this to work
+	def setBanner(self, imagePath):
+		url = self.discord+"users/@me"
+		with open(imagePath, "rb") as image:
+			encodedImage = base64.b64encode(image.read()).decode('utf-8')
+		body = {"banner":"data:image/png;base64,"+encodedImage}
+		return Wrapper.sendRequest(self.s, 'patch', url, body, log=self.log)
+
 	def enable2FA(self, code, secret, password): #returns new token plus backup codes
 		url = self.discord+"users/@me/mfa/totp/enable"
 		body = {"code": code, "secret": secret, "password": password}

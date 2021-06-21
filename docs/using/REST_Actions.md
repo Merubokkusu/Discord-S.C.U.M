@@ -197,6 +197,24 @@ bot.setDiscriminator('0001')
 ```python
 bot.setAvatar('./catpics/001.png')
 ```
+###### Parameters:
+- image path (str)
+
+##### ```setAboutMe```
+currently, you need to be in the beta testing program for this to work
+```python
+bot.setAboutMe('hello world')
+```
+###### Parameters:
+- bio (str)
+
+##### ```setBanner```
+currently, you need to be in the beta testing program with nitro for this to work
+```python
+bot.setBanner('./catpics/001.png')
+```
+###### Parameters:
+- image path (str)
 
 ##### ```getTOTPurl```
 ```python
@@ -591,6 +609,13 @@ bot.createInvite('channelID00000000000')
 - checkInvite (Optional[str]) - invite code to check. Defaults to ""
 - targetType (Optional[str]) - unknown. Defaults to ""
 
+##### ```getGuilds```
+```python
+bot.getGuilds()
+```
+###### Parameters:
+- with_counts (bool/Nonetype) - get approx online and member counts. Defaults to True
+
 ##### ```kick```
 ```python
 bot.kick('guildID00000000000','userID11111111111','weeeee')
@@ -674,6 +699,14 @@ bot.getMessage('channelID0000000000','msgID000000000000')
 ###### Parameters:
 - channelID (str)
 - messageID (str)
+
+##### ```greet```
+```python
+bot.greet('channelID0000000000', ["749054660769218631"])
+```
+###### Parameters:
+- channelID (str)
+- sticker_ids (list)
 
 ##### ```Embedder```
 ```python

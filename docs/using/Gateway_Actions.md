@@ -220,17 +220,19 @@ bot.gateway.finishedMemberFetching('guildID00000000000')
 ###### Returns:
 boolean
 
-##### ```gateway.findFirstVisibleTextChannel```
+##### ```gateway.findVisibleChannels```
 run this either during a gateway connection (after ready_supplemental event) or after a gateway connection
 ```python
-bot.gateway.findFirstVisibleTextChannel('guildID00000000000')
+bot.gateway.findVisibleChannels('guildID00000000000')
 ```
 
 ###### Parameters:
 - guildID (str)
+- types (list) - list of channel types. Defaults to ['guild_text', 'dm', 'guild_voice', 'group_dm', 'guild_category', 'guild_news', 'guild_store', 'guild_news_thread', 'guild_public_thread', 'guild_private_thread', 'guild_stage_voice']
+- findFirst (bool) - stop at the first match. Defaults to False
 
 ###### Returns:
-- channel ID string
+- list of channel ID string(s)
 
 ##### ```gateway.subscribeToGuildEvents```
 if you're not receiving events (messages, voice states, etc) from a large guild, then this will fix that
@@ -259,6 +261,7 @@ def guildTest(resp):
 - threads (Optional[bool]) - subscribe to thread updates?
 - activities (Optional[bool]) - subscribe to activity presence updates?
 - members (Optional[list]) - purpose of this is unknown
+- thread_member_lists (Optional[list]) - idk
 
 ##### ```gateway.request.searchGuildMembers```
 ```python

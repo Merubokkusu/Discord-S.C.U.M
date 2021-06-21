@@ -52,6 +52,14 @@ class Messages(object):
 		url = self.discord+"channels/"+channelID+"/messages?limit=1&around="+messageID
 		return Wrapper.sendRequest(self.s, 'get', url, log=self.log)
 
+	#greet with stickers
+	def greet(self, channelID, sticker_ids):
+		url = self.discord+"channels/"+channelID+"/greet"
+		if isinstance(sticker_ids, str):
+			sticker_ids = [sticker_ids]
+		body = {"sticker_ids": [sticker_ids]}
+		return Wrapper.sendRequest(self.s, 'post', url, body, log=self.log)
+
 	#text message
 	def sendMessage(self, channelID, message, nonce, tts, embed, message_reference, allowed_mentions, sticker_ids):
 		url = self.discord+"channels/"+channelID+"/messages"

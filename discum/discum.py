@@ -163,6 +163,10 @@ class Client:
 	def getMessage(self, channelID, messageID):
 		return Messages(self.discord,self.s,self.log).getMessage(channelID, messageID)
 
+	#greet with stickers
+	def greet(self, channelID, sticker_ids):
+		return Messages(self.discord,self.s,self.log).greet(channelID, sticker_ids)
+
 	#send messages
 	def sendMessage(self, channelID, message, nonce="calculate", tts=False, embed=None, message_reference=None, allowed_mentions=None, sticker_ids=None):
 		return Messages(self.discord,self.s,self.log).sendMessage(channelID, message, nonce, tts, embed, message_reference, allowed_mentions, sticker_ids)
@@ -315,6 +319,14 @@ class Client:
 	#set discriminator
 	def setDiscriminator(self, discriminator): #USER PASSWORD NEEDS TO BE SET BEFORE THIS IS RUN
 		return User(self.discord,self.s,self.log).setDiscriminator(discriminator, password=self.__user_password)
+
+	#set about me
+	def setAboutMe(self, bio):
+		return User(self.discord,self.s,self.log).setAboutMe(bio)
+
+	#set banner
+	def setBanner(self, imagePath):
+		return User(self.discord,self.s,self.log).setBanner(imagePath)
 
 	#2FA
 	def calculateTOTPcode(self, secret="default"): #need to put this function here (instead of in login folder or user folder) because it updates the secret (if and only if secret == "")
@@ -496,6 +508,10 @@ class Client:
 	#create invite
 	def createInvite(self, channelID, max_age_seconds=False, max_uses=False, grantTempMembership=False, checkInvite="", targetType=""):
 		return Guild(self.discord,self.s,self.log).createInvite(channelID, max_age_seconds, max_uses, grantTempMembership, checkInvite, targetType)
+
+	#get all guilds (this is used by the client when going to the developers portal)
+	def getGuilds(self, with_counts=True):
+		return Guild(self.discord,self.s,self.log).getGuilds(with_counts)
 
 	#kick a user
 	def kick(self,guildID,userID,reason=""):

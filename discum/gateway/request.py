@@ -11,8 +11,8 @@ class Request(object):
 	def setStatus(self, status, activities=[], afk=False, since=0):
 		UserRequest(self.gatewayobject).setStatus(status, activities, afk, since)
 
-	def lazyGuild(self, guild_id, channel_ranges=None, typing=None, threads=None, activities=None, members=None):
-		GuildRequest(self.gatewayobject).lazyGuild(guild_id, channel_ranges, typing, threads, activities, members)
+	def lazyGuild(self, guild_id, channel_ranges=None, typing=None, threads=None, activities=None, members=None, thread_member_lists=None):
+		GuildRequest(self.gatewayobject).lazyGuild(guild_id, channel_ranges, typing, threads, activities, members, thread_member_lists)
 
 	def searchGuildMembers(self, guild_ids, query="", limit=10, presences=True, user_ids=None):
 		GuildRequest(self.gatewayobject).searchGuildMembers(guild_ids, query, limit, presences, user_ids)

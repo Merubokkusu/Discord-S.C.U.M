@@ -52,7 +52,7 @@ class GuildParse(object):
 		return guilddata
 
 	@staticmethod
-	def guild_members_chunk(response): #interesting event..will have to look into more
+	def guild_members_chunk(response):
 		memberChunkData = {"members":[], "guild_id": response["d"]["guild_id"], "chunk_count":response["d"]["chunk_count"], "chunk_index":response["d"]["chunk_index"]}
 		if "not_found" in response["d"]:
 			memberChunkData["not_found"] = [str(n) for n in response["d"]["not_found"]] #list of user ids

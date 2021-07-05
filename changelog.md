@@ -1,4 +1,22 @@
 # Changelog
+# 1.3.1
+### Added
+- checkPermissions function to permissions.py
+- gateway event type parsing for messages, channels, and relationships
+- organized some files that were being used in multiple contexts into utils folder
+- search guild members (opcode 8) examples
+- more searchMessages queries
+- accessibility.py to calculate and parse the accessibility number (sent in discord's "science"/tracking requests)
+- color.py to help with getting color values
+- 4 resp api wraps: greet, setAboutMe, setBanner, and getGuilds
+- findVisibleChannels (looks for channels and categories)
+- thread\_member\_lists argument added to op14 request wrap
+### Changed
+- typo in http request headers fixed (thx dolfies)
+- capabilities # in gateway identify msg updated
+- updated embed examples (thx caiocinel)
+- subscribeToGuildEvents also works for unavailable guilds
+- updated message parsing
 # 1.3.0
 ### Added
 - more message types to discum/gateway/messages/parse.py

@@ -10,7 +10,7 @@ from discum.gateway.guild.combo import GuildCombo #for member formatting (reform
 bot.gateway.guildMemberSearches = {}
 
 #move to gateway/guild/combo.py
-def handleGuildMemberSearches(resp, guildIDs, saveAsQuery, isQueryOverridden, userIDs): #hm what happens if all userIDs are found? well good news: "not_found" value is just []
+def handleGuildMemberSearches(resp, guildIDs, saveAsQuery, isQueryOverridden, userIDs, keep): #hm what happens if all userIDs are found? well good news: "not_found" value is just []
 	if resp.event.guild_members_chunk:
 		chunk = resp.parsed.auto()
 		gID = chunk["guild_id"]
@@ -19,21 +19,21 @@ def handleGuildMemberSearches(resp, guildIDs, saveAsQuery, isQueryOverridden, us
 			if userIDs and "not_found" in chunk:
 				match = True
 				for member in chunk["members"]:
-					member_id, member_properties = GuildCombo(bot.gateway).reformat_member(member, keep="all")
+					member_id, member_properties = GuildCombo(bot.gateway).reformat_member(member, keep=keep)
 					bot.gateway.guildMemberSearches[gID]["ids"].add(member_id)
 					bot.gateway.session.guild(gID).updateOneMember(member_id, member_properties)
 			elif not userIDs:
 				if isQueryOverridden:
 					match = True #no checks
 					for member in chunk["members"]:
-						member_id, member_properties = GuildCombo(bot.gateway).reformat_member(member, keep="all")
+						member_id, member_properties = GuildCombo(bot.gateway).reformat_member(member, keep=keep)
 						bot.gateway.guildMemberSearches[gID]["queries"][saveAsQuery].add(member_id)
 						bot.gateway.session.guild(gID).updateOneMember(member_id, member_properties)
 				else: #check results
-					if all([(re.sub(' +', ' ', k["user"]["username"].lower()).startswith(saveAsQuery) or re.sub(' +', ' ', k["nick"].lower()).startswith(saveAsQuery)) if k.get('nick') else re.sub(' +', ' ', k["user"]["username"].lower()).startswith(saveAsQuery) for k in chunk["members"]]):
+					if all([(re.sub(' +', ' ', k["user"]["username"].lower()).startswith(saveAsQuery) or re.sub(' +', ' ', k["nick"].lower()).startswith(saveAsQuery)) if k.get('nick') else re.sub(' +', ' ', k["user"]["username"].lower()).startswith(saveAsQuery) for k in chunk["members"]]): #search user/nick, ignore case, replace consecutive spaces with 1 space
 						match = True
 						for member in chunk["members"]:
-							member_id, member_properties = GuildCombo(bot.gateway).reformat_member(member, keep="all")
+							member_id, member_properties = GuildCombo(bot.gateway).reformat_member(member, keep=keep)
 							bot.gateway.guildMemberSearches[gID]["queries"][saveAsQuery].add(member_id)
 							bot.gateway.session.guild(gID).updateOneMember(member_id, member_properties)
 			if chunk["chunk_index"] == chunk["chunk_count"]-1 and gID==guildIDs[-1]: #if at end
@@ -45,13 +45,14 @@ def handleGuildMemberSearches(resp, guildIDs, saveAsQuery, isQueryOverridden, us
 								"guildIDs": guildIDs,
 								"saveAsQuery": saveAsQuery,
 								"isQueryOverridden": isQueryOverridden,
-								"userIDs": userIDs
+								"userIDs": userIDs, 
+								"keep": keep
 							},
 						}
 					)
 
 #move to gateway/guild/combo.py
-def searchGuildMembers(guildIDs, query="", saveAsQueryOverride=None, limit=10, presences=True, userIDs=None):
+def searchGuildMembers(guildIDs, query="", saveAsQueryOverride=None, limit=10, presences=True, userIDs=None, keep=[]):
 	if bot.gateway.READY:
 		saveAsQuery = query.lower() if saveAsQueryOverride==None else saveAsQueryOverride.lower()
 		#create a spot to put the data in bot.gateway.guildMemberSearches
@@ -69,13 +70,35 @@ def searchGuildMembers(guildIDs, query="", saveAsQueryOverride=None, limit=10, p
 					bot.gateway.guildMemberSearches[k]["queries"] = {}
 				if saveAsQuery not in bot.gateway.guildMemberSearches[k]["queries"]:
 					bot.gateway.guildMemberSearches[k]["queries"][saveAsQuery] = set()
-		bot.gateway.command({"function":handleGuildMemberSearches, "priority":0, "params": {"guildIDs":guildIDs, "saveAsQuery":saveAsQuery, "isQueryOverridden":saveAsQueryOverride!=None, "userIDs":userIDs}})
+		bot.gateway.command(
+			{
+				"function": handleGuildMemberSearches,
+				"priority": 0,
+				"params": {
+					"guildIDs": guildIDs,
+					"saveAsQuery": saveAsQuery,
+					"isQueryOverridden": saveAsQueryOverride != None,
+					"userIDs": userIDs,
+					"keep": keep,
+				},
+			}
+		)
 		bot.gateway.request.searchGuildMembers(guildIDs, query, limit, presences, userIDs) #not in combo.py bc we only want this to send once
 
 #move to gateway/gateway.py
-def finishedGuildSearch(guildIDs, query="", saveAsQueryOverride=None, userIDs=None):
+def finishedGuildSearch(guildIDs, query="", saveAsQueryOverride=None, userIDs=None, keep=[]):
 	saveAsQuery = query.lower() if saveAsQueryOverride==None else saveAsQueryOverride.lower()
-	return {"function": handleGuildMemberSearches, "params": {"guildIDs": guildIDs, "saveAsQuery": saveAsQuery, "isQueryOverridden": saveAsQueryOverride!=None, "userIDs": userIDs}} not in bot.gateway._after_message_hooks
+	command = {
+		"function": handleGuildMemberSearches,
+		"params": {
+			"guildIDs": guildIDs,
+			"saveAsQuery": saveAsQuery,
+			"isQueryOverridden": saveAsQueryOverride != None,
+			"userIDs": userIDs,
+			"keep": keep
+		},
+	}
+	return command not in bot.gateway._after_message_hooks
 
 ######################################################################
 #how to run:
@@ -84,7 +107,7 @@ def finishedGuildSearch(guildIDs, query="", saveAsQueryOverride=None, userIDs=No
 @bot.gateway.command
 def test(resp):
 	if resp.event.ready_supplemental:
-		searchGuildMembers(['guildID'], 'searchTerm', limit=100)
+		searchGuildMembers(['guildID'], 'searchTerm', limit=100, keep="all")
 	if resp.event.guild_members_chunk and finishedGuildSearch(['guildID'], 'searchTerm'):
 		bot.gateway.close()
 
@@ -97,7 +120,7 @@ bot.gateway.clearCommands()
 @bot.gateway.command
 def test(resp):
 	if resp.event.ready_supplemental:
-		searchGuildMembers(['guildID'], userIDs=['userID'])
+		searchGuildMembers(['guildID'], userIDs=['userID'], keep="all")
 	if resp.event.guild_members_chunk and finishedGuildSearch(['guildID'], userIDs=['userID']):
 		bot.gateway.close()
 
@@ -115,6 +138,16 @@ allchars = [' ', '!', '"', '#', '$', '%', '&', "'", '(', ')', '*', '+', ',', '-'
 bot.qList = ["!"] #query list
 bot.gateway.guildMemberSearches = {}
 bot.gateway.resetMembersOnSessionReconnect = False #member list brute forcing can take a while
+
+class MemberFetchingScore:
+	def __init__(self):
+		self.effectiveness = 0
+		self.efficiency = 0
+		self.completeness = 0
+	def getScore(self):
+		return (self.effectiveness+self.efficiency+self.completeness)/3
+
+s = MemberFetchingScore()
 
 def calculateOption(guildID, action): #action == 'append' or 'replace'
 	if action == 'append':
@@ -143,7 +176,8 @@ def findReplaceableIndex(guildID):
 
 def bruteForceTest(resp, guildID, wait):
 	if resp.event.ready_supplemental:
-		searchGuildMembers([guildID], query=''.join(bot.qList), limit=100)
+		bot.startTime = time.time()
+		searchGuildMembers([guildID], query=''.join(bot.qList), limit=100, keep="all")
 	elif resp.event.guild_members_chunk:
 		remove = False
 		if len(bot.gateway.guildMemberSearches[guildID]["queries"][''.join(bot.qList)]) == 100: #append
@@ -161,6 +195,12 @@ def bruteForceTest(resp, guildID, wait):
 		if remove: #if no replace options, find first replaceable index & replace it
 			if len(bot.qList) == 1: #reached end of possibilities
 				bot.gateway.removeCommand({"function": bruteForceTest, "params":{"guildID":guildID, "wait":wait}})
+				totalTime = time.time() - bot.startTime
+				s.efficiency = len(bot.gateway.session.guild(guildID).members)/totalTime
+				print("efficiency: "+repr(s.efficiency)+"%")
+				s.completeness = 100*(len(bot.gateway.session.guild(guildID).members)/bot.gateway.session.guild(guildID).memberCount)
+				print("completeness: "+repr(s.completeness)+"%")
+				print("score: "+repr(s.getScore()))
 				bot.gateway.close()
 			else:
 				replaceableInd = findReplaceableIndex(guildID)
@@ -170,12 +210,19 @@ def bruteForceTest(resp, guildID, wait):
 					bot.qList[-1] = replaceOptions[0]
 				else:
 					bot.gateway.removeCommand({"function": bruteForceTest, "params":{"guildID":guildID, "wait":wait}})
+					totalTime = time.time() - bot.startTime
+					s.efficiency = len(bot.gateway.session.guild(guildID).members)/totalTime
+					print("efficiency: "+repr(s.efficiency)+"%")
+					s.completeness = 100*(len(bot.gateway.session.guild(guildID).members)/bot.gateway.session.guild(guildID).memberCount)
+					print("completeness: "+repr(s.completeness)+"%")
+					print("score: "+repr(s.getScore()))
 					bot.gateway.close()
 		if wait: time.sleep(wait)
-		print('next query: '+''.join(bot.qList))
-		print('members fetched so far: '+repr(len(bot.gateway.session.guild(guildID).members)))
-		print("effectiveness: "+repr(len(bot.gateway.session.guild(guildID).members)/(len(bot.gateway.guildMemberSearches[guildID]["queries"])))+"%")
-		searchGuildMembers([guildID], query=''.join(bot.qList), limit=100)
+		print("next query: "+"".join(bot.qList))
+		print("members fetched so far: "+repr(len(bot.gateway.session.guild(guildID).members)))
+		s.effectiveness = len(bot.gateway.session.guild(guildID).members)/(len(bot.gateway.guildMemberSearches[guildID]["queries"]))
+		print("effectiveness: "+repr(s.effectiveness)+"%")
+		searchGuildMembers([guildID], query=''.join(bot.qList), limit=100, keep="all")
 
 guildID = ''
 wait = 1

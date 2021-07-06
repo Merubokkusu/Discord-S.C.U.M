@@ -6,10 +6,16 @@ class StartParse(object): #really hope this doesn't take too long to run...
 	def ready(response):
 		ready_data = dict(response["d"])
 		ready_data.pop("merged_members")
+		user_pool = {h["id"]:h for h in response["d"]["users"]} #convert to dict for faster retrieval
 		#parse relationships
-		ready_data["relationships"] = {i["id"]:dict(i,**{"type":Types.relationshipTypes[i["type"]]}) for i in response["d"]["relationships"]}
+		ready_data["relationships"] = {i["id"]:dict(i,**{"type":Types.relationshipTypes[i["type"]]}, **user_pool.get(i["id"],{})) for i in response["d"]["relationships"]}
 		#parse private channels
-		ready_data["private_channels"] = {j["id"]:dict(j,**{"type":Types.channelTypes[j["type"]]}) for j in response["d"]["private_channels"]}
+		ready_data["private_channels"] = {}
+		for j in response["d"]["private_channels"]:
+			ready_data["private_channels"][j["id"]] = dict(j,**{"type":Types.channelTypes[j["type"]]})
+			if "recipient_ids" in ready_data["private_channels"][j["id"]]:
+				recipient_ids = ready_data["private_channels"][j["id"]].pop("recipient_ids")
+				ready_data["private_channels"][j["id"]]["recipients"] = {q:user_pool.get(q,{}) for q in recipient_ids}
 		#add activities key to user settings
 		ready_data["user_settings"]["activities"] = {}
 		#parse guilds

@@ -11,6 +11,7 @@
 - 4 resp api wraps: greet, setAboutMe, setBanner, and getGuilds
 - findVisibleChannels (looks for channels and categories)
 - thread\_member\_lists argument added to op14 request wrap
+- contextproperties.py to add the X-Context-Properties header to some requests
 ### Changed
 - typo in http request headers fixed (thx dolfies)
 - capabilities # in gateway identify msg updated

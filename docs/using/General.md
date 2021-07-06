@@ -208,7 +208,11 @@ bot.gateway.session.guild(guildID).channels
 bot.gateway.session.guild(guildID).channelIDs
 bot.gateway.session.guild(guildID).channel(channelID)
 bot.gateway.session.guild(guildID).voiceStates
-bot.gateway.session.guild(guildID).position
+bot.gateway.session.guild(guildID).me
+bot.gateway.session.guild(guildID).applicationCommandCount
+bot.gateway.session.guild(guildID).maxMembers
+bot.gateway.session.guild(guildID).stages
+bot.gateway.session.guild(guildID).stickers
 ```
 
 Data about a specific relationship:

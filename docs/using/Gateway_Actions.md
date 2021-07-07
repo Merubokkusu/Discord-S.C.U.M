@@ -247,6 +247,89 @@ def subTest(resp):
 - onlyLarge (Optional[bool]) - send opcode 14s to only large guilds (so, less messages sent to discord)
 - wait (Optional[int]) - wait time between sending opcode 14s
 
+##### ```gateway.queryGuildMembers```
+search for members in guild(s) with a username/nickname that starts with text
+```python
+@bot.gateway.command
+def queryTest(resp):
+	if resp.event.ready_supplemental:
+		bot.gateway.queryGuildMembers(['guildID'], 'a', limit=100, keep="all")
+	if resp.event.guild_members_chunk and bot.gateway.finishedGuildSearch(['guildID'], 'a'): #optional; close gateway after finished
+		bot.gateway.close() #optional
+
+bot.gateway.run()
+
+print(bot.gateway.guildMemberSearches['guildID']['queries']['a']) #user IDs of results
+print(bot.gateway.session.guild('guildID').members) #member data
+```
+
+###### Parameters:
+- guildIDs (list) - list of guild ID strings
+- query (str) - what to search for
+- saveAsQueryOverride (Optional[str]) - save search results under a different query and skip response checking
+- limit (Optional[int]) - maximum number of results to return. If you do not have full-memberlist-view perms, the maximum number you can put is 100. Defaults to 10
+- presences (Optional[bool]) - include presence data. Defaults to True
+- keep (Optional[list/"all"/None]) - what data to save from each member:
+  - list:
+    - all possible member properties are: 
+      ```
+       ['pending', 'deaf', 'hoisted_role', 'presence', 'joined_at', 'public_flags', 'username', 'avatar', 'discriminator', 'premium_since', 'roles', 'is_pending', 'mute', 'nick', 'bot']
+      ```
+    - set keep to the list of all the member properties you want to retain
+    - by default, keep is set to an empty list. This is done to save memory (which really does make a different for massive guilds).
+  - "all":
+    - keep all member properties
+  - None
+    - disregard member properties
+
+##### ```gateway.checkGuildMembers```
+check if user(s) exist in guild(s)
+```python
+@bot.gateway.command
+def checkTest(resp):
+	if resp.event.ready_supplemental:
+		bot.gateway.checkGuildMembers(['guildID'], ['userID1', 'userID2'], keep="all")
+	if resp.event.guild_members_chunk and bot.gateway.finishedGuildSearch(['guildID'], userIDs=['userID1', 'userID2']): #optional; close gateway after finished
+		bot.gateway.close() #optional
+
+bot.gateway.run()
+
+print(bot.gateway.guildMemberSearches['guildID']['ids']) #user IDs of results
+print(bot.gateway.session.guild('guildID').members) #member data
+```
+
+###### Parameters:
+- guildIDs (list) - list of guild ID strings
+- userIDs (list) - list of user ID strings
+- presences (Optional[bool]) - include presence data. Defaults to True
+- keep (Optional[list/"all"/None]) - what data to save from each member:
+  - list:
+    - all possible member properties are: 
+      ```
+       ['pending', 'deaf', 'hoisted_role', 'presence', 'joined_at', 'public_flags', 'username', 'avatar', 'discriminator', 'premium_since', 'roles', 'is_pending', 'mute', 'nick', 'bot']
+      ```
+    - set keep to the list of all the member properties you want to retain
+    - by default, keep is set to an empty list. This is done to save memory (which really does make a different for massive guilds).
+  - "all":
+    - keep all member properties
+  - None
+    - disregard member properties
+
+##### ```gateway.finishedGuildSearch```
+```python
+print(bot.gateway.finishedGuildSearch(['guildID'], 'a'))
+print(bot.gateway.finishedGuildSearch(['guildID'], userIDs=['userID1', 'userID2']))
+```
+
+###### Parameters:
+put in same parameters as queryGuildMembers or checkGuildMembers
+- guildIDs (list) - list of guild ID strings
+- query (str)
+- saveAsQueryOverride (Optional[str])
+- limit (Optional[int])
+- presences (Optional[bool])
+- keep (Optional[list/"all"/None]) - actually optional
+
 ##### ```gateway.request.lazyGuild```
 ```python
 @bot.gateway.command
@@ -276,6 +359,7 @@ def searchGuildMembersTest(resp):
 - limit (Optional[int]) - how many users to fetch, can go up to 100. You can only use limit=0 on guilds you have manage server perms on. Defaults to 10
 - presences (Optional[bool]) - whether or not to fetch user presences. Defaults to True
 - user_ids (Optional[list]) - search if specified users are in guild(s)
+- nonce (Optional[str]) - current discord snowflake; user accs don't use this, but it can be helpful for an easy way to link requests to their responses
 
 ##### ```gateway.parse(...).guild_member_list_update```
 ```python

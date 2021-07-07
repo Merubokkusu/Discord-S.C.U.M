@@ -14,8 +14,8 @@ class Request(object):
 	def lazyGuild(self, guild_id, channel_ranges=None, typing=None, threads=None, activities=None, members=None, thread_member_lists=None):
 		GuildRequest(self.gatewayobject).lazyGuild(guild_id, channel_ranges, typing, threads, activities, members, thread_member_lists)
 
-	def searchGuildMembers(self, guild_ids, query="", limit=10, presences=True, user_ids=None):
-		GuildRequest(self.gatewayobject).searchGuildMembers(guild_ids, query, limit, presences, user_ids)
+	def searchGuildMembers(self, guild_ids, query="", limit=10, presences=True, user_ids=None, nonce=None):
+		GuildRequest(self.gatewayobject).searchGuildMembers(guild_ids, query, limit, presences, user_ids, nonce)
 
 	def DMchannel(self, channel_id):
 		DmRequest(self.gatewayobject).DMchannel(channel_id)

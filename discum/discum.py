@@ -527,6 +527,7 @@ class Client:
 
 	#look up a user in a guild
 	def getGuildMember(self,guildID,userID):
+		print("Warning: getGuildMember will be removed soon. Use gateway.checkGuildMembers instead (https://github.com/Merubokkusu/Discord-S.C.U.M/blob/master/examples/searchGuildMembers.py).")
 		return Guild(self.discord,self.s,self.log).getGuildMember(guildID,userID)
 
 	def getMemberVerificationData(self, guildID, with_guild=False, invite_code=None):
@@ -556,10 +557,44 @@ class Client:
 		return self.Science.science(events)
 
 	def calculateClientUUID(self, eventNum="default", userID="default", increment=True):
+		if self.Science == "":
+			try:
+				#get analytics token
+				response = User(self.discord,self.s,self.log).info(with_analytics_token=True)
+				if response.status_code == 401:
+					raise
+				self.userData = response.json()
+			except:
+				self.userData = {"analytics_token": None, "id": "0"} #if token invalid
+				#get xfingerprint
+				if self.__xfingerprint == "":
+					self.__xfingerprint = Login(self.s, self.discord, self.log).getXFingerprint()
+			#initialize Science object
+			self.Science = Science(self.discord, self.s, self.log, self.userData["analytics_token"], self.userData["id"], self.__xfingerprint)
 		return self.Science.UUIDobj.calculate(eventNum, userID, increment)
 
 	def refreshClientUUID(self, resetEventNum=True):
+		if self.Science == "":
+			try:
+				#get analytics token
+				response = User(self.discord,self.s,self.log).info(with_analytics_token=True)
+				if response.status_code == 401:
+					raise
+				self.userData = response.json()
+			except:
+				self.userData = {"analytics_token": None, "id": "0"} #if token invalid
+				#get xfingerprint
+				if self.__xfingerprint == "":
+					self.__xfingerprint = Login(self.s, self.discord, self.log).getXFingerprint()
+			#initialize Science object
+			self.Science = Science(self.discord, self.s, self.log, self.userData["analytics_token"], self.userData["id"], self.__xfingerprint)
 		return self.Science.UUIDobj.refresh(resetEventNum)
 
 	def parseClientUUID(self, client_uuid):
-		return self.Science.UUIDobj.parse(client_uuid)
+		if self.Science == "":
+			self.Science = Science(self.discord, self.s, self.log, None, "0", "") #no sequential data needed for parsing
+			result = self.Science.UUIDobj.parse(client_uuid)
+			self.Science = "" #reset
+			return result
+		else:
+			return self.Science.UUIDobj.parse(client_uuid)

@@ -31,7 +31,7 @@ class GuildRequest(object):
 			data["d"].pop("thread_member_lists")
 		self.gatewayobject.send(data)
 
-	def searchGuildMembers(self, guild_ids, query, limit, presences, user_ids): #note that query can only be "" if you have admin perms (otherwise you'll get inconsistent responses from discord)
+	def searchGuildMembers(self, guild_ids, query, limit, presences, user_ids, nonce): #note that query can only be "" if you have admin perms (otherwise you'll get inconsistent responses from discord)
 		if isinstance(guild_ids, str):
 			guild_ids = [guild_ids]
 		data = {
@@ -43,6 +43,8 @@ class GuildRequest(object):
 		else:
 			data["d"]["query"] = query
 			data["d"]["limit"] = limit
-		if presences:
+		if presences != None:
 			data["d"]["presences"] = presences
+		if nonce != None:
+			data["d"]["nonce"] = nonce
 		self.gatewayobject.send(data)

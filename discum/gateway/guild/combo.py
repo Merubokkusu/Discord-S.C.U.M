@@ -4,6 +4,7 @@
 
 import time
 import copy
+import re
 from ...utils.permissions import PERMS, Permissions
 from ...logger import *
 
@@ -214,3 +215,78 @@ class GuildCombo(object):
 				if wait: time.sleep(wait)
 				self.gatewayobj.memberFetchingStatus["first"].append(guildID)
 				self.gatewayobj.request.lazyGuild(**op14fields)
+
+	#helper for searchGuildMembers
+	def handleGuildMemberSearches(self, resp, guildIDs, saveAsQuery, isQueryOverridden, userIDs, keep): #hm what happens if all userIDs are found? well good news: "not_found" value is just []
+		if resp.event.guild_members_chunk:
+			chunk = resp.parsed.auto()
+			gID = chunk["guild_id"]
+			match = False
+			if gID in guildIDs:
+				if userIDs and "not_found" in chunk:
+					match = True
+					for member in chunk["members"]:
+						member_id, member_properties = self.reformat_member(member, keep=keep)
+						self.gatewayobj.guildMemberSearches[gID]["ids"].add(member_id)
+						self.gatewayobj.session.guild(gID).updateOneMember(member_id, member_properties)
+				elif not userIDs:
+					if isQueryOverridden:
+						match = True #no checks
+						for member in chunk["members"]:
+							member_id, member_properties = self.reformat_member(member, keep=keep)
+							self.gatewayobj.guildMemberSearches[gID]["queries"][saveAsQuery].add(member_id)
+							self.gatewayobj.session.guild(gID).updateOneMember(member_id, member_properties)
+					else: #check results
+						if all([(re.sub(' +', ' ', k["user"]["username"].lower()).startswith(saveAsQuery) or re.sub(' +', ' ', k["nick"].lower()).startswith(saveAsQuery)) if k.get('nick') else re.sub(' +', ' ', k["user"]["username"].lower()).startswith(saveAsQuery) for k in chunk["members"]]): #search user/nick, ignore case, replace consecutive spaces with 1 space
+							match = True
+							for member in chunk["members"]:
+								member_id, member_properties = self.reformat_member(member, keep=keep)
+								self.gatewayobj.guildMemberSearches[gID]["queries"][saveAsQuery].add(member_id)
+								self.gatewayobj.session.guild(gID).updateOneMember(member_id, member_properties)
+				if chunk["chunk_index"] == chunk["chunk_count"]-1 and gID==guildIDs[-1]: #if at end
+					if match:
+						self.gatewayobj.removeCommand(
+							{
+								"function": self.handleGuildMemberSearches,
+								"params": {
+									"guildIDs": guildIDs,
+									"saveAsQuery": saveAsQuery,
+									"isQueryOverridden": isQueryOverridden,
+									"userIDs": userIDs, 
+									"keep": keep
+								},
+							}
+						)
+
+	def searchGuildMembers(self, guildIDs, query, saveAsQueryOverride, limit, presences, userIDs, keep):
+		if self.gatewayobj.READY:
+			saveAsQuery = query.lower() if saveAsQueryOverride==None else saveAsQueryOverride.lower()
+			#create a spot to put the data in bot.gateway.guildMemberSearches
+			if userIDs: #userID storage
+				for i in guildIDs:
+					if i not in self.gatewayobj.guildMemberSearches:
+						self.gatewayobj.guildMemberSearches[i] = {"ids":set()}
+					if "ids" not in self.gatewayobj.guildMemberSearches[i]:
+						self.gatewayobj.guildMemberSearches[i]["ids"] = set()
+			else: #query storage (saveAsQuery)
+				for k in guildIDs:
+					if k not in self.gatewayobj.guildMemberSearches:
+						self.gatewayobj.guildMemberSearches[k] = {"queries":{}}
+					if "queries" not in self.gatewayobj.guildMemberSearches[k]:
+						self.gatewayobj.guildMemberSearches[k]["queries"] = {}
+					if saveAsQuery not in self.gatewayobj.guildMemberSearches[k]["queries"]:
+						self.gatewayobj.guildMemberSearches[k]["queries"][saveAsQuery] = set()
+			self.gatewayobj.command(
+				{
+					"function": self.handleGuildMemberSearches,
+					"priority": 0,
+					"params": {
+						"guildIDs": guildIDs,
+						"saveAsQuery": saveAsQuery,
+						"isQueryOverridden": saveAsQueryOverride != None,
+						"userIDs": userIDs,
+						"keep": keep,
+					},
+				}
+			)
+			self.gatewayobj.request.searchGuildMembers(guildIDs, query, limit, presences, userIDs)

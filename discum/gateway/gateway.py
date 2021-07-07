@@ -127,6 +127,7 @@ class GatewayServer:
 		self.memberFetchingStatus = {"first": []}
 		self.resetMembersOnSessionReconnect = True #reset members after each session
 		self.updateSessionData = True
+		self.guildMemberSearches = {}
 
 		#latency
 		self._last_ack = None
@@ -415,6 +416,7 @@ class GatewayServer:
 	'''
 	Guild/Server stuff
 	'''
+	#op14 related stuff
 	def getMemberFetchingParams(self, targetRangeStarts): #more for just proof of concept. targetRangeStarts must not contain duplicates and must be a list of integers
 		targetRangeStarts = {i:1 for i in targetRangeStarts} #remove duplicates but preserve order
 		if targetRangeStarts.get(0)!=None and targetRangeStarts.get(100)!=None:
@@ -460,6 +462,44 @@ class GatewayServer:
 	#sends a series of opcode 14s to tell discord that you're looking at guild channels
 	def subscribeToGuildEvents(self, onlyLarge=False, wait=None):
 		GuildCombo(self).subscribeToGuildEvents(onlyLarge, wait)
+
+	#op8 related stuff
+	def queryGuildMembers(self, guildIDs, query, saveAsQueryOverride=None, limit=10, presences=True, keep=[]):
+		if isinstance(guildIDs, str):
+			guildIDs = [guildIDs]
+		GuildCombo(self).searchGuildMembers(guildIDs, query, saveAsQueryOverride, limit, presences, None, keep)
+
+	def checkGuildMembers(self, guildIDs, userIDs, presences=True, keep=[]):
+		if isinstance(guildIDs, str):
+			guildIDs = [guildIDs]
+		GuildCombo(self).searchGuildMembers(guildIDs, "", None, 10, presences, userIDs, keep)
+
+	def finishedGuildSearch(self, guildIDs, query="", saveAsQueryOverride=None, userIDs=None, keep=False):
+		if isinstance(guildIDs, str):
+			guildIDs = [guildIDs]
+		saveAsQuery = query.lower() if saveAsQueryOverride==None else saveAsQueryOverride.lower()
+		command = {
+			"function": GuildCombo(self).handleGuildMemberSearches,
+			"params": {
+				"guildIDs": guildIDs,
+				"saveAsQuery": saveAsQuery,
+				"isQueryOverridden": saveAsQueryOverride != None,
+				"userIDs": userIDs,
+				"keep": keep
+			},
+		}
+		if keep == False: #if keep param not provided, look if params are subset of command_list function params
+			command["params"].pop("keep")
+			for c in self._after_message_hooks:
+				if isinstance(c, dict):
+					if c.get("function").__func__ == GuildCombo(self).handleGuildMemberSearches.__func__:
+						d1 = command["params"]
+						d2 = c.get("params", {})
+						if all(key in d2 and d2[key] == d1[key] for key in d1): #https://stackoverflow.com/a/41579450/14776493
+							return False #not finished yet with guild search
+			return True
+		else:
+			return command not in self._after_message_hooks
 
 	'''
 	User stuff

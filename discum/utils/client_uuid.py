@@ -47,8 +47,10 @@ class Client_UUID(object): #Huge thanks to github user fweak for helping me figu
         for i in range(6):
             unpacked.append(struct.unpack('<i', decoded_client_uuid[4*i:4*i+4])[0])
         UUIDdata = {}
-        UUIDdata['userID'] = str((unpacked[1]<<32) + unpacked[0])
+        userIDguess = (unpacked[1]<<32) + unpacked[0]
+        UUIDdata['userID'] = repr(userIDguess if userIDguess%4294967296<=2147483647 else userIDguess+4294967296)
         UUIDdata['randomPrefix'] = unpacked[2]
-        UUIDdata['creationTime'] = (unpacked[4]<<32) + unpacked[3]
+        creationTimeGuess = (unpacked[4]<<32) + unpacked[3]
+        UUIDdata['creationTime'] = creationTimeGuess if creationTimeGuess%4294967296<=2147483647 else userIDguess+4294967296
         UUIDdata['eventNum'] = unpacked[5]
         return UUIDdata

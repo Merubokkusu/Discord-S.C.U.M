@@ -645,7 +645,7 @@ bot.revokeBan('guildID00000000000','userID11111111111')
 - userID (str)
 
 ##### ```getGuildMember```
-*_bot api endpoint; will be removed when a convenient-enough gateway function to written to accomplish this task_
+**_bot api endpoint; will soon be removed as gateway.checkGuildMembers replaces this functionality**
 ```python
 bot.getGuildMember('guildID00000000000','userID11111111111')
 ```

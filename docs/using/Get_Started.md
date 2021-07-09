@@ -6,7 +6,11 @@ Installing
 
 Latest version from github:
 
-    python -m pip install --user --upgrade git+https://github.com/Merubokkusu/Discord-S.C.U.M.git
+    python -m pip install --user --upgrade git+https://github.com/Merubokkusu/Discord-S.C.U.M.git#egg=discum
+
+or with remote authentication functions:
+
+    python -m pip install --user --upgrade -e git+https://github.com/Merubokkusu/Discord-S.C.U.M.git#egg=discum[ra]
 
 Previous versions (not recommended):
 1) pick a [release](https://github.com/Merubokkusu/Discord-S.C.U.M/releases) and download it
@@ -23,17 +27,18 @@ bot = discum.Client(token="user token here")
 
 ### Parameters:
 
--   **email** (Optional\[str\])
--   **password** (Optional\[str\])
--   **secret** (Optional\[str\]) - the 2FA secret string
--   **code** (Optional\[str\]) - TOTP 6 digit code
--   **token** (Optional\[str\]) - if you'd like to use discum without auth, input an invalid token like "poop"
--   **proxy\_host** (Optional\[str\]) - proxy host without http(s) part
--   **proxy\_port** (Optional\[str\])
--   **user\_agent** (Optional\[str\]) - defaulted to "random", which then randomly generates a user agent
--   **locale** (Optional\[str\]) - defaulted to "en-US"
--   **build\_num** (Optional\[int\]) - defaulted to "request", which then requests the discord build number
--   **log** (Optional\[dict\]) - defaulted to {"console":True, "file":False}. The value of "file" can be set to a filename (which is created if it does not exist)
+-   **email** (Optional[str])
+-   **password** (Optional[str])
+-   **secret** (Optional[str]) - the 2FA secret string
+-   **code** (Optional[str]) - TOTP 6 digit code
+-   **token** (Optional[str]) - if you'd like to use discum without auth, input an invalid token like "poop"
+-   **remote\_auth** (Optional[bool/str]) - use remote authentication (scan qr code) to login. Set as filename if you'd like to set a specific file location for the qr code image. Defaults to True
+-   **proxy\_host** (Optional[str]) - proxy host without http(s) part
+-   **proxy\_port** (Optional[str])
+-   **user\_agent** (Optional[str]) - defaults to "random", which then randomly generates a user agent
+-   **locale** (Optional[str]) - defaults to "en-US"
+-   **build\_num** (Optional[int]) - defaults to "request", which then requests the discord build number
+-   **log** (Optional[dict]) - defaults to {"console":True, "file":False}. The value of "file" can be set to a filename (which is created if it does not exist)
 
 ### Returns:
 

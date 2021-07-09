@@ -28,12 +28,17 @@ REQUIRED = [
     'filetype',
     'websocket-client==0.59.0',
     'ua-parser',
-    'random_user_agent'
+    'random_user_agent',
+    'colorama'
 ]
 
 # What packages are optional?
 EXTRAS = {
-    # 'fancy feature': ['django'],
+    'ra': [
+        'pycryptodome', 
+        'pyqrcode'
+        'pypng'
+    ]
 }
 
 # The rest you shouldn't have to touch too much :)

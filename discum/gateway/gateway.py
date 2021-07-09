@@ -76,7 +76,7 @@ class GatewayServer:
 		STREAM_SET_PAUSED =            22 #  ??
 		REQUEST_APPLICATION_COMMANDS = 24 #  ??
 
-	def __init__(self, websocketurl, token, super_properties, sessionobj="", RESTurl="", log=True): #session obj needed for proxies and some combo gateway functions (that also require http api wraps)
+	def __init__(self, websocketurl, token, super_properties, sessionobj="", RESTurl="", log={"console":True, "file":False}): #session obj needed for proxies and some combo gateway functions (that also require http api wraps)
 		self.token = token
 		self.super_properties = super_properties
 		self.auth = {
@@ -258,6 +258,7 @@ class GatewayServer:
 				break
 			self.send({"op": self.OPCODE.HEARTBEAT,"d": self.sequence})
 			self._last_ack = time.perf_counter()
+		return
 
 	#just a wrapper for ws.send
 	def send(self, payload):

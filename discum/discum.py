@@ -30,7 +30,7 @@ import random
 
 #client initialization
 class Client:
-	def __init__(self, email="", password="", secret="", code="", token="", proxy_host=None, proxy_port=None, user_agent="random", locale="en-US", build_num="request", log={"console":True, "file":False}):
+	def __init__(self, email="", password="", secret="", code="", token="", remote_auth=False, proxy_host=None, proxy_port=None, user_agent="random", locale="en-US", build_num="request", log={"console":True, "file":False}):
 		#step 1: vars
 		self.log = log
 		self.locale = locale
@@ -43,8 +43,9 @@ class Client:
 		self.__proxy_host = None if proxy_host in (None,False) else proxy_host
 		self.__proxy_port = None if proxy_port in (None,False) else proxy_port
 		self.api_version = 9
-		self.discord = 'https://discord.com/api/v'+str(self.api_version)+'/'
-		self.websocketurl = 'wss://gateway.discord.gg/?encoding=json&v='+str(self.api_version)+'&compress=zlib-stream'
+		self.discord = 'https://discord.com/api/v'+repr(self.api_version)+'/'
+		self.websocketurl = 'wss://gateway.discord.gg/?encoding=json&v='+repr(self.api_version)+'&compress=zlib-stream'
+		self.remoteauthurl = 'wss://remote-auth-gateway.discord.gg/?v=1'
 		#step 2: user agent
 		if user_agent != "random":
 			self.__user_agent = user_agent
@@ -72,8 +73,8 @@ class Client:
 		self.s.headers.update(headers)
 		if self.__proxy_host != None: #self.s.proxies defaults to {}
 			self.proxies = {
-			'http': "http://" +  self.__proxy_host+':'+self.__proxy_port,
-			'https': "https://" +  self.__proxy_host+':'+self.__proxy_port
+			'http': "http://" + self.__proxy_host+':'+self.__proxy_port,
+			'https': "https://" + self.__proxy_host+':'+self.__proxy_port
 			}
 			self.s.proxies.update(self.proxies)
 		#step 4: cookies
@@ -84,9 +85,12 @@ class Client:
 		#step 6: token/authorization/fingerprint (also part of headers, except for fingerprint)
 		tokenProvided = self.__user_token not in ("",None,False)
 		if not tokenProvided:
-			loginResponse, self.__xfingerprint = Login(self.s, self.discord, self.log).login(email=email, password=password, secret=secret, code=code) 
-			self.__user_token = loginResponse.get('token') #update token from "" to actual value
-			time.sleep(1)
+			if remote_auth:
+				self.__user_token, self.userData = self.remoteAuthLogin(remote_auth)
+			else:
+				loginResponse, self.__xfingerprint = Login(self.s, self.discord, self.log).login(email=email, password=password, secret=secret, code=code) 
+				self.__user_token = loginResponse.get('token') #update token from "" to actual value
+				time.sleep(1)
 		self.s.headers.update({"Authorization": self.__user_token}) #update headers
 		#step 7: gateway (object initialization)
 		self.gateway = GatewayServer(self.websocketurl, self.__user_token, self.__super_properties, self.s, self.discord, self.log) #self.s contains proxy host and proxy port already
@@ -147,6 +151,15 @@ class Client:
 
 	def getVersionStableHash(self, underscore=None):
 		return Other(self.s, self.discord, self.log).getVersionStableHash(underscore)
+
+	def initRA(self):
+		from .gateway.remoteauth import RemoteAuth
+		self.ra = RemoteAuth(self.remoteauthurl, self.__user_agent, self.__proxy_host, self.__proxy_port, self.log)
+
+	def remoteAuthLogin(self, saveQrCode=True):
+		from .gateway.remoteauth import RemoteAuth
+		self.ra = RemoteAuth(self.remoteauthurl, self.__user_agent, self.__proxy_host, self.__proxy_port, self.log)
+		return self.ra.run(saveQrCode)
 
 	'''
 	Messages

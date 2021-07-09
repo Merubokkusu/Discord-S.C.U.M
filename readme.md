@@ -28,9 +28,11 @@ A simple, easy to use, non-restrictive, synchronous Discord API Wrapper for Self
 - easy-to-use (make selfbots/userbots)
 - easy-to-extend/edit (add api wrappers)
 - readable (organized 😃 )
+- mimics the client while giving you control
 - all api wraps, with the exception of getGuildMember, point to user/"private" apis
 - on-event (gateway) capabilities
 - [extremely customizable fetchMembers function](docs/using/fetchingGuildMembers.md)
+- remote authentication functions
 - support for python 2.7
 
 ## About
@@ -41,10 +43,14 @@ A simple, easy to use, non-restrictive, synchronous Discord API Wrapper for Self
   Note, using a selfbot is against Discord's Terms of Service and you could get banned for using one if you're not careful. Also, this needs to be said: discum does not have rate limit handling. The main reasons for this are that discum is made to (1) be (relatively) simple and (2) give the developer/user freedom with how to handle the rate limits. We (Merubokkusu and anewrandomaccount) do not take any responsibility for any consequences you might face while using discum. We also do not take any responsibility for any damage caused (to servers/channels) through the use of Discum. Discum is a tool; how you use this tool is on you.
 
 ## Installation  
-from github (recommended):
+To install the library without remote authentication (logging in using a phone & qr code), run:
 ```
-python -m pip install --user --upgrade git+https://github.com/Merubokkusu/Discord-S.C.U.M.git
-```          
+python -m pip install --user --upgrade git+https://github.com/Merubokkusu/Discord-S.C.U.M.git#egg=discum
+```
+Otherwise, to use remote authentication functions, run:
+```
+python -m pip install --user --upgrade -e git+https://github.com/Merubokkusu/Discord-S.C.U.M.git#egg=discum[ra]
+```
 
 #### Prerequisites (installed automatically using above methods)
 - requests
@@ -53,7 +59,11 @@ python -m pip install --user --upgrade git+https://github.com/Merubokkusu/Discor
 - websocket_client==0.59.0
 - filetype
 - ua-parser
-- random\_user\_agent
+- random\_user\_agent       
+remote auth prerequisites (if you install discum[ra]):       
+- pyqrcode
+- pycryptodome
+- pypng
 
 ## Documentation
 [https://github.com/Merubokkusu/Discord-S.C.U.M/tree/master/docs](docs)
@@ -102,8 +112,8 @@ bot.gateway.run(auto_reconnect=True)
 - [X] On-Message (and other on-anything gateway) capabilities
 - [X] Getting guild members
 - [X] improve documentation
-- [ ] add more http api wraps
-- [ ] Making phone calls, sending audio/video data thru those calls
+- [ ] add more http api wraps (interactions and guilds)
+- [ ] media (voice & video calls, along with the various discord games/activites)
 - [ ] Everything
 
 ## FAQ

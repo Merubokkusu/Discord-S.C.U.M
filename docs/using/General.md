@@ -24,14 +24,21 @@
 ```python
 bot.log = {"console":True, "file":False}
 #or
-bot.log = {"console":True, "file":"log.txt"}
+bot.log = {"console":False, "file":"log.txt"}
 #etc...
 ```
 ```bot.gateway.log``` dict, manages logging for gateway actions 
 ```python
 bot.gateway.log = {"console":True, "file":False}
 #or
-bot.gateway.log = {"console":True, "file":"gatewaylog.txt"}
+bot.gateway.log = {"console":False, "file":"gatewaylog.txt"}
+#etc...
+```
+```bot.ra.log``` dict, manages logging for remote authentication gateway actions
+```python
+bot.ra.log = {"console":True, "file":False}
+#or
+bot.ra.log = {"console":False, "file":"ralog.txt"}
 #etc...
 ```
 

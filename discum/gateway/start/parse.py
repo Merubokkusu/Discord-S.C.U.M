@@ -8,7 +8,7 @@ class StartParse(object): #really hope this doesn't take too long to run...
 		ready_data.pop("merged_members")
 		user_pool = {h["id"]:h for h in response["d"]["users"]} #convert to dict for faster retrieval
 		#parse relationships
-		ready_data["relationships"] = {i["id"]:dict(i,**{"type":Types.relationshipTypes[i["type"]]}, **user_pool.get(i["id"],{})) for i in response["d"]["relationships"]}
+		ready_data["relationships"] = {i["id"]:dict(dict(i,**{"type":Types.relationshipTypes[i["type"]]}), **user_pool.get(i["id"],{})) for i in response["d"]["relationships"]}
 		#parse private channels
 		ready_data["private_channels"] = {}
 		for j in response["d"]["private_channels"]:

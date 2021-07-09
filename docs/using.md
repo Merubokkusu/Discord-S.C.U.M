@@ -27,6 +27,8 @@ Table of Contents
     -   [calculate superproperties](using/REST_Actions.md#getsuperproperties)
     -   [get xfingerprint](using/REST_Actions.md#getxfingerprint)
     -   [login](using/REST_Actions.md#login)
+    -   [{remote auth gateway} initialize bot.ra](using/Remote_Authentication.md#initRA)
+    -   [{remote auth gateway} login using remote authentication](using/Remote_Authentication.md#remoteAuthLogin)
     -   [get gateway url](using/REST_Actions.md#getgatewayurl)
     -   [get status of discord's servers](using/REST_Actions.md#getdiscordstatus)
     -   [get "detectables"](using/REST_Actions.md#getdetectables)

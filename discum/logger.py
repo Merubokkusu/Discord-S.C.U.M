@@ -1,8 +1,11 @@
+import colorama
+colorama.init()
+
 class LogLevel:
-	SEND = '\033[94m'
-	RECEIVE = '\033[92m'
-	WARNING = '\033[93m'
-	DEFAULT = '\033[m'
+	SEND = colorama.Fore.MAGENTA
+	RECEIVE = colorama.Fore.GREEN
+	WARNING = colorama.Fore.YELLOW
+	DEFAULT = colorama.Style.RESET_ALL
 
 class Logger:
 	@staticmethod

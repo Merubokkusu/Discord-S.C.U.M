@@ -59,7 +59,9 @@ python -m pip install --user --upgrade -e git+https://github.com/Merubokkusu/Dis
 - websocket_client==0.59.0
 - filetype
 - ua-parser
-- random\_user\_agent       
+- random\_user\_agent
+- colorama
+
 remote auth prerequisites (if you install discum[ra]):       
 - pyqrcode
 - pycryptodome

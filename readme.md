@@ -47,7 +47,7 @@ To install the library without remote authentication (logging in using a phone &
 ```
 python -m pip install --user --upgrade git+https://github.com/Merubokkusu/Discord-S.C.U.M.git#egg=discum
 ```
-Otherwise, to use remote authentication functions, run:
+Otherwise, to also use remote authentication functions, run:
 ```
 python -m pip install --user --upgrade -e git+https://github.com/Merubokkusu/Discord-S.C.U.M.git#egg=discum[ra]
 ```

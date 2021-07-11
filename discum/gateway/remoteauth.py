@@ -134,7 +134,7 @@ class RemoteAuth:
 				else:
 					fileLoc = self.fingerprint+".png"
 				self.qr_img.png(fileLoc, scale=10)
-				print("QR code image for {} saved in ./{}.png".format(fileLoc, self.fingerprint))
+				print("QR code image for {} saved in {}".format(self.fingerprint, fileLoc))
 		elif op == self.OPCODE.PENDING_FINISH:
 			user_payload = self.decrypt(response['encrypted_user_payload'])
 			userID, username, discriminator, avatar = self.parseUserPayload(user_payload)

@@ -64,7 +64,7 @@ class Session:
 	def friends(self):
 		f = {}
 		for i in self.relationships: #where i is a user id
-			if self.relationships[i]['type'] == 1:
+			if self.relationships[i]['type'] == 'friend':
 				f[i] = self.relationships[i]
 		return f
 	
@@ -77,7 +77,7 @@ class Session:
 	def blocked(self):
 		b = {}
 		for i in self.relationships: #where i is a user id
-			if self.relationships[i]['type'] == 2:
+			if self.relationships[i]['type'] == 'blocked':
 				b[i] = self.relationships[i]
 		return b
 	
@@ -90,7 +90,7 @@ class Session:
 	def incomingFriendRequests(self):
 		ifr = {}
 		for i in self.relationships:
-			if self.relationships[i]['type'] == 3:
+			if self.relationships[i]['type'] == 'pending_incoming':
 				ifr[i] = self.relationships[i]
 		return ifr
 	
@@ -103,7 +103,7 @@ class Session:
 	def outgoingFriendRequests(self):
 		ofr = {}
 		for i in self.relationships:
-			if self.relationships[i]['type'] == 4:
+			if self.relationships[i]['type'] == 'pending_outgoing':
 				ofr[i] = self.relationships[i]
 		return ofr
 	

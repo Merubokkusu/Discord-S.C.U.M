@@ -179,7 +179,7 @@ class GuildCombo(object):
 		channels = s.guild(guildID).channels
 		for channel in channels.values():
 			if channel['type'] in types:
-				permissions = Permissions.calculatePermissions(s.user['id'], guildID, s.guild(guildID).owner, s.guild(guildID).roles, s.guild(guildID).position['roles'], channel["permission_overwrites"])
+				permissions = Permissions.calculatePermissions(s.user['id'], guildID, s.guild(guildID).owner, s.guild(guildID).roles, s.guild(guildID).me['roles'], channel["permission_overwrites"])
 				if Permissions.checkPermissions(permissions, PERMS.VIEW_CHANNEL):
 					if findFirst:
 						return [channel['id']]

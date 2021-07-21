@@ -264,6 +264,10 @@ class Client:
 	'''
 	User relationships
 	'''
+	#get relationships
+	def getRelationships(self):
+		return User(self.discord,self.s,self.log).getRelationships()
+
 	#create outgoing friend request
 	def requestFriend(self, user): #you can input a userID(snowflake) or a user discriminator
 		return User(self.discord,self.s,self.log).requestFriend(user)
@@ -500,6 +504,27 @@ class Client:
 	def enableSourceMaps(self, enable=True):
 		return User(self.discord,self.s,self.log).enableSourceMaps()
 
+	def suppressEveryonePings(self, guildID, suppress=True):
+		return User(self.discord,self.s,self.log).suppressEveryonePings(guildID, suppress)
+
+	def suppressRoleMentions(self, guildID, suppress=True):
+		return User(self.discord,self.s,self.log).suppressRoleMentions(guildID, suppress)
+
+	def enableMobilePushNotifications(self, guildID, enable=True):
+		return User(self.discord,self.s,self.log).enableMobilePushNotifications(guildID, enable)
+
+	def setChannelNotificationOverrides(self, guildID, overrides):
+		return User(self.discord,self.s,self.log).setChannelNotificationOverrides(guildID, overrides)
+
+	def setMessageNotifications(self, guildID, notifications):
+		return User(self.discord,self.s,self.log).setMessageNotifications(guildID, notifications)
+
+	def muteGuild(self, guildID, mute=True, duration=None):
+		return User(self.discord,self.s,self.log).muteGuild(guildID, mute, duration)
+
+	def muteDM(self, DMID, mute=True, duration=None):
+		return User(self.discord,self.s,self.log).muteDM(DMID, mute, duration)
+
 	def logout(self, provider=None, voip_provider=None):
 		return User(self.discord,self.s,self.log).logout(provider, voip_provider)
 
@@ -537,6 +562,10 @@ class Client:
 	#unban a user
 	def revokeBan(self, guildID, userID):
 		return Guild(self.discord,self.s,self.log).revokeBan(guildID, userID)
+
+	#get number of members in each role
+	def getRoleMemberCounts(self, guildID):
+		return Guild(self.discord,self.s,self.log).getRoleMemberCounts(guildID)
 
 	#look up a user in a guild
 	def getGuildMember(self,guildID,userID):

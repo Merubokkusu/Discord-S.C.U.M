@@ -9,6 +9,10 @@ class User(object):
 		self.s = s
 		self.log = log
 
+	def getRelationships(self):
+		url = self.discord+"users/@me/relationships"
+		return Wrapper.sendRequest(self.s, 'get', url, log=self.log)
+
 	def requestFriend(self, user):
 		if "#" in user:
 			url = self.discord+"users/@me/relationships"
@@ -405,6 +409,62 @@ class User(object):
 			return Wrapper.sendRequest(self.s, 'put', url, headerModifications={"remove":["X-Super-Properties", "X-Fingerprint"]}, log=self.log)
 		else:
 			return Wrapper.sendRequest(self.s, 'delete', url, headerModifications={"remove":["X-Super-Properties", "X-Fingerprint"]}, log=self.log)
+
+	'''
+	Notification Settings
+	'''
+	@staticmethod
+	def index(inputList, searchItem): #only used for notification settings, returning -1 doesn't make sense in this context
+		try:
+			return inputList.index(searchItem)
+		except ValueError:
+			return 0
+
+	def suppressEveryonePings(self, guildID, suppress):
+		url = self.discord+"users/@me/guilds/"+str(guildID)+"/settings"
+		body = {"suppress_everyone": suppress}
+		return Wrapper.sendRequest(self.s, 'patch', url, body, log=self.log)
+
+	def suppressRoleMentions(self, guildID, suppress):
+		url = self.discord+"users/@me/guilds/"+str(guildID)+"/settings"
+		body = {"suppress_roles": suppress}
+		return Wrapper.sendRequest(self.s, 'patch', url, body, log=self.log)
+
+	def enableMobilePushNotifications(self, guildID, enable):
+		url = self.discord+"users/@me/guilds/"+str(guildID)+"/settings"
+		body = {"mobile_push": enable}
+		return Wrapper.sendRequest(self.s, 'patch', url, body, log=self.log)
+
+	def setChannelNotificationOverrides(self, guildID, overrides):
+		url = self.discord+"users/@me/guilds/"+str(guildID)+"/settings"
+		if type(overrides[0]) in (tuple, list):
+			msgNotificationTypes = ["all messages", "only mentions", "nothing"]
+			overrides = [{str(channel):{"message_notifications": self.index(msgNotificationTypes, msg.lower()), "muted":muted}} for channel,msg,muted in overrides]
+		body = {"channel_overrides": overrides}
+		return Wrapper.sendRequest(self.s, 'patch', url, body, log=self.log)
+
+	def setMessageNotifications(self, guildID, notifications):
+		url = self.discord+"users/@me/guilds/"+str(guildID)+"/settings"
+		msgNotificationTypes = ["all messages", "only mentions", "nothing"]
+		body = {"message_notifications": self.index(msgNotificationTypes, notifications.lower())}
+		return Wrapper.sendRequest(self.s, 'patch', url, body, log=self.log)
+
+	def muteGuild(self, guildID, mute, duration):
+		url = self.discord+"users/@me/guilds/"+str(guildID)+"/settings"
+		body = {"muted": mute}
+		if mute and duration is not None:
+			end_time = (datetime.datetime.utcnow()+datetime.timedelta(minutes=duration)).isoformat()[:-3]+'Z' #https://stackoverflow.com/a/54272238/14776493
+			body["mute_config"] = {"selected_time_window":duration, "end_time":end_time}
+		return Wrapper.sendRequest(self.s, 'patch', url, body, log=self.log)
+
+	def muteDM(self, DMID, mute, duration):
+		url = self.discord+"users/@me/guilds/%40me/settings"
+		data = {"muted": mute}
+		if mute and duration is not None:
+			end_time = (datetime.datetime.utcnow()+datetime.timedelta(minutes=duration)).isoformat()[:-3]+'Z'
+			data["mute_config"] = {"selected_time_window":duration, "end_time":end_time}
+		body = {"channel_overrides":{str(DMID):data}}
+		return Wrapper.sendRequest(self.s, 'patch', url, body, log=self.log)
 
 	'''
 	Logout

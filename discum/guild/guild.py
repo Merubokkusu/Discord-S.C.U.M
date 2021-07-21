@@ -70,12 +70,12 @@ class Guild(object):
 	server moderation
 	'''
 	#kick a user
-	def kick(self,guildID,userID,reason):
+	def kick(self, guildID, userID, reason):
 		url = self.discord+"guilds/%s/members/%s?reason=%s" % (guildID, userID, quote(reason))
 		return Wrapper.sendRequest(self.s, 'delete', url, log=self.log)
 
 	#ban a user
-	def ban(self,guildID,userID,deleteMessagesDays,reason):
+	def ban(self, guildID, userID, deleteMessagesDays, reason):
 		url = self.discord+"guilds/%s/bans/%s" % (guildID, userID)
 		body = {"delete_message_days": str(deleteMessagesDays), "reason": reason}
 		return Wrapper.sendRequest(self.s, 'put', url, body, log=self.log)
@@ -85,12 +85,21 @@ class Guild(object):
 		return Wrapper.sendRequest(self.s, 'delete', url, log=self.log)
 
 	#lookup a user in a guild. thx Echocage for finding this api endpoint
-	'''Note, user clients do not run this api request, however it currently works without a problem. 
-	Once the equivalent gateway command/request is added, the getGuildMember function will be removed from here.
 	'''
+	removed as this is a bot-only request. Use bot.gateway.checkGuildMembers instead.
+
 	def getGuildMember(self, guildID, userID):
 		url = self.discord+"guilds/%s/members/%s" % (guildID, userID)
 		return Wrapper.sendRequest(self.s, 'get', url, log=self.log)
+	'''
+
+	def getRoleMemberCounts(self, guildID):
+		url = self.discord+"guilds/"+guildID+"/roles/member-counts"
+		return Wrapper.sendRequest(self.s, 'get', url, log=self.log)
+
+	'''
+	other stuff
+	'''
 
 	#get member verification data
 	def getMemberVerificationData(self, guildID, with_guild, invite_code):

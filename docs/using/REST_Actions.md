@@ -71,7 +71,12 @@ __________
 | 2 | block |
 | 3 | incoming friend request |
 | 4 | outgoing friend request |
-	
+
+##### ```getRelationships```
+```python
+bot.getRelationships()
+```
+
 ##### ```requestFriend```
 \*_risky action_
 ```python
@@ -520,6 +525,71 @@ bot.enableSourceMaps()
 ###### Parameters:
 - enable (Optional[bool]) - defaults to True
 
+##### ```suppressEveryonePings```
+```python
+bot.suppressEveryonePings('0000000000000000000')
+```
+
+###### Parameters:
+- guildID (str)
+- suppress (Optional[bool]) - defaults to True
+
+##### ```suppressRoleMentions```
+```python
+bot.suppressRoleMentions('0000000000000000000')
+```
+
+###### Parameters:
+- guildID (str)
+- suppress (Optional[bool]) - defaults to True
+
+##### ```enableMobilePushNotifications```
+```python
+bot.enableMobilePushNotifications('0000000000000000000')
+```
+
+###### Parameters:
+- guildID (str)
+- enable (Optional[bool]) - defaults to True
+
+##### ```setChannelNotificationOverrides```
+```python
+bot.setChannelNotificationOverrides('0000000000000000000', [('1111111111111', 'only mentions', False), ('2222222222222', 'nothing', True)])
+```
+
+###### Parameters:
+- guildID (str)
+- overrides (list) - list of tuples containing data about channel notification overrides. Each tuple looks like ('channelID', 'msg notifications type', 'mute'). 'msg notifications type' is either "all messages" or "only mentions" or "nothing". 'mute' is a boolean. If instead you'd like to input the raw overrides dictionary, you can do that instead.
+
+##### ```setMessageNotifications```
+```python
+bot.setMessageNotifications('0000000000000000000', 'all messages')
+```
+
+###### Parameters:
+- guildID (str)
+- notifications (str) - either "all messages" or "only mentions" or "nothing"
+
+##### ```muteGuild```
+```python
+bot.muteGuild('0000000000000000000', duration=15)
+```
+
+###### Parameters:
+- guildID (str)
+- mute (Optional[bool]) - defaults to True
+- duration (Optional[int]) - duration of mute in minutes
+
+##### ```muteDM```
+```python
+bot.muteDM('0000000000000000000', duration=900)
+```
+
+###### Parameters:
+- DMID (str)
+- mute (Optional[bool]) - defaults to True
+- duration (Optional[int]) - duration of mute in minutes
+
 ##### ```logout```
 ```python
 bot.logout()
@@ -644,14 +714,13 @@ bot.revokeBan('guildID00000000000','userID11111111111')
 - guildID (str)
 - userID (str)
 
-##### ```getGuildMember```
-**_bot api endpoint; will soon be removed as gateway.checkGuildMembers replaces this functionality**
+##### ```getRoleMemberCounts```
 ```python
-bot.getGuildMember('guildID00000000000','userID11111111111')
+bot.getRoleMemberCounts('guildID00000000000')
 ```
+
 ###### Parameters:
 - guildID (str)
-- userID (str)
 
 ##### ```getMemberVerificationData```
 ```python

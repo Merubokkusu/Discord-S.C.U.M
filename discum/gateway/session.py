@@ -64,7 +64,7 @@ class Session:
 	def friends(self):
 		f = {}
 		for i in self.relationships: #where i is a user id
-			if self.relationships[i]['type'] == 'friend':
+			if self.relationships[i]['type'] in ('friend', 1):
 				f[i] = self.relationships[i]
 		return f
 	
@@ -77,7 +77,7 @@ class Session:
 	def blocked(self):
 		b = {}
 		for i in self.relationships: #where i is a user id
-			if self.relationships[i]['type'] == 'blocked':
+			if self.relationships[i]['type'] in ('blocked', 2):
 				b[i] = self.relationships[i]
 		return b
 	
@@ -90,7 +90,7 @@ class Session:
 	def incomingFriendRequests(self):
 		ifr = {}
 		for i in self.relationships:
-			if self.relationships[i]['type'] == 'pending_incoming':
+			if self.relationships[i]['type'] in ('pending_incoming', 3):
 				ifr[i] = self.relationships[i]
 		return ifr
 	
@@ -103,7 +103,7 @@ class Session:
 	def outgoingFriendRequests(self):
 		ofr = {}
 		for i in self.relationships:
-			if self.relationships[i]['type'] == 'pending_outgoing':
+			if self.relationships[i]['type'] in ('pending_outgoing', 4):
 				ofr[i] = self.relationships[i]
 		return ofr
 	
@@ -390,7 +390,7 @@ class guild(Session):
 	def categories(self): #all data about guild categories, can be overwhelming
 		all_categories = {}
 		for i in self.channelsAndCategories: #https://discord.com/developers/docs/resources/channel#channel-object-channel-types
-			if self.channelsAndCategories[i]['type'] == 4:
+			if self.channelsAndCategories[i]['type'] in ('guild_category', 4):
 				all_categories[i] = self.channelsAndCategories[i]
 		return all_categories
 
@@ -405,7 +405,7 @@ class guild(Session):
 	def channels(self): #all data about all guild channels, can be overwhelming
 		all_channels = {}
 		for i in self.channelsAndCategories: #https://discord.com/developers/docs/resources/channel#channel-object-channel-types
-			if self.channelsAndCategories[i]['type'] != 4:
+			if self.channelsAndCategories[i]['type'] not in ('guild_category', 4):
 				all_channels[i] = self.channelsAndCategories[i]
 		return all_channels
 

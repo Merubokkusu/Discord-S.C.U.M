@@ -57,7 +57,7 @@ class Messages(object):
 		url = self.discord+"channels/"+channelID+"/greet"
 		if isinstance(sticker_ids, str):
 			sticker_ids = [sticker_ids]
-		body = {"sticker_ids": [sticker_ids]}
+		body = {"sticker_ids": sticker_ids}
 		return Wrapper.sendRequest(self.s, 'post', url, body, log=self.log)
 
 	#text message

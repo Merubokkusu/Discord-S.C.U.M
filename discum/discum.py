@@ -177,7 +177,7 @@ class Client:
 		return Messages(self.discord,self.s,self.log).getMessage(channelID, messageID)
 
 	#greet with stickers
-	def greet(self, channelID, sticker_ids):
+	def greet(self, channelID, sticker_ids=["749054660769218631"]):
 		return Messages(self.discord,self.s,self.log).greet(channelID, sticker_ids)
 
 	#send messages

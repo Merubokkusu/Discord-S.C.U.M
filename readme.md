@@ -29,7 +29,7 @@ A simple, easy to use, non-restrictive, synchronous Discord API Wrapper for Self
 - easy-to-extend/edit (add api wrappers)
 - readable (organized 😃 )
 - mimics the client while giving you control
-- all api wraps, with the exception of getGuildMember, point to user/"private" apis
+- all api wraps point to user/"private" apis
 - on-event (gateway) capabilities
 - [extremely customizable fetchMembers function](docs/using/fetchingGuildMembers.md)
 - remote authentication functions
@@ -126,7 +126,7 @@ Q: Does discum support BOT accounts?
 A: No. Discum only supports user accounts.      
 
 Q: What's the difference between user/private API and BOT API?      
-A: User APIs are run by the official client. Many of these are not documented by discord. On the other hand, BOT APIs are run by BOT accounts and are documented by discord. So far, discum consists of primarily user API wraps (with the exception of the bot.getGuildMember(...) http api wrap).      
+A: User APIs are run by the official client. Many of these are not documented by discord. On the other hand, BOT APIs are run by BOT accounts and are documented by discord. Discum only consists of user APIs.    
 
 Q: How to fix "\[SSL: CERTIFICATE_VERIFY_FAILED]" errors?      
 A: https://stackoverflow.com/a/53310545/14776493       

@@ -551,6 +551,14 @@ class Client:
 	def getGuilds(self, with_counts=True):
 		return Guild(self.discord,self.s,self.log).getGuilds(with_counts)
 
+	#create a guild
+	def createGuild(self, name, icon=None, channels=[], systemChannelID=None, template="2TffvPucqHkN"):
+		return Guild(self.discord,self.s,self.log).createGuild(name, icon, channels, systemChannelID, template)
+
+	#delete a guild
+	def deleteGuild(self, guildID):
+		return Guild(self.discord,self.s,self.log).deleteGuild(guildID)
+
 	#kick a user
 	def kick(self,guildID,userID,reason=""):
 		return Guild(self.discord,self.s,self.log).kick(guildID,userID,reason)

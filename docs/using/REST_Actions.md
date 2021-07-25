@@ -686,6 +686,25 @@ bot.getGuilds()
 ###### Parameters:
 - with_counts (bool/Nonetype) - get approx online and member counts. Defaults to True
 
+##### ```createGuild```
+```python
+bot.createGuild('hello world', icon='cat.jpg')
+```
+###### Parameters:
+- name (str)
+- icon (Optional[str]) - image path
+- channels (Optional[list]) - list of channels (https://discord.com/developers/docs/resources/channel#channel-object)
+- systemChannelID (Optional[str])
+- template (Optional[str]) - defaults to "2TffvPucqHkN"
+
+
+##### ```deleteGuild```
+```python
+bot.deleteGuild('guildID00000000000')
+```
+###### Parameters:
+- guildID (str)
+
 ##### ```kick```
 ```python
 bot.kick('guildID00000000000','userID11111111111','weeeee')

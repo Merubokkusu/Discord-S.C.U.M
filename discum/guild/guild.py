@@ -3,6 +3,7 @@ from ..utils.permissions import PERMS, Permissions
 from ..utils.contextproperties import ContextProperties
 
 import time
+import base64
 
 try:
 	from urllib.parse import quote
@@ -69,6 +70,22 @@ class Guild(object):
 	'''
 	server moderation
 	'''
+	#create a guild
+	def createGuild(self, name, icon, channels, systemChannelID, template):
+		url = self.discord+"guilds"
+		body = {"name": name, "icon":icon, "channels":channels, "system_channel_id":systemChannelID, "guild_template_code":template}
+		if icon != None:
+			with open(icon, "rb") as image:
+				encodedImage = base64.b64encode(image.read()).decode('utf-8')
+				body["icon"] = "data:image/png;base64,"+encodedImage
+		return Wrapper.sendRequest(self.s, 'post', url, body, log=self.log)
+
+	#delete a guild (assuming you are the owner)
+	def deleteGuild(self, guildID):
+		url = self.discord+"guilds/%s/delete" % (guildID)
+		body = {}
+		return Wrapper.sendRequest(self.s, 'post', url, body, log=self.log)
+
 	#kick a user
 	def kick(self, guildID, userID, reason):
 		url = self.discord+"guilds/%s/members/%s?reason=%s" % (guildID, userID, quote(reason))

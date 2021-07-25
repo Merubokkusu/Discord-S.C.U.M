@@ -132,6 +132,8 @@ Table of Contents
     -   [leave guild](using/REST_Actions.md#leaveguild)
     -   [create invite code](using/REST_Actions.md#createinvite)
     -   [get guilds](using/REST_Actions.md#getGuilds)
+    -   [create guild](using/REST_Actions.md#createGuild)
+    -   [delete guild](using/REST_Actions.md#deleteGuild)
     -   [kick user](using/REST_Actions.md#kick)
     -   [ban user](using/REST_Actions.md#ban)
     -   [revoke ban](using/REST_Actions.md#revokeban)

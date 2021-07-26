@@ -44,9 +44,16 @@ class Guild(object):
 		if wait: time.sleep(wait)
 		return self.joinGuildRaw(inviteCode, guildData["guild"]["id"], guildData["channel"]["id"], guildData["channel"]["type"], location)
 
-	def leaveGuild(self, guildID):
+	def previewGuild(self, guildID, sessionID):
+		url = "guilds/"+guildID+"/members/@me?lurker=true"
+		if sessionID != None:
+			url += "&session_id="+sessionID
+		return Wrapper.sendRequest(self.s, 'put', url, headerModifications={"update":{"X-Context-Properties":"e30="}}, log=self.log)
+
+	def leaveGuild(self, guildID, lurking):
 		url = self.discord+"users/@me/guilds/"+guildID
-		return Wrapper.sendRequest(self.s, 'delete', url, log=self.log)
+		body = {"lurking": lurking}
+		return Wrapper.sendRequest(self.s, 'delete', url, body, log=self.log)
 
 	def createInvite(self, channelID, max_age_seconds, max_uses, grantTempMembership, checkInvite, targetType): #has to be a channel thats in a guild. also checkInvite and targetType are basically useless.
 		url = self.discord+"channels/"+channelID+"/invites"
@@ -66,6 +73,10 @@ class Guild(object):
 		if with_counts != None:
 			url += "?with_counts="+repr(with_counts).lower()
 		return Wrapper.sendRequest(self.s, 'get', url, headerModifications={"update":{"X-Track":self.s.headers.get("X-Super-Properties")}, "remove":"X-Super-Properties"}, log=self.log)
+
+	def getDiscoverableGuilds(self, offset, limit):
+		url = self.discord+"discoverable-guilds?offset="+repr(offset)+"&limit="+repr(limit)
+		return Wrapper.sendRequest(self.s, 'get', url, log=self.log)
 
 	'''
 	server moderation

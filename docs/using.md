@@ -129,9 +129,11 @@ Table of Contents
 -   Guild
     -   [get info from invite code](using/REST_Actions.md#getinfofrominvitecode)
     -   [{risky action} join guild](using/REST_Actions.md#joinguild)
+    -   [preview/lurk-in guild](using/REST_Actions.md#previewGuild)
     -   [leave guild](using/REST_Actions.md#leaveguild)
     -   [create invite code](using/REST_Actions.md#createinvite)
-    -   [get guilds](using/REST_Actions.md#getGuilds)
+    -   [get my guilds](using/REST_Actions.md#getGuilds)
+    -   [get discoverable guilds](using/REST_Actions.md#getDiscoverableGuilds)
     -   [create guild](using/REST_Actions.md#createGuild)
     -   [delete guild](using/REST_Actions.md#deleteGuild)
     -   [kick user](using/REST_Actions.md#kick)

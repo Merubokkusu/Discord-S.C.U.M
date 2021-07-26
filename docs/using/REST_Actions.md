@@ -660,12 +660,26 @@ bot.joinGuild('1a1a1')
 - location (Optional[str]) - "accept invite page" or "join guild". Defaults to "accept invite page"
 - wait (Optional[int]) - this function uses 2 endpoints: getInfoFromInviteCode and a raw join guild endpoint; wait specifies the time to wait inbetween these 2 requests. Defaults to 0. 
 
+##### ```previewGuild```
+Only works on discoverable guilds and only applicable for current session. This is best used while the gateway is running, even though it does not require the gateway to run.
+```python
+@bot.gateway.command
+def previewTest(resp):
+	if resp.event.ready_supplemental:
+		bot.previewGuild('guildID00000000000', sessionID=bot.gateway.session_id)
+	...<now, only for the current session, you're in that guild>...
+```
+###### Parameters:
+- guildID (str)
+- sessionID (Optional[str]) - the current gateway session ID
+
 ##### ```leaveGuild```
 ```python
 bot.leaveGuild('guildID00000000000')
 ```
 ###### Parameters:
 - guild ID (str)
+- lurking (Optional[bool]) - whether or not you were previewing (/lurking) that guild. Defaults to False
 
 ##### ```createInvite```
 ```python
@@ -685,6 +699,14 @@ bot.getGuilds()
 ```
 ###### Parameters:
 - with_counts (bool/Nonetype) - get approx online and member counts. Defaults to True
+
+##### ```getDiscoverableGuilds```
+```python
+bot.getDiscoverableGuilds()
+```
+###### Parameters:
+- offset (Optional[int]) - after how many results to start at. Defaults to 0
+- limit (Optional[int]) - maximum number of results to display. Defaults to 24
 
 ##### ```createGuild```
 ```python

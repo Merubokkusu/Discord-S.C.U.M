@@ -539,9 +539,13 @@ class Client:
 	def joinGuild(self, inviteCode, location="accept invite page", wait=0):
 		return Guild(self.discord,self.s,self.log).joinGuild(inviteCode, location, wait)
 
+	#preview/lurk-join guild. Only applies to current (gateway) session
+	def previewGuild(self, guildID, sessionID=None):
+		return Guild(self.discord,self.s,self.log).previewGuild(guildID, sessionID)
+
 	#leave guild
-	def leaveGuild(self, guildID):
-		return Guild(self.discord,self.s,self.log).leaveGuild(guildID)
+	def leaveGuild(self, guildID, lurking=False):
+		return Guild(self.discord,self.s,self.log).leaveGuild(guildID, lurking)
 
 	#create invite
 	def createInvite(self, channelID, max_age_seconds=False, max_uses=False, grantTempMembership=False, checkInvite="", targetType=""):
@@ -550,6 +554,10 @@ class Client:
 	#get all guilds (this is used by the client when going to the developers portal)
 	def getGuilds(self, with_counts=True):
 		return Guild(self.discord,self.s,self.log).getGuilds(with_counts)
+
+	#get discoverable guilds
+	def getDiscoverableGuilds(self, offset=0, limit=24):
+		return Guild(self.discord,self.s,self.log).getDiscoverableGuilds(offset, limit)
 
 	#create a guild
 	def createGuild(self, name, icon=None, channels=[], systemChannelID=None, template="2TffvPucqHkN"):

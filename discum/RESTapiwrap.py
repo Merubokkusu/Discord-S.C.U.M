@@ -99,8 +99,9 @@ class Wrapper:
 			if response and response.headers.get('Content-Encoding') == "br": #decompression; gzip/deflate is automatically handled by requests module
 				response._content = Wrapper.brdecompress(response.content, log)
 			# 8. log response
-			text, color = Wrapper.logFormatter(function_name, response.text, part="response")
-			Logger.log(text, color, log)
+			if response:
+				text, color = Wrapper.logFormatter(function_name, response.text, part="response")
+				Logger.log(text, color, log)
 			# 9. return response object with decompressed content
 			return response
 		else:

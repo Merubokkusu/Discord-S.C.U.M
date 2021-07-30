@@ -88,7 +88,7 @@ class Client:
 			if remote_auth:
 				self.__user_token, self.userData = self.remoteAuthLogin(remote_auth)
 			else:
-				loginResponse, self.__xfingerprint = Login(self.s, self.discord, self.log).login(email=email, password=password, secret=secret, code=code) 
+				loginResponse, self.__xfingerprint = Login(self.s, self.discord, self.log).login(email=email, password=password, undelete=False, captcha=None, source=None, gift_code_sku_id=None, secret=secret, code=code)
 				self.__user_token = loginResponse.get('token') #update token from "" to actual value
 				time.sleep(1)
 		self.s.headers.update({"Authorization": self.__user_token}) #update headers

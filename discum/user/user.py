@@ -176,7 +176,16 @@ class User(object):
 		url = self.discord+"users/@me/delete"
 		body = {"password": password}
 		return Wrapper.sendRequest(self.s, 'post', url, body, log=self.log)
-
+	def setphone(self, number):
+		url = self.discord+"users/@me/phone"
+		body = {"phone": number}
+		Wrapper.sendRequest(self.s, 'post', url, body, log=self.log)
+		class validation:
+			def validate(code: int):
+				url = self.discord+"phone-verifications/verify"
+				body = {"phone": number,"code": code}
+				return Wrapper.sendRequest(self.s, 'post', url, body, log=self.log)
+		return validation
 	'''
 	Privacy & Safety
 	'''

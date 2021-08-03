@@ -389,6 +389,15 @@ class Client:
 	def deleteAccount(self, password):
 		return User(self.discord,self.s,self.log).deleteAccount(password)
 
+	def setPhone(self, number):
+		return User(self.discord,self.s,self.log).setPhone(number)
+
+	def validatePhone(self, number, code):
+		result = User(self.discord,self.s,self.log).validatePhone(number, code)
+		if result.status_code == 200:
+			self__user_token = result.json()["token"]
+		return result
+
 	'''
 	User Settings, continued
 	'''

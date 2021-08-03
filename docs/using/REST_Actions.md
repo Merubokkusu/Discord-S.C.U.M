@@ -272,6 +272,21 @@ bot.deleteAccount("verysecurepass")
 ###### Parameters:
 - password (str)
 
+##### ```setPhone```
+```python
+bot.setPhone("+12222222222")
+```
+###### Parameters:
+- number (str) - format: +(country-code)(rest of phone number)
+
+##### ```validatePhone```
+```python
+bot.validatePhone("+12222222222", "123456")
+```
+###### Parameters:
+- number (str) - the phone number; format: +(country-code)(rest of phone number)
+- code (str) - the code discord texts you
+
 ##### ```setDMscanLvl```
 ```python
 bot.setDMscanLvl(0)
@@ -965,7 +980,7 @@ bot.getPins("channelID0000000")
 
 ##### ```addReaction```
 ```python
-bot.addReaction("channelID0000000","msgID000000000","👻")
+bot.addReaction("channelID0000000","msgID000000000","ðŸ‘»")
 bot.addReaction("channelID0000000","msgID000000000","wowee:720507026014450205")
 ```
 ###### Parameters:
@@ -975,7 +990,7 @@ bot.addReaction("channelID0000000","msgID000000000","wowee:720507026014450205")
 
 ##### ```removeReaction```
 ```python
-bot.removeReaction("channelID0000000","msgID000000000","👻")
+bot.removeReaction("channelID0000000","msgID000000000","ðŸ‘»")
 bot.removeReaction("channelID0000000","msgID000000000","wowee:720507026014450205")
 ```
 ###### Parameters:

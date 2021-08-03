@@ -65,6 +65,8 @@ Table of Contents
     -   [get 2FA backup codes](using/REST_Actions.md#getbackupcodes)
     -   [disable account](using/REST_Actions.md#disableaccount)
     -   [delete account](using/REST_Actions.md#deleteaccount)
+    -   [set phone number](using/REST_Actions.md#setphone)
+    -   [validate phone number](using/REST_Actions.md#validatephone)
     -   [set DM scan level](using/REST_Actions.md#setdmscanlvl)
     -   [allow DMs from guild members](using/REST_Actions.md#allowdmsfromservermembers)
     -   [allow friend requests from...](using/REST_Actions.md#allowfriendrequestsfrom)

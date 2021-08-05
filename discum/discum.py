@@ -534,6 +534,9 @@ class Client:
 	def muteDM(self, DMID, mute=True, duration=None):
 		return User(self.discord,self.s,self.log).muteDM(DMID, mute, duration)
 
+	def setThreadNotifications(self, threadID, notifications):
+		return User(self.discord,self.s,self.log).setThreadNotifications(threadID, notifications)
+
 	def logout(self, provider=None, voip_provider=None):
 		return User(self.discord,self.s,self.log).logout(provider, voip_provider)
 
@@ -592,16 +595,26 @@ class Client:
 	def getRoleMemberCounts(self, guildID):
 		return Guild(self.discord,self.s,self.log).getRoleMemberCounts(guildID)
 
-	#look up a user in a guild
-	def getGuildMember(self,guildID,userID):
-		print("Warning: getGuildMember will be removed soon. Use gateway.checkGuildMembers instead (https://github.com/Merubokkusu/Discord-S.C.U.M/blob/master/examples/searchGuildMembers.py).")
-		return Guild(self.discord,self.s,self.log).getGuildMember(guildID,userID)
-
 	def getMemberVerificationData(self, guildID, with_guild=False, invite_code=None):
 		return Guild(self.discord,self.s,self.log).getMemberVerificationData(guildID, with_guild, invite_code)
 
 	def agreeGuildRules(self, guildID, form_fields, version="2021-01-05T01:44:32.163000+00:00"):
 		return Guild(self.discord,self.s,self.log).agreeGuildRules(guildID, form_fields, version)
+
+	def createThread(self, channelID, name, messageID=None, public=True, archiveAfter='24 hours'):
+		return Guild(self.discord,self.s,self.log).createThread(channelID, name, messageID, public, archiveAfter)
+
+	def leaveThread(self, threadID, location="Sidebar Overflow"):
+		return Guild(self.discord,self.s,self.log).leaveThread(threadID, location)
+
+	def joinThread(self, threadID, location="Banner"):
+		return Guild(self.discord,self.s,self.log).joinThread(threadID, location)
+
+	def archiveThread(self, threadID, lock=True):
+		return Guild(self.discord,self.s,self.log).archiveThread(threadID, lock)
+
+	def unarchiveThread(self, threadID, lock=False):
+		return Guild(self.discord,self.s,self.log).unarchiveThread(threadID, lock)
 
 	'''
 	"Science", aka Discord's tracking endpoint (https://luna.gitlab.io/discord-unofficial-docs/science.html - "Discord argues that they need to collect the data in the case the User allows the usage of the data later on. Which in [luna's] opinion is complete bullshit. Have a good day.")

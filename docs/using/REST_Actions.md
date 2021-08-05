@@ -605,6 +605,14 @@ bot.muteDM('0000000000000000000', duration=900)
 - mute (Optional[bool]) - defaults to True
 - duration (Optional[int]) - duration of mute in minutes
 
+##### ```setThreadNotifications```
+```python
+bot.setThreadNotifications('threadID000000000', 'all messages')
+```
+###### Parameters:
+- threadID (str)
+- notifications (str) - either "all messages" or "only mentions" or "nothing"
+
 ##### ```logout```
 ```python
 bot.logout()
@@ -796,6 +804,44 @@ bot.agreeGuildRules("guildID000000000000", memberVerificationData["form_fields"]
 - form_fields (list) - from getMemberVerificationData(...)
 - version (str) - from getMemberVerificationData(...). Defaults to "2021-01-05T01:44:32.163000+00:00"
 
+##### ```createThread```
+```python
+bot.createThread('channelID00000000', 'test')
+```
+###### Parameters:
+- channelID (str)
+- name (str)
+- messageID (Optional[str])
+- public (Optional[bool]) - defaults to True
+- archiveAfter (Optional[str]) - archive after '1 hour', '24 hours', '3 days', or '1 week'. Defaults to '24 hours'
+##### ```leaveThread```
+```python
+bot.leaveThread('threadID00000000')
+```
+###### Parameters:
+- threadID (str)
+- location (Optional[str]) - basically context properties. Defaults to "Sidebar Overflow"
+##### ```joinThread```
+```python
+bot.joinThread('threadID0000000')
+```
+###### Parameters:
+- threadID (str)
+- location (Optional[str]) - basically context properties. Defaults to "Banner"
+##### ```archiveThread```
+```python
+bot.archiveThread(threadID)
+```
+###### Parameters:
+- threadID (str)
+- lock (Optional[bool]) - prevent ppl from sending msgs in thread. Defaults to True
+##### ```unarchiveThread```
+```python
+bot.unarchiveThread(threadID)
+```
+###### Parameters:
+- threadID (str)
+- lock (Optional[bool]) - prevent ppl from sending msgs in thread. Defaults to False
 __________
 ### Messages
 ##### ```createDM```

@@ -79,7 +79,7 @@ class Guild(object):
 		return Wrapper.sendRequest(self.s, 'get', url, log=self.log)
 
 	'''
-	server moderation
+	server moderation and management
 	'''
 	#create a guild
 	def createGuild(self, name, icon, channels, systemChannelID, template):
@@ -141,3 +141,41 @@ class Guild(object):
 		form_fields[0]['response'] = True
 		body = {"version":version, "form_fields":form_fields}
 		return Wrapper.sendRequest(self.s, 'put', url, body, log=self.log)
+
+	### threads
+	#create thread
+	def createThread(self, channelID, name, messageID, public, archiveAfter):
+		url = self.discord+"channels/"+channelID
+		if messageID:
+			url += "/messages/"+messageID
+		url += "/threads"
+		choice = archiveAfter.lower()
+		if choice == '1 hour':
+			archiveAfterSeconds = 60
+		elif choice in ('24 hour', '24 hours', '1 day'):
+			archiveAfterSeconds = 1440
+		elif choice in ('3 day', '3 days'):
+			archiveAfterSeconds = 4320
+		elif choice in ('1 week', '7 day', '7 days'):
+			archiveAfterSeconds = 10080
+		threadType = 11 if public else 12
+		body = {"name": name, "type": threadType, "auto_archive_duration": archiveAfterSeconds}
+		return Wrapper.sendRequest(self.s, 'post', url, body, log=self.log)
+	#leave thread
+	def leaveThread(self, threadID, location):
+		url = self.discord+"channels/"+threadID+"/thread-members/@me?location="+quote(location)
+		return Wrapper.sendRequest(self.s, 'delete', url, log=self.log)
+	#join thread
+	def joinThread(self, threadID, location):
+		url = self.discord+"channels/"+threadID+"/thread-members/@me?location="+quote(location)
+		return Wrapper.sendRequest(self.s, 'post', url, log=self.log)
+	#archive thread
+	def archiveThread(self, threadID, lock):
+		url = self.discord+"channels/"+threadID
+		body = {"archived": True, "locked": lock}
+		return Wrapper.sendRequest(self.s, 'patch', url, body, log=self.log)
+	#unarchive thread
+	def unarchiveThread(self, threadID, lock):
+		url = self.discord+"channels/"+threadID
+		body = {"archived": False, "locked": lock}
+		return Wrapper.sendRequest(self.s, 'patch', url, body, log=self.log)

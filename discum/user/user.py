@@ -476,6 +476,13 @@ class User(object):
 		body = {"channel_overrides":{str(DMID):data}}
 		return Wrapper.sendRequest(self.s, 'patch', url, body, log=self.log)
 
+	def setThreadNotifications(self, threadID, notifications):
+		url = self.discord+"channels/"+threadID+"/thread-members/@me/settings"
+		threadNotificationTypes = ["all messages", "only mentions", "nothing"]
+		flags = 1<<(self.index(threadNotificationTypes, notifications.lower())+1)
+		body = {"flags": flags}
+		return Wrapper.sendRequest(self.s, 'patch', url, body, log=self.log)
+
 	'''
 	Logout
 	'''

@@ -191,7 +191,7 @@ class GatewayServer:
 		resp = Resp(copy.deepcopy(response))
 		Logger.log('[gateway] < {}'.format(response), LogLevel.RECEIVE, self.log)
 		if response['op'] == self.OPCODE.HELLO: #only happens once, first message sent to client
-			self.interval = (response["d"]["heartbeat_interval"])/1000 #if this fails make an issue and I'll revert it back to the old method (slightly smaller wait time than heartbeat)
+			self.interval = 41250/1000 #slightly smaller wait time than heartbeat
 			thread.start_new_thread(self._heartbeat, ())
 		elif response['op'] == self.OPCODE.HEARTBEAT_ACK:
 			if self._last_ack != None:

@@ -1,33 +1,64 @@
 # Fetching Guild Members
-Alright so this really needs a page of its own because it's special. There's no actual api endpoint to get the guild members, so instead what discum does is fetch the member list, piece by piece. Discum also provides some params for the fetchMembers function that allow you to modify fetching behavior (in almost any way you want).      
-    
-Note that for large guilds (```bot.gateway.session.guild('GUILD_ID').large == True```), the member list only contains the not-offline members.       
-
+Alright so this really needs a page of its own because it's special. There's no actual api endpoint to get the guild members, so instead you have 2 options:    
+1)  fetch the member list sidebar (bot.gateway.fetchMembers, which uses opcode 14)
+    - when to use: if you can see any categories/channels in the guild
+    - pro: fast
+    - con: for large servers (```bot.gateway.session.guild('GUILD_ID').large == True```), only not-offline members are fetched
+     
+2)  search for members by query (bot.gateway.queryGuildMembers, which uses opcode 8)      
+    - when to use: if you cannot see any categories/channels in the guild
+    - pro: can potentially get the entire member list, can scrape members from multiple guilds at the same time
+    - con: slow af (speed is dependent on brute forcer optimizations)
+____________________________________
 # Links/Table of Contents
-- [Usage](#fetch-guild-members)
-- [Reasoning/Make your own fetchMembers function](https://arandomnewaccount.gitlab.io/discord-unofficial-docs/lazy_guilds.html)
-- [What happens when fetchMembers is run](#what-happens)
-- [Calculating # of fetchable members](#calculating--of-fetchable-members)
-- [Examples](#examples)
-- [Efficiency & Effectiveness](#efficiency--effectiveness)
-- [POC: fetching the memberlist backwards](#fetching-the-member-list-backwards)
+- [fetch the member list sidebar (faster, but less members)](#fetch-the-member-list-sidebar)
+  - [Usage](https://github.com/Merubokkusu/Discord-S.C.U.M/blob/master/docs/using/Gateway_Actions.md#gatewayfetchmembers)
+  - [Algorithm](#Algorithm)
+  - [How many members can I fetch?](#how-many-members-can-i-fetch)
+  - [Examples](#Examples)
+  - [Efficiency & Effectiveness](#efficiency--effectiveness)
+  - [POC: fetching the memberlist backwards](#fetching-the-member-list-backwards)
+- [search for members by query (slower, but more members)](#search-for-members-by-query)
+  - [Usage](#Usage)
+  - [Algorithm](#Algorithm-1)
+  - [How many members can I fetch?](#how-many-members-can-i-fetch-1)
+___________________________________
+## Fetch the Member List Sidebar
+#### Algorithm
+1) load guild data (send an op14 with range [0,99]). If the guild is unavailable, discord will send over a GUILD_CREATE event.
+2) subscribe to a list of ranges in member list sidebar.
+3) after a GUILD_MEMBER_LIST_UPDATE is received, update the saved member list data and subscribe to a new list of ranges
 
-### what happens:
-1) the member-fetching tracker for that particular guild gets reset
-2) the [fetchMembers combo function](https://github.com/Merubokkusu/Discord-S.C.U.M/blob/master/discum/gateway/guild/combo.py#L83) gets inserted at position 0 (or whatever priority you select) in the gateway command list
-3) the fetchMembers combo function starts running once ready_supplemental has been received
-4) the fetchMembers combo function removes itself from the command list once finished
+note: 
+- you don't have to wait for a GUILD_MEMBER_LIST_UPDATE event to send the next list of member ranges, that's just how discum does it to better mimic the client
+- there're 2 methods to fetch the member list: 
+    - overlap. Ranges subscribed to (in order) are:
+      ```
+      [[0,99], [100,199]]
+      [[0,99], [100,199], [200,299]]
+      [[0,99], [200,299], [300,399]]
+      ...
+      ```
+    - nonoverlap. Ranges subscribed to (in order) are:
+      ```
+      [[0,99], [100,199]]
+      [[0,99], [200,299], [300,399]]
+      [[0,99], [400,499], [500,599]]
+      ...
+      ```
+- more info: https://arandomnewaccount.gitlab.io/discord-unofficial-docs/lazy_guilds.html
 
-### calculating # of fetchable members
+#### How many members can I fetch?
 Even though it's not yet known how discord calculates this, you can still come up with a "ground truth" number. The steps are as follows:
 1) open your browser's dev tools (chrome dev tools is a favorite)
 2) click on the network tab and make sure you can see websocket connections
 3) go to a guild and scroll all the way down on the member list
 4) see what are the ranges of the last gateway request your client sends (the # of fetchable members is somewhere in these ranges)
 
-### examples
+#### Examples
+all examples shown use the "overlap" method
 
-This first example runs the fetchMembers function while the gateway is running (both examples below use the "overlap" method):
+while the gateway is running:
 ```python
 import discum
 bot = discum.Client(token='ur token')
@@ -49,7 +80,7 @@ bot.gateway.run()
 for memberID in bot.gateway.session.guild('322850917248663552').members:
 	print(memberID)
 ```
-And this second example runs fetchMembers before the gateway is run:
+before the gateway is run:
 ```python
 import discum
 bot = discum.Client(token='ur token')
@@ -69,7 +100,7 @@ bot.gateway.run()
 for memberID in bot.gateway.session.guild('322850917248663552').members:
 	print(memberID)
 ```
-It's possible that fetchMembers doesn't fetch all fetchable members. Don't worry if this happens, you can start fetching members from any index. (discum calculates ranges using index x multiplier; the index used below is 50 and the multiplier used is 100, so the fetching starts at 50x100 = 5000):
+It's possible that fetchMembers doesn't fetch all not-offline members due to rate limiting. Don't worry if this happens, you can start fetching members from any index. (discum calculates ranges using index x multiplier; the index used below is 50 and the multiplier used is 100, so the fetching starts at 50x100 = 5000th member):
 ```python
 #import discum
 #bot = discum.Client(token='ur token')
@@ -92,10 +123,7 @@ for memberID in bot.gateway.session.guild('322850917248663552').members:
 [Want a function that returns the member list? No worries.](https://github.com/Merubokkusu/Discord-S.C.U.M/blob/master/examples/gettingGuildMembers.py)
 
 
-### Efficiency & Effectiveness
-Alright so technically there are 2 ways to get the member list. The first way is through websockets (which is what discum uses). The second way is through html scraping (which I don't recommend since I imagine that'd be slower).
-  
-Using a slightly-modified version of discum (just 6 lines extra to track times and member counts), these stats were collected on discum's fetchMembers's efficiency and effectiveness (note, wait time was set to 0 for these tests):
+#### Efficiency & Effectiveness
 
 |      | overlap&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; | no overlap |
 |------|---------|------------|
@@ -105,7 +133,7 @@ Using a slightly-modified version of discum (just 6 lines extra to track times a
 As you can see, the "no overlap" method fetches 200 members/second while the "overlap" method fetches 100 members/second. However, "no overlap" is also a lot less effective. After doing a few more tests with both methods ("overlap" and "no overlap"), "no overlap" shows a lot less consistency/reliability than "overlap".
 
 
-### fetching the member list backwards
+#### Fetching the member list backwards
 (and in pretty much any "style" you want)       
 So, this is more proof-of-concept, but here's a short explanation.         
 Suppose you're in a guild with 1000 members and want to fetch the member list backwards (I dunno...more undetectable since noone fetches it backwards? lol).        
@@ -141,4 +169,48 @@ Suppose you're in a guild with 1000 members and want to fetch the member list ba
    bot.gateway.fetchMembers("guildID","channelID",startIndex=startIndex, method=method)
    bot.gateway.run()
    ```
-   
+____________________________________
+## Search for Members by Query
+#### Usage
+1) copy the code for [discum's example op8 brute forcer](https://github.com/Merubokkusu/Discord-S.C.U.M/blob/master/examples/searchGuildMembers.py#L31)
+2) run the function:
+  ```python
+  bot.gateway.command({"function": bruteForceTest, "params":{"guildID":'1010101010101010', "wait":1}})
+  ```
+  A wait time of at least 0.5 is needed to prevent the brute forcer from rate limiting too often. In the event that the brute forcer does get rate limited, some time will be lost reconnecting (the brute forcer should just start from where it left off).
+#### Algorithm
+for simplicity, assume that the list of characters to search for is ['a', 'b', 'c', 'd']
+1) query for up to 100 members in guild who have a nickname/username starting with 'a'
+2) on a GUILD_MEMBERS_CHUNK event:
+    - if there are 100 results:
+        - add on the 2nd character of the last result. For example, if the results are
+            ```
+            aaaaaaaaaaaa
+            aaadfd3fgdftjh
+            ...
+            Acaddd
+            ``` 
+            , 
+            the next query will be 'ac'. Note: searches are case-insensitive and consecutive spaces are treated like single spaces.
+    - if there are less than 100 results:
+        - replace the last index of the query with the next option in the list
+
+This algorithm can definitely be made a lot better so have at it. The brute forcer example is just there to help you get started.
+
+#### How many members can I fetch?
+- no member-viewing perms
+  - a limit is posed if many users have the same nickname & username (but different discriminators). Only the 1st 100 members will be able to be fetched. There's no known way to include the discriminator # in the search.
+  - also, in order to query users with fancy characters in their username/nickname, the op8 brute forcer needs to be slowed down (cause, more characters to search)
+- member-viewing perms
+  - no limit. You can fetch all the members:
+    ```python
+    @bot.gateway.command
+    def test(resp):
+    	if resp.event.ready_supplemental:
+    		bot.gateway.queryGuildMembers(['guildID'], '', limit=0, keep="all")
+    	if resp.event.guild_members_chunk and bot.gateway.finishedGuildSearch(['guildID'], ''):
+    		bot.gateway.close()
+
+    bot.gateway.run()
+    ```
+    If the above doesn't work, set the limit parameter to 10000.

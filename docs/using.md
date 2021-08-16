@@ -150,6 +150,8 @@ Table of Contents
     -   [join thread](using/REST_Actions.md#jointhread)
     -   [archive thread](using/REST_Actions.md#archiveThread)
     -   [unarchive thread](using/REST_Actions.md#unarchiveThread)
+    -   [search for school hubs](using/REST_Actions.md#lookupSchool)
+    -   [signup for school hub waiting list](using/REST_Actions.md#schoolHubSignup)
     -   [{gateway} fetch guild members](using/Gateway_Actions.md#gatewayfetchmembers)
     -   [{gateway} guild member fetching parameter helper (POC)](using/Gateway_Actions.md#gatewaygetmemberfetchingparams)
     -   [{gateway} check if guild member fetching is finished](using/Gateway_Actions.md#gatewayfinishedmemberfetching)

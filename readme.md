@@ -43,11 +43,11 @@ A simple, easy to use, non-restrictive, synchronous Discord API Wrapper for Self
   Note, using a selfbot is against Discord's Terms of Service and you could get banned for using one if you're not careful. Also, this needs to be said: discum does not have rate limit handling. The main reasons for this are that discum is made to (1) be (relatively) simple and (2) give the developer/user freedom with how to handle the rate limits. We (Merubokkusu and anewrandomaccount) do not take any responsibility for any consequences you might face while using discum. We also do not take any responsibility for any damage caused (to servers/channels) through the use of Discum. Discum is a tool; how you use this tool is on you.
 
 ## Installation  
-To install the library without remote authentication (logging in using a phone & qr code), run:
+To install the library normally, run:
 ```
 python -m pip install --user --upgrade git+https://github.com/Merubokkusu/Discord-S.C.U.M.git#egg=discum
 ```
-Otherwise, to also use remote authentication functions, run:
+Otherwise, to also use remote authentication functions (login using a phone & qr code), run:
 ```
 python -m pip install --user --upgrade -e git+https://github.com/Merubokkusu/Discord-S.C.U.M.git#egg=discum[ra]
 ```

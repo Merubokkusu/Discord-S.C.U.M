@@ -842,6 +842,23 @@ bot.unarchiveThread(threadID)
 ###### Parameters:
 - threadID (str)
 - lock (Optional[bool]) - prevent ppl from sending msgs in thread. Defaults to False
+
+##### ```lookupSchool```
+```python
+bot.lookupSchool('school@school.edu')
+```
+###### Parameters:
+- email (str)
+- allowMultipleGuilds (Optional[bool]) - defaults to True
+
+##### ```schoolHubSignup```
+```python
+bot.schoolHubSignup('school@school.edu', 'wowow')
+```
+###### Parameters:
+- email (str)
+- school (str) - school name
+
 __________
 ### Messages
 ##### ```createDM```

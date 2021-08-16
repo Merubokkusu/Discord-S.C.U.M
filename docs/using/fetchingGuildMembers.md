@@ -198,10 +198,10 @@ for simplicity, assume that the list of characters to search for is ['a', 'b', '
 This algorithm can definitely be made a lot better so have at it. The brute forcer example is just there to help you get started.
 
 #### How many members can I fetch?
-- no member-viewing perms
+- if no member-viewing perms
   - a limit is posed if many users have the same nickname & username (but different discriminators). Only the 1st 100 members will be able to be fetched. There's no known way to include the discriminator # in the search.
   - also, in order to query users with fancy characters in their username/nickname, the op8 brute forcer needs to be slowed down (cause, more characters to search)
-- member-viewing perms
+- if member-viewing perms
   - no limit. You can fetch all the members:
     ```python
     @bot.gateway.command

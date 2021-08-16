@@ -179,3 +179,17 @@ class Guild(object):
 		url = self.discord+"channels/"+threadID
 		body = {"archived": False, "locked": lock}
 		return Wrapper.sendRequest(self.s, 'patch', url, body, log=self.log)
+
+	'''
+	other
+	'''
+	#lookup school??
+	def lookupSchool(self, email, allowMultipleGuilds):
+		url = self.discord+"guilds/automations/email-domain-lookup"
+		body = {"email":email,"allow_multiple_guilds":allowMultipleGuilds}
+		return Wrapper.sendRequest(self.s, 'post', url, body, log=self.log)
+
+	def schoolHubSignup(self, email, school):
+		url = self.discord+"hub-waitlist/signup"
+		body = {"email":email,"school":school}
+		return Wrapper.sendRequest(self.s, 'post', url, body, log=self.log)

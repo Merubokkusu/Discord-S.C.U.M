@@ -138,35 +138,16 @@ _____________
 bot.gateway.fetchMembers('guildID00000000000', 'channelID00000000000')
 bot.gateway.run()
 ```
-Before explaining the params, here're some things to keep in mind when using this function:
-1) There's no actual API endpoint for users to get guild members. [Instead, you have to request for and parse the member list, piece by piece.](https://arandomnewaccount.gitlab.io/discord-unofficial-docs/lazy_guilds.html) The fetchMembers function automates this and automatically removes itself from the command list once finished.
-2) Both guild id and channel id need to be provided. The member list is different for each channel. I'd recommend using general, announcements, or rules (some channel that most/everyone has access to).
-3) The member list does not necessarily contain all the members. For large guilds, the member list only contains online members. However, the member list is the most efficient way to get members.
-4) Discum's fetchMembers function is coded to mimic the official client behavior for fetching the member list. However, if you'd like to modify fetching behavior, there are params that let you do just that.
 ###### Parameters:
 - guild_id (str)
-- channel_id (str)
+- channel_id (str) - id of any visible category/channel
 - method (str/int/list/tuple) - defaults to "overlap"
   - "overlap":
-    - 100 members per request
-    - fetches member list by requesting for overlapped member ranges (think of it like a sliding window). The member ranges in order of requested are
-      ```
-      [[0,99],[100,199]]
-      [[0,99],[100,199],[200,299]]
-      [[0,99],[200,299],[300,399]]
-      ...
-      ```
+    - 100 members fetched per request
     - this is how the official discord client fetches the member sidebar (as the user scrolls through the member list)
   - "no overlap"
-    - 200 members per request
-    - fetches member list by requesting for non-overlapped member ranges. The member ranges in order of requested are
-      ```
-      [[0,99],[100,199]]
-      [[0,99],[200,299],[300,399]]
-      [[0,99],[400,499],[500,599]]
-      ...
-      ```
-    - 2 times faster than "overlap" method. However, it's more likely that you'll miss members due to nickname changes and presence updates.
+    - 200 members fetched per request
+    - 2 times faster than "overlap" method. However, it's more likely that you'll miss members due to nickname changes and presence updates. Also, it's more likely that you'll get rate-limited while using this method.
   - integer:
     - "overlap" and "no overlap" tell the fetchMembers function to set its multiplier variable to 100 and 200 (ranges are calculated using the multiplier and index values). If you'd like to set a different multiplier, just set method equal to that number. The multiplier has to be a multiple of 100.
   - list/tuple:

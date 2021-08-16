@@ -616,6 +616,12 @@ class Client:
 	def unarchiveThread(self, threadID, lock=False):
 		return Guild(self.discord,self.s,self.log).unarchiveThread(threadID, lock)
 
+	def lookupSchool(self, email, allowMultipleGuilds=True):
+		return Guild(self.discord,self.s,self.log).lookupSchool(email, allowMultipleGuilds)
+
+	def schoolHubSignup(self, email, school):
+		return Guild(self.discord,self.s,self.log).schoolHubSignup(email, school)
+
 	'''
 	"Science", aka Discord's tracking endpoint (https://luna.gitlab.io/discord-unofficial-docs/science.html - "Discord argues that they need to collect the data in the case the User allows the usage of the data later on. Which in [luna's] opinion is complete bullshit. Have a good day.")
 	'''

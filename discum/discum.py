@@ -394,7 +394,7 @@ class Client:
 
 	def validatePhone(self, number, code):
 		result = User(self.discord,self.s,self.log).validatePhone(number, code)
-		if result.status_code == 200:
+		if result.status_code == 200 and "token" in result.json():
 			self.__user_token = result.json()["token"]
 		return result
 

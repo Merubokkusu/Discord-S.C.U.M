@@ -224,10 +224,10 @@ class GatewayServer:
 			if not self.resetMembersOnSessionReconnect and self.session.read()[0]:
 				for guildID in settings_ready['guilds']:
 					settings_ready['guilds'][guildID]['members'] = self.session.guild(guildID).members
-			self.session.settings_ready = settings_ready
+			self.session = Session(settings_ready,{})
 		elif resp.event.ready_supplemental:
 			settings_ready_supp = resp.parsed.ready_supplemental() #parsed
-			self.session.settings_ready_supp = settings_ready_supp
+			self.session = Session(settings_ready,settings_ready_supp)
 			self.READY = True
 		if self.updateSessionData:
 			self.sessionUpdates(resp)

@@ -4,6 +4,7 @@ import struct
 import base64
 
 class Client_UUID(object): #Huge thanks to github user fweak for helping me figure out the mystery of the client_uuid. made some discord "science" notes here: https://docs.google.com/document/d/1b5aDx7S1iLHoeb6B56izZakbXItA84gUjFzK-0OBwy0
+    __slots__ = ['userID', 'randomPrefix', 'creationTime', 'eventNum', 'UUID']
     def __init__(self, userID, creationTime="now", eventNum=0):
         self.userID = int(userID)
         num = int(4294967296 * random.random())

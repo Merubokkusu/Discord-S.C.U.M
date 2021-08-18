@@ -11,6 +11,7 @@ except ImportError:
 	from urllib import quote
 
 class Guild(object):
+	__slots__ = ['discord', 's', 'log']
 	def __init__(self, discord, s, log): #s is the requests session object
 		self.discord = discord
 		self.s = s

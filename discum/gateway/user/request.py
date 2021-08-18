@@ -1,12 +1,13 @@
 #request
 
 class UserRequest(object):
-	def __init__(self, gatewayobject):
-		self.gatewayobject = gatewayobject
+	__slots__ = ['gatewayobj']
+	def __init__(self, gatewayobj):
+		self.gatewayobj = gatewayobj
 
 	def setStatus(self, status, activities, afk, since): #note, custom status goes in activities
 		data = {
-		    "op": self.gatewayobject.OPCODE.PRESENCE_UPDATE,
+		    "op": self.gatewayobj.OPCODE.PRESENCE_UPDATE,
 		    "d": {
 		        "status": status,
 		        "since": since,
@@ -14,4 +15,4 @@ class UserRequest(object):
 		        "afk": afk
 		    }
 		}
-		self.gatewayobject.send(data)
+		self.gatewayobj.send(data)

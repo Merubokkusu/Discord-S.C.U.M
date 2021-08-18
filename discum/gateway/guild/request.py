@@ -1,12 +1,13 @@
 #points to commands that help request info/actions using the gateway
 
 class GuildRequest(object):
-	def __init__(self, gatewayobject):
-		self.gatewayobject = gatewayobject
+	__slots__ = ['gatewayobj']
+	def __init__(self, gatewayobj):
+		self.gatewayobj = gatewayobj
 
 	def lazyGuild(self, guild_id, channel_ranges, typing, threads, activities, members, thread_member_lists): #https://arandomnewaccount.gitlab.io/discord-unofficial-docs/lazy_guilds.html
 		data = {
-		    "op": self.gatewayobject.OPCODE.LAZY_REQUEST,
+		    "op": self.gatewayobj.OPCODE.LAZY_REQUEST,
 		    "d": {
 		        "guild_id": guild_id,
 		        "typing": typing,
@@ -29,13 +30,13 @@ class GuildRequest(object):
 			data["d"].pop("members")
 		if thread_member_lists == None:
 			data["d"].pop("thread_member_lists")
-		self.gatewayobject.send(data)
+		self.gatewayobj.send(data)
 
 	def searchGuildMembers(self, guild_ids, query, limit, presences, user_ids, nonce): #note that query can only be "" if you have admin perms (otherwise you'll get inconsistent responses from discord)
 		if isinstance(guild_ids, str):
 			guild_ids = [guild_ids]
 		data = {
-		    "op": self.gatewayobject.OPCODE.REQUEST_GUILD_MEMBERS,
+		    "op": self.gatewayobj.OPCODE.REQUEST_GUILD_MEMBERS,
 		    "d": {"guild_id": guild_ids},
 		}
 		if isinstance(user_ids, list): #there are 2 types of op8 that the client can send
@@ -47,4 +48,4 @@ class GuildRequest(object):
 			data["d"]["presences"] = presences
 		if nonce != None:
 			data["d"]["nonce"] = nonce
-		self.gatewayobject.send(data)
+		self.gatewayobj.send(data)

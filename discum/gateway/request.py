@@ -1,4 +1,4 @@
-from ..importhelper import Imports
+from ..importmanager import Imports
 imports = Imports(
 	{
 		"GuildRequest": "discum.gateway.guild.request",

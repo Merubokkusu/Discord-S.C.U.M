@@ -1,13 +1,14 @@
 #request
 
 class MediaRequest(object):
-	def __init__(self, gatewayobject):
-		self.gatewayobject = gatewayobject
+	__slots__ = ['gatewayobj']
+	def __init__(self, gatewayobj):
+		self.gatewayobj = gatewayobj
 
 	def call(self, channelID, guildID=None, mute=False, deaf=False, video=False):
-		self.gatewayobject.send(
+		self.gatewayobj.send(
 		    {
-		        "op": self.gatewayobject.OPCODE.VOICE_STATE_UPDATE,
+		        "op": self.gatewayobj.OPCODE.VOICE_STATE_UPDATE,
 		        "d": {
 		            "guild_id": guildID,
 		            "channel_id": channelID,
@@ -19,9 +20,9 @@ class MediaRequest(object):
 		)
 
 	def endCall(self):
-		self.gatewayobject.send(
+		self.gatewayobj.send(
 		    {
-		        "op": self.gatewayobject.OPCODE.VOICE_STATE_UPDATE,
+		        "op": self.gatewayobj.OPCODE.VOICE_STATE_UPDATE,
 		        "d": {
 		            "guild_id": None,
 		            "channel_id": None,

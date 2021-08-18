@@ -1,5 +1,5 @@
 #to speed up importing discum & only import modules when they are needed
-from .importhelper import Imports
+from .importmanager import Imports
 imports = Imports(
 	{
 		"Wrapper": "discum.RESTapiwrap",

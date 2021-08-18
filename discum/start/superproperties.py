@@ -11,6 +11,7 @@ class SuperProperties:
     '''
     https://luna.gitlab.io/discord-unofficial-docs/science.html#super-properties-object
     '''
+    __slots__ = ['editedS', 'buildnum', 'log']
     def __init__(self, s, buildnum="request", log={"console":True, "file":False}):
         self.editedS = Wrapper.editedReqSession(s, {"remove": ["Authorization", "X-Super-Properties"]})
         self.buildnum = buildnum

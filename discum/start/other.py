@@ -3,6 +3,7 @@ from ..RESTapiwrap import *
 #This file includes apis that run when your client starts but idk where to organize them
 #Maybe they'll get organized eventually, idk
 class Other:
+    __slots__ = ['s', 'discord', 'log']
     def __init__(self, s, discordurl, log):
         self.s = s
         self.discord = discordurl

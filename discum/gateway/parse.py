@@ -1,6 +1,6 @@
 #parses response from gateway
 
-from ..importhelper import Imports
+from ..importmanager import Imports
 imports = Imports(
 	{
 		"StartParse": "discum.gateway.start.parse",

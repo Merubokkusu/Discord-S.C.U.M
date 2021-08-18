@@ -21,7 +21,7 @@ from .parse import Parse
 from ..logger import * #imports LogLevel and Logger
 
 #dynamic imports
-from ..importhelper import Imports
+from ..importmanager import Imports
 imports = Imports(
 	{
 		"User": "discum.user.user",

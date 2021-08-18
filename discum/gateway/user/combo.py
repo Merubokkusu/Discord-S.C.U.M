@@ -1,6 +1,7 @@
 #combo
 import time, datetime
 class UserCombo(object):
+	__slots__ = ['gatewayobj']
 	def __init__(self, gatewayobj):
 		self.gatewayobj = gatewayobj
 

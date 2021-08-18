@@ -10,6 +10,7 @@ except ImportError:
     from urllib.parse import urlparse
 
 class Fileparse(object):
+	__slots__ = ['log', 'editedS']
 	def __init__(self, s, log): #s is the requests session object
 		self.log = log
 		self.editedS = Wrapper.editedReqSession(s, {"remove": ["Authorization", "X-Fingerprint", "X-Super-Properties"]})

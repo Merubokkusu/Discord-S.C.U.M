@@ -1,4 +1,5 @@
 class Embedder(object):
+    __slots__ = ['jsonEmbed']
     def __init__(self):
         self.jsonEmbed = {"fields": []} #Create a 'fields' key otherwise we can't add anything to it, plus it doesn't effect anything if nothing is added.
 

@@ -7,6 +7,7 @@ import base64
 import hashlib
 
 class TOTP:
+    __slots__ = ['secret']
     def __init__(self, secret):
         self.secret = secret
 

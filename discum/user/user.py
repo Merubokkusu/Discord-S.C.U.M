@@ -5,6 +5,7 @@ from ..utils.contextproperties import ContextProperties
 from ..utils.color import Color
 
 class User(object):
+	__slots__ = ['discord', 's', 'log']
 	def __init__(self, discord, s, log): #s is the requests session object
 		self.discord = discord
 		self.s = s

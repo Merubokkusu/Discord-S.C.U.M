@@ -1,9 +1,8 @@
 class Session:
-	settings_ready = {}
-	settings_ready_supp = {}
+	__slots__ = ['guild', 'DM', 'relationship', 'userGuildSetting', 'settings_ready', 'settings_ready_supp']
 	def __init__(self, input_settings_ready, input_settings_ready_supp):
-		Session.settings_ready = input_settings_ready
-		Session.settings_ready_supp = input_settings_ready_supp
+		self.settings_ready = input_settings_ready
+		self.settings_ready_supp = input_settings_ready_supp
 		self.guild = guild
 		self.DM = DM
 		self.relationship = relationship
@@ -191,6 +190,7 @@ class Session:
 
 ###specific guild
 class guild(Session):
+	__slots__ = ['guildID']
 	def __init__(self, guildID):
 		self.guildID = guildID
 
@@ -442,6 +442,7 @@ class guild(Session):
 
 ###specific relationship
 class relationship(Session): #not the same organization as class guild
+	__slots__ = ['userID']
 	def __init__(self, userID):
 		self.userID = userID
 
@@ -451,6 +452,7 @@ class relationship(Session): #not the same organization as class guild
 
 ###specific DM
 class DM(Session):
+	__slots__ = ['DMID']
 	def __init__(self, DMID):
 		self.DMID = DMID
 
@@ -467,14 +469,16 @@ class DM(Session):
 
 ###specific User Guild Settings; keep in mind that user guild settings also includes some group dm notification settings stuff
 class userGuildSetting(Session):
+	__slots__ = ['guildID']
 	def __init__(self, guildID):
 		self.guildID = guildID
 
 	@property
 	def data(self):
-		if len(Session.settings_ready['user_guild_settings']['entries']) == 0:
+		userGuildSettings = Session.settings_ready['user_guild_settings']['entries']
+		if len(userGuildSettings) == 0:
 			return None
-		for i in range(len(Session.settings_ready['user_guild_settings']['entries'])):
-			if Session.settings_ready['user_guild_settings']['entries'][i]['guild_id'] == self.guildID:
-				return Session.settings_ready['user_guild_settings']['entries'][i]
+		for g in userGuildSettings:
+			if g['guild_id'] == self.guildID:
+				return g
 		return None

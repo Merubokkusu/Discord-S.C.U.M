@@ -16,11 +16,11 @@ class Wrapper:
 			color = LogLevel.SEND
 		# [+] (<class->function) body
 		elif part == "body":
-			text = str(data)
+			text = json.dumps(data)
 			color = LogLevel.SEND
 		# [+] (<class->function) Response <- response.text
 		elif part == "response":
-			text = "Response <- {}".format(data)
+			text = "Response <- {}".format(data.encode('utf-8'))
 			color = LogLevel.RECEIVE
 		formatted = " [+] {} {}".format(function, text)
 		return formatted, color
@@ -32,8 +32,7 @@ class Wrapper:
 			import brotli
 			data = brotli.decompress(payload)
 			return data
-		except Exception:
-			Logger.log("Either brotli decompress failed or discord returned incorrect content encodings.", None, log) #yea, it happens :/
+		except:
 			return payload
 
 	#header modifications, like endpoints that don't need auth, superproperties, etc; also for updating headers like xfingerprint

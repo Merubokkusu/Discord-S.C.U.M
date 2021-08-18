@@ -49,6 +49,8 @@ def exceptionChecker(e, types): #this is an A or B or ... check
 #gateway class
 class GatewayServer:
 
+	__slots__ = ['token', 'super_properties', 'auth', 'RESTurl', 'sessionobj', 'proxy_host', 'proxy_port', 'keepData', 'log', 'interval', 'session_id', 'sequence', 'READY', 'session', 'ws', '_after_message_hooks', '_last_err', '_last_close_event', 'connected', 'resumable', 'voice_data', 'memberFetchingStatus', 'resetMembersOnSessionReconnect', 'updateSessionData', 'guildMemberSearches', '_last_ack', 'latency', 'request', 'parse', '_zlib']
+
 	class OPCODE:
 		# Name                         Code  Client Action   Description
 		DISPATCH =                     0  #  Receive         dispatches an event
@@ -218,14 +220,14 @@ class GatewayServer:
 		if resp.event.ready:
 			self._last_err = None
 			self.session_id = response['d']['session_id']
-			self.settings_ready = resp.parsed.ready() #parsed
+			settings_ready = resp.parsed.ready() #parsed
 			if not self.resetMembersOnSessionReconnect and self.session.read()[0]:
-				for guildID in self.settings_ready['guilds']:
-					self.settings_ready['guilds'][guildID]['members'] = self.session.guild(guildID).members
-			self.session = Session(self.settings_ready, {})
+				for guildID in settings_ready['guilds']:
+					settings_ready['guilds'][guildID]['members'] = self.session.guild(guildID).members
+			self.session.settings_ready = settings_ready
 		elif resp.event.ready_supplemental:
-			self.settings_ready_supp = resp.parsed.ready_supplemental() #parsed
-			self.session = Session(self.settings_ready, self.settings_ready_supp) #reinitialize i guess
+			settings_ready_supp = resp.parsed.ready_supplemental() #parsed
+			self.session.settings_ready_supp = settings_ready_supp
 			self.READY = True
 		if self.updateSessionData:
 			self.sessionUpdates(resp)
@@ -327,7 +329,7 @@ class GatewayServer:
 		self._last_ack = None
 		self.memberFetchingStatus = {"first": []}
 
-	#kinda influenced by https://github.com/scrubjay55/Reddit_ChatBot_Python/blob/master/Reddit_ChatBot_Python/WebSockClient.py (Apache License 2.0)
+	#kinda influenced by https://github.com/scrubjay55/Reddit_ChatBot_Python (Apache License 2.0)
 	def run(self, auto_reconnect=True):
 		if auto_reconnect:
 			while True:

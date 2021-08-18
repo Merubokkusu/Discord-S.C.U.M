@@ -1,4 +1,5 @@
 class Event:
+	__slots__ = ['response']
 	def __init__(self, response):
 		self.response = response
 

@@ -15,6 +15,7 @@ import copy
 
 #function names are just lowercase types, so for type GUILD_MEMBER_LIST_UPDATE, the function is guild_member_list_update
 class Parse(object):
+	__slots__ = ['response']
 	def __init__(self, response):
 		self.response = copy.deepcopy(response)
 

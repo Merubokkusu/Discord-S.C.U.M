@@ -1,13 +1,32 @@
 class Session:
+	__slots__ = []
 	settings_ready = {}
 	settings_ready_supp = {}
 	def __init__(self, input_settings_ready, input_settings_ready_supp):
 		Session.settings_ready = input_settings_ready
 		Session.settings_ready_supp = input_settings_ready_supp
-		self.guild = guild
-		self.DM = DM
-		self.relationship = relationship
-		self.userGuildSetting = userGuildSetting
+
+	def setSettingsReady(self, data):
+		Session.settings_ready = dict(data)
+	
+	def setSettingsReadySupp(self, data):
+		Session.settings_ready_supp = dict(data)
+
+	@property
+	def guild(self):
+		return Guild
+
+	@property
+	def DM(self):
+		return DM
+
+	@property
+	def relationship(self):
+		return Relationship
+
+	@property
+	def userGuildSetting(self):
+		return UserGuildSetting
 
 	def read(self): #returns all Session settings
 		return [self.settings_ready, self.settings_ready_supp]
@@ -190,7 +209,8 @@ class Session:
 
 
 ###specific guild
-class guild(Session):
+class Guild(Session):
+	__slots__ = ['guildID']
 	def __init__(self, guildID):
 		self.guildID = guildID
 
@@ -441,7 +461,8 @@ class guild(Session):
 		return Session.settings_ready['guilds'][self.guildID]['stickers']
 
 ###specific relationship
-class relationship(Session): #not the same organization as class guild
+class Relationship(Session): #not the same organization as class guild
+	__slots__ = ['userID']
 	def __init__(self, userID):
 		self.userID = userID
 
@@ -451,6 +472,7 @@ class relationship(Session): #not the same organization as class guild
 
 ###specific DM
 class DM(Session):
+	__slots__ = ['DMID']
 	def __init__(self, DMID):
 		self.DMID = DMID
 
@@ -466,7 +488,8 @@ class DM(Session):
 		return self.data['recipient_ids']
 
 ###specific User Guild Settings; keep in mind that user guild settings also includes some group dm notification settings stuff
-class userGuildSetting(Session):
+class UserGuildSetting(Session):
+	__slots__ = ['guildID']
 	def __init__(self, guildID):
 		self.guildID = guildID
 

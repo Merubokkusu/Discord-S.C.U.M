@@ -25,6 +25,7 @@
 | resp.event.friend_suggestion_deleted | FRIEND_SUGGESTION_DELETE |
 | resp.event.gift_code_updated | GIFT_CODE_UPDATE |
 | resp.event.guild_application_commands_updated | GUILD_APPLICATION_COMMANDS_UPDATE |
+| resp.event.guild_application_command_counts_updated | GUILD_APPLICATION_COMMAND_COUNTS_UPDATE |
 | resp.event.ban_added | GUILD_BAN_ADD |
 | resp.event.ban_removed | GUILD_BAN_REMOVE |
 | resp.event.guild | GUILD_CREATE |

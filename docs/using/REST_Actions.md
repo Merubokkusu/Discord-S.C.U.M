@@ -872,6 +872,34 @@ bot.schoolHubSignup('school@school.edu', 'wowow')
 - school (str) - school name
 
 __________
+### Interactions
+##### ```getSlashCommands```
+```python
+bot.getSlashCommands("botID000000000")
+```
+###### Parameters:
+- applicationID (str) - the bot ID
+
+##### ```triggerSlashCommand```
+```python
+#first, lets see what slash commands we can run
+slashCmds = bot.getSlashCommands("botID000000000").json()
+
+#next, let's parse that and create some slash command data
+from discum.utils.slash import SlashCommander
+s = SlashCommander(slashCmds) #slashCmds can be either a list of cmds or just 1 cmd. Each cmd is of type dict.
+data = s.get(['saved', 'queues', 'create'], {'name':'hi'})
+
+#finally, lets send the slash command
+bot.triggerSlashCommand("botID000000000", "channelID0000000", guildID="guildID0000000", data=data)
+```
+###### Parameters:
+- applicationID (str)
+- channelID (str)
+- guildID (Optional[str])
+- data (dict) - gets sent in the "data" key. Can use discum.utils.slash.SlashCommander to help with formatting data.
+- nonce (Optional[str]) - by default, this gets calculated
+__________
 ### Messages
 ##### ```createDM```
 \*_risky action_
@@ -910,7 +938,8 @@ bot.greet('channelID0000000000', ["749054660769218631"])
 
 ##### ```Embedder```
 ```python
-embed = bot.Embedder()
+from discum.utils.embed import Embedder
+embed = Embedder()
 embed.title("This is a test")
 embed.image('https://cdn.dribbble.com/users/189524/screenshots/2105870/04-example_800x600_v4.gif')
 embed.fields('Hello!',':yum:')

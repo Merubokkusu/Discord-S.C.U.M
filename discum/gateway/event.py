@@ -92,8 +92,12 @@ class Event:
 		return self.response['t'] == 'GIFT_CODE_UPDATE'
 
 	@property
-	def guild_application_commands_updated(self): #huh?
+	def guild_application_commands_updated(self):
 		return self.response['t'] == 'GUILD_APPLICATION_COMMANDS_UPDATE'
+
+	@property
+	def guild_application_command_counts_updated(self):
+		return self.response['t'] == 'GUILD_APPLICATION_COMMAND_COUNTS_UPDATE'
 
 	@property
 	def ban_added(self): #{'t': 'GUILD_BAN_ADD', 's': s, 'op': 0, 'd': {'user': {'username': username, 'public_flags': 0, 'id': id, 'discriminator': '0000', 'avatar': None}, 'guild_id': guildID}}

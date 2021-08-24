@@ -258,6 +258,8 @@ class GatewayServer:
 	def _heartbeat(self):
 		Logger.log("[gateway] entering heartbeat", None, self.log)
 		while self.connected:
+			if self.interval == None: #can't replicate the issue so consider this a temp patch
+				self.interval = 41.25
 			time.sleep(self.interval)
 			if not self.connected:
 				break

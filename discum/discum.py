@@ -13,6 +13,7 @@ imports = Imports(
 		"Science": "discum.science.science",
 		"TOTP": "discum.utils.totp",
 		"RemoteAuth": "discum.gateway.remoteauth",
+		"SlashCommands": "discum.interactions.slashcommands"
 	}
 )
 
@@ -28,7 +29,7 @@ import random
 
 #client initialization
 class Client:
-	__slots__ = ['log', 'locale', '__user_token', '__user_email', '__user_password', '__totp_secret', '__xfingerprint', 'userData', '__proxy_host', '__proxy_port', 'api_version', 'discord', 'websocketurl', 'remoteauthurl', '__user_agent', 's', '__super_properties', 'gateway', 'Embedder', 'Science']
+	__slots__ = ['log', 'locale', '__user_token', '__user_email', '__user_password', '__totp_secret', '__xfingerprint', 'userData', '__proxy_host', '__proxy_port', 'api_version', 'discord', 'websocketurl', 'remoteauthurl', '__user_agent', 's', '__super_properties', 'gateway', 'Science']
 	def __init__(self, email="", password="", secret="", code="", token="", remote_auth=False, proxy_host=None, proxy_port=None, user_agent="random", locale="en-US", build_num="request", log={"console":True, "file":False}):
 		#step 1: vars
 		self.log = log
@@ -94,10 +95,7 @@ class Client:
 		#step 7: gateway (object initialization)
 		from .gateway.gateway import GatewayServer
 		self.gateway = GatewayServer(self.websocketurl, self.__user_token, self.__super_properties, self.s, self.discord, self.log) #self.s contains proxy host and proxy port already
-		#step 8: embed (object initialization)
-		from .utils.embed import Embedder
-		self.Embedder = Embedder
-		#step 9: somewhat prepare for science events
+		#step 8: somewhat prepare for science events
 		self.Science = ""
 
 ##########################################################
@@ -624,6 +622,17 @@ class Client:
 
 	def schoolHubSignup(self, email, school):
 		return imports.Guild(self.discord,self.s,self.log).schoolHubSignup(email, school)
+
+	'''
+	Interactions
+	'''
+	#used when searching for slash commands in a dm w/a bot
+	def getSlashCommands(self, applicationID):
+		return imports.SlashCommands(self.discord,self.s,self.log).getSlashCommands(applicationID)
+
+	#trigger a slash command (running /command blah blah blah whatever)
+	def triggerSlashCommand(self, applicationID, channelID, guildID=None, data={}, nonce="calculate"):
+		return imports.SlashCommands(self.discord,self.s,self.log).triggerSlashCommand(applicationID, channelID, guildID, data, nonce)
 
 	'''
 	"Science", aka Discord's tracking endpoint (https://luna.gitlab.io/discord-unofficial-docs/science.html - "Discord argues that they need to collect the data in the case the User allows the usage of the data later on. Which in [luna's] opinion is complete bullshit. Have a good day.")

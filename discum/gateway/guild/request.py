@@ -49,3 +49,39 @@ class GuildRequest(object):
 		if nonce != None:
 			data["d"]["nonce"] = nonce
 		self.gatewayobj.send(data)
+
+	#wait but why is this under guild? because gateway slash command searching only works in guilds
+	#example "d" fields (from client):
+	'''
+	{"guild_id": "blah", "nonce": "blah", "type": 1, "limit": 7, "query": "test"}
+	{"guild_id": "blah", "nonce": "blah", "type": 1, "applications": True, "offset": 0, "command_ids": ["blah", ...], "limit":10}
+	{"guild_id": "blah", "nonce": "blah", "type": 1, "offset": 30, "limit": 10}
+	'''
+	def searchSlashCommands(self, guild_id, nonce, offset, limit, command_ids, query):
+		#nonce
+		if nonce == "calculate":
+			from ...utils.nonce import calculateNonce
+			nonce = calculateNonce()
+		else:
+			nonce = str(nonce)
+		#payload
+		data = {
+			"op": self.gatewayobj.OPCODE.REQUEST_APPLICATION_COMMANDS,
+			"d": {"guild_id": guild_id, "nonce": nonce, "type": 1},
+		}
+		#case 1: search by query
+		if query != None:
+			data["d"].update({"limit":limit, "query":query})
+			if offset != None:
+				data["d"]["offset"] = offset
+		#case 2: search by command ids
+		elif command_ids != None:
+			if isinstance(command_ids, str):
+				command_ids = [command_ids]
+			data["d"].update({"applications":True, "offset":0 if offset==None else offset, "command_ids":command_ids, "limit":limit})
+		#case 3: get them all (with a limit)
+		else:
+			data["d"]["limit"] = limit
+			if offset != None:
+				data["d"]["offset"] = offset
+		self.gatewayobj.send(data)

@@ -342,6 +342,23 @@ def searchGuildMembersTest(resp):
 - user_ids (Optional[list]) - search if specified users are in guild(s)
 - nonce (Optional[str]) - current discord snowflake; user accs don't use this, but it can be helpful for an easy way to link requests to their responses
 
+##### ```gateway.request.searchSlashCommands```
+below is an example for sending slash commands to a guild. First we search for slash commands and then we send the one we want.
+```python
+from discum.utils.slash import SlashCommander
+
+@bot.gateway.command
+def slashCommandTest(resp):
+    if resp.event.ready_supplemental:
+        bot.gateway.request.searchSlashCommands('839502008108580904', limit=10, query="queue")
+    if resp.event.guild_application_commands_updated:
+        bot.gateway.removeCommand(slashCommandTest)
+        slashCmds = resp.parsed.auto()['application_commands']
+        s = SlashCommander(slashCmds, application_id='234395307759108106')
+        data = s.get(['queue'])
+        bot.triggerSlashCommand("234395307759108106", "847861529030033449", "839502008108580904", data=data)
+```
+
 ##### ```gateway.parse(...).guild_member_list_update```
 ```python
 bot.gateway.parse(savedEvent).guild_member_list_update

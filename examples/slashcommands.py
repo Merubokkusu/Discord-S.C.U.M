@@ -30,7 +30,6 @@ bot.gateway.run()
 
 #The following example is the recommended for triggering slash commands in a DM
 
-guildID = ""
 channelID = ""
 botID = "234395307759108106"
 
@@ -43,7 +42,7 @@ s = SlashCommander(slashCmds) #slashCmds can be either a list of cmds or just 1 
 data = s.get(['saved', 'queues', 'create'], inputs={'name':'test'})
 
 #finally, lets send the slash command
-bot.triggerSlashCommand(botID, channelID, guildID=guildID, data=data)
+bot.triggerSlashCommand(botID, channelID, data=data)
 
 '''
 It technically doesn't matter which one you use. But, if you'd like to mimic the client,

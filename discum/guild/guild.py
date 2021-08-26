@@ -38,7 +38,7 @@ class Guild(object):
 	#just the join guild endpoint, default location mimics joining a guild from the ([+]Add a Server) button
 	def joinGuildRaw(self, inviteCode, guild_id, channel_id, channel_type, location="join guild"):
 		url = self.discord+"invites/"+inviteCode
-		return Wrapper.sendRequest(self.s, 'post', url, headerModifications={"update":{"X-Context-Properties":ContextProperties.get(location, guild_id=guild_id, channel_id=channel_id, channel_type=channel_type)}}, log=self.log)
+		return Wrapper.sendRequest(self.s, 'post', url, "{}", headerModifications={"update":{"X-Context-Properties":ContextProperties.get(location, guild_id=guild_id, channel_id=channel_id, channel_type=channel_type)}}, log=self.log)
 
 	def joinGuild(self, inviteCode, location, wait):
 		guildData = self.getInfoFromInviteCode(inviteCode, with_counts=True, with_expiration=True, fromJoinGuildNav=(location.lower()=="join guild")).json()

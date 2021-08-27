@@ -6,7 +6,7 @@
         - [session data/settings](#botgatewaysession)
         
 - [Functions](#Functions)
-    - [check token](#check-token)
+    - [check token](#checkToken)
     - [convert between snowflake and unixts](#snowflake_to_unixts-and-unixts_to_snowflake)
     - [gateway functions](#gateway-functions)
         - [add functions to gateway command list](#gatewaycommand)

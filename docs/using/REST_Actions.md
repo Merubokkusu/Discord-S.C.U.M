@@ -794,9 +794,52 @@ bot.revokeBan('guildID00000000000','userID11111111111')
 ```python
 bot.getRoleMemberCounts('guildID00000000000')
 ```
-
 ###### Parameters:
 - guildID (str)
+
+##### ```getGuildIntegrations```
+```python
+bot.getGuildIntegrations('guildID00000000000')
+```
+###### Parameters:
+- guildID (str)
+- include_applications (Optional[bool/Nonetype]) - include bot info. Defaults to True.
+
+##### ```getGuildTemplates```
+```python
+bot.getGuildTemplates('guildID00000000000')
+```
+###### Parameters:
+- guildID (str)
+
+##### ```getRoleMemberIDs```
+this does not work for the @everyone role
+```python
+bot.getRoleMemberIDs('guildID00000000000', 'roleID000000000000')
+```
+###### Parameters:
+- guildID (str)
+- roleID (str)
+
+##### ```addMembersToRole```
+add members to role (add a role to multiple members at the same time)
+```python
+bot.addMembersToRole('guildID00000000000', 'roleID000000000000', ['userID1', 'userID2'])
+```
+###### Parameters:
+- guildID (str)
+- roleID (str)
+- memberIDs (list of strings)
+
+##### ```setMemberRoles```
+to add or remove roles, you need to know the current roles of the user
+```python
+bot.setMemberRoles('guildID00000000000', 'memberID0000000000', ['roleID1', 'roleID2'])
+```
+###### Parameters:
+- guildID (str)
+- memberID (str)
+- roleIDs (list of strings) - needs to have all the role IDs that you want the member to have
 
 ##### ```getMemberVerificationData```
 ```python

@@ -596,6 +596,26 @@ class Client:
 	def getRoleMemberCounts(self, guildID):
 		return imports.Guild(self.discord,self.s,self.log).getRoleMemberCounts(guildID)
 
+	#get integrations (includes applications aka bots)
+	def getGuildIntegrations(self, guildID, include_applications=True):
+		return imports.Guild(self.discord,self.s,self.log).getGuildIntegrations(guildID, include_applications)
+
+	#get guild templates
+	def getGuildTemplates(self, guildID):
+		return imports.Guild(self.discord,self.s,self.log).getGuildTemplates(guildID)
+
+	#get role member ids
+	def getRoleMemberIDs(self, guildID, roleID):
+		return imports.Guild(self.discord,self.s,self.log).getRoleMemberIDs(guildID, roleID)
+
+	#add members to role (add a role to multiple members at the same time)
+	def addMembersToRole(self, guildID, roleID, memberIDs):
+		return imports.Guild(self.discord,self.s,self.log).addMembersToRole(guildID, roleID, memberIDs)
+
+	#set roles of a member
+	def setMemberRoles(self, guildID, memberID, roleIDs):
+		return imports.Guild(self.discord,self.s,self.log).setMemberRoles(guildID, memberID, roleIDs)
+
 	def getMemberVerificationData(self, guildID, with_guild=False, invite_code=None):
 		return imports.Guild(self.discord,self.s,self.log).getMemberVerificationData(guildID, with_guild, invite_code)
 

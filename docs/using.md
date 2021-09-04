@@ -159,6 +159,7 @@ Table of Contents
     -   [search for school hubs](using/REST_Actions.md#lookupSchool)
     -   [signup for school hub waiting list](using/REST_Actions.md#schoolHubSignup)
     -   [get slash commands](using/REST_Actions.md#getSlashCommands)
+    -   [click on button or select from menu](using/REST_Actions.md#click)
     -   [trigger/send slash command](using/REST_Actions.md#triggerSlashCommand)
     -   [{gateway} fetch guild members](using/Gateway_Actions.md#gatewayfetchmembers)
     -   [{gateway} guild member fetching parameter helper (POC)](using/Gateway_Actions.md#gatewaygetmemberfetchingparams)

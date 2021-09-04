@@ -937,11 +937,34 @@ data = s.get(['saved', 'queues', 'create'], {'name':'hi'})
 bot.triggerSlashCommand("botID000000000", "channelID0000000", guildID="guildID0000000", data=data)
 ```
 ###### Parameters:
-- applicationID (str)
+- applicationID (str) - bot ID
 - channelID (str)
 - guildID (Optional[str])
-- data (dict) - gets sent in the "data" key. Can use discum.utils.slash.SlashCommander to help with formatting data.
+- data (dict) - gets sent in the "data" key. Can use discum.utils.slash.SlashCommander to help with formatting the data.
 - nonce (Optional[str]) - by default, this gets calculated
+
+##### ```click```
+```python
+#message is a dict
+from discum.utils.button import Buttoner
+buts = Buttoner(message["components"])
+bot.click(
+    message["webhook_id"],
+    channelID=message["channel_id"],
+    guildID=message.get("guild_id"),
+    messageID=message["id"],
+    messageFlags=message["flags"],
+    data=buts.getButton("First"),
+)
+```
+###### Parameters:
+- applicationID (str) - bot ID
+- channelID (str)
+- messageID (str)
+- messageFlags (str) - obtained by doing message["flags"]
+- guildID (str)
+- nonce (Optional[str]) - by default, this gets calculated
+- data (dict) - gets sent in the "data" key. Can use discum.utils.button.Buttoner to help with formatting the data.
 __________
 ### Messages
 ##### ```createDM```

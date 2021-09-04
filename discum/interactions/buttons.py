@@ -1,17 +1,14 @@
 from ..RESTapiwrap import Wrapper
 
-class SlashCommands(object):
+class Buttons(object):
 	__slots__ = ['discord', 's', 'log']
 	def __init__(self, discord, s, log):
 		self.discord = discord
 		self.s = s
 		self.log = log
 
-	def getSlashCommands(self, applicationID):
-		url = self.discord+"applications/"+applicationID+"/commands"
-		return Wrapper.sendRequest(self.s, 'get', url, log=self.log)
-
-	def triggerSlashCommand(self, applicationID, channelID, guildID, data, nonce):
+	#click on a button or select menu option(s)
+	def click(self, applicationID, channelID, messageID, messageFlags, guildID, nonce, data):
 		url = self.discord+"interactions"
 		if nonce == "calculate":
 			from ..utils.nonce import calculateNonce
@@ -19,12 +16,14 @@ class SlashCommands(object):
 		else:
 			nonce = str(nonce)
 		body = {
-			"type": 2,
-			"application_id": applicationID,
+			"type": 3,
+			"nonce": nonce,
 			"guild_id": guildID,
 			"channel_id": channelID,
+			"message_flags": messageFlags,
+			"message_id": messageID,
+			"application_id": applicationID,
 			"data": data,
-			"nonce": nonce,
 		}
 		if guildID == None:
 			body.pop("guild_id")

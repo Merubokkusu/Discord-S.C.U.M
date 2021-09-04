@@ -52,7 +52,7 @@ def exceptionChecker(e, types): #this is an A or B or ... check
 #gateway class
 class GatewayServer:
 
-	__slots__ = ['token', 'super_properties', 'auth', 'RESTurl', 'sessionobj', 'proxy_host', 'proxy_port', 'keepData', 'log', 'interval', 'session_id', 'sequence', 'READY', 'session', 'ws', '_after_message_hooks', '_last_err', '_last_close_event', 'connected', 'resumable', 'voice_data', 'memberFetchingStatus', 'resetMembersOnSessionReconnect', 'updateSessionData', 'guildMemberSearches', '_last_ack', 'latency', 'request', 'parse', '_zlib']
+	__slots__ = ['token', 'super_properties', 'auth', 'RESTurl', 'sessionobj', 'proxy_host', 'proxy_port', 'keepData', 'log', 'interval', 'session_id', 'sequence', 'READY', 'session', 'ws', '_after_message_hooks', '_last_err', '_last_close_event', 'connected', 'resumable', 'voice_data', 'memberFetchingStatus', 'resetMembersOnSessionReconnect', 'updateSessionData', 'guildMemberSearches', '_last_ack', 'latency', 'request', 'parse', '_zlib', 'connectionKwargs']
 
 	class OPCODE:
 		# Name                         Code  Client Action   Description
@@ -141,6 +141,9 @@ class GatewayServer:
 		#gateway requests and parsing
 		self.request = Request(self)
 		self.parse = Parse
+
+		#extra gateway connection kwargs
+		self.connectionKwargs = {}
 
 	#WebSocketApp, more info here: https://github.com/websocket-client/websocket-client/blob/master/websocket/_app.py#L84
 	def _get_ws_app(self, websocketurl):
@@ -363,7 +366,7 @@ class GatewayServer:
 								time.sleep(10)
 		else:
 			self._zlib = zlib.decompressobj()
-			self.ws.run_forever(ping_interval=10, ping_timeout=5, http_proxy_host=self.proxy_host, http_proxy_port=self.proxy_port)
+			self.ws.run_forever(ping_interval=10, ping_timeout=5, http_proxy_host=self.proxy_host, http_proxy_port=self.proxy_port, **self.connectionKwargs)
 
 	######################################################
 	def sessionUpdates(self, resp):

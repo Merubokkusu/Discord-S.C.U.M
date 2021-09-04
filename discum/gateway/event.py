@@ -140,8 +140,8 @@ class Event:
 		return self.response['t'] == 'INTEGRATION_DELETE'
 
 	@property
-	def interaction(self):
-		return self.response['t'] == 'INTERACTION_CREATE'
+	def interaction_successful(self):
+		return self.response['t'] == 'INTERACTION_SUCCESS'
 
 	@property
 	def guild_member_list(self):

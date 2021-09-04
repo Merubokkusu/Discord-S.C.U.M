@@ -37,6 +37,7 @@
 | resp.event.integration_updated | INTEGRATION_UPDATE |
 | resp.event.integration_deleted | INTEGRATION_DELETE |
 | resp.event.interaction | INTERACTION_CREATE |
+| resp.event.interaction_successful | INTERACTION_SUCCESS |
 | resp.event.guild_member_list | GUILD_MEMBER_LIST_UPDATE |
 | resp.event.guild_member_updated | GUILD_MEMBER_UPDATE |
 | resp.event.guild_members_chunk | GUILD_MEMBERS_CHUNK |

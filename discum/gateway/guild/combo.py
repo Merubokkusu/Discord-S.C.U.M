@@ -9,6 +9,7 @@ from ...utils.permissions import PERMS, Permissions
 from ...logger import *
 
 class GuildCombo(object):
+	__slots__ = ['gatewayobj']
 	def __init__(self, gatewayobj):
 		self.gatewayobj = gatewayobj
 

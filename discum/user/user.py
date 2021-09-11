@@ -2,8 +2,10 @@ import base64
 import datetime
 from ..RESTapiwrap import *
 from ..utils.contextproperties import ContextProperties
+from ..utils.color import Color
 
 class User(object):
+	__slots__ = ['discord', 's', 'log']
 	def __init__(self, discord, s, log): #s is the requests session object
 		self.discord = discord
 		self.s = s
@@ -116,6 +118,11 @@ class User(object):
 		with open(imagePath, "rb") as image:
 			encodedImage = base64.b64encode(image.read()).decode('utf-8')
 		body = {"avatar":"data:image/png;base64,"+encodedImage}
+		return Wrapper.sendRequest(self.s, 'patch', url, body, log=self.log)
+
+	def setProfileColor(self, color):
+		url = self.discord+"users/@me"
+		body = {"accent_color": Color.get(color)}
 		return Wrapper.sendRequest(self.s, 'patch', url, body, log=self.log)
 
 	def setUsername(self, username, password):

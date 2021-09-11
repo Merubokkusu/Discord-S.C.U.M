@@ -1,4 +1,5 @@
 class Event:
+	__slots__ = ['response']
 	def __init__(self, response):
 		self.response = response
 
@@ -91,8 +92,12 @@ class Event:
 		return self.response['t'] == 'GIFT_CODE_UPDATE'
 
 	@property
-	def guild_application_commands_updated(self): #huh?
+	def guild_application_commands_updated(self):
 		return self.response['t'] == 'GUILD_APPLICATION_COMMANDS_UPDATE'
+
+	@property
+	def guild_application_command_counts_updated(self):
+		return self.response['t'] == 'GUILD_APPLICATION_COMMAND_COUNTS_UPDATE'
 
 	@property
 	def ban_added(self): #{'t': 'GUILD_BAN_ADD', 's': s, 'op': 0, 'd': {'user': {'username': username, 'public_flags': 0, 'id': id, 'discriminator': '0000', 'avatar': None}, 'guild_id': guildID}}
@@ -135,8 +140,8 @@ class Event:
 		return self.response['t'] == 'INTEGRATION_DELETE'
 
 	@property
-	def interaction(self):
-		return self.response['t'] == 'INTERACTION_CREATE'
+	def interaction_successful(self):
+		return self.response['t'] == 'INTERACTION_SUCCESS'
 
 	@property
 	def guild_member_list(self):

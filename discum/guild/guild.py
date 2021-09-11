@@ -11,6 +11,7 @@ except ImportError:
 	from urllib import quote
 
 class Guild(object):
+	__slots__ = ['discord', 's', 'log']
 	def __init__(self, discord, s, log): #s is the requests session object
 		self.discord = discord
 		self.s = s
@@ -124,6 +125,34 @@ class Guild(object):
 	def getRoleMemberCounts(self, guildID):
 		url = self.discord+"guilds/"+guildID+"/roles/member-counts"
 		return Wrapper.sendRequest(self.s, 'get', url, log=self.log)
+
+	def getGuildIntegrations(self, guildID, include_applications):
+		url = self.discord+"guilds/"+guildID+"/integrations"
+		if include_applications != None:
+			url += "?include_applications="+repr(include_applications).lower()
+		return Wrapper.sendRequest(self.s, 'get', url, log=self.log)
+
+	def getGuildTemplates(self, guildID):
+		url = self.discord+"guilds/"+guildID+"/templates"
+		return Wrapper.sendRequest(self.s, 'get', url, log=self.log)
+
+	def getRoleMemberIDs(self, guildID, roleID):
+		url = self.discord+"guilds/"+guildID+"/roles/"+roleID+"/member-ids"
+		return Wrapper.sendRequest(self.s, 'get', url, log=self.log)
+
+	def addMembersToRole(self, guildID, roleID, memberIDs):
+		if isinstance(memberIDs, str):
+			memberIDs = [memberIDs]
+		url = self.discord+"guilds/"+guildID+"/roles/"+roleID+"/members"
+		body = {"member_ids":memberIDs}
+		return Wrapper.sendRequest(self.s, 'patch', url, body, log=self.log)
+
+	def setMemberRoles(self, guildID, memberID, roleIDs):
+		if isinstance(roleIDs, str):
+			roleIDs = [roleIDs]
+		url = self.discord+"guilds/"+guildID+"/members/"+memberID
+		body = {"roles": roleIDs}
+		return Wrapper.sendRequest(self.s, 'patch', url, body, log=self.log)
 
 	'''
 	other stuff

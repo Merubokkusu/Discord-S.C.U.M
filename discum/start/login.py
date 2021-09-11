@@ -9,6 +9,7 @@ class Login:
 	'''
 	Manages HTTP authentication
 	'''
+	__slots__ = ['discord', 'log', 'editedS', 'xfingerprint']
 	def __init__(self, s, discordurl, log):
 		self.discord = discordurl
 		self.log = log

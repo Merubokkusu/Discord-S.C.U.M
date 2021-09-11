@@ -27,6 +27,8 @@ from ..logger import *
 
 class RemoteAuth:
 
+	__slots__ = ['user_agent', 'saveQrCode', 'proxy_host', 'proxy_port', 'log', '_last_err', '_after_message_hooks', 'connected', 'interval', 'key_pair', 'public_key', 'decryptor', 'fingerprint', 'qr_url', 'qr_img', 'userData', 'token', 'ws']
+
 	class OPCODE:
 		# Name                 Code                      Client Action   Description
 		HELLO =                "hello"  #                Receive         sent on connection open

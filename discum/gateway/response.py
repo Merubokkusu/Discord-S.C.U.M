@@ -11,6 +11,7 @@ from .event import Event
 from .parse import Parse
 
 class Resp:
+	__slots__ = ['raw', 'event', 'parsed']
 	def __init__(self, response):
 		self.raw = response
 		self.event = Event(response)

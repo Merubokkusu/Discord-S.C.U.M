@@ -205,6 +205,18 @@ bot.setAvatar('./catpics/001.png')
 ###### Parameters:
 - image path (str)
 
+##### ```setProfileColor```
+```python
+bot.setProfileColor('red')
+```
+###### Parameters:
+- color (Optional[str/tuple/list/int]) - can either input a color name, an rgb tuple/list, or a decimal color. Defaults to None
+
+Note: these are all the possible string values:
+```
+['black', 'default', 'aqua', 'teal', 'dark_aqua', 'dark_teal', 'green', 'dark_green', 'blue', 'dark_blue', 'purple', 'dark_purple', 'magenta', 'luminous_vivid_pink', 'dark_magenta', 'dark_vivid_pink', 'gold', 'dark_gold', 'orange', 'dark_orange', 'red', 'dark_red', 'light_grey', 'grey', 'dark_grey', 'darker_grey', 'og_blurple', 'ruined_blurple', 'blurple', 'greyple', 'dark_theme', 'not_quite_black', 'dark_but_not_black', 'white', 'fuchsia', 'yellow', 'navy', 'dark_navy']
+```
+
 ##### ```setAboutMe```
 currently, you need to be in the beta testing program for this to work
 ```python
@@ -782,9 +794,52 @@ bot.revokeBan('guildID00000000000','userID11111111111')
 ```python
 bot.getRoleMemberCounts('guildID00000000000')
 ```
-
 ###### Parameters:
 - guildID (str)
+
+##### ```getGuildIntegrations```
+```python
+bot.getGuildIntegrations('guildID00000000000')
+```
+###### Parameters:
+- guildID (str)
+- include_applications (Optional[bool/Nonetype]) - include bot info. Defaults to True.
+
+##### ```getGuildTemplates```
+```python
+bot.getGuildTemplates('guildID00000000000')
+```
+###### Parameters:
+- guildID (str)
+
+##### ```getRoleMemberIDs```
+this does not work for the @everyone role
+```python
+bot.getRoleMemberIDs('guildID00000000000', 'roleID000000000000')
+```
+###### Parameters:
+- guildID (str)
+- roleID (str)
+
+##### ```addMembersToRole```
+add members to role (add a role to multiple members at the same time)
+```python
+bot.addMembersToRole('guildID00000000000', 'roleID000000000000', ['userID1', 'userID2'])
+```
+###### Parameters:
+- guildID (str)
+- roleID (str)
+- memberIDs (list of strings)
+
+##### ```setMemberRoles```
+to add or remove roles, you need to know the current roles of the user
+```python
+bot.setMemberRoles('guildID00000000000', 'memberID0000000000', ['roleID1', 'roleID2'])
+```
+###### Parameters:
+- guildID (str)
+- memberID (str)
+- roleIDs (list of strings) - needs to have all the role IDs that you want the member to have
 
 ##### ```getMemberVerificationData```
 ```python
@@ -860,6 +915,57 @@ bot.schoolHubSignup('school@school.edu', 'wowow')
 - school (str) - school name
 
 __________
+### Interactions
+##### ```getSlashCommands```
+```python
+bot.getSlashCommands("botID000000000")
+```
+###### Parameters:
+- applicationID (str) - the bot ID
+
+##### ```triggerSlashCommand```
+```python
+#first, lets see what slash commands we can run
+slashCmds = bot.getSlashCommands("botID000000000").json()
+
+#next, let's parse that and create some slash command data
+from discum.utils.slash import SlashCommander
+s = SlashCommander(slashCmds) #slashCmds can be either a list of cmds or just 1 cmd. Each cmd is of type dict.
+data = s.get(['saved', 'queues', 'create'], {'name':'hi'})
+
+#finally, lets send the slash command
+bot.triggerSlashCommand("botID000000000", "channelID0000000", guildID="guildID0000000", data=data)
+```
+###### Parameters:
+- applicationID (str) - bot ID
+- channelID (str)
+- guildID (Optional[str])
+- data (dict) - gets sent in the "data" key. Can use discum.utils.slash.SlashCommander to help with formatting the data.
+- nonce (Optional[str]) - by default, this gets calculated
+
+##### ```click```
+```python
+#message is a dict
+from discum.utils.button import Buttoner
+buts = Buttoner(message["components"])
+bot.click(
+    message["webhook_id"],
+    channelID=message["channel_id"],
+    guildID=message.get("guild_id"),
+    messageID=message["id"],
+    messageFlags=message["flags"],
+    data=buts.getButton("First"),
+)
+```
+###### Parameters:
+- applicationID (str) - bot ID
+- channelID (str)
+- messageID (str)
+- messageFlags (str) - obtained by doing message["flags"]
+- guildID (str)
+- nonce (Optional[str]) - by default, this gets calculated
+- data (dict) - gets sent in the "data" key. Can use discum.utils.button.Buttoner to help with formatting the data.
+__________
 ### Messages
 ##### ```createDM```
 \*_risky action_
@@ -898,7 +1004,8 @@ bot.greet('channelID0000000000', ["749054660769218631"])
 
 ##### ```Embedder```
 ```python
-embed = bot.Embedder()
+from discum.utils.embed import Embedder
+embed = Embedder()
 embed.title("This is a test")
 embed.image('https://cdn.dribbble.com/users/189524/screenshots/2105870/04-example_800x600_v4.gif')
 embed.fields('Hello!',':yum:')

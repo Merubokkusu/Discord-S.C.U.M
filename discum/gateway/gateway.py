@@ -6,26 +6,29 @@ import base64
 import zlib
 import copy
 
-#some http wraps that help gateway functions:
-from ..user.user import User
-
 try:
 	import thread
 except ImportError:
 	import _thread as thread
 
+#session data, response object, requests, and parsing
 from .session import Session
 from .response import Resp
 from .request import Request
-
 from .parse import Parse
-
-#gateway combo functions
-from .guild.combo import GuildCombo
-from .user.combo import UserCombo
 
 #log to console/file
 from ..logger import * #imports LogLevel and Logger
+
+#dynamic imports
+from ..importmanager import Imports
+imports = Imports(
+	{
+		"User": "discum.user.user",
+		"GuildCombo": "discum.gateway.guild.combo",
+		"UserCombo": "discum.gateway.user.combo",
+	}
+)
 
 #exceptions
 class InvalidSessionException(Exception):
@@ -48,6 +51,8 @@ def exceptionChecker(e, types): #this is an A or B or ... check
 
 #gateway class
 class GatewayServer:
+
+	__slots__ = ['token', 'super_properties', 'auth', 'RESTurl', 'sessionobj', 'proxy_host', 'proxy_port', 'keepData', 'log', 'interval', 'session_id', 'sequence', 'READY', 'session', 'ws', '_after_message_hooks', '_last_err', '_last_close_event', 'connected', 'resumable', 'voice_data', 'memberFetchingStatus', 'resetMembersOnSessionReconnect', 'updateSessionData', 'guildMemberSearches', '_last_ack', 'latency', 'request', 'parse', '_zlib', 'connectionKwargs']
 
 	class OPCODE:
 		# Name                         Code  Client Action   Description
@@ -137,6 +142,9 @@ class GatewayServer:
 		self.request = Request(self)
 		self.parse = Parse
 
+		#extra gateway connection kwargs
+		self.connectionKwargs = {}
+
 	#WebSocketApp, more info here: https://github.com/websocket-client/websocket-client/blob/master/websocket/_app.py#L84
 	def _get_ws_app(self, websocketurl):
 		sec_websocket_key = base64.b64encode(bytes(random.getrandbits(8) for _ in range(16))).decode() #https://websockets.readthedocs.io/en/stable/_modules/websockets/handshake.html
@@ -178,7 +186,7 @@ class GatewayServer:
 			if len(self.session.settings_ready) != 0:
 				if self.session.userSettings.get("activities") not in (None, {}):
 					self.auth["presence"]["status"] = self.session.userSettings.get("status")
-					self.auth["presence"]["activities"] = UserCombo(self).constructActivitiesList()
+					self.auth["presence"]["activities"] = imports.UserCombo(self).constructActivitiesList()
 			self.send({"op": self.OPCODE.IDENTIFY, "d": self.auth})
 		else:
 			self.resumable = False
@@ -218,14 +226,14 @@ class GatewayServer:
 		if resp.event.ready:
 			self._last_err = None
 			self.session_id = response['d']['session_id']
-			self.settings_ready = resp.parsed.ready() #parsed
+			settings_ready = resp.parsed.ready() #parsed
 			if not self.resetMembersOnSessionReconnect and self.session.read()[0]:
-				for guildID in self.settings_ready['guilds']:
-					self.settings_ready['guilds'][guildID]['members'] = self.session.guild(guildID).members
-			self.session = Session(self.settings_ready, {})
+				for guildID in settings_ready['guilds']:
+					settings_ready['guilds'][guildID]['members'] = self.session.guild(guildID).members
+			self.session.setSettingsReady(settings_ready)
 		elif resp.event.ready_supplemental:
-			self.settings_ready_supp = resp.parsed.ready_supplemental() #parsed
-			self.session = Session(self.settings_ready, self.settings_ready_supp) #reinitialize i guess
+			settings_ready_supp = resp.parsed.ready_supplemental() #parsed
+			self.session.setSettingsReadySupp(settings_ready_supp)
 			self.READY = True
 		if self.updateSessionData:
 			self.sessionUpdates(resp)
@@ -253,6 +261,8 @@ class GatewayServer:
 	def _heartbeat(self):
 		Logger.log("[gateway] entering heartbeat", None, self.log)
 		while self.connected:
+			if self.interval == None: #can't replicate the issue so consider this a temp patch
+				self.interval = 41.25
 			time.sleep(self.interval)
 			if not self.connected:
 				break
@@ -327,7 +337,7 @@ class GatewayServer:
 		self._last_ack = None
 		self.memberFetchingStatus = {"first": []}
 
-	#kinda influenced by https://github.com/scrubjay55/Reddit_ChatBot_Python/blob/master/Reddit_ChatBot_Python/WebSockClient.py (Apache License 2.0)
+	#kinda influenced by https://github.com/scrubjay55/Reddit_ChatBot_Python (Apache License 2.0)
 	def run(self, auto_reconnect=True):
 		if auto_reconnect:
 			while True:
@@ -356,7 +366,7 @@ class GatewayServer:
 								time.sleep(10)
 		else:
 			self._zlib = zlib.decompressobj()
-			self.ws.run_forever(ping_interval=10, ping_timeout=5, http_proxy_host=self.proxy_host, http_proxy_port=self.proxy_port)
+			self.ws.run_forever(ping_interval=10, ping_timeout=5, http_proxy_host=self.proxy_host, http_proxy_port=self.proxy_port, **self.connectionKwargs)
 
 	######################################################
 	def sessionUpdates(self, resp):
@@ -435,7 +445,7 @@ class GatewayServer:
 			del self.memberFetchingStatus[guild_id] #just resetting tracker on the specific guild_id
 		self.command(
 			{
-				"function": GuildCombo(self).fetchMembers,
+				"function": imports.GuildCombo(self).fetchMembers,
 				"priority": priority,
 				"params": {
 					"guild_id": guild_id,
@@ -458,29 +468,29 @@ class GatewayServer:
 	def findVisibleChannels(self, guildID, types=['guild_text', 'dm', 'guild_voice', 'group_dm', 'guild_category', 'guild_news', 'guild_store', 'guild_news_thread', 'guild_public_thread', 'guild_private_thread', 'guild_stage_voice'], findFirst=False):
 		if len(self.session.read()[0]) == 0: #if never connected to gateway
 			return
-		return GuildCombo(self).findVisibleChannels(guildID, types, findFirst)
+		return imports.GuildCombo(self).findVisibleChannels(guildID, types, findFirst)
 
 	#sends a series of opcode 14s to tell discord that you're looking at guild channels
 	def subscribeToGuildEvents(self, onlyLarge=False, wait=None):
-		GuildCombo(self).subscribeToGuildEvents(onlyLarge, wait)
+		imports.GuildCombo(self).subscribeToGuildEvents(onlyLarge, wait)
 
 	#op8 related stuff
 	def queryGuildMembers(self, guildIDs, query, saveAsQueryOverride=None, limit=10, presences=True, keep=[]):
 		if isinstance(guildIDs, str):
 			guildIDs = [guildIDs]
-		GuildCombo(self).searchGuildMembers(guildIDs, query, saveAsQueryOverride, limit, presences, None, keep)
+		imports.GuildCombo(self).searchGuildMembers(guildIDs, query, saveAsQueryOverride, limit, presences, None, keep)
 
 	def checkGuildMembers(self, guildIDs, userIDs, presences=True, keep=[]):
 		if isinstance(guildIDs, str):
 			guildIDs = [guildIDs]
-		GuildCombo(self).searchGuildMembers(guildIDs, "", None, 10, presences, userIDs, keep)
+		imports.GuildCombo(self).searchGuildMembers(guildIDs, "", None, 10, presences, userIDs, keep)
 
 	def finishedGuildSearch(self, guildIDs, query="", saveAsQueryOverride=None, userIDs=None, keep=False):
 		if isinstance(guildIDs, str):
 			guildIDs = [guildIDs]
 		saveAsQuery = query.lower() if saveAsQueryOverride==None else saveAsQueryOverride.lower()
 		command = {
-			"function": GuildCombo(self).handleGuildMemberSearches,
+			"function": imports.GuildCombo(self).handleGuildMemberSearches,
 			"params": {
 				"guildIDs": guildIDs,
 				"saveAsQuery": saveAsQuery,
@@ -493,7 +503,7 @@ class GatewayServer:
 			command["params"].pop("keep")
 			for c in self._after_message_hooks:
 				if isinstance(c, dict):
-					if c.get("function").__func__ == GuildCombo(self).handleGuildMemberSearches.__func__:
+					if c.get("function").__func__ == imports.GuildCombo(self).handleGuildMemberSearches.__func__:
 						d1 = command["params"]
 						d2 = c.get("params", {})
 						if all(key in d2 and d2[key] == d1[key] for key in d1): #https://stackoverflow.com/a/41579450/14776493
@@ -506,55 +516,55 @@ class GatewayServer:
 	User stuff
 	'''
 	def setStatus(self, status): #can only be run while connected to gateway
-		User(self.RESTurl,self.sessionobj,self.log).setStatusHelper(status)
-		UserCombo(self).setStatus(status)
+		imports.User(self.RESTurl,self.sessionobj,self.log).setStatusHelper(status)
+		imports.UserCombo(self).setStatus(status)
 
 	#Currently does not work due to discord api changes :/ They seem to be cross checking inputs with connections but not sure yet...
 	def setPlayingStatus(self, game): #can only be run while connected to gateway, will update metadata later
 		if not self.session.userSettings['show_current_game']:
-			User(self.RESTurl,self.sessionobj,self.log).enableActivityDisplay(enable=True)
-		UserCombo(self).setPlayingStatus(game)
+			imports.User(self.RESTurl,self.sessionobj,self.log).enableActivityDisplay(enable=True)
+		imports.UserCombo(self).setPlayingStatus(game)
 
 	def removePlayingStatus(self): #can only be run while connected to gateway
-		UserCombo(self).removePlayingStatus()
+		imports.UserCombo(self).removePlayingStatus()
 
 	#Currently does not work due to discord api changes :/ They seem to be cross checking inputs with connections but not sure yet...
 	def setStreamingStatus(self, stream, url): #can only be run while connected to gateway, will update metadata later
 		if not self.session.userSettings['show_current_game']:
-			User(self.RESTurl,self.sessionobj,self.log).enableActivityDisplay(enable=True)
-		UserCombo(self).setStreamingStatus(stream, url)
+			imports.User(self.RESTurl,self.sessionobj,self.log).enableActivityDisplay(enable=True)
+		imports.UserCombo(self).setStreamingStatus(stream, url)
 
 	def removeStreamingStatus(self): #can only be run while connected to gateway
-		UserCombo(self).removeStreamingStatus()
+		imports.UserCombo(self).removeStreamingStatus()
 
 	#Currently does not work due to discord api changes :/ They seem to be cross checking inputs with connections but not sure yet...
 	def setListeningStatus(self, song): #can only be run while connected to gateway, will update metadata later
 		if not self.session.userSettings['show_current_game']:
-			User(self.RESTurl,self.sessionobj,self.log).enableActivityDisplay(enable=True)
-		UserCombo(self).setListeningStatus(song)
+			imports.User(self.RESTurl,self.sessionobj,self.log).enableActivityDisplay(enable=True)
+		imports.UserCombo(self).setListeningStatus(song)
 
 	def removeListeningStatus(self): #can only be run while connected to gateway
-		UserCombo(self).removeListeningStatus()
+		imports.UserCombo(self).removeListeningStatus()
 
 	#Currently does not work due to discord api changes :/ They seem to be cross checking inputs with connections but not sure yet...
 	def setWatchingStatus(self, show): #can only be run while connected to gateway, will update metadata later
 		if not self.session.userSettings['show_current_game']:
-			User(self.RESTurl,self.sessionobj,self.log).enableActivityDisplay(enable=True)
-		UserCombo(self).setWatchingStatus(show)
+			imports.User(self.RESTurl,self.sessionobj,self.log).enableActivityDisplay(enable=True)
+		imports.UserCombo(self).setWatchingStatus(show)
 
 	def removeWatchingStatus(self): #can only be run while connected to gateway
-		UserCombo(self).removeWatchingStatus()
+		imports.UserCombo(self).removeWatchingStatus()
 
 	def setCustomStatus(self, customstatus, emoji=None, animatedEmoji=False, expires_at=None): #can only be run while connected to gateway
-		User(self.RESTurl,self.sessionobj,self.log).setStatusHelper(self.session.userSettings['status'])
-		User(self.RESTurl,self.sessionobj,self.log).setCustomStatusHelper(customstatus, emoji, expires_at)
-		UserCombo(self).setCustomStatus(customstatus, emoji, animatedEmoji)
+		imports.User(self.RESTurl,self.sessionobj,self.log).setStatusHelper(self.session.userSettings['status'])
+		imports.User(self.RESTurl,self.sessionobj,self.log).setCustomStatusHelper(customstatus, emoji, expires_at)
+		imports.UserCombo(self).setCustomStatus(customstatus, emoji, animatedEmoji)
 
 	def removeCustomStatus(self):
-		User(self.RESTurl,self.sessionobj,self.log).setCustomStatusHelper("")
-		UserCombo(self).removeCustomStatus()
+		imports.User(self.RESTurl,self.sessionobj,self.log).setCustomStatusHelper("")
+		imports.UserCombo(self).removeCustomStatus()
 
 	def clearActivities(self):
 		if self.session.userSettings['custom_status'] != None:
-			User(self.RESTurl,self.sessionobj,self.log).setCustomStatusHelper("", emoji=None, expires_at=None)
-		UserCombo(self).clearActivities()
+			imports.User(self.RESTurl,self.sessionobj,self.log).setCustomStatusHelper("", emoji=None, expires_at=None)
+		imports.UserCombo(self).clearActivities()

@@ -5,6 +5,7 @@ import random
 from ..utils.client_uuid import Client_UUID
 
 class Science(object):
+    __slots__ = ['discord', 's', 'log', 'analytics_token', 'xfingerprint', 'UUIDobj']
     def __init__(self, discord, s, log, analytics_token, userID, xfingerprint): #s is the requests session object
         self.discord = discord
         self.s = s

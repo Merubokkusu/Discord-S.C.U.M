@@ -456,7 +456,7 @@ class User(object):
 		url = self.discord+"users/@me/guilds/"+str(guildID)+"/settings"
 		if type(overrides[0]) in (tuple, list):
 			msgNotificationTypes = ["all messages", "only mentions", "nothing"]
-			overrides = [{str(channel):{"message_notifications": self.index(msgNotificationTypes, msg.lower()), "muted":muted}} for channel,msg,muted in overrides]
+			overrides = {str(channel):{"message_notifications": self.index(msgNotificationTypes, msg.lower()), "muted":muted} for channel,msg,muted in overrides}
 		body = {"channel_overrides": overrides}
 		return Wrapper.sendRequest(self.s, 'patch', url, body, log=self.log)
 

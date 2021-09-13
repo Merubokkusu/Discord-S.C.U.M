@@ -90,7 +90,7 @@ class Client:
 				self.__user_token, self.userData = self.remoteAuthLogin(remote_auth)
 			else:
 				loginResponse, self.__xfingerprint = imports.Login(self.s, self.discord, self.log).login(email=email, password=password, undelete=False, captcha=None, source=None, gift_code_sku_id=None, secret=secret, code=code)
-				self.__user_token = loginResponse.get('token') #update token from "" to actual value
+				self.__user_token = loginResponse.json().get('token') #update token from "" to actual value
 				time.sleep(1)
 		self.s.headers.update({"Authorization": self.__user_token}) #update headers
 		#step 7: gateway (object initialization)

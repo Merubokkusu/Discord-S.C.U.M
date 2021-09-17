@@ -539,6 +539,12 @@ class Client:
 	def setThreadNotifications(self, threadID, notifications):
 		return imports.User(self.discord,self.s,self.log).setThreadNotifications(threadID, notifications)
 
+	def getReportMenu(self):
+		return imports.User(self.discord,self.s,self.log).getReportMenu()
+
+	def reportSpam(self, channelID, messageID, reportType="first_dm", guildID=None, version="1.0", variant="1", language="en"):
+		return imports.User(self.discord,self.s,self.log).reportSpam(channelID, messageID, reportType, guildID, version, variant, language)
+
 	def logout(self, provider=None, voip_provider=None):
 		return imports.User(self.discord,self.s,self.log).logout(provider, voip_provider)
 

@@ -3,6 +3,7 @@ import datetime
 from ..RESTapiwrap import *
 from ..utils.contextproperties import ContextProperties
 from ..utils.color import Color
+from ..utils.nonce import calculateNonce
 
 class User(object):
 	__slots__ = ['discord', 's', 'log']
@@ -489,6 +490,28 @@ class User(object):
 		flags = 1<<(self.index(threadNotificationTypes, notifications.lower())+1)
 		body = {"flags": flags}
 		return Wrapper.sendRequest(self.s, 'patch', url, body, log=self.log)
+
+	def getReportMenu(self):
+		url = self.discord+'reporting/menu/first_dm'
+		return Wrapper.sendRequest(self.s, 'get', url, log=self.log)
+
+	def reportSpam(self, channelID, messageID, reportType, guildID, version, variant, language):
+		url = self.discord+'reporting/'+reportType
+		body = {
+			"id": calculateNonce(),
+			"version": version,
+			"variant": variant,
+			"language": language,
+			"breadcrumbs": [7],
+			"elements": {},
+			"name": reportType,
+			"channel_id": channelID,
+			"message_id": messageID,
+		}
+		if reportType in ('guild_directory_entry', 'stage_channel', 'guild'):
+			body["guild_id"] = guildID
+		return Wrapper.sendRequest(self.s, 'post', url, body, log=self.log)
+
 
 	'''
 	Logout

@@ -625,6 +625,26 @@ bot.setThreadNotifications('threadID000000000', 'all messages')
 - threadID (str)
 - notifications (str) - either "all messages" or "only mentions" or "nothing"
 
+##### ```getReportMenu```
+used to get version and variant of report menu
+```python
+bot.getReportMenu()
+```
+
+##### ```reportSpam```
+```python
+bot.reportSpam('channelID00000000', 'messageID00000000')
+```
+###### Parameters:
+channelID, messageID, reportType="first_dm", guildID=None, version="1.0", variant="1", language="en"
+- channelID (str)
+- messageID (str)
+- reportType (Optional[str]) - options are "first_dm", "message", "user", "guild", "guild_directory_entry", "stage_channel". Defaults to "first_dm"
+- guildID (Optional[str]) - if reportType is in ("guild", "guild_directory_entry", "stage_channel"), then this field is necessary
+- version (Optional[str]) - the report menu version. Can be retrievied from the response of ```bot.getReportMenu()```
+- variant (Optional[str]) - the report menu variant. Can be retrievied from the response of ```bot.getReportMenu()```
+- language (Optional[str]) - ISO 639-1 Code language representation. Example: "en" for English. See the 2-letter codes at https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes. Defaults to "en"
+
 ##### ```logout```
 ```python
 bot.logout()

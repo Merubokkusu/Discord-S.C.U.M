@@ -114,7 +114,8 @@ bot.gateway.run(auto_reconnect=True)
 - [X] On-Message (and other on-anything gateway) capabilities
 - [X] Getting guild members
 - [X] improve documentation
-- [ ] add more http api wraps (interactions and guilds)
+- [X] add interactions (slash command triggering, buttons, and dropdowns/menus)
+- [ ] add more guild http api wraps
 - [ ] media (voice & video calls, along with the various discord games/activites)
 - [ ] Everything
 

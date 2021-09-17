@@ -112,6 +112,8 @@ Table of Contents
     -   [mute guild](using/REST_Actions.md#muteGuild)
     -   [mute DM](using/REST_Actions.md#muteDM)
     -   [set thread notifications](using/REST_Actions.md#setThreadNotifications)
+    -   [get spam report menu info](using/REST_Actions.md#getReportMenu)
+    -   [report spam](using/REST_Actions.md#reportSpam)
     -   [logout](using/REST_Actions.md#logout)
     -   [{gateway} set status](using/Gateway_Actions.md#gatewaysetstatus)
     -   [{gateway} set custom status](using/Gateway_Actions.md#gatewaysetcustomstatus)

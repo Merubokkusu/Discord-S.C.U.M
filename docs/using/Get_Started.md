@@ -65,8 +65,11 @@ def helloworld(resp):
         guildID = m['guild_id'] if 'guild_id' in m else None #because DMs are technically channels too
         channelID = m['channel_id']
         username = m['author']['username']
+        userId = m['author']['id']
+        messageID = m['id']
         discriminator = m['author']['discriminator']
-        content = m['content']
+        content = m['content'] 
+        messageLink = "https://discord.com/channels/"+guildID+"/"+channelID+"/"+messageID
         print("> guild {} channel {} | {}#{}: {}".format(guildID, channelID, username, discriminator, content))
 
 bot.gateway.run(auto_reconnect=True)

@@ -1,9 +1,12 @@
-from ..utils.fileparse import Fileparse
 from requests_toolbelt import MultipartEncoder
 import random,string
-import os.path
 import time, datetime
+import os.path
 import json
+import base64
+
+from ..utils.fileparse import Fileparse
+from ..utils.contextproperties import ContextProperties
 from ..RESTapiwrap import *
 
 try:
@@ -31,13 +34,51 @@ class Messages(object):
 		if isinstance(recipients, str):
 			recipients = [recipients]
 		body = {"recipients": recipients}
-		return Wrapper.sendRequest(self.s, 'post', url, body, headerModifications={"update":{"X-Context-Properties":"e30="}}, log=self.log)
+		if len(recipients)>1:
+			context = ContextProperties.get("new group dm")
+		else:
+			context = "e30=" #{}
+		return Wrapper.sendRequest(self.s, 'post', url, body, headerModifications={"update":{"X-Context-Properties":context}}, log=self.log)
 
 	#create a DM
 	def createDM(self, recipients):
 		req = self.createDMraw(recipients)
 		self.getMessages(req.json()["id"], num=50, beforeDate=None, aroundMessage=None)
 		return req
+
+	#deleteChannel (also works for deleting dms/dm-groups)
+	def deleteChannel(self, channelID):
+		url = self.discord+'channels/'+channelID
+		return Wrapper.sendRequest(self.s, 'delete', url, log=self.log)
+
+	def removeFromDmGroup(self, channelID, userID):
+		url = self.discord+'channels/'+channelID+'/recipients/'+userID
+		return Wrapper.sendRequest(self.s, 'delete', url, log=self.log)
+
+	def addToDmGroup(self, channelID, userID):
+		url = self.discord+'channels/'+channelID+'/recipients/'+userID
+		context = ContextProperties.get("add friends to dm")
+		return Wrapper.sendRequest(self.s, 'put', url, headerModifications={"update":{"X-Context-Properties":context}}, log=self.log)
+
+	def createDmGroupInvite(self, channelID, max_age_seconds):
+		url = self.discord+'channels/'+channelID+'/invites'
+		if max_age_seconds == False:
+			max_age_seconds = 0
+		body = {"max_age": max_age_seconds}
+		context = ContextProperties.get("Group DM Invite Create")
+		return Wrapper.sendRequest(self.s, 'post', url, body, headerModifications={"update":{"X-Context-Properties":context}}, log=self.log)
+
+	def setDmGroupName(self, channelID, name):
+		url = self.discord+'channels/'+channelID
+		body = {"name": name}
+		return Wrapper.sendRequest(self.s, 'patch', url, body, log=self.log)
+
+	def setDmGroupIcon(self, channelID, imagePath):
+		url = self.discord+'channels/'+channelID
+		with open(imagePath, "rb") as image:
+			encodedImage = base64.b64encode(image.read()).decode('utf-8')
+		body = {"icon":"data:image/png;base64,"+encodedImage}
+		return Wrapper.sendRequest(self.s, 'patch', url, body, log=self.log)
 
 	#get messages
 	def getMessages(self,channelID,num,beforeDate,aroundMessage): # num is between 1 and 100, beforeDate is a snowflake

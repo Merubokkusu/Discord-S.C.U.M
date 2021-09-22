@@ -22,6 +22,12 @@ class ContextProperties(object):
 			return "eyJsb2NhdGlvbiI6IlVzZXIgUHJvZmlsZSJ9" # {"location":"User Profile"}
 		elif loc == "add friend":
 			return "eyJsb2NhdGlvbiI6IkFkZCBGcmllbmQifQ==" # {"location":"Add Friend"}
+		elif loc == "new group dm":
+			return "eyJsb2NhdGlvbiI6Ik5ldyBHcm91cCBETSJ9" # {"location":"New Group DM"}
+		elif loc == "add friends to dm":
+			return "eyJsb2NhdGlvbiI6IkFkZCBGcmllbmRzIHRvIERNIn0=" # {"location":"Add Friends to DM"}
+		elif loc == "group dm invite create":
+			return "eyJsb2NhdGlvbiI6Ikdyb3VwIERNIEludml0ZSBDcmVhdGUifQ==" # {"location":"Group DM Invite Create"}
 		elif loc == "guild header":
 			return "eyJsb2NhdGlvbiI6Ikd1aWxkIEhlYWRlciJ9" # {"location":"Guild Header"}
 		elif loc in ("accept invite page", "join guild"):

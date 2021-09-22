@@ -69,6 +69,18 @@ class Guild(object):
 			body["target_type"] = targetType
 		return Wrapper.sendRequest(self.s, 'post', url, body, headerModifications={"update":{"X-Context-Properties":ContextProperties.get("guild header")}}, log=self.log)
 
+	def deleteInvite(self, inviteCode):
+		url = self.discord+'invites/'+inviteCode
+		return Wrapper.sendRequest(self.s, 'delete', url, log=self.log)
+
+	def getGuildInvites(self, guildID):
+		url = self.discord+'guilds/'+guildID+'/invites'
+		return Wrapper.sendRequest(self.s, 'get', url, log=self.log)
+
+	def getChannelInvites(self, channelID):
+		url = self.discord+'channels/'+channelID+'/invites'
+		return Wrapper.sendRequest(self.s, 'get', url, log=self.log)
+
 	def getGuilds(self, with_counts):
 		url = self.discord+"users/@me/guilds"
 		if with_counts != None:
@@ -77,6 +89,10 @@ class Guild(object):
 
 	def getDiscoverableGuilds(self, offset, limit):
 		url = self.discord+"discoverable-guilds?offset="+repr(offset)+"&limit="+repr(limit)
+		return Wrapper.sendRequest(self.s, 'get', url, log=self.log)
+
+	def getGuildRegions(self, guildID):
+		url = self.discord+'guilds/'+guildID+'/regions'
 		return Wrapper.sendRequest(self.s, 'get', url, log=self.log)
 
 	'''

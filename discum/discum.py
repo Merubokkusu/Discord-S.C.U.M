@@ -166,6 +166,30 @@ class Client:
 	def createDM(self,recipients):
 		return imports.Messages(self.discord,self.s,self.log).createDM(recipients)
 
+	#delete channel/DM/DM group
+	def deleteChannel(self, channelID):
+		return imports.Messages(self.discord,self.s,self.log).deleteChannel(channelID)
+
+	#remove from DM group
+	def removeFromDmGroup(self, channelID, userID):
+		return imports.Messages(self.discord,self.s,self.log).removeFromDmGroup(channelID, userID)
+
+	#add to DM group
+	def addToDmGroup(self, channelID, userID):
+		return imports.Messages(self.discord,self.s,self.log).addToDmGroup(channelID, userID)
+
+	#create DM group invite link
+	def createDmGroupInvite(self, channelID, max_age_seconds=86400):
+		return imports.Messages(self.discord,self.s,self.log).createDmGroupInvite(channelID, max_age_seconds)
+
+	#change DM group name
+	def setDmGroupName(self, channelID, name):
+		return imports.Messages(self.discord,self.s,self.log).setDmGroupName(channelID, name)
+
+	#change DM icon
+	def setDmGroupIcon(self, channelID, imagePath):
+		return imports.Messages(self.discord,self.s,self.log).setDmGroupIcon(channelID, imagePath)
+
 	#get recent messages
 	def getMessages(self,channelID,num=1,beforeDate=None,aroundMessage=None): # num <= 100, beforeDate is a snowflake
 		return imports.Messages(self.discord,self.s,self.log).getMessages(channelID,num,beforeDate,aroundMessage)
@@ -571,6 +595,15 @@ class Client:
 	def createInvite(self, channelID, max_age_seconds=False, max_uses=False, grantTempMembership=False, checkInvite="", targetType=""):
 		return imports.Guild(self.discord,self.s,self.log).createInvite(channelID, max_age_seconds, max_uses, grantTempMembership, checkInvite, targetType)
 
+	def deleteInvite(self, inviteCode):
+		return imports.Guild(self.discord,self.s,self.log).deleteInvite(inviteCode)
+
+	def getGuildInvites(self, guildID):
+		return imports.Guild(self.discord,self.s,self.log).getGuildInvites(guildID)
+
+	def getChannelInvites(self, channelID):
+		return imports.Guild(self.discord,self.s,self.log).getChannelInvites(channelID)
+
 	#get all guilds (this is used by the client when going to the developers portal)
 	def getGuilds(self, with_counts=True):
 		return imports.Guild(self.discord,self.s,self.log).getGuilds(with_counts)
@@ -578,6 +611,9 @@ class Client:
 	#get discoverable guilds
 	def getDiscoverableGuilds(self, offset=0, limit=24):
 		return imports.Guild(self.discord,self.s,self.log).getDiscoverableGuilds(offset, limit)
+
+	def getGuildRegions(self, guildID):
+		return imports.Guild(self.discord,self.s,self.log).getGuildRegions(guildID)
 
 	#create a guild
 	def createGuild(self, name, icon=None, channels=[], systemChannelID=None, template="2TffvPucqHkN"):

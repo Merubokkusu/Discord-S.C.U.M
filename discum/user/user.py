@@ -478,9 +478,12 @@ class User(object):
 	def muteDM(self, DMID, mute, duration):
 		url = self.discord+"users/@me/guilds/%40me/settings"
 		data = {"muted": mute}
-		if mute and duration is not None:
-			end_time = (datetime.datetime.utcnow()+datetime.timedelta(minutes=duration)).isoformat()[:-3]+'Z'
-			data["mute_config"] = {"selected_time_window":duration, "end_time":end_time}
+		if mute:
+			if duration is not None:
+				end_time = (datetime.datetime.utcnow()+datetime.timedelta(minutes=duration)).isoformat()[:-3]+'Z'
+				data["mute_config"] = {"selected_time_window":duration, "end_time":end_time}
+			else:
+				data["mute_config"] = {"selected_time_window":-1, "end_time":None}
 		body = {"channel_overrides":{str(DMID):data}}
 		return Wrapper.sendRequest(self.s, 'patch', url, body, log=self.log)
 
@@ -511,7 +514,6 @@ class User(object):
 		if reportType in ('guild_directory_entry', 'stage_channel', 'guild'):
 			body["guild_id"] = guildID
 		return Wrapper.sendRequest(self.s, 'post', url, body, log=self.log)
-
 
 	'''
 	Logout

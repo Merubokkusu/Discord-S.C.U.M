@@ -585,7 +585,7 @@ bot.setChannelNotificationOverrides('0000000000000000000', [('1111111111111', 'o
 ```
 
 ###### Parameters:
-- guildID (str)
+- guildID (str) - for DMs, set the guildID to '%40me'
 - overrides (list) - list of tuples containing data about channel notification overrides. Each tuple looks like ('channelID', 'msg notifications type', 'mute'). 'msg notifications type' is either "all messages" or "only mentions" or "nothing". 'mute' is a boolean. If instead you'd like to input the raw overrides dictionary, you can do that instead.
 
 ##### ```setMessageNotifications```
@@ -615,7 +615,7 @@ bot.muteDM('0000000000000000000', duration=900)
 ###### Parameters:
 - DMID (str)
 - mute (Optional[bool]) - defaults to True
-- duration (Optional[int]) - duration of mute in minutes
+- duration (Optional[int]) - duration of mute in minutes. Defaults to None (mute until you unmute it)
 
 ##### ```setThreadNotifications```
 ```python
@@ -748,6 +748,13 @@ bot.createInvite('channelID00000000000')
 - checkInvite (Optional[str]) - invite code to check. Defaults to ""
 - targetType (Optional[str]) - unknown. Defaults to ""
 
+##### ```getGuildInvites```
+```python
+bot.getGuildInvites('guildID00000000000')
+```
+###### Parameters:
+- guildID (str)
+
 ##### ```getGuilds```
 ```python
 bot.getGuilds()
@@ -762,6 +769,13 @@ bot.getDiscoverableGuilds()
 ###### Parameters:
 - offset (Optional[int]) - after how many results to start at. Defaults to 0
 - limit (Optional[int]) - maximum number of results to display. Defaults to 24
+
+##### ```getGuildRegions```
+```python
+bot.getGuildRegions('guildID00000000000')
+```
+###### Parameters:
+- guildID (str)
 
 ##### ```createGuild```
 ```python
@@ -986,7 +1000,7 @@ bot.click(
 - nonce (Optional[str]) - by default, this gets calculated
 - data (dict) - gets sent in the "data" key. Can use discum.utils.button.Buttoner to help with formatting the data.
 __________
-### Messages
+### Dms
 ##### ```createDM```
 \*_risky action_
 ```python
@@ -996,6 +1010,69 @@ bot.sendMessage(newDM, "hello")
 ###### Parameters:
 - recipients (list) - list of user ID strings
 
+##### ```removeFromDmGroup```
+```python
+bot.removeFromDmGroup('DMID00000000000', 'userID000000000000')
+```
+###### Parameters:
+- channelID (str) - DM ID
+- userID (str)
+
+##### ```addToDmGroup```
+```python
+bot.addToDmGroup('DMID00000000000', 'userID000000000000')
+```
+###### Parameters:
+- channelID (str) - DM ID
+- userID (str)
+
+##### ```createDmGroupInvite```
+```python
+bot.createDmGroupInvite('DMID00000000000')
+```
+###### Parameters:
+- channelID (str) - DM ID
+- max_age_seconds (int) - number of seconds for invite to last. Defaults to 86400 (24 hrs)
+
+##### ```setDmGroupName```
+```python
+bot.setDmGroupName('DMID00000000000', 'helloworld')
+```
+###### Parameters:
+- channelID (str) - DM ID
+- name (str)
+
+##### ```setDmGroupIcon```
+```python
+bot.setDmGroupIcon('DMID00000000000')
+```
+###### Parameters:
+- channelID (str) - DM ID
+- imagePath (str) - local image path
+__________
+### Channels
+##### ```deleteChannel```
+```python
+bot.deleteChannel('channelID0000000000')
+```
+###### Parameters:
+- channelID (str)
+
+##### ```deleteInvite```
+```python
+bot.deleteInvite('blahblah')
+```
+###### Parameters:
+- inviteCode (str)
+
+##### ```getChannelInvites```
+```python
+bot.getChannelInvites('channelID0000000000')
+```
+###### Parameters:
+- channelID (str)
+__________
+### Messages
 ##### ```getMessages```
 ```python
 bot.getMessages("channelID0000000000")

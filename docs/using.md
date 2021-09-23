@@ -50,6 +50,7 @@ Table of Contents
     -   [remove mention from inbox](using/REST_Actions.md#removementionfrominbox)
     -   [get my stickers](using/REST_Actions.md#getmystickers)
     -   [get user notes](using/REST_Actions.md#getnotes)
+    -   [set user note](using/REST_Actions.md#setUserNote)
     -   [get RTC regions](using/REST_Actions.md#getrtcregions)
     -   [change username](using/REST_Actions.md#setusername)
     -   [change email](using/REST_Actions.md#setemail)

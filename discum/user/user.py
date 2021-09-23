@@ -79,6 +79,11 @@ class User(object):
 		url = self.discord+"users/@me/notes/"+userID
 		return Wrapper.sendRequest(self.s, 'get', url, log=self.log)
 
+	def setUserNote(self, userID, note):
+		url = self.discord+'users/@me/notes/'+userID
+		body = {"note": note}
+		return Wrapper.sendRequest(self.s, 'put', url, body, log=self.log)
+
 	def getRTCregions(self):
 		url = "https://latency.discord.media/rtc"
 		return Wrapper.sendRequest(self.s, 'get', url, log=self.log)

@@ -333,6 +333,9 @@ class Client:
 	def getNotes(self, userID):
 		return imports.User(self.discord,self.s,self.log).getNotes(userID)
 
+	def setUserNote(self, userID, note):
+		return imports.User(self.discord,self.s,self.log).setUserNote(userID, note)
+
 	def getRTCregions(self):
 		return imports.User(self.discord,self.s,self.log).getRTCregions()
 

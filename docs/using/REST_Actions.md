@@ -155,10 +155,18 @@ bot.getMyStickers()
 ```
 ##### ```getNotes```
 ```python
-bot.getNotes('222222222222222222')
+bot.getNotes('userID0000000000')
 ```
 ###### Parameters:
 - user ID (str)
+
+##### ```setUserNote```
+```python
+bot.setUserNote('userID0000000000', 'hello')
+```
+###### Parameters:
+- userID (str)
+- note (str)
 
 ##### ```getRTCregions```
 ```python

@@ -339,6 +339,9 @@ class Client:
 	def getRTCregions(self):
 		return imports.User(self.discord,self.s,self.log).getRTCregions()
 
+	def getVoiceRegions(self):
+		return imports.User(self.discord,self.s,self.log).getVoiceRegions()
+
 	'''
 	Profile edits
 	'''
@@ -572,6 +575,12 @@ class Client:
 	def reportSpam(self, channelID, messageID, reportType="first_dm", guildID=None, version="1.0", variant="1", language="en"):
 		return imports.User(self.discord,self.s,self.log).reportSpam(channelID, messageID, reportType, guildID, version, variant, language)
 
+	def getHandoffToken(self, key):
+		return imports.User(self.discord,self.s,self.log).getHandoffToken(key)
+
+	def ring(self, channelID, userIDs=None):
+		return imports.User(self.discord,self.s,self.log).ring(channelID, userIDs)
+
 	def logout(self, provider=None, voip_provider=None):
 		return imports.User(self.discord,self.s,self.log).logout(provider, voip_provider)
 
@@ -610,6 +619,10 @@ class Client:
 	#get all guilds (this is used by the client when going to the developers portal)
 	def getGuilds(self, with_counts=True):
 		return imports.Guild(self.discord,self.s,self.log).getGuilds(with_counts)
+
+	#get guild channels (this is used by the client when going to the server insights page for a guild)
+	def getGuildChannels(self, guildID):
+		return imports.Guild(self.discord,self.s,self.log).getGuildChannels(guildID)
 
 	#get discoverable guilds
 	def getDiscoverableGuilds(self, offset=0, limit=24):
@@ -683,11 +696,38 @@ class Client:
 	def unarchiveThread(self, threadID, lock=False):
 		return imports.Guild(self.discord,self.s,self.log).unarchiveThread(threadID, lock)
 
-	def lookupSchool(self, email, allowMultipleGuilds=True):
-		return imports.Guild(self.discord,self.s,self.log).lookupSchool(email, allowMultipleGuilds)
+	def lookupSchool(self, email, allowMultipleGuilds=True, useVerificationCode=True):
+		return imports.Guild(self.discord,self.s,self.log).lookupSchool(email, allowMultipleGuilds, useVerificationCode)
 
-	def schoolHubSignup(self, email, school):
-		return imports.Guild(self.discord,self.s,self.log).schoolHubSignup(email, school)
+	def schoolHubWaitlistSignup(self, email, school):
+		return imports.Guild(self.discord,self.s,self.log).schoolHubWaitlistSignup(email, school)
+
+	def schoolHubSignup(self, email, hubID):
+		return imports.Guild(self.discord,self.s,self.log).schoolHubSignup(email, hubID)
+
+	def verifySchoolHubSignup(self, hubID, email, code):
+		return imports.Guild(self.discord,self.s,self.log).verifySchoolHubSignup(hubID, email, code)
+
+	def getSchoolHubGuilds(self, hubID):
+		return imports.Guild(self.discord,self.s,self.log).getSchoolHubGuilds(hubID)
+
+	def getSchoolHubDirectoryCounts(self, hubID):
+		return imports.Guild(self.discord,self.s,self.log).getSchoolHubDirectoryCounts(hubID)
+
+	def joinGuildFromSchoolHub(self, hubID, guildID):
+		return imports.Guild(self.discord,self.s,self.log).joinGuildFromSchoolHub(hubID, guildID)
+
+	def searchSchoolHub(self, hubID, query):
+		return imports.Guild(self.discord,self.s,self.log).searchSchoolHub(hubID, query)
+
+	def getMySchoolHubGuilds(self, hubID):
+		return imports.Guild(self.discord,self.s,self.log).getMySchoolHubGuilds(hubID)
+
+	def setSchoolHubGuildDetails(self, hubID, guildID, description, directoryID):
+		return imports.Guild(self.discord,self.s,self.log).setSchoolHubGuildDetails(hubID, guildID, description, directoryID)
+
+	def getLiveStages(self, extra=False):
+		return imports.Guild(self.discord,self.s,self.log).getLiveStages(extra)
 
 	'''
 	Interactions

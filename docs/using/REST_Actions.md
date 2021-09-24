@@ -173,6 +173,11 @@ bot.setUserNote('userID0000000000', 'hello')
 bot.getRTCregions()
 ```
 
+##### ```getVoiceRegions```
+```python
+bot.getVoiceRegions()
+```
+
 ##### ```setUsername```
 \*bot.\_Client\_\_user\_password needs to be set before running this
 ```python
@@ -653,6 +658,23 @@ channelID, messageID, reportType="first_dm", guildID=None, version="1.0", varian
 - variant (Optional[str]) - the report menu variant. Can be retrievied from the response of ```bot.getReportMenu()```
 - language (Optional[str]) - ISO 639-1 Code language representation. Example: "en" for English. See the 2-letter codes at https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes. Defaults to "en"
 
+##### ```getHandoffToken```
+this does **not** return your token. I'm not sure yet what it is.
+```python
+bot.getHandoffToken('b909e096-f16e-4c75-9da6-4a237354ca4f')
+```
+###### Parameters:
+- key (str) - uuid (version 4; variant DCE 1.1, ISO/IEC 11578:1996). Also, this seems to work with any randomly generated version 4 UUID
+
+##### ```ring```
+invite user(s) to a call (in a DM/group DM)
+```python
+bot.ring('channelID00000000', ['userID0000000000', 'userID11111111111'])
+```
+###### Parameters:
+- channelID (str) - DM ID
+- userIDs (Optional[list]) - list of strings
+
 ##### ```logout```
 ```python
 bot.logout()
@@ -769,6 +791,13 @@ bot.getGuilds()
 ```
 ###### Parameters:
 - with_counts (bool/Nonetype) - get approx online and member counts. Defaults to True
+
+##### ```getGuildChannels```
+```python
+bot.getGuildChannels('guildID00000000000')
+```
+###### Parameters:
+- guildID (str)
 
 ##### ```getDiscoverableGuilds```
 ```python
@@ -911,6 +940,7 @@ bot.createThread('channelID00000000', 'test')
 - messageID (Optional[str])
 - public (Optional[bool]) - defaults to True
 - archiveAfter (Optional[str]) - archive after '1 hour', '24 hours', '3 days', or '1 week'. Defaults to '24 hours'
+
 ##### ```leaveThread```
 ```python
 bot.leaveThread('threadID00000000')
@@ -918,6 +948,7 @@ bot.leaveThread('threadID00000000')
 ###### Parameters:
 - threadID (str)
 - location (Optional[str]) - basically context properties. Defaults to "Sidebar Overflow"
+
 ##### ```joinThread```
 ```python
 bot.joinThread('threadID0000000')
@@ -925,6 +956,7 @@ bot.joinThread('threadID0000000')
 ###### Parameters:
 - threadID (str)
 - location (Optional[str]) - basically context properties. Defaults to "Banner"
+
 ##### ```archiveThread```
 ```python
 bot.archiveThread(threadID)
@@ -932,6 +964,7 @@ bot.archiveThread(threadID)
 ###### Parameters:
 - threadID (str)
 - lock (Optional[bool]) - prevent ppl from sending msgs in thread. Defaults to True
+
 ##### ```unarchiveThread```
 ```python
 bot.unarchiveThread(threadID)
@@ -947,15 +980,87 @@ bot.lookupSchool('school@school.edu')
 ###### Parameters:
 - email (str)
 - allowMultipleGuilds (Optional[bool]) - defaults to True
+- useVerificationCode (Optional[bool]) - defaults to True
 
-##### ```schoolHubSignup```
+##### ```schoolHubWaitlistSignup```
 ```python
-bot.schoolHubSignup('school@school.edu', 'wowow')
+bot.schoolHubWaitlistSignup('school@school.edu', 'wowow')
 ```
 ###### Parameters:
 - email (str)
 - school (str) - school name
 
+##### ```schoolHubSignup```
+```python
+bot.schoolHubSignup('school@school.edu', 'hubID0000000000')
+```
+###### Parameters:
+- email (str)
+- hubID (str) - aka guild ID
+
+##### ```verifySchoolHubSignup```
+```python
+bot.verifySchoolHubSignup('hubID0000000000', 'school@school.edu', '12345')
+```
+###### Parameters:
+- hubID (str) - aka guild ID
+- email (str)
+- code (str)
+
+##### ```getSchoolHubGuilds```
+```python
+bot.getSchoolHubGuilds('hubID0000000000')
+```
+###### Parameters:
+- hubID (str)
+
+##### ```getSchoolHubDirectoryCounts```
+```python
+bot.getSchoolHubDirectoryCounts('hubID0000000000')
+```
+###### Parameters:
+- hubID (str)
+
+##### ```joinGuildFromSchoolHub```
+```python
+bot.joinGuildFromSchoolHub('hubID0000000000', 'guildID000000000')
+```
+###### Parameters:
+- hubID (str)
+- guildID (str)
+
+##### ```searchSchoolHub```
+```python
+bot.searchSchoolHub('hubID0000000000', 'cats')
+```
+###### Parameters:
+- hubID (str)
+- query (str)
+
+##### ```getMySchoolHubGuilds```
+get guilds that I'm an owner of that either can potentially be added to the hub or are already in the hub
+```python
+bot.getMySchoolHubGuilds('hubID0000000000')
+```
+###### Parameters:
+- hubID (str)
+
+##### ```setSchoolHubGuildDetails```
+```python
+bot.setSchoolHubGuildDetails('hubID0000000000', 'guildID000000000', 'cats and dogs', 1)
+```
+###### Parameters:
+- hubID (str)
+- guildID (str)
+- description (str)
+- directoryID (int)
+
+##### ```getLiveStages```
+```python
+bot.getLiveStages()
+```
+###### Parameters:
+- extra (Optional[bool]) - defaults to False
 __________
 ### Interactions
 ##### ```getSlashCommands```

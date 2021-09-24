@@ -88,6 +88,10 @@ class User(object):
 		url = "https://latency.discord.media/rtc"
 		return Wrapper.sendRequest(self.s, 'get', url, log=self.log)
 
+	def getVoiceRegions(self):
+		url = self.discord+'voice/regions'
+		return Wrapper.sendRequest(self.s, 'get', url, log=self.log)
+
 	def setStatusHelper(self, status, timeout=None): #Dont run this function by itself; status options are: online, idle, dnd, invisible
 		url = self.discord+"users/@me/settings"
 		if status in ("online", "idle", "dnd", "invisible"):
@@ -518,6 +522,16 @@ class User(object):
 		}
 		if reportType in ('guild_directory_entry', 'stage_channel', 'guild'):
 			body["guild_id"] = guildID
+		return Wrapper.sendRequest(self.s, 'post', url, body, log=self.log)
+
+	def getHandoffToken(self, key):
+		url = self.discord+'auth/handoff'
+		body = {"key": key}
+		return Wrapper.sendRequest(self.s, 'post', url, body, log=self.log)
+
+	def ring(self, channelID, userIDs):
+		url = self.discord+'channels/'+channelID+'/call/ring'
+		body = {"recipients": userIDs}
 		return Wrapper.sendRequest(self.s, 'post', url, body, log=self.log)
 
 	'''

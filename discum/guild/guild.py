@@ -85,7 +85,13 @@ class Guild(object):
 		url = self.discord+"users/@me/guilds"
 		if with_counts != None:
 			url += "?with_counts="+repr(with_counts).lower()
-		return Wrapper.sendRequest(self.s, 'get', url, headerModifications={"update":{"X-Track":self.s.headers.get("X-Super-Properties")}, "remove":"X-Super-Properties"}, log=self.log)
+		headerMods = {"update":{"X-Track":self.s.headers.get("X-Super-Properties")}, "remove":"X-Super-Properties"}
+		return Wrapper.sendRequest(self.s, 'get', url, headerModifications=headerMods, log=self.log)
+
+	def getGuildChannels(self, guildID):
+		url = self.discord+'guilds/'+guildID+'/channels'
+		headerMods = {"update":{"X-Track":self.s.headers.get("X-Super-Properties")}, "remove":"X-Super-Properties"}
+		return Wrapper.sendRequest(self.s, 'get', url, headerModifications=headerMods, log=self.log)
 
 	def getDiscoverableGuilds(self, offset, limit):
 		url = self.discord+"discoverable-guilds?offset="+repr(offset)+"&limit="+repr(limit)
@@ -228,13 +234,58 @@ class Guild(object):
 	'''
 	other
 	'''
-	#lookup school??
-	def lookupSchool(self, email, allowMultipleGuilds):
+	#lookup school
+	def lookupSchool(self, email, allowMultipleGuilds, useVerificationCode):
 		url = self.discord+"guilds/automations/email-domain-lookup"
 		body = {"email":email,"allow_multiple_guilds":allowMultipleGuilds}
+		if useVerificationCode != None:
+			body["use_verification_code"] = useVerificationCode
 		return Wrapper.sendRequest(self.s, 'post', url, body, log=self.log)
 
-	def schoolHubSignup(self, email, school):
+	#https://discord.com/channels/hubID/mainChannelID
+	def schoolHubWaitlistSignup(self, email, school):
 		url = self.discord+"hub-waitlist/signup"
 		body = {"email":email,"school":school}
 		return Wrapper.sendRequest(self.s, 'post', url, body, log=self.log)
+
+	def schoolHubSignup(self, email, hubID):
+		url = self.discord+'guilds/automations/email-domain-lookup'
+		body = {"email":email,"guild_id":hubID,"allow_multiple_guilds":True,"use_verification_code":True}
+		return Wrapper.sendRequest(self.s, 'post', url, body, log=self.log)
+
+	def verifySchoolHubSignup(self, hubID, email, code):
+		url = self.discord+'guilds/automations/email-domain-lookup/verify-code'
+		body = {"code":code,"guild_id":hubID,"email":email}
+		return Wrapper.sendRequest(self.s, 'post', url, body, log=self.log)
+
+	def getSchoolHubGuilds(self, hubID): #note, the "entity_id" returned in each entry is the guildID
+		url = self.discord+'channels/'+hubID+'/directory-entries' #ik it says channels, but it's the hubID/"guildID".
+		return Wrapper.sendRequest(self.s, 'get', url, log=self.log)
+
+	def getSchoolHubDirectoryCounts(self, hubID): #this only returns the # of guilds/groups in each directory/category. This doesn't even return the category names
+		url = self.discord+'channels/'+hubID+'/directory-entries/counts'
+		return Wrapper.sendRequest(self.s, 'get', url, log=self.log)
+
+	def joinGuildFromSchoolHub(self, hubID, guildID):
+		url = self.discord+'guilds/'+guildID+'/members/@me?lurker=false&directory_channel_id='+hubID
+		headerMods = {"update":{"X-Context-Properties":ContextProperties.get("school hub guild")}}
+		return Wrapper.sendRequest(self.s, 'put', url, headerModifications=headerMods, log=self.log)
+
+	def searchSchoolHub(self, hubID, query):
+		url = self.discord+'channels/'+hubID+'/directory-entries/search?query='+query
+		return Wrapper.sendRequest(self.s, 'get', url, log=self.log)
+
+	def getMySchoolHubGuilds(self, hubID): #or guilds you own that can potentially be added to the hub
+		url = self.discord+'channels/'+hubID+'/directory-entries/list'
+		return Wrapper.sendRequest(self.s, 'get', url, log=self.log)
+
+	def setSchoolHubGuildDetails(self, hubID, guildID, description, directoryID): #directoryID (int) is not a snowflake
+		url = self.discord+'channels/'+hubID+'/directory-entry/'+guildID
+		body = {"description":description,"primary_category_id":directoryID}
+		return Wrapper.sendRequest(self.s, 'post', url, body, log=self.log)
+
+	def getLiveStages(self, extra):
+		url = self.discord+'stage-instances'
+		if extra:
+			url += '/extra'
+		return Wrapper.sendRequest(self.s, 'get', url, log=self.log)

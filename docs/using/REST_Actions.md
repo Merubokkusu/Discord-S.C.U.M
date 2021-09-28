@@ -666,14 +666,21 @@ bot.getHandoffToken('b909e096-f16e-4c75-9da6-4a237354ca4f')
 ###### Parameters:
 - key (str) - uuid (version 4; variant DCE 1.1, ISO/IEC 11578:1996). Also, this seems to work with any randomly generated version 4 UUID
 
-##### ```ring```
+##### ```inviteToCall```
 invite user(s) to a call (in a DM/group DM)
 ```python
-bot.ring('channelID00000000', ['userID0000000000', 'userID11111111111'])
+bot.inviteToCall('channelID00000000', ['userID0000000000', 'userID11111111111'])
 ```
 ###### Parameters:
 - channelID (str) - DM ID
 - userIDs (Optional[list]) - list of strings
+
+##### ```declineCall```
+```python
+bot.declineCall('channelID00000000')
+```
+###### Parameters:
+- channelID (str) - DM ID
 
 ##### ```logout```
 ```python
@@ -1064,6 +1071,8 @@ bot.getLiveStages()
 __________
 ### Interactions
 ##### ```getSlashCommands```
+Only works if you already have a DM with this bot.
+If you only share a guild with the bot, you'll have to use [bot.gateway.searchGuildMembers](Gateway_Actions.md#gatewaysearchGuildMembers)
 ```python
 bot.getSlashCommands("botID000000000")
 ```
@@ -1072,7 +1081,7 @@ bot.getSlashCommands("botID000000000")
 
 ##### ```triggerSlashCommand```
 ```python
-#first, lets see what slash commands we can run
+#first, lets see what slash commands we can run.
 slashCmds = bot.getSlashCommands("botID000000000").json()
 
 #next, let's parse that and create some slash command data

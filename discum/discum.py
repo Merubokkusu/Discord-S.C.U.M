@@ -578,8 +578,11 @@ class Client:
 	def getHandoffToken(self, key):
 		return imports.User(self.discord,self.s,self.log).getHandoffToken(key)
 
-	def ring(self, channelID, userIDs=None):
-		return imports.User(self.discord,self.s,self.log).ring(channelID, userIDs)
+	def inviteToCall(self, channelID, userIDs=None):
+		return imports.User(self.discord,self.s,self.log).inviteToCall(channelID, userIDs)
+
+	def declineCall(self, channelID):
+		return imports.User(self.discord,self.s,self.log).declineCall(channelID)
 
 	def logout(self, provider=None, voip_provider=None):
 		return imports.User(self.discord,self.s,self.log).logout(provider, voip_provider)

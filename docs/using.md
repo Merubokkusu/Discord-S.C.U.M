@@ -117,7 +117,8 @@ Table of Contents
     -   [get spam report menu info](using/REST_Actions.md#getReportMenu)
     -   [report spam](using/REST_Actions.md#reportSpam)
     -   [get handoff token](using/REST_Actions.md#getHandoffToken)
-    -   [ring (invite someone to a call)]
+    -   [invite someone to a call](using/REST_Actions.md#inviteToCall)
+    -   [decline an incoming call](using/REST_Actions.md#declineCall)
     -   [logout](using/REST_Actions.md#logout)
     -   [{gateway} set status](using/Gateway_Actions.md#gatewaysetstatus)
     -   [{gateway} set custom status](using/Gateway_Actions.md#gatewaysetcustomstatus)

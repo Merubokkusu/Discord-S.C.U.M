@@ -529,9 +529,14 @@ class User(object):
 		body = {"key": key}
 		return Wrapper.sendRequest(self.s, 'post', url, body, log=self.log)
 
-	def ring(self, channelID, userIDs):
+	def inviteToCall(self, channelID, userIDs):
 		url = self.discord+'channels/'+channelID+'/call/ring'
 		body = {"recipients": userIDs}
+		return Wrapper.sendRequest(self.s, 'post', url, body, log=self.log)
+
+	def declineCall(self, channelID):
+		url = self.discord+'channels/'+channelID+'/call/stop-ringing'
+		body = {}
 		return Wrapper.sendRequest(self.s, 'post', url, body, log=self.log)
 
 	'''

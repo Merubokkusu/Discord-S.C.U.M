@@ -350,14 +350,22 @@ from discum.utils.slash import SlashCommander
 @bot.gateway.command
 def slashCommandTest(resp):
     if resp.event.ready_supplemental:
-        bot.gateway.request.searchSlashCommands('839502008108580904', limit=10, query="queue")
+        bot.gateway.request.searchSlashCommands('guildID', limit=10, query="queue")
     if resp.event.guild_application_commands_updated:
         bot.gateway.removeCommand(slashCommandTest)
         slashCmds = resp.parsed.auto()['application_commands']
-        s = SlashCommander(slashCmds, application_id='234395307759108106')
+        s = SlashCommander(slashCmds, application_id='botID')
         data = s.get(['queue'])
-        bot.triggerSlashCommand("234395307759108106", "847861529030033449", "839502008108580904", data=data)
+        bot.triggerSlashCommand("botID", "channelID", "guildID", data=data)
 ```
+###### Parameters:
+- guildID (str) - bot ID
+- nonce (Optional[str]) - current discord snowflake. Calculated by default.
+- offset (Optional[int]) - start showing results at what index. Defaults to None aka 0
+- limit (optional[int]) - up to how many results to get. Defaults to 10
+- command_ids (Optional[list]) - list of command ID strings to get data on
+- query (Optional[str]) - search for commands that start with query
+
 
 ##### ```gateway.parse(...).guild_member_list_update```
 ```python

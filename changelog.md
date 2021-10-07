@@ -1,4 +1,35 @@
 # Changelog
+# 1.4.0
+### Added
+- getRelationships, getVoiceRegions, getHandoffToken
+- suppressEveryonePings, suppressRoleMentions, enableMobilePushNotifications, setChannelNotificationOverrides, setMessageNotifications, muteGuild, muteDM
+- getRoleMemberCounts, getGuildIntegrations, getGuildTemplates, getRoleMemberIDs, addMembersToRole, setMemberRoles
+- createGuild, deleteGuild, previewGuild, getDiscoverableGuilds, deleteChannel, getGuildInvites, getChannelInvites, getGuildRegions, getGuildChannels
+- __DM groups__: removeFromDmGroup, addToDmGroup, createDmGroupInvite, setDMGroupName, setDmGroupIcon, deleteInvite
+- setPhone and validatePhone (thx sudo-do)
+- __Threads__: setThreadNotifications, createThread, leaveThread, joinThread, archiveThread, unarchiveThread
+- __School hubs__: lookupSchool, schoolHubSignup, schoolHubWaitlistSignup, schoolHubSignup, verifySchoolHubSignup, getSchoolHubGuilds, getSchoolHubDirectoryCounts, joinGuildFromSchoolHub, searchSchoolHub, getMySchoolHubGuilds, setSchoolHubGuildDetails, getLiveStages
+- setProfileColor
+- __Interactions__: getSlashCommands (only if you share a dm with the bot), triggerSlashCommand, click
+- getReportMenu, reportSpam
+- setUserNote
+- inviteToCall, declineCall
+- utils.slash.SlashCommander (from discum.utils.slash import SlashCommander) to craft slash command interaction data
+- utils.button.Buttoner (from discum.utils.button import Buttoner) to craft button/dropdown interaction data
+- gateway.request.searchSlashCommands (only for guilds), gateway.queryGuildMembers (op8 "brute forcing" now possible), and gateway.checkGuildMembers 
+- remote auth functions (initRA, remoteAuthLogin) + ability to add/remove functions to the remote auth gateway (ra)
+- 4 functions to gateway.session.guild(guildID): applicationCommandCount, maxMembers, stages, and stickers
+- gateway.connectionKwargs variable (dict): possible key values = "proxy\_type", "http\_proxy\_auth"; see issue #153
+### Changed
+- use \_\_slots__ to lower ram usage
+- only import stuff when needed (speed up imports)
+- fixed login (thx MayaankAshok)
+- fixed color printing for windows
+- renamed gateway.session.guild(guildID).position to gateway.session.guild(guildID).me
+- updated ready event parsing to use the value of "users" to provide full user data to DM recipients and relationships (thx dolfies)
+### Removed
+- getGuildMember
+
 # 1.3.1
 ### Added
 - checkPermissions function to permissions.py

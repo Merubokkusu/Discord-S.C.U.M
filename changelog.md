@@ -8,7 +8,8 @@
 - __DM groups__: removeFromDmGroup, addToDmGroup, createDmGroupInvite, setDMGroupName, setDmGroupIcon, deleteInvite
 - setPhone and validatePhone (thx sudo-do)
 - __Threads__: setThreadNotifications, createThread, leaveThread, joinThread, archiveThread, unarchiveThread
-- __School hubs__: lookupSchool, schoolHubSignup, schoolHubWaitlistSignup, schoolHubSignup, verifySchoolHubSignup, getSchoolHubGuilds, getSchoolHubDirectoryCounts, joinGuildFromSchoolHub, searchSchoolHub, getMySchoolHubGuilds, setSchoolHubGuildDetails, getLiveStages
+- __School hubs__: lookupSchool, schoolHubSignup, schoolHubWaitlistSignup, schoolHubSignup, verifySchoolHubSignup, getSchoolHubGuilds, getSchoolHubDirectoryCounts, joinGuildFromSchoolHub, searchSchoolHub, getMySchoolHubGuilds, setSchoolHubGuildDetails
+- getLiveStages
 - setProfileColor
 - __Interactions__: getSlashCommands (only if you share a dm with the bot), triggerSlashCommand, click
 - getReportMenu, reportSpam

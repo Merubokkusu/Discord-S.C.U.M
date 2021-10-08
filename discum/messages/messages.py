@@ -166,7 +166,13 @@ class Messages(object):
 			self.sendFile(channelID, file, isurl=isurl, message=message, tts=tts, message_reference={"channel_id":channelID,"message_id":messageID}, sticker_ids=sticker_ids)
 
 	def searchMessages(self, guildID, channelID, authorID, authorType, mentionsUserID, has, linkHostname, embedProvider, embedType, attachmentExtension, attachmentFilename, mentionsEveryone, includeNsfw, afterDate, beforeDate, textSearch, afterNumResults, limit): #classic discord search function, results with key "hit" are the results you searched for, afterNumResults (aka offset) is multiples of 25 and indicates after which messages (type int), filterResults defaults to False
-		url = self.discord+"guilds/"+guildID+"/messages/search?"
+		if guildID:
+			url = self.discord+"guilds/"+guildID+"/messages/search?"
+		else:
+			if isinstance(channelID, str):
+				url = self.discord+"channels/{}/messages/search?".format(channelID)
+			else:
+				url = self.discord+"channels/{}/messages/search?".format(channelID[0])
 		allqueryparams = []
 		if channelID:
 			if isinstance(channelID, str):

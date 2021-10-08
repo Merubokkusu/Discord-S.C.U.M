@@ -1287,10 +1287,14 @@ bot.reply('222222222222222222','000000000000000000', 'this is a reply', sticker_
 
 ##### ```searchMessages```
 ```python
-bot.searchMessages("guildID000000000",textSearch="hello")
+#if searching in a guild:
+bot.searchMessages("guildID000000000", textSearch="hello")
+
+#if searching in a DM/DM group:
+bot.searchMessages(channelID="channelID0000000", textSearch="hello")
 ```
 ###### Parameters:
-- guildID (str)
+- guildID (Optional[str]) - if searching messages in a guild
 - channelID (Optional[str/list]) - channel ID string(s)
 - authorID (Optional[str/list]) - author ID string(s)
 - authorType (Optional[str/list]) - author type(s): "user", "bot", and/or "webhook"
@@ -1305,7 +1309,7 @@ bot.searchMessages("guildID000000000",textSearch="hello")
 - includeNsfw (Optional[bool])
 - afterDate (Optional[str]) - discord snowflake string (highest msg id)
 - beforeDate (Optional[str]) - discord snowflake string (highest msg id)
-- textSearch (Optional[str])
+- textSearch (Optional[str]) - content
 - afterNumResults (Optional[int]) - multiples of 25
 - limit (Optional[int]) - how many results to show
 

@@ -289,3 +289,12 @@ class Guild(object):
 		if extra:
 			url += '/extra'
 		return Wrapper.sendRequest(self.s, 'get', url, log=self.log)
+
+	#the only time this is observed in the client is in a guild
+	def getChannel(self, channelID):
+		url = self.discord+'channels/'+channelID
+		return Wrapper.sendRequest(self.s, 'get', url, log=self.log)
+
+	def getGuildActivitiesConfig(self, guildID):
+		url = self.discord+'activities/guilds/'+guildID+'/config'
+		return Wrapper.sendRequest(self.s, 'get', url, log=self.log)

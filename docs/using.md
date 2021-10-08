@@ -177,6 +177,8 @@ Table of Contents
     -   [get guilds that I'm an owner of that either can potentially be added to the hub or are already in the hub](using/REST_Actions.md#getMySchoolHubGuilds)
     -   [set the description and directory ID of a school hub guild I own](using/REST_Actions.md#setSchoolHubGuildDetails)
     -   [get live stages (from stage discovery)](using/REST_Actions.md#getLiveStages)
+    -   [get channel data](using/REST_Actions.md#getChannel)
+    -   [get guild activities config](using/REST_Actions.md#getGuildActivitiesConfig)
     -   [get slash commands](using/REST_Actions.md#getSlashCommands)
     -   [click on button or select from menu](using/REST_Actions.md#click)
     -   [trigger/send slash command](using/REST_Actions.md#triggerSlashCommand)

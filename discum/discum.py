@@ -67,6 +67,7 @@ class Client:
 			"Sec-Fetch-Dest": "empty",
 			"Sec-Fetch-Mode": "cors",
 			"Sec-Fetch-Site": "same-origin",
+			"X-Debug-Options": "bugReporterEnabled",
 			"Connection": "keep-alive",
 			"Content-Type": "application/json"
 		}
@@ -731,6 +732,12 @@ class Client:
 
 	def getLiveStages(self, extra=False):
 		return imports.Guild(self.discord,self.s,self.log).getLiveStages(extra)
+
+	def getChannel(self, channelID):
+		return imports.Guild(self.discord,self.s,self.log).getChannel(channelID)
+
+	def getGuildActivitiesConfig(self, guildID):
+		return imports.Guild(self.discord,self.s,self.log).getGuildActivitiesConfig(guildID)
 
 	'''
 	Interactions

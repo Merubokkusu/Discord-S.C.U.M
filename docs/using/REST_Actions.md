@@ -1068,6 +1068,20 @@ bot.getLiveStages()
 ```
 ###### Parameters:
 - extra (Optional[bool]) - defaults to False
+
+##### ```getChannel```
+```python
+bot.getChannel('channelID0000000')
+```
+###### Parameters:
+- channelID (str)
+
+##### ```getGuildActivitiesConfig```
+```python
+bot.getGuildActivitiesConfig('guildID0000000')
+```
+###### Parameters:
+- guildID (str)
 __________
 ### Interactions
 ##### ```getSlashCommands```

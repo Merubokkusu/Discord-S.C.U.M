@@ -746,11 +746,13 @@ bot.getInfoFromInviteCode('minecraft')
 \*_risky action_
 ```python
 bot.joinGuild('1a1a1')
+#or
+bot.joinGuild('1a1a1', location='markdown')
 ```
 ###### Parameters:
 - inviteCode (str) - just the invite code, NOT the entire link
-- location (Optional[str]) - "accept invite page" or "join guild". Defaults to "accept invite page"
-- wait (Optional[int]) - this function uses 2 endpoints: getInfoFromInviteCode and a raw join guild endpoint; wait specifies the time to wait inbetween these 2 requests. Defaults to 0. 
+- location (Optional[str]) - "accept invite page", "join guild", or "markdown". The "markdown" option uses only 1 request while the other options use 2 requests. Defaults to "accept invite page"
+- wait (Optional[int]) - only used if "accept invite page" or "join guild" locations are used. Specifies the wait time in seconds between the getInfoFromInviteCode and raw join guild endpoint. Defaults to 0. 
 
 ##### ```previewGuild```
 Only works on discoverable guilds and only applicable for current session. This is best used while the gateway is running, even though it does not require the gateway to run.

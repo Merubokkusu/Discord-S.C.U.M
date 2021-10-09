@@ -36,14 +36,21 @@ class Guild(object):
 		return Wrapper.sendRequest(self.s, 'get', url, log=self.log)
 
 	#just the join guild endpoint, default location mimics joining a guild from the ([+]Add a Server) button
-	def joinGuildRaw(self, inviteCode, guild_id, channel_id, channel_type, location="join guild"):
+	def joinGuildRaw(self, inviteCode, guild_id=None, channel_id=None, channel_type=None, location="join guild"):
 		url = self.discord+"invites/"+inviteCode
-		return Wrapper.sendRequest(self.s, 'post', url, headerModifications={"update":{"X-Context-Properties":ContextProperties.get(location, guild_id=guild_id, channel_id=channel_id, channel_type=channel_type)}}, log=self.log)
+		if location in ("accept invite page", "join guild"):
+			return Wrapper.sendRequest(self.s, 'post', url, {}, headerModifications={"update":{"X-Context-Properties":ContextProperties.get(location, guild_id=guild_id, channel_id=channel_id, channel_type=channel_type)}}, log=self.log)
+		elif location == "markdown":
+			return Wrapper.sendRequest(self.s, 'post', url, {}, headerModifications={"update":{"X-Context-Properties":ContextProperties.get("markdown")}}, log=self.log)
 
 	def joinGuild(self, inviteCode, location, wait):
-		guildData = self.getInfoFromInviteCode(inviteCode, with_counts=True, with_expiration=True, fromJoinGuildNav=(location.lower()=="join guild")).json()
-		if wait: time.sleep(wait)
-		return self.joinGuildRaw(inviteCode, guildData["guild"]["id"], guildData["channel"]["id"], guildData["channel"]["type"], location)
+		location = location.lower()
+		if location in ("accept invite page", "join guild"):
+			guildData = self.getInfoFromInviteCode(inviteCode, with_counts=True, with_expiration=True, fromJoinGuildNav=(location.lower()=="join guild")).json()
+			if wait: time.sleep(wait)
+			return self.joinGuildRaw(inviteCode, guildData["guild"]["id"], guildData["channel"]["id"], guildData["channel"]["type"], location)
+		elif location == "markdown":
+			return self.joinGuildRaw(inviteCode, location="markdown")
 
 	def previewGuild(self, guildID, sessionID):
 		url = "guilds/"+guildID+"/members/@me?lurker=true"

@@ -34,6 +34,8 @@ class ContextProperties(object):
 			return "eyJsb2NhdGlvbiI6Ikh1YiBTaWRlYmFyIn0=" # {"location":"Hub Sidebar"}
 		elif loc == "guild header":
 			return "eyJsb2NhdGlvbiI6Ikd1aWxkIEhlYWRlciJ9" # {"location":"Guild Header"}
+		elif loc == "markdown":
+			return "eyJsb2NhdGlvbiI6Ik1hcmtkb3duIExpbmsifQ==" # {"location":"Markdown Link"}
 		elif loc in ("accept invite page", "join guild"):
 			data = {
 				"location": "Accept Invite Page",

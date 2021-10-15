@@ -16,6 +16,10 @@ class User(object):
 		url = self.discord+"users/@me/relationships"
 		return Wrapper.sendRequest(self.s, 'get', url, log=self.log)
 
+	def getMutualFriends(self, userID):
+		url = self.discord+"users/"+userID+"/relationships"
+		return Wrapper.sendRequest(self.s, 'get', url, log=self.log)
+
 	def requestFriend(self, user):
 		if "#" in user:
 			url = self.discord+"users/@me/relationships"

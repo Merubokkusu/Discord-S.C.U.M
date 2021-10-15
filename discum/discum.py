@@ -291,6 +291,10 @@ class Client:
 	def getRelationships(self):
 		return imports.User(self.discord,self.s,self.log).getRelationships()
 
+	#get mutual friends
+	def getMutualFriends(self, userID):
+		return imports.User(self.discord,self.s,self.log).getMutualFriends(userID)
+
 	#create outgoing friend request
 	def requestFriend(self, user): #you can input a userID(snowflake) or a user discriminator
 		return imports.User(self.discord,self.s,self.log).requestFriend(user)

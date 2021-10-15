@@ -77,6 +77,13 @@ __________
 bot.getRelationships()
 ```
 
+##### ```getMutualFriends```
+```python
+bot.getMutualFriends("2222222222222222")
+```
+###### Parameters:
+- userID (str)
+
 ##### ```requestFriend```
 \*_risky action_
 ```python

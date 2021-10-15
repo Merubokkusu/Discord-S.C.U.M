@@ -38,6 +38,7 @@ Table of Contents
     -   [{gateway} parse READY\_SUPPLEMENTAL](using/Gateway_Actions.md#respparsedready_supplemental)
 -   User
     -   [get relationships](using/REST_Actions.md#getrelationships)
+    -   [get mutual friends](using/REST_Actions.md#getMutualFriends)
     -   [{risky action} send friend request](using/REST_Actions.md#requestfriend)
     -   [accept friend request](using/REST_Actions.md#acceptfriend)
     -   [unfriend/unblock/remove friend request/reject friend request](using/REST_Actions.md#removerelationship)

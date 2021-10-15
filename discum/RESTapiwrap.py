@@ -76,6 +76,8 @@ class Wrapper:
 			function_name = "({}->{})".format(str(stack[1][0].f_locals['self']).split(' ')[0], stack[1][3])
 			# 2. edit request session if needed
 			reqsession = Wrapper.editedReqSession(reqsession, headerModifications)
+			if body == None:
+				reqsession.headers.pop('Content-Type', None)
 			# 3. log url
 			text, color = Wrapper.logFormatter(function_name, [method, url], part="url")
 			Logger.log(text, color, log)

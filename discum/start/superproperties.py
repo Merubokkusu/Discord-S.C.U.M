@@ -21,7 +21,7 @@ class SuperProperties:
         Logger.log("Retrieving Discord's build number...", None, self.log) 
         try: #getting the build num is kinda experimental since who knows if discord will change where the build number is located...
             extra_mods = {"update":{"Sec-Fetch-Dest": "document", "Sec-Fetch-Mode": "navigate","Sec-Fetch-Site": "none"}}
-            discord_login_page_exploration = Wrapper.sendRequest(self.editedS, 'get', "https://discord.com/login", log=False).text #log set to False cause this takes up console space w/o giving meaningful info
+            discord_login_page_exploration = Wrapper.sendRequest(self.editedS, 'get', "https://discord.com/login", headerModifications=extra_mods, log=False).text #log set to False cause this takes up console space w/o giving meaningful info
             time.sleep(1)
             file_with_build_num = 'https://discord.com/assets/'+re.compile(r'assets/+([a-z0-9]+)\.js').findall(discord_login_page_exploration)[-2]+'.js' #fastest solution I could find since the last js file is huge in comparison to 2nd from last
             req_file_build = Wrapper.sendRequest(self.editedS, 'get', file_with_build_num, log=False).text #log set to False cause this is a big file

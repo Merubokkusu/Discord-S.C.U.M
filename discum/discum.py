@@ -204,7 +204,7 @@ class Client:
 		return imports.Messages(self.discord,self.s,self.log).greet(channelID, sticker_ids)
 
 	#send messages
-	def sendMessage(self, channelID, message, nonce="calculate", tts=False, embed=None, message_reference=None, allowed_mentions=None, sticker_ids=None):
+	def sendMessage(self, channelID, message="", nonce="calculate", tts=False, embed=None, message_reference=None, allowed_mentions=None, sticker_ids=None):
 		return imports.Messages(self.discord,self.s,self.log).sendMessage(channelID, message, nonce, tts, embed, message_reference, allowed_mentions, sticker_ids)
 
 	#send files (local or link)

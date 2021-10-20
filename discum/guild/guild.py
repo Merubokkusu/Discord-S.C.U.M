@@ -130,13 +130,15 @@ class Guild(object):
 	#kick a user
 	def kick(self, guildID, userID, reason):
 		url = self.discord+"guilds/%s/members/%s?reason=%s" % (guildID, userID, quote(reason))
-		return Wrapper.sendRequest(self.s, 'delete', url, log=self.log)
+		headerMods = {"update":{"X-Audit-Log-Reason":reason}} if reason=="" else {}
+		return Wrapper.sendRequest(self.s, 'delete', url, headerModifications=headerMods, log=self.log)
 
 	#ban a user
 	def ban(self, guildID, userID, deleteMessagesDays, reason):
 		url = self.discord+"guilds/%s/bans/%s" % (guildID, userID)
 		body = {"delete_message_days": str(deleteMessagesDays), "reason": reason}
-		return Wrapper.sendRequest(self.s, 'put', url, body, log=self.log)
+		headerMods = {"update":{"X-Audit-Log-Reason":reason}} if reason=="" else {}
+		return Wrapper.sendRequest(self.s, 'put', url, body, headerModifications=headerMods, log=self.log)
 
 	def revokeBan(self, guildID, userID):
 		url = self.discord+"guilds/"+guildID+"/bans/"+userID

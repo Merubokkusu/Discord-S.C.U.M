@@ -1,8 +1,7 @@
-import copy #only used if header modification is used
 import json
 import inspect
 import time
-from requests.exceptions import ConnectionError
+import requests
 from .logger import * #imports LogLevel and Logger
 
 #functions for REST requests in Wrapper class
@@ -38,17 +37,18 @@ class Wrapper:
 	#header modifications, like endpoints that don't need auth, superproperties, etc; also for updating headers like xfingerprint
 	@staticmethod
 	def editedReqSession(reqsession, headerModifications):
+		edited = requests.Session()
+		edited.headers.update(reqsession.headers.copy())
+		edited.proxies.update(reqsession.proxies.copy())
+		edited.cookies.update(reqsession.cookies.copy())
 		if headerModifications not in ({}, None):
-			editedSession = copy.deepcopy(reqsession)
 			if "update" in headerModifications:
-				editedSession.headers.update(headerModifications["update"])
+				edited.headers.update(headerModifications["update"])
 			if "remove" in headerModifications:
 				for header in headerModifications["remove"]:
-					if header in editedSession.headers:
-						del editedSession.headers[header]
-			return editedSession
-		else:
-			return reqsession
+					if header in edited.headers:
+						del edited.headers[header]
+		return edited
 
 	#only for "Connection reset by peer" errors. Influenced by praw's retry code
 	@staticmethod
@@ -57,7 +57,7 @@ class Wrapper:
 		while True:
 			try:
 				return reqMethod(url=url, **data)
-			except ConnectionError:
+			except requests.exceptions.ConnectionError:
 				if log:
 					Logger.log("Connection reset by peer. Retrying...", None, log)
 					time.sleep(0.3)
@@ -68,16 +68,33 @@ class Wrapper:
 				break
 		return None
 
+	#reqsession, method, url, body=None, headerModifications={}, timeout=None, log={"console":True, "file":False}
 	@staticmethod
-	def sendRequest(reqsession, method, url, body=None, headerModifications={}, timeout=None, log={"console":True, "file":False}): #headerModifications = {"update":{}, "remove":[]}
+	def sendRequest(*args, **kwargs): #headerModifications = {"update":{}, "remove":[]}
+		#weird way to set vars ik, but python was doing some weird things like not updating headerModifications so...temp fix...
+		body = kwargs.get('body', None)
+		headerModifications = kwargs.get('headerModifications', {})
+		timeout = kwargs.get('timeout', None)
+		log = kwargs.get('log', None)
+		if len(args) >= 3:
+			reqsession, method, url = args[0:3]
+			if len(args) == 4:
+				body = args[-1]
+		else:
+			Logger.log('requests session, method, and url required.', None, log)
+			return
+		#ugly code above...hopefully temporary
 		if hasattr(reqsession, method): #just checks if post, get, whatever is a valid requests method
 			# 1. find function
 			stack = inspect.stack()
 			function_name = "({}->{})".format(str(stack[1][0].f_locals['self']).split(' ')[0], stack[1][3])
 			# 2. edit request session if needed
-			reqsession = Wrapper.editedReqSession(reqsession, headerModifications)
 			if body == None:
-				reqsession.headers.pop('Content-Type', None)
+				if headerModifications.get('remove', None) == None:
+					headerModifications['remove'] = ['Content-Type']
+				else:
+					headerModifications['remove'].append('Content-Type')
+			s = Wrapper.editedReqSession(reqsession, headerModifications)
 			# 3. log url
 			text, color = Wrapper.logFormatter(function_name, [method, url], part="url")
 			Logger.log(text, color, log)
@@ -95,7 +112,7 @@ class Wrapper:
 			if timeout != None:
 				data['timeout'] = timeout
 			# 6. the request
-			response = Wrapper.retryLogic(getattr(reqsession, method), url, data, log)
+			response = Wrapper.retryLogic(getattr(s, method), url, data, log)
 			# 7. brotli decompression of response
 			if response and response.headers.get('Content-Encoding') == "br": #decompression; gzip/deflate is automatically handled by requests module
 				response._content = Wrapper.brdecompress(response.content, log)

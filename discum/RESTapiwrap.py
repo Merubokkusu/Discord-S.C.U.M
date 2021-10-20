@@ -15,7 +15,10 @@ class Wrapper:
 			color = LogLevel.SEND
 		# [+] (<class->function) body
 		elif part == "body":
-			text = json.dumps(data)
+			try:
+				text = json.dumps(data)
+			except:
+				text = str(data)
 			color = LogLevel.SEND
 		# [+] (<class->function) Response <- response.text
 		elif part == "response":

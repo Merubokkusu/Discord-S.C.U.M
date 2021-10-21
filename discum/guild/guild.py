@@ -92,12 +92,12 @@ class Guild(object):
 		url = self.discord+"users/@me/guilds"
 		if with_counts != None:
 			url += "?with_counts="+repr(with_counts).lower()
-		headerMods = {"update":{"X-Track":self.s.headers.get("X-Super-Properties")}, "remove":"X-Super-Properties"}
+		headerMods = {"update":{"X-Track":self.s.headers.get("X-Super-Properties")}, "remove":["X-Super-Properties"]}
 		return Wrapper.sendRequest(self.s, 'get', url, headerModifications=headerMods, log=self.log)
 
 	def getGuildChannels(self, guildID):
 		url = self.discord+'guilds/'+guildID+'/channels'
-		headerMods = {"update":{"X-Track":self.s.headers.get("X-Super-Properties")}, "remove":"X-Super-Properties"}
+		headerMods = {"update":{"X-Track":self.s.headers.get("X-Super-Properties")}, "remove":["X-Super-Properties"]}
 		return Wrapper.sendRequest(self.s, 'get', url, headerModifications=headerMods, log=self.log)
 
 	def getDiscoverableGuilds(self, offset, limit):

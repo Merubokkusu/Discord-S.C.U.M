@@ -5,12 +5,11 @@ this bug works both on servers and DMs :). The below code is only for DMs but ca
 **idk if this bug still works
 '''
 
-import requests, json
-
 import discum
 import time
 
 bot = discum.Client(token='ur token')
+bot.discord = 'https://discord.com/api/' #modify base url
 
 @bot.gateway.command
 def helloworld(resp):
@@ -24,15 +23,8 @@ def helloworld(resp):
         if m['author']['id'] == bot.gateway.session.user['id']:
             return
         if m['type'] == 'reply':
-            if 'referenced_message' in m and m['referenced_message']['author']['id'] == bot.gateway.session.user['id'] and 'guild_id' not in m:
-                time.sleep(1) #instant replies make ppl think ur running a selfbot so...
-                channelID = m['channel_id']
-                baseURL = "https://discord.com/api/channels/{}/messages".format(channelID)
-                POSTedJSON =  json.dumps ({"content":"The server Gods have allowed me to grant you the server badge. You are now a server :).","nonce":None,"tts":False,"message_reference":{"guild_id":None,"channel_id":m['channel_id'],"message_id":m['id']},"allowed_mentions":{"parse":["users","roles","everyone"],"replied_user":False}})
-                try:
-                    bot.s.post(baseURL, data=POSTedJSON)
-                except:
-                    bot.s.post(baseURL, data=POSTedJSON)
-                time.sleep(2) #instant replies make ppl think ur running a selfbot so...
+            if 'referenced_message' in m and m['referenced_message']['author']['id'] == bot.gateway.session.user['id']:
+                time.sleep(1)
+                bot.reply(m['channel_id'], m['id'], "The server Gods have allowed me to grant you the server badge. You are now a server :).")
 
 bot.gateway.run()

@@ -53,7 +53,7 @@ class Guild(object):
 			return self.joinGuildRaw(inviteCode, location="markdown")
 
 	def previewGuild(self, guildID, sessionID):
-		url = "guilds/"+guildID+"/members/@me?lurker=true"
+		url = self.discord+"guilds/"+guildID+"/members/@me?lurker=true"
 		if sessionID != None:
 			url += "&session_id="+sessionID
 		return Wrapper.sendRequest(self.s, 'put', url, headerModifications={"update":{"X-Context-Properties":"e30="}}, log=self.log)

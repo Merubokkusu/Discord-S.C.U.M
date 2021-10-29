@@ -2,7 +2,6 @@ import websocket
 import json
 import time
 import random
-import base64
 import zlib
 import copy
 
@@ -147,19 +146,12 @@ class GatewayServer:
 
 	#WebSocketApp, more info here: https://github.com/websocket-client/websocket-client/blob/master/websocket/_app.py#L84
 	def _get_ws_app(self, websocketurl):
-		sec_websocket_key = base64.b64encode(bytes(random.getrandbits(8) for _ in range(16))).decode() #https://websockets.readthedocs.io/en/stable/_modules/websockets/handshake.html
 		headers = {
 			"Accept-Encoding": "gzip, deflate, br",
 			"Accept-Language": "en-US,en;q=0.9",
 			"Cache-Control": "no-cache",
-			"Connection": "Upgrade",
-			"Host": "gateway.discord.gg",
-			"Origin": "https://discord.com",
 			"Pragma": "no-cache",
 			"Sec-WebSocket-Extensions": "permessage-deflate; client_max_window_bits",
-			"Sec-WebSocket-Key": sec_websocket_key,
-			"Sec-WebSocket-Version": "13",
-			"Upgrade": "websocket",
 			"User-Agent": self.super_properties["browser_user_agent"]
 		} #more info: https://stackoverflow.com/a/40675547
 
@@ -343,7 +335,7 @@ class GatewayServer:
 			while True:
 				try:
 					self._zlib = zlib.decompressobj()
-					self.ws.run_forever(ping_interval=10, ping_timeout=5, http_proxy_host=self.proxy_host, http_proxy_port=self.proxy_port)
+					self.ws.run_forever(ping_interval=10, ping_timeout=5, http_proxy_host=self.proxy_host, http_proxy_port=self.proxy_port, **self.connectionKwargs)
 					raise self._last_err
 				except KeyboardInterrupt:
 					self._last_err = KeyboardInterrupt("Keyboard Interrupt Error")

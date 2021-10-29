@@ -4,7 +4,6 @@ https://luna.gitlab.io/discord-unofficial-docs/desktop_remote_auth.html
 https://github.com/Vap0r1ze/discord-remote-auth/blob/master/src/types/RemoteAuthClient.js
 '''
 import websocket
-import random
 import time
 
 import json
@@ -63,19 +62,12 @@ class RemoteAuth:
 
 	#WebSocketApp, more info here: https://github.com/websocket-client/websocket-client/blob/master/websocket/_app.py#L84
 	def _get_ws_app(self, remoteauthurl):
-		sec_websocket_key = base64.b64encode(bytes(random.getrandbits(8) for _ in range(16))).decode() #https://websockets.readthedocs.io/en/stable/_modules/websockets/handshake.html
 		headers = {
 			"Accept-Encoding": "gzip, deflate, br",
 			"Accept-Language": "en-US,en;q=0.9",
 			"Cache-Control": "no-cache",
-			"Connection": "Upgrade",
-			"Host": "gateway.discord.gg",
-			"Origin": "https://discord.com",
 			"Pragma": "no-cache",
 			"Sec-WebSocket-Extensions": "permessage-deflate; client_max_window_bits",
-			"Sec-WebSocket-Key": sec_websocket_key,
-			"Sec-WebSocket-Version": "13",
-			"Upgrade": "websocket",
 			"User-Agent": self.user_agent
 		} #more info: https://stackoverflow.com/a/40675547
 

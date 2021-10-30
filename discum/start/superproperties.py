@@ -26,7 +26,7 @@ class SuperProperties:
             file_with_build_num = 'https://discord.com/assets/'+re.compile(r'assets/+([a-z0-9]+)\.js').findall(discord_login_page_exploration)[-2]+'.js' #fastest solution I could find since the last js file is huge in comparison to 2nd from last
             req_file_build = Wrapper.sendRequest(self.editedS, 'get', file_with_build_num, log=False).text #log set to False cause this is a big file
             index_of_build_num = req_file_build.find('buildNumber')+14
-            discord_build_num = int(req_file_build[index_of_build_num:index_of_build_num+5])
+            discord_build_num = int(req_file_build[index_of_build_num:index_of_build_num+6])
             Logger.log('Discord is currently on build number '+str(discord_build_num), None, self.log)
             return discord_build_num
         except Exception as e:

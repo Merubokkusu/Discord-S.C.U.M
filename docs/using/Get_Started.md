@@ -44,7 +44,7 @@ bot = discum.Client(token="user token here")
 
 a discum.Client object
 
-examples
+Examples
 --------
 
 A simple example showing how to use the REST api wraps and how to interact with discord's gateway:
@@ -93,3 +93,28 @@ bot.gateway.run()
 ```
 
 [more examples](https://github.com/Merubokkusu/Discord-S.C.U.M/tree/master/examples)
+
+Proxies
+-------
+For more control over proxies:            
+You can edit your bot's requests session.
+The bot's requests session for REST api wraps is stored in ```bot.s```. Therefore, you can do ```bot.s.proxies = ...```.
+You can also pass in authentication (remember, ```bot.s``` is a requests Session object): https://stackoverflow.com/a/52051665/14776493
+
+Then, you can update your requests session for the gateway (```bot.gateway.sessionobj```). This is optional and only needed if you're using status update gateway functions.
+
+Also, the gateway has inputs for proxies. You can edit the proxies for the gateway like this:
+```python
+bot.gateway.proxy_host = ...
+bot.gateway.proxy_port = ...
+```
+
+you can also pass in connection kwargs to the gateway:
+#### HTTP proxy
+```python
+bot.gateway. connectionKwargs = {"proxy_type":"http", "http_proxy_auth":("username", "password123")}
+```
+#### SOCKS4 (or SOCKS5) proxy
+```python
+bot.gateway. connectionKwargs = {"proxy_type":"socks4"}
+```

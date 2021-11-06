@@ -429,8 +429,8 @@ class Client:
 	def setPhone(self, number):
 		return imports.User(self.discord,self.s,self.log).setPhone(number)
 
-	def validatePhone(self, number, code):
-		result = imports.User(self.discord,self.s,self.log).validatePhone(number, code)
+	def validatePhone(self, number, code, password):
+		result = imports.User(self.discord,self.s,self.log).validatePhone(number, code, password)
 		if result.status_code == 200 and "token" in result.json():
 			self.__user_token = result.json()["token"]
 		return result

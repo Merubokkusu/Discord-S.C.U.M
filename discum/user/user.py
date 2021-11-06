@@ -203,9 +203,13 @@ class User(object):
 		body = {"phone": number}
 		return Wrapper.sendRequest(self.s, 'post', url, body, log=self.log)
 
-	def validatePhone(self, number, code):
+	def validatePhone(self, number, code, password):
 		url = self.discord+"phone-verifications/verify"
 		body = {"phone": number,"code": str(code)}
+		request = Wrapper.sendRequest(self.s, 'post', url, body, log=self.log)
+
+		url = self.discord+"users/@me/phone"
+		body = {"phone_token":request.json()["token"], "password":password}
 		return Wrapper.sendRequest(self.s, 'post', url, body, log=self.log)
 
 	'''

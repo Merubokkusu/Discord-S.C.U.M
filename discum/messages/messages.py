@@ -1,5 +1,5 @@
 from requests_toolbelt import MultipartEncoder
-import random,string
+import random, string
 import time, datetime
 import os.path
 import json
@@ -137,26 +137,21 @@ class Messages(object):
 			filename = os.path.basename(os.path.normpath(filelocation))
 		#now time to post the file
 		url = self.discord+'channels/'+channelID+'/messages'
-		if isurl:
-			payload = {"content":message,"tts":tts}
-			if message_reference != None:
-				payload["message_reference"] = message_reference
-				payload["type"] = 19
-			if sticker_ids != None:
-				payload["sticker_ids"] = sticker_ids
-			fields={"file":(filename,fd,mimetype), "payload_json":(None,json.dumps(payload))}
-		else:
-			payload = {"content":message,"tts":tts}
-			if message_reference != None:
-				payload["message_reference"] = message_reference
-				payload["type"] = 19
-			if sticker_ids != None:
-				payload["sticker_ids"] = sticker_ids
-			fields={"file":(filename,open(filelocation,'rb').read(),mimetype), "payload_json":(None,json.dumps(payload))}
-		m=MultipartEncoder(fields=fields,boundary='----WebKitFormBoundary'+''.join(random.sample(string.ascii_letters+string.digits,16)))
-		self.s.headers.update({"Content-Type":m.content_type})
-		response = Wrapper.sendRequest(self.s, 'post', url, body=m, log=self.log)
-		self.s.headers.update({"Content-Type":"application/json"})
+		
+		payload = {"content":message,"tts":tts}
+		if message_reference != None:
+			payload["message_reference"] = message_reference
+			payload["type"] = 19
+		if sticker_ids != None:
+			payload["sticker_ids"] = sticker_ids
+		if not isurl:
+			fd = open(filelocation,'rb').read()
+		fields={"file":(filename,fd,mimetype), "payload_json":(None,json.dumps(payload))}
+		
+		randomstr = ''.join(random.sample(string.ascii_letters+string.digits,16))
+		m = MultipartEncoder(fields=fields,boundary='----WebKitFormBoundary'+randomstr)
+		headerMods = {"update": {"Content-Type":m.content_type}}
+		response = Wrapper.sendRequest(self.s, 'post', url, body=m, headerModifications=headerMods, log=self.log)
 		return response
 
 	def reply(self, channelID, messageID, message, nonce, tts, embed, allowed_mentions, sticker_ids, file, isurl):

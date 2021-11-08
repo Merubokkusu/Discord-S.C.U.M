@@ -1,3 +1,7 @@
+import random, string
+from requests_toolbelt import MultipartEncoder
+import json
+
 from ..RESTapiwrap import Wrapper
 
 class SlashCommands(object):
@@ -18,7 +22,7 @@ class SlashCommands(object):
 			nonce = calculateNonce()
 		else:
 			nonce = str(nonce)
-		body = {
+		payload = {
 			"type": 2,
 			"application_id": applicationID,
 			"guild_id": guildID,
@@ -27,5 +31,12 @@ class SlashCommands(object):
 			"nonce": nonce,
 		}
 		if guildID == None:
-			body.pop("guild_id")
-		return Wrapper.sendRequest(self.s, 'post', url, body, log=self.log)
+			payload.pop("guild_id")
+		fields = {"payload_json":(None, json.dumps(payload))}
+		randomstr = ''.join(random.sample(string.ascii_letters+string.digits,16))
+		body = MultipartEncoder(fields=fields, boundary='----WebKitFormBoundary'+randomstr)
+		headerMods = {"update": {"Content-Type": body.content_type}}
+
+		return Wrapper.sendRequest(self.s, 'post', url, body, headerModifications=headerMods, log=self.log)
+
+

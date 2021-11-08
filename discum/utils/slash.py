@@ -77,7 +77,8 @@ class SlashCommander(object):
 			data = {
 					"name": current_cmd["name"],
 					"type": current_cmd["type"],
-					"options": []
+					"options": [],
+					"attachments": []
 			}
 			if current_cmd.get("version"):
 				data.update(

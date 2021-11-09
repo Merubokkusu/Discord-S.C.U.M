@@ -1,7 +1,8 @@
 class Buttoner(object):
 	__slots__ = ['components', 'component_types']
 	def __init__(self, components):
-		if type(components) in (list, tuple) and isinstance(components[0], dict):
+		if (type(components) in (list, tuple) 
+		and (len(components) == 0 or isinstance(components[0], dict))):
 			self.components = list(dict(i) for i in components)
 		else:
 			raise ValueError("components must be a list of dicts.")
@@ -59,6 +60,7 @@ class Buttoner(object):
 						menus.append(dict(c))
 						if findFirst:
 							return menus
+		return menus
 
 	def findDropdown(self, menu, label=None, description=None, value=None, emojiName=None, emojiID=None, findFirst=False): #label, description, value, emojiName, emojiID
 		dropdowns = []

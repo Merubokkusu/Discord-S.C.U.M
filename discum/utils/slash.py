@@ -77,14 +77,14 @@ class SlashCommander(object):
 			data = {
 					"name": current_cmd["name"],
 					"type": current_cmd["type"],
-					"options": [],
-					"attachments": []
+					"options": []
 			}
 			if current_cmd.get("version"):
 				data.update(
 					{
 						"version": current_cmd.get("version"),
 						"id": current_cmd["id"],
+						"attachments": [] #only the top layer of cmds has attachments
 					}
 				)
 			self._getConstructedSubdict(constructed_slash_cmd, index).update(data)

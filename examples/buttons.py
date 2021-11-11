@@ -13,7 +13,7 @@ channelID = ""
 messageID = ""
 
 message = bot.getMessage(channelID, messageID)
-data = message.json()
+data = message.json()[0]
 buts = Buttoner(data["components"])
 bot.click(
     data["webhook_id"],
@@ -25,7 +25,7 @@ bot.click(
 )
 
 message = bot.getMessage(channelID, messageID)
-data = message.json()
+data = message.json()[0]
 bot.click(
     data["webhook_id"],
     channelID=data["channel_id"],

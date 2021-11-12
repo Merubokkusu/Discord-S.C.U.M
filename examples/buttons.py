@@ -16,7 +16,7 @@ message = bot.getMessage(channelID, messageID)
 data = message.json()[0]
 buts = Buttoner(data["components"])
 bot.click(
-    data["webhook_id"],
+    data["author"]["id"],
     channelID=data["channel_id"],
     guildID=data.get("guild_id"),
     messageID=data["id"],
@@ -27,7 +27,7 @@ bot.click(
 message = bot.getMessage(channelID, messageID)
 data = message.json()[0]
 bot.click(
-    data["webhook_id"],
+    data["author"]["id"],
     channelID=data["channel_id"],
     guildID=data.get("guild_id"),
     messageID=data["id"],
@@ -61,7 +61,7 @@ def slashCommandTest(resp, guildID, channelID, botID):
 def clickButton(resp):
     if resp.event.message or resp.event.message_updated:
         data = resp.parsed.auto()
-        if data.get("webhook_id", None) == "234395307759108106" and data["interaction"]["user"]["id"]==bot.gateway.session.user["id"]:
+        if data.get("webhook_id") == "234395307759108106" and data["interaction"]["user"]["id"]==bot.gateway.session.user["id"]:
             bot.gateway.close()
             buts = Buttoner(data["components"])
             bot.click(

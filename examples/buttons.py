@@ -9,27 +9,30 @@ bot = discum.Client(token='ur token')
 #this is a bit easier but has a small chance getting your acc flagged (because, 1 more request need per button click than usual)
 from discum.utils.button import Buttoner
 
+guildID = None #replace with guildID string if msg is in a guild
 channelID = ""
 messageID = ""
 
+#click button
 message = bot.getMessage(channelID, messageID)
 data = message.json()[0]
 buts = Buttoner(data["components"])
 bot.click(
     data["author"]["id"],
     channelID=data["channel_id"],
-    guildID=data.get("guild_id"),
+    guildID=guildID,
     messageID=data["id"],
     messageFlags=data["flags"],
     data=buts.getButton("First"),
 )
 
+#select dropdown option
 message = bot.getMessage(channelID, messageID)
 data = message.json()[0]
 bot.click(
     data["author"]["id"],
     channelID=data["channel_id"],
-    guildID=data.get("guild_id"),
+    guildID=guildID,
     messageID=data["id"],
     messageFlags=data["flags"],
     data=buts.getMenuSelection(placeholder="Make a selection", labels=['a', 'b']),

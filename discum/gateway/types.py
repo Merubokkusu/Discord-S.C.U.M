@@ -24,7 +24,8 @@ class Types:
 		19: "reply",
 		20: "application_command",
 		21: "thread_starter_message",
-		22: "guild_invite_reminder"
+		22: "guild_invite_reminder",
+		23: "context_menu_command"
 	}
 
 	channelTypes = {

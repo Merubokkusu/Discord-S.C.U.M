@@ -38,7 +38,7 @@ class ContextProperties(object):
 			return "eyJsb2NhdGlvbiI6Ik1hcmtkb3duIExpbmsifQ==" # {"location":"Markdown Link"}
 		elif loc in ("accept invite page", "join guild"):
 			data = {
-				"location": "Accept Invite Page",
+				"location": loc.title(),
 				"location_guild_id": guild_id,
 				"location_channel_id": channel_id,
 				"location_channel_type": channel_type,

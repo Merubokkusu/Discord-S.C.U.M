@@ -36,7 +36,7 @@ class Buttoner(object):
 			for index,c in enumerate(row["components"]):
 				#if button
 				if c["type"] == 2:
-					if self._check([label, customID, column], [c["label"], c["custom_id"], index]):
+					if self._check([label, customID, column], [c.get("label"), c["custom_id"], index]):
 						buttons.append(dict(c))
 						if findFirst:
 							return buttons

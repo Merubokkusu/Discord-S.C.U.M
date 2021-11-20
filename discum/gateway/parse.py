@@ -42,9 +42,6 @@ class Parse(object):
 	def message_create(self):
 		return imports.MessageParse().message_create(self.response)
 
-	def message_update(self): #same format as message create events
-		return imports.MessageParse().message_create(self.response)
-
 	def sessions_replace(self, session_id="0"):
 		return imports.UserParse().sessions_replace(self.response, session_id)
 

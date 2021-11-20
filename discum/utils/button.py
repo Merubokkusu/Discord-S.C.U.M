@@ -24,7 +24,7 @@ class Buttoner(object):
 		return True
 
 	#get attributes of a button
-	def findButton(self, label=None, customID=None, row=None, column=None, findFirst=False): #label, custom_id, row, column
+	def findButton(self, label=None, customID=None, row=None, column=None, emojiName=None, emojiID=None, findFirst=False):
 		buttons = []
 		#row
 		if row != None:
@@ -36,7 +36,16 @@ class Buttoner(object):
 			for index,c in enumerate(row["components"]):
 				#if button
 				if c["type"] == 2:
-					if self._check([label, customID, column], [c.get("label"), c["custom_id"], index]):
+					if self._check(
+						[label, customID, column, emojiName, emojiID],
+						[
+							c.get("label"),
+							c["custom_id"],
+							index,
+							c.get("emoji", {}).get("name"),
+							c.get("emoji", {}).get("id"),
+						],
+					):
 						buttons.append(dict(c))
 						if findFirst:
 							return buttons
@@ -81,8 +90,8 @@ class Buttoner(object):
 		return dropdowns
 
 	#get constructed button data
-	def getButton(self, label=None, customID=None, row=None, column=None):
-		button = self.findButton(label, customID, row, column, findFirst=True)
+	def getButton(self, label=None, customID=None, row=None, column=None, emojiName=None, emojiID=None):
+		button = self.findButton(label, customID, row, column, emojiName, emojiID, findFirst=True)
 		if len(button)>0:
 			return {"component_type": 2, "custom_id": button[0]["custom_id"]}
 		else:
@@ -93,7 +102,7 @@ class Buttoner(object):
 		menu = self.findMenu(placeholder, customID, row, findFirst=True)
 		if len(menu)>0:
 			menuData = {"component_type":3, "custom_id":menu[0]["custom_id"], "values":[]}
-			for l,d,v,eN,eID in zip(labels,descriptions,values,emojiNames,emojiIDs):
+			for l,d,v,eN,eID in zip(labels, descriptions, values, emojiNames, emojiIDs):
 				dropdown = self.findDropdown(menu[0], label=l, description=d, value=v, emojiName=eN, emojiID=eID)
 				if len(dropdown)>0:
 					menuData["values"].append(dropdown["value"])

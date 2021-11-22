@@ -2,6 +2,7 @@ import random, string
 from requests_toolbelt import MultipartEncoder
 import json
 
+from ..utils.nonce import calculateNonce
 from ..RESTapiwrap import Wrapper
 
 class SlashCommands(object):
@@ -18,8 +19,7 @@ class SlashCommands(object):
 	def triggerSlashCommand(self, applicationID, channelID, guildID, data, nonce):
 		url = self.discord+"interactions"
 		if nonce == "calculate":
-			from ..utils.nonce import calculateNonce
-			nonce = calculateNonce()
+			nonce = calculateNonce("now")
 		else:
 			nonce = str(nonce)
 		payload = {

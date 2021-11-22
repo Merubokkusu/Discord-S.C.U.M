@@ -184,6 +184,8 @@ Table of Contents
     -   [get slash commands](using/REST_Actions.md#getSlashCommands)
     -   [click on button or select from menu](using/REST_Actions.md#click)
     -   [trigger/send slash command](using/REST_Actions.md#triggerSlashCommand)
+    -	[trigger user command](using/REST_Actions.md#triggerUserCommand)
+    -	[trigger message command](using/REST_Actions.md#triggerMessageCommand)
     -   [{gateway} fetch guild members](using/Gateway_Actions.md#gatewayfetchmembers)
     -   [{gateway} guild member fetching parameter helper (POC)](using/Gateway_Actions.md#gatewaygetmemberfetchingparams)
     -   [{gateway} check if guild member fetching is finished](using/Gateway_Actions.md#gatewayfinishedmemberfetching)

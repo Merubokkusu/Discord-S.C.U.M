@@ -251,8 +251,9 @@ bot.checkToken('poop')
 ###### Parameters:
 - token (str)
 ###### Returns:
-a requests.Response object. If the token is valid, the .json() should contain the following keys:        
-\['id', 'username', 'avatar', 'discriminator', 'public_flags', 'flags', 'locale', 'nsfw_allowed', 'mfa_enabled', 'analytics_token', 'email', 'verified', 'phone'\]
+tuple of booleans
+	(isValid, isLocked)
+	for example, (True, False) describes a valid and unlocked token
 
 ##### ```snowflake_to_unixts``` and ```unixts_to_snowflake```
 ```python

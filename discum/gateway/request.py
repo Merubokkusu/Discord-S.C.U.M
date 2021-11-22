@@ -22,8 +22,8 @@ class Request(object):
 	def searchGuildMembers(self, guild_ids, query="", limit=10, presences=True, user_ids=None, nonce=None):
 		imports.GuildRequest(self.gatewayobject).searchGuildMembers(guild_ids, query, limit, presences, user_ids, nonce)
 
-	def searchSlashCommands(self, guild_id, nonce="calculate", offset=None, limit=10, command_ids=None, query=None):
-		imports.GuildRequest(self.gatewayobject).searchSlashCommands(guild_id, nonce, offset, limit, command_ids, query)
+	def searchSlashCommands(self, guild_id, query=None, command_ids=None, applicationID=None, limit=10, offset=None, nonce="calculate", appType="chat"):
+		imports.GuildRequest(self.gatewayobject).searchSlashCommands(guild_id, query, command_ids, applicationID, limit, offset, nonce, appType)
 
 	def DMchannel(self, channel_id):
 		imports.DmRequest(self.gatewayobject).DMchannel(channel_id)

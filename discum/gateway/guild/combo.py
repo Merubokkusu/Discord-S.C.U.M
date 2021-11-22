@@ -94,7 +94,7 @@ class GuildCombo(object):
 		if self.gatewayobj.READY:
 			if self.gatewayobj.memberFetchingStatus.get(guild_id) == None: #request for lazy request
 				self.gatewayobj.memberFetchingStatus[guild_id] = [startIndex, startIndex] #format is [previous index, current index]. This format is useful for the wait parameter.
-				if not self.gatewayobj.session.guild(guild_id).hasMembers or reset:
+				if not self.gatewayobj.session.guild(guild_id).hasMembers and reset:
 					self.gatewayobj.session.guild(guild_id).resetMembers() #reset
 				if len(self.gatewayobj.memberFetchingStatus["first"]) == 0:
 					self.gatewayobj.memberFetchingStatus["first"] = [guild_id]

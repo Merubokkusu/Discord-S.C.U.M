@@ -31,7 +31,13 @@ class SlashCommander(object):
 	def _getCmdSubdict(self, cmdList):
 		result = self.commands
 		for cmd in cmdList:
-			result = next((c for c in result["options"] if c["name"] == cmd and c["type"] in (1,2)), None)
+			result = next(
+				(
+					c for c in result["options"]
+					if c["name"] == cmd and (c["type"] in (1, 2) or self._isAtOuterLvl(c))
+				),
+				None,
+			)
 			if result == None:
 				raise ValueError("{} is not a valid command list".format(cmdList))
 		return result
@@ -44,6 +50,10 @@ class SlashCommander(object):
 				result["options"].append({})
 			result = result["options"][0]
 		return result
+
+	#check if at the outer level of the command
+	def _isAtOuterLvl(self, inputDict):
+		return "version" in inputDict
 
 	#get type, description, and options of command (from command list)
 	def metadata(self, cmdList):
@@ -59,7 +69,7 @@ class SlashCommander(object):
 	#get options (attributes and parameters) of command (from command list)
 	def options(self, cmdList):
 		theDict = self._getCmdSubdict(cmdList)
-		if theDict["type"] in (1,2):
+		if theDict["type"] in (1, 2) or self._isAtOuterLvl(theDict):
 			options = [
 				dict(i, **{"type": self.option_types[i["type"]][0]})
 				for i in theDict.get("options", [])
@@ -71,7 +81,13 @@ class SlashCommander(object):
 		constructed_slash_cmd = {}
 		current_cmd = self.commands
 		for index, cmd in enumerate(cmdList):
-			current_cmd = next((c for c in current_cmd["options"] if c["name"] == cmd and c["type"] in (1,2)), None)
+			current_cmd = next(
+				(
+					c for c in current_cmd["options"]
+					if c["name"] == cmd and c["type"] in (1, 2) or self._isAtOuterLvl(c)
+				),
+				None
+			)
 			if current_cmd == None:
 				raise ValueError("{} is not a valid command list".format(cmdList))
 			data = {
@@ -79,7 +95,7 @@ class SlashCommander(object):
 					"type": current_cmd["type"],
 					"options": []
 			}
-			if current_cmd.get("version"):
+			if self._isAtOuterLvl(current_cmd):
 				data.update(
 					{
 						"version": current_cmd.get("version"),

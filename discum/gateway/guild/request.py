@@ -57,18 +57,27 @@ class GuildRequest(object):
 	{"guild_id": "blah", "nonce": "blah", "type": 1, "applications": True, "offset": 0, "command_ids": ["blah", ...], "limit":10}
 	{"guild_id": "blah", "nonce": "blah", "type": 1, "offset": 30, "limit": 10}
 	'''
-	def searchSlashCommands(self, guild_id, nonce, offset, limit, command_ids, query):
+	def searchSlashCommands(self, guild_id, query, command_ids, applicationID, limit, offset, nonce, appType):
 		#nonce
 		if nonce == "calculate":
 			from ...utils.nonce import calculateNonce
 			nonce = calculateNonce()
 		else:
 			nonce = str(nonce)
+
 		#payload
 		data = {
 			"op": self.gatewayobj.OPCODE.REQUEST_APPLICATION_COMMANDS,
 			"d": {"guild_id": guild_id, "nonce": nonce, "type": 1},
 		}
+
+		#application type
+		appType = appType.lower()
+		if 'user' in appType:
+			data["d"]["type"] = 2
+		elif 'message' in appType:
+			data["d"]["type"] = 3
+
 		#case 1: search by query
 		if query != None:
 			data["d"].update({"limit":limit, "query":query})
@@ -84,4 +93,8 @@ class GuildRequest(object):
 			data["d"]["limit"] = limit
 			if offset != None:
 				data["d"]["offset"] = offset
+
+		#idk, this isn't ever done in the client but it's useful so here goes
+		if applicationID != None:
+			data["d"]["application_id"] = applicationID
 		self.gatewayobj.send(data)

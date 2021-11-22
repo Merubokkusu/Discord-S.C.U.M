@@ -19,7 +19,7 @@ imports = Imports(
 )
 
 #logging to console/file
-from .logger import * #imports LogLevel and Logger
+from .logger import LogLevel, Logger
 
 #other imports
 import time
@@ -47,6 +47,7 @@ class Client:
 		self.discord = 'https://discord.com/api/v'+repr(self.api_version)+'/'
 		self.websocketurl = 'wss://gateway.discord.gg/?encoding=json&v='+repr(self.api_version)+'&compress=zlib-stream'
 		self.remoteauthurl = 'wss://remote-auth-gateway.discord.gg/?v=1'
+		
 		#step 2: user agent
 		if user_agent != "random":
 			self.__user_agent = user_agent
@@ -54,6 +55,7 @@ class Client:
 			import random_user_agent.user_agent #only really want to import this if needed
 			self.__user_agent = random_user_agent.user_agent.UserAgent(limit=100).get_random_user_agent()
 			Logger.log('Randomly generated user agent: '+self.__user_agent, None, log)
+		
 		#step 3: http request headers
 		headers = {
 			"Origin": "https://discord.com",
@@ -79,24 +81,28 @@ class Client:
 			'https': "https://" + self.__proxy_host+':'+self.__proxy_port
 			}
 			self.s.proxies.update(proxies)
+		
 		#step 4: cookies
 		self.s.cookies.update({"locale": self.locale})
+		
 		#step 5: super-properties (part of headers)
-		self.__super_properties = imports.SuperProperties(self.s, buildnum=build_num, log=self.log).getSuperProperties(self.__user_agent, self.locale)
+		self.__super_properties = self.getSuperProperties(self.__user_agent, build_num, self.locale)
 		self.s.headers.update({"X-Super-Properties": base64.b64encode(json.dumps(self.__super_properties).encode()).decode("utf-8")})
+		
 		#step 6: token/authorization/fingerprint (also part of headers, except for fingerprint)
-		tokenProvided = self.__user_token not in ("",None,False)
-		if not tokenProvided:
+		login_needed = token in ('', None, False) and {email, password}.isdisjoint({'', None, False})
+		if login_needed:
 			if remote_auth:
 				self.__user_token, self.userData = self.remoteAuthLogin(remote_auth)
 			else:
-				loginResponse, self.__xfingerprint = imports.Login(self.s, self.discord, self.log).login(email=email, password=password, undelete=False, captcha=None, source=None, gift_code_sku_id=None, secret=secret, code=code)
+				loginResponse, self.__xfingerprint = self.login(email, password, False, None, None, None, secret, code)
 				self.__user_token = loginResponse.json().get('token') #update token from "" to actual value
-				time.sleep(1)
 		self.s.headers.update({"Authorization": self.__user_token}) #update headers
+		
 		#step 7: gateway (object initialization)
 		from .gateway.gateway import GatewayServer
 		self.gateway = GatewayServer(self.websocketurl, self.__user_token, self.__super_properties, self.s, self.discord, self.log) #self.s contains proxy host and proxy port already
+		
 		#step 8: somewhat prepare for science events
 		self.Science = ""
 
@@ -106,13 +112,22 @@ class Client:
 	test token
 	'''
 	def checkToken(self, token):
-		editedS = imports.Wrapper().editedReqSession(self.s, {"update":{"Authorization":token}})
-		connection = imports.User(self.discord, editedS, self.log).info(with_analytics_token=True)
-		if connection.status_code == 200:
-			Logger.log("Valid token.", None, self.log)
+		editedS = imports.Wrapper().editedReqSession(self.s, {'update':{'Authorization':token}})
+		user = imports.User(self.discord, editedS, self.log)
+		settingsTest = user.enableDevMode(True)
+		infoTest = user.info(True)
+		isValid = True
+		if settingsTest.status_code == 200:
+			Logger.log('Valid, non-locked token.', None, self.log)
+			isLocked = False
+		elif infoTest.status_code == 204:
+			Logger.log('Valid, but locked token.', None, self.log)
+			isLocked = True
 		else:
-			Logger.log("Invalid token.", None, self.log)
-		return connection
+			Logger.log('Invalid token.', None, self.log)
+			isValid = False
+			isLocked = None
+		return isValid, isLocked
 
 	'''
 	discord snowflake to unix timestamp and back
@@ -752,6 +767,18 @@ class Client:
 
 	#trigger a slash command (running /command blah blah blah whatever)
 	def triggerSlashCommand(self, applicationID, channelID, guildID=None, data={}, nonce="calculate"):
+		return imports.SlashCommands(self.discord,self.s,self.log).triggerSlashCommand(applicationID, channelID, guildID, data, nonce)
+
+	#trigger a user command (right click on bot username, select a command from Apps)
+	def triggerUserCommand(self, applicationID, channelID, guildID=None, data={}, nonce="calculate"):
+		if "target_id" not in data:
+			data["target_id"] = applicationID
+		return imports.SlashCommands(self.discord,self.s,self.log).triggerSlashCommand(applicationID, channelID, guildID, data, nonce)
+
+	#trigger a message command (right click on message, select a command from Apps)
+	def triggerMessageCommand(self, applicationID, messageID, channelID, guildID=None, data={}, nonce="calculate"):
+		if "target_id" not in data:
+			data["target_id"] = messageID
 		return imports.SlashCommands(self.discord,self.s,self.log).triggerSlashCommand(applicationID, channelID, guildID, data, nonce)
 
 	#click on a button or select menu option(s)

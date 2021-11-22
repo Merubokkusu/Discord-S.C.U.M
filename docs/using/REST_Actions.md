@@ -1097,7 +1097,7 @@ __________
 Only works if you already have a DM with this bot.
 If you only share a guild with the bot, you'll have to use [bot.gateway.searchGuildMembers](Gateway_Actions.md#gatewaysearchGuildMembers)
 ```python
-bot.getSlashCommands("botID000000000")
+bot.getSlashCommands("botID")
 ```
 ###### Parameters:
 - applicationID (str) - the bot ID
@@ -1105,7 +1105,7 @@ bot.getSlashCommands("botID000000000")
 ##### ```triggerSlashCommand```
 ```python
 #first, lets see what slash commands we can run.
-slashCmds = bot.getSlashCommands("botID000000000").json()
+slashCmds = bot.getSlashCommands("botID").json()
 
 #next, let's parse that and create some slash command data
 from discum.utils.slash import SlashCommander
@@ -1113,14 +1113,37 @@ s = SlashCommander(slashCmds) #slashCmds can be either a list of cmds or just 1 
 data = s.get(['saved', 'queues', 'create'], {'name':'hi'})
 
 #finally, lets send the slash command
-bot.triggerSlashCommand("botID000000000", "channelID0000000", guildID="guildID0000000", data=data)
+bot.triggerSlashCommand("botID", "channelID", guildID="guildID", data=data)
 ```
 ###### Parameters:
 - applicationID (str) - bot ID
 - channelID (str)
 - guildID (Optional[str])
 - data (dict) - gets sent in the "data" key. Can use discum.utils.slash.SlashCommander to help with formatting the data.
-- nonce (Optional[str]) - by default, this gets calculated
+- nonce (Optional[str]) - by default, this is calculated
+
+##### ```triggerUserCommand```
+```python
+bot.triggerUserCommand("botID", "channelID", guildID="guildID", data=data)
+```
+###### Parameters:
+- applicationID (str) - bot ID
+- channelID (str)
+- guildID (Optional[str])
+- data (dict) - gets sent in the "data" key. Can use discum.utils.slash.SlashCommander to help with formatting the data.
+- nonce (Optional[str]) - by default, this is calculated
+
+##### ```triggerMessageCommand```
+```python
+bot.triggerUserCommand("botID", "messageID", "channelID", guildID="guildID", data=data)
+```
+###### Parameters:
+- applicationID (str) - bot ID
+- messageID (str)
+- channelID (str)
+- guildID (Optional[str])
+- data (dict) - gets sent in the "data" key. Can use discum.utils.slash.SlashCommander to help with formatting the data.
+- nonce (Optional[str]) - by default, this is calculated
 
 ##### ```click```
 ```python

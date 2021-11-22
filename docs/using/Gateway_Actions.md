@@ -359,13 +359,19 @@ def slashCommandTest(resp):
         bot.triggerSlashCommand("botID", "channelID", "guildID", data=data)
 ```
 ###### Parameters:
-- guildID (str) - bot ID
-- nonce (Optional[str]) - current discord snowflake. Calculated by default.
-- offset (Optional[int]) - start showing results at what index. Defaults to None aka 0
-- limit (optional[int]) - up to how many results to get. Defaults to 10
-- command_ids (Optional[list]) - list of command ID strings to get data on
+- guildID (str)
 - query (Optional[str]) - search for commands that start with query
-
+- command_ids (Optional[list]) - list of command ID strings to get data on
+- application_id (Optional[str]) - bot ID
+- limit (optional[int]) - up to how many results to get. Defaults to 10
+- offset (Optional[int]) - start showing results at what index. Defaults to None aka 0
+- nonce (Optional[str]) - current discord snowflake. Calculated by default.
+- app_type (Optional[str]) - application type. Defaults to 'chat'
+| application type | description |
+| ----------- | ----------- |
+| chat           | Slash commands; a text-based command that shows up when a user types |
+| user           | A UI-based command that shows up when you right click or tap on a user |
+| message           | A UI-based command that shows up when you right click or tap on a message |
 
 ##### ```gateway.parse(...).guild_member_list_update```
 ```python

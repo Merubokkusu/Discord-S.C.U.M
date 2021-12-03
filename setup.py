@@ -36,7 +36,7 @@ REQUIRED = [
 EXTRAS = {
     'ra': [
         'pycryptodome', 
-        'pyqrcode'
+        'pyqrcode',
         'pypng'
     ]
 }

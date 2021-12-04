@@ -7,7 +7,7 @@ A simple, easy to use, non-restrictive, synchronous Discord API Wrapper for Self
 ![https://files.catbox.moe/3ns003.png](https://files.catbox.moe/3ns003.png)
         
 \* You can send issues to discordtehe@gmail.com (arandomnewaccount will respond). If you put them in the issues tab, either arandomnewaccount will edit your message to "respond" because he can't post public comments or Merubokkusu will respond. Please at least read the README before submitting an issue.       
-** Currently really busy so might take a while to respond.        
+** Will get some time to update stuff after Dec 10, 2021      
 ##### *** risky actions: [issue #66](https://github.com/Merubokkusu/Discord-S.C.U.M/issues/66#issue-876713938)
 
 ## Table of Contents

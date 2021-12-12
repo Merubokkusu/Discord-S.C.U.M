@@ -167,6 +167,8 @@ class Client:
 			if not proxy_type:
 				true_type = 'http'
 				proxy_type = ('http', 'https')
+			else:
+				proxy_type = (proxy_type,)
 			auth = search.group(2)
 			if auth:
 				proxy_auth = auth[:-1].split(':')
@@ -176,17 +178,13 @@ class Client:
 			proxy_port = search.group(4)
 
 			#proxy updating
-			if isinstance(proxy_type, tuple):
-				proxies = {
-					'http': "http://{}".format(newProxy),
-					'https': "https://{}".format(newProxy)
-				}
-			elif isinstance(proxy_type, str):
-				proxies = {proxy_type: newProxy}
+			proxies = {t:'{}://{}:{}'.format(t, proxy_host, proxy_port) for t in proxy_type}
 
 			self.s.proxies.update(proxies)
 			if auth:
 				self.s.auth = requests.auth.HTTPProxyAuth(*proxy_auth)
+			else:
+				self.s.auth = None
 
 			if updateGateway:
 				self.gateway.sessionobj = self.s
@@ -195,6 +193,8 @@ class Client:
 				self.gateway.proxy_port = proxy_port
 				if self.s.auth:
 					self.gateway.proxy_auth = (self.s.auth.username, self.s.auth.password)
+				else:
+					self.gateway.proxy_auth = None
 
 
 	'''

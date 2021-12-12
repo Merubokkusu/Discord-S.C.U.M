@@ -160,10 +160,10 @@ class GatewayServer:
 
 		ws = websocket.WebSocketApp(websocketurl,
 									header = headers,
-									on_open=lambda ws: self.on_open,
-									on_message=lambda ws, msg: self.on_message,
-									on_error=lambda ws, msg: self.on_error,
-									on_close=lambda ws, close_code, close_msg: self.on_close
+									on_open=lambda ws: self.on_open(ws),
+									on_message=lambda ws, msg: self.on_message(ws, msg),
+									on_error=lambda ws, msg: self.on_error(ws, msg),
+									on_close=lambda ws, close_code, close_msg: self.on_close(ws, close_code, close_msg)
 									)
 		return ws
 

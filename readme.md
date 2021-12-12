@@ -76,7 +76,7 @@ Please see the [contribution guidelines](https://github.com/Merubokkusu/Discord-
 # Example usage
 ```python
 import discum     
-bot = discum.Client(token='420tokentokentokentoken.token.tokentokentokentokentoken', log={"console":True, "file":False})
+bot = discum.Client(token='420tokentokentokentoken.token.tokentokentokentokentoken', log=False)
 
 bot.sendMessage("238323948859439", "Hello :)")
 

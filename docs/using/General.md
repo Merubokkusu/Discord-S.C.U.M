@@ -98,9 +98,32 @@ bot.gateway.run()
 
 [more examples](https://github.com/Merubokkusu/Discord-S.C.U.M/tree/master/examples)
 
+you can also switch accounts:
+# ```switchAccount```
+```python
+bot.switchAccount('token here')
+```
+### Parameters:
+- newToken (str)
+
 Proxies
 -------
-to easily switch proxies: [bot.switchProxy(...)](General.md#switchProxy)
+you can either input a proxy when initializing your bot (shown above) or switch to a proxy:
+# ```switchProxy```
+```python
+bot.switchProxy('http://username:password123@127.0.0.1:8080')
+#do stuff
+bot.switchProxy('https://192.168.1.18:4444')
+#do other stuff
+```
+### Parameters:
+- newProxy (str/None) - set to None to not use a proxy
+	examples:       
+		"http://10.10.1.10:3128"       
+		"http://username:password123@10.10.1.10:3128"       
+		"https://10.10.1.10:3126"       
+		"socks4://10.10.1.10:3126" 
+
 
 You can also edit your bot's requests session.
 The bot's requests session for REST api wraps is stored in ```bot.s```. Therefore, you can do ```bot.s.proxies = ...```.

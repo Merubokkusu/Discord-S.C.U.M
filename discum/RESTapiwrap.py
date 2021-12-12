@@ -2,7 +2,8 @@ import json
 import inspect
 import time
 import requests
-from .logger import * #imports LogLevel and Logger
+
+from .logger import LogLevel, Logger
 
 #functions for REST requests in Wrapper class
 class Wrapper:
@@ -71,22 +72,19 @@ class Wrapper:
 				break
 		return None
 
-	#reqsession, method, url, body=None, headerModifications={}, timeout=None, log={"console":True, "file":False}
+	#headerModifications = {"update":{}, "remove":[]}
 	@staticmethod
-	def sendRequest(*args, **kwargs): #headerModifications = {"update":{}, "remove":[]}
-		#weird way to set vars ik, but python was doing some weird things like not updating headerModifications so...temp fix...
-		body = kwargs.get('body', None)
-		headerModifications = kwargs.get('headerModifications', {})
-		timeout = kwargs.get('timeout', None)
-		log = kwargs.get('log', None)
-		if len(args) >= 3:
-			reqsession, method, url = args[0:3]
-			if len(args) == 4:
-				body = args[-1]
-		else:
-			Logger.log('requests session, method, and url required.', None, log)
-			return
-		#ugly code above...hopefully temporary
+	def sendRequest(reqsession, method, url, body=None, headerModifications={}, timeout=None, log={"console":True, "file":False}):
+		#https://stackoverflow.com/a/6794329/14776493 + ty dolfies
+		if body is None:
+			body = None
+		if headerModifications == {}:
+			headerModifications = {}
+		if timeout is None:
+			timeout = None
+		if log == {"console":True, "file":False}:
+			log = {"console":True, "file":False}
+		#rest of stuff
 		if hasattr(reqsession, method): #just checks if post, get, whatever is a valid requests method
 			# 1. find function
 			stack = inspect.stack()
@@ -95,8 +93,9 @@ class Wrapper:
 			if body == None:
 				if headerModifications.get('remove', None) == None:
 					headerModifications['remove'] = ['Content-Type']
-				else:
+				elif 'Content-Type' not in headerModifications['remove']:
 					headerModifications['remove'].append('Content-Type')
+
 			s = Wrapper.editedReqSession(reqsession, headerModifications)
 			# 3. log url
 			text, color = Wrapper.logFormatter(function_name, [method, url], part="url")
@@ -123,7 +122,9 @@ class Wrapper:
 			if response != None:
 				text, color = Wrapper.logFormatter(function_name, response.text, part="response")
 				Logger.log(text, color, log)
-			# 9. return response object with decompressed content
+				# 9. update cookies
+				reqsession.cookies.update(response.cookies)
+			# 10. return response object with decompressed content
 			return response
 		else:
 			Logger.log('Invalid request method.', None, log)

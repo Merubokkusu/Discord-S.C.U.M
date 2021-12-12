@@ -1,6 +1,7 @@
 import base64
 import datetime
-from ..RESTapiwrap import *
+
+from ..RESTapiwrap import Wrapper
 from ..utils.contextproperties import ContextProperties
 from ..utils.color import Color
 from ..utils.nonce import calculateNonce
@@ -44,10 +45,12 @@ class User(object):
 		body = {"type": 2}
 		return Wrapper.sendRequest(self.s, 'put', url, body, headerModifications={"update":{"X-Context-Properties":ContextProperties.get(location)}}, log=self.log)
 
-	def getProfile(self, userID, with_mutual_guilds):
+	def getProfile(self, userID, with_mutual_guilds, guildID):
 		url = self.discord+"users/"+userID+"/profile"
 		if with_mutual_guilds != None:
 			url += "?with_mutual_guilds="+repr(with_mutual_guilds).lower()
+		if guildID != None:
+			url += "?guild_id="+str(guildID)
 		return Wrapper.sendRequest(self.s, 'get', url, log=self.log)
 
 	def info(self, with_analytics_token): #simple. bot.info() for own user data
@@ -294,7 +297,7 @@ class User(object):
 		url = self.discord+"users/@me/billing/subscriptions"
 		return Wrapper.sendRequest(self.s, 'get', url, log=self.log)
 
-	def getStripeClientSecret(self): #for adding new payment methods. Stripe api wraps are not included because discum is just a discord api wrapper.
+	def getStripeClientSecret(self): #for adding new payment methods. Stripe api wraps are not included because discum is just a discord api 
 		url = self.discord+"users/@me/billing/stripe/setup-intents"
 		return Wrapper.sendRequest(self.s, 'post', url, log=self.log)
 

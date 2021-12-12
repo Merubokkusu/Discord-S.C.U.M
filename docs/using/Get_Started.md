@@ -33,8 +33,12 @@ bot = discum.Client(token="user token here")
 -   **code** (Optional[str]) - TOTP 6 digit code
 -   **token** (Optional[str]) - if you'd like to use discum without auth, input an invalid token like "poop"
 -   **remote\_auth** (Optional[bool/str]) - use remote authentication (scan qr code) to login. Set as filename if you'd like to set a specific file location for the qr code image. Defaults to True
--   **proxy\_host** (Optional[str]) - proxy host without http(s) part
--   **proxy\_port** (Optional[str])
+-   **proxy** (Optional[str])
+	examples:       
+		"http://10.10.1.10:3128"       
+		"http://username:password123@10.10.1.10:3128"       
+		"https://10.10.1.10:3126"       
+		"socks4://10.10.1.10:3126"       
 -   **user\_agent** (Optional[str]) - defaults to "random", which then randomly generates a user agent
 -   **locale** (Optional[str]) - defaults to "en-US"
 -   **build\_num** (Optional[int]) - defaults to "request", which then requests the discord build number
@@ -105,16 +109,18 @@ Then, you can update your requests session for the gateway (```bot.gateway.sessi
 
 Also, the gateway has inputs for proxies. You can edit the proxies for the gateway like this:
 ```python
-bot.gateway.proxy_host = ...
-bot.gateway.proxy_port = ...
+bot.gateway.proxy_host = "0.0.0.0"
+bot.gateway.proxy_port = "0000"
+bot.gateway.proxy_type = "https"
+bot.gateway.proxy_auth = (username, password)
 ```
 
 you can also pass in connection kwargs to the gateway:
 #### HTTP proxy
 ```python
-bot.gateway. connectionKwargs = {"proxy_type":"http", "http_proxy_auth":("username", "password123")}
+bot.gateway.connectionKwargs = {"proxy_type":"http", "http_proxy_auth":("username", "password123")}
 ```
 #### SOCKS4 (or SOCKS5) proxy
 ```python
-bot.gateway. connectionKwargs = {"proxy_type":"socks4"}
+bot.gateway.connectionKwargs = {"proxy_type":"socks4"}
 ```

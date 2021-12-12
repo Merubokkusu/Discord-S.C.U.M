@@ -17,7 +17,7 @@ from .request import Request
 from .parse import Parse
 
 #log to console/file
-from ..logger import * #imports LogLevel and Logger
+from ..logger import LogLevel, Logger
 
 #dynamic imports
 from ..importmanager import Imports
@@ -51,7 +51,7 @@ def exceptionChecker(e, types): #this is an A or B or ... check
 #gateway class
 class GatewayServer:
 
-	__slots__ = ['token', 'super_properties', 'auth', 'RESTurl', 'sessionobj', 'proxy_host', 'proxy_port', 'keepData', 'log', 'interval', 'session_id', 'sequence', 'READY', 'session', 'ws', '_after_message_hooks', '_last_err', '_last_close_event', 'connected', 'resumable', 'voice_data', 'memberFetchingStatus', 'resetMembersOnSessionReconnect', 'updateSessionData', 'guildMemberSearches', '_last_ack', 'latency', 'request', 'parse', '_zlib', 'connectionKwargs']
+	__slots__ = ['token', 'super_properties', 'auth', 'RESTurl', 'sessionobj', 'proxy_host', 'proxy_port', 'proxy_type', 'proxy_auth', 'keepData', 'log', 'interval', 'session_id', 'sequence', 'READY', 'session', 'ws', '_after_message_hooks', '_last_err', '_last_close_event', 'connected', 'resumable', 'voice_data', 'memberFetchingStatus', 'resetMembersOnSessionReconnect', 'updateSessionData', 'guildMemberSearches', '_last_ack', 'latency', 'request', 'parse', '_zlib', 'connectionKwargs']
 
 	class OPCODE:
 		# Name                         Code  Client Action   Description
@@ -67,7 +67,7 @@ class GatewayServer:
 		INVALID_SESSION =              9  #  Receive         used to notify client they have an invalid session id
 		HELLO =                        10 #  Receive         sent immediately after connecting, contains heartbeat and server debug information
 		HEARTBEAT_ACK =                11 #  Sent            immediately following a client heartbeat that was received
-		#GUILD_SYNC =                  12 #  Receive         supposedly guild_sync but not used...idk
+		#GUILD_SYNC =                  12 #  Receive         guild_sync but not used anymore
 		DM_UPDATE =                    13 #  Send            used to get dm features
 		LAZY_REQUEST =                 14 #  Send            discord responds back with GUILD_MEMBER_LIST_UPDATE type SYNC...
 		LOBBY_CONNECT =                15 #  ??
@@ -78,9 +78,9 @@ class GatewayServer:
 		STREAM_WATCH =                 20 #  ??
 		STREAM_PING =                  21 #  Send
 		STREAM_SET_PAUSED =            22 #  ??
-		REQUEST_APPLICATION_COMMANDS = 24 #  ??
+		REQUEST_APPLICATION_COMMANDS = 24 #  Send            request application/bot cmds (user, message, and slash cmds)
 
-	def __init__(self, websocketurl, token, super_properties, sessionobj="", RESTurl="", log={"console":True, "file":False}): #session obj needed for proxies and some combo gateway functions (that also require http api wraps)
+	def __init__(self, websocketurl, token, super_properties, sessionobj=None, RESTurl="", log={"console":True, "file":False}): #session obj needed for proxies and some combo gateway functions (that also require http api wraps)
 		self.token = token
 		self.super_properties = super_properties
 		self.auth = {
@@ -104,17 +104,21 @@ class GatewayServer:
 		self.RESTurl = RESTurl #for helper http requests
 		self.sessionobj = sessionobj #for helper http requests
 
-		self.proxy_host = None if "https" not in sessionobj.proxies else sessionobj.proxies["https"][8:].split(":")[0]
-		self.proxy_port = None if "https" not in sessionobj.proxies else sessionobj.proxies["https"][8:].split(":")[1]
+		self.proxy_type, self.proxy_auth, self.proxy_host, self.proxy_port = [None]*4
+		if sessionobj and sessionobj.proxies:
+			self.proxy_type = proxy_type = list(sessionobj.proxies.keys())[0]
+			self.proxy_host, self.proxy_port = sessionobj.proxies[proxy_type].split('://')[-1].split(':')
+			if sessionobj.auth:
+				self.proxy_auth = (sessionobj.auth.username, sessionobj.auth.password)
 
-		self.keepData = ("dms", "guilds", "guild_channels") #keep data even after leaving dm, guild, or guild channel
+		self.keepData = ("guilds") #keep data even after leaving "dms", "guilds", or "guild_channels"
 		self.log = log
 
 		self.interval = None
 		self.session_id = None
 		self.sequence = 0
 		self.READY = False #becomes True once READY_SUPPLEMENTAL is received
-		self.session = Session({},{})
+		self.session = Session({},{}) #not the same as sessionobj
 
 		#websocket.enableTrace(True) #for debugging
 		self.ws = self._get_ws_app(websocketurl)
@@ -335,7 +339,15 @@ class GatewayServer:
 			while True:
 				try:
 					self._zlib = zlib.decompressobj()
-					self.ws.run_forever(ping_interval=10, ping_timeout=5, http_proxy_host=self.proxy_host, http_proxy_port=self.proxy_port, **self.connectionKwargs)
+					self.ws.run_forever(
+						ping_interval=10,
+						ping_timeout=5,
+						http_proxy_host=self.proxy_host,
+						http_proxy_port=self.proxy_port,
+						http_proxy_auth=self.proxy_auth,
+						proxy_type=self.proxy_type,
+						**self.connectionKwargs
+					)
 					raise self._last_err
 				except KeyboardInterrupt:
 					self._last_err = KeyboardInterrupt("Keyboard Interrupt Error")
@@ -358,7 +370,15 @@ class GatewayServer:
 								time.sleep(10)
 		else:
 			self._zlib = zlib.decompressobj()
-			self.ws.run_forever(ping_interval=10, ping_timeout=5, http_proxy_host=self.proxy_host, http_proxy_port=self.proxy_port, **self.connectionKwargs)
+			self.ws.run_forever(
+				ping_interval=10,
+				ping_timeout=5,
+				http_proxy_host=self.proxy_host,
+				http_proxy_port=self.proxy_port,
+				http_proxy_auth=self.proxy_auth,
+				proxy_type=self.proxy_type,
+				**self.connectionKwargs
+			)
 
 	######################################################
 	def sessionUpdates(self, resp):
@@ -369,7 +389,7 @@ class GatewayServer:
 			guildID = guildData['id']
 			voiceStateData = guildData.pop('voice_states', [])
 			if not self.resetMembersOnSessionReconnect and guildID in self.session.guildIDs:
-				guilddata['members'] = self.session.guild(guildID).members
+				guildData['members'] = self.session.guild(guildID).members
 			self.session.setGuildData(guildID, guildData)
 			self.session.setVoiceStateData(guildID, voiceStateData)
 		#guild deleted

@@ -1,4 +1,4 @@
-from ..RESTapiwrap import *
+from ..RESTapiwrap import Wrapper
 from ..utils.permissions import PERMS, Permissions
 from ..utils.contextproperties import ContextProperties
 

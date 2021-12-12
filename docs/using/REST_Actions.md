@@ -22,6 +22,8 @@ bot.getSuperProperties('Opera/8.17 (Windows NT 5.1; sl-SI) Presto/2.8.215 Versio
 ```python
 bot.getXFingerprint()
 ```
+###### Parameters:
+- generateIfNone (Optional[bool]) - if xfingerprint does not get fetched, generate a random fingerprint
 ###### Returns:
 xfingerprint string
 
@@ -63,6 +65,16 @@ bot.getOauth2Tokens()
 ```python
 bot.getVersionStableHash()
 ```
+##### ```getLibrary```
+```python
+bot.getLibrary()
+```
+##### ```getBadDomainHashes```
+```python
+bot.getBadDomainHashes()
+```
+###### Returns:
+list of hashes
 __________
 ### User
 | relationship type | description |
@@ -124,6 +136,7 @@ bot.getProfile('222222222222222222')
 ###### Parameters:
 - userID (str)
 - with_mutual_guilds (Optional[bool/None]) - get mutual guilds. Defaults to True
+- guildID (Optional[str]) - gets guild member info, if applicable
 
 ##### ```info```
 ```python

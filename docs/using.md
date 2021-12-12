@@ -12,6 +12,8 @@ Table of Contents
     -   [gateway variables](using/General.md#gateway-variables)
         -   [session settings/data](using/General.md#botgatewaysession)
     -   [check token](using/General.md#checktoken)
+    -   [switch account/token](using/General.md#switchAccount)
+    -   [switch proxy](using/General.md#switchProxy)
     -   [convert between snowflake and unixts](using/General.md#snowflake_to_unixts-and-unixts_to_snowflake)
     -   [gateway functions](using/General.md#gateway-functions)
         - [add functions to gateway command list](using/General.md#gatewaycommand)
@@ -35,6 +37,8 @@ Table of Contents
     -   [get "detectables"](using/REST_Actions.md#getdetectables)
     -   [get OAuth2 tokens](using/REST_Actions.md#getoauth2tokens)
     -   [get hash of stable discord version](using/REST_Actions.md#getversionstablehash)
+    -   [get user library](using/REST_Actions.md#getLibrary)
+    -   [get bad domain hashes](using/REST_Actions.md#getBadDomainHashes)
     -   [{gateway} parse READY](using/Gateway_Actions.md#respparsedready)
     -   [{gateway} parse READY\_SUPPLEMENTAL](using/Gateway_Actions.md#respparsedready_supplemental)
 -   User

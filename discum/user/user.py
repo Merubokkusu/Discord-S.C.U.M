@@ -47,10 +47,13 @@ class User(object):
 
 	def getProfile(self, userID, with_mutual_guilds, guildID):
 		url = self.discord+"users/"+userID+"/profile"
+		queries = []
 		if with_mutual_guilds != None:
-			url += "?with_mutual_guilds="+repr(with_mutual_guilds).lower()
+			queries.append("with_mutual_guilds="+repr(with_mutual_guilds).lower())
 		if guildID != None:
-			url += "?guild_id="+str(guildID)
+			queries.append("guild_id="+str(guildID))
+		if queries:
+			url += '?'+'&'.join(queries)
 		return Wrapper.sendRequest(self.s, 'get', url, log=self.log)
 
 	def info(self, with_analytics_token): #simple. bot.info() for own user data

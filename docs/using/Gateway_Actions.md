@@ -156,7 +156,7 @@ bot.gateway.run()
   - list:
     - all possible member properties are: 
       ```
-       ['pending', 'deaf', 'hoisted_role', 'presence', 'joined_at', 'public_flags', 'username', 'avatar', 'discriminator', 'premium_since', 'roles', 'is_pending', 'mute', 'nick', 'bot']
+       ['pending', 'deaf', 'hoisted_role', 'presence', 'joined_at', 'public_flags', 'username', 'avatar', 'discriminator', 'premium_since', 'roles', 'is_pending', 'mute', 'nick', 'bot', 'communication_disabled_until']
       ```
     - set keep to the list of all the member properties you want to retain
     - by default, keep is set to an empty list. This is done to save memory (which really does make a different for massive guilds).
@@ -321,11 +321,11 @@ def guildTest(resp):
 ###### Parameters:
 - guild_id (str)
 - channel_ranges (Optional[dict]) - format is {"channelID":ranges} where ranges always contains [0,99] and up to 2 other ranges. So, ```[[0,99]]```, ```[[0,99], [100,199]]```, and ```[[0,99], [100,199], [200,299]]``` are examples of values for ranges
-- typing (Optional[bool]) - subscribe to typing indicators?
-- threads (Optional[bool]) - subscribe to thread updates?
-- activities (Optional[bool]) - subscribe to activity presence updates?
-- members (Optional[list]) - purpose of this is unknown
-- thread_member_lists (Optional[list]) - idk
+- typing (Optional[bool]) - subscribe to typing indicators
+- threads (Optional[bool]) - subscribe to thread updates
+- activities (Optional[bool]) - subscribe to activity presence updates
+- members (Optional[list]) - list of user id strings. subscribe the guild_member_list_update events from certain user(s)
+- thread_member_lists (Optional[list])
 
 ##### ```gateway.request.searchGuildMembers```
 ```python

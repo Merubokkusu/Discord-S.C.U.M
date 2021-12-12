@@ -230,6 +230,8 @@ class Guild(Session):
 
 	@property
 	def hasMembers(self):
+		if self.guildID not in Session.settings_ready['guilds']:
+			return False
 		return len(Session.settings_ready['guilds'][self.guildID]['members']) >= 0
 
 	@property

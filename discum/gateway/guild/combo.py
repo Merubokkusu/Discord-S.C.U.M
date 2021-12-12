@@ -15,7 +15,7 @@ class GuildCombo(object):
 
 	#fetchMembers helper function
 	def reformat_member(self, memberdata, keep=[]): #memberdata comes in as a dict and leaves as a tuple (userID, memberdatareformatted). This is done to easily prevent duplicates in the member list when fetching.
-		allProperties = ['pending', 'deaf', 'hoisted_role', 'presence', 'joined_at', 'public_flags', 'username', 'avatar', 'discriminator', 'premium_since', 'roles', 'is_pending', 'mute', 'nick', 'bot']
+		allProperties = ['pending', 'deaf', 'hoisted_role', 'presence', 'joined_at', 'public_flags', 'username', 'avatar', 'discriminator', 'premium_since', 'roles', 'is_pending', 'mute', 'nick', 'bot', 'communication_disabled_until']
 		if keep == None:
 			remove = allProperties
 		elif keep == "all":
@@ -29,36 +29,9 @@ class GuildCombo(object):
 		userID = userdata.pop('id', {})
 		memberproperties.update(userdata)
 		#filtering/removing
-		if 'pending' in remove and 'pending' in memberproperties:
-			del memberproperties['pending']
-		if 'deaf' in remove and 'deaf' in memberproperties:
-			del memberproperties['deaf']
-		if 'hoisted_role' in remove and 'hoisted_role' in memberproperties:
-			del memberproperties['hoisted_role']
-		if 'presence' in remove and 'presence' in memberproperties:
-			del memberproperties['presence']
-		if 'joined_at' in remove and 'joined_at' in memberproperties:
-			del memberproperties['joined_at']
-		if 'public_flags' in remove and 'public_flags' in memberproperties:
-			del memberproperties['public_flags']
-		if 'username' in remove and 'username' in memberproperties:
-			del memberproperties['username']
-		if 'avatar' in remove and 'avatar' in memberproperties:
-			del memberproperties['avatar']
-		if 'discriminator' in remove and 'discriminator' in memberproperties:
-			del memberproperties['discriminator']
-		if 'premium_since' in remove and 'premium_since' in memberproperties:
-			del memberproperties['premium_since']
-		if 'roles' in remove and 'roles' in memberproperties:
-			del memberproperties['roles']
-		if 'is_pending' in remove and 'is_pending' in memberproperties:
-			del memberproperties['is_pending']
-		if 'mute' in remove and 'mute' in memberproperties:
-			del memberproperties['mute']
-		if 'nick' in remove and 'nick' in memberproperties:
-			del memberproperties['nick']
-		if 'bot' in remove and 'bot' in memberproperties:
-			del memberproperties['bot']
+		for r in remove:
+			if r in memberproperties:
+				del memberproperties[r]
 		return userID, memberproperties
 
 	#fetchMembers helper function

@@ -7,7 +7,8 @@ import base64
 
 from ..utils.fileparse import Fileparse
 from ..utils.contextproperties import ContextProperties
-from ..RESTapiwrap import *
+from ..utils.nonce import calculateNonce
+from ..RESTapiwrap import Wrapper
 
 try:
 	from urllib.parse import quote_plus, urlparse, urlencode
@@ -21,12 +22,6 @@ class Messages(object):
 		self.discord = discord
 		self.s = s
 		self.log = log
-
-	def calculateNonce(self, date="now"):
-		if date == "now":
-			date = datetime.datetime.now()
-		unixts = time.mktime(date.timetuple())
-		return str((int(unixts)*1000-1420070400000)*4194304)
 
 	#just the raw endpoint
 	def createDMraw(self, recipients):
@@ -105,10 +100,12 @@ class Messages(object):
 	#text message
 	def sendMessage(self, channelID, message, nonce, tts, embed, message_reference, allowed_mentions, sticker_ids):
 		url = self.discord+"channels/"+channelID+"/messages"
+		body = {"content": message, "tts": tts}
 		if nonce == "calculate":
-			body = {"content": message, "tts": tts, "nonce": self.calculateNonce()}
+			nonce = calculateNonce()
 		else:
-			body = {"content": message, "tts": tts, "nonce": str(nonce)}
+			nonce = str(nonce)
+		body["nonce"] = nonce
 		if embed != None:
 			body["embed"] = embed
 		if message_reference != None:
@@ -280,6 +277,13 @@ class Messages(object):
 		parsedEmoji = quote_plus(emoji)
 		url = self.discord+"channels/"+channelID+"/messages/"+messageID+"/reactions/"+parsedEmoji+"/%40me"
 		return Wrapper.sendRequest(self.s, 'delete', url, log=self.log)
+
+	def getReactionUsers(self,channelID,messageID,emoji):
+		parsedEmoji = quote_plus(emoji)
+		url = self.discord+"channels/"+channelID+"/messages/"+messageID+"/reactions/"+parsedEmoji+"?limit="+str(limit)
+		if afterUserID:
+			url += '&after='+str(afterUserID)
+		return Wrapper.sendRequest(self.s, 'get', url, log=self.log)
 
 	#acknowledge message (mark message read)
 	def ackMessage(self, channelID, messageID, ackToken):

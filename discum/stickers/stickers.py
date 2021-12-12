@@ -1,4 +1,4 @@
-from ..RESTapiwrap import *
+from ..RESTapiwrap import Wrapper
 
 class Stickers(object):
 	__slots__ = ['discord', 's', 'log']

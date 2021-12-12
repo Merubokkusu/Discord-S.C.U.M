@@ -1,9 +1,11 @@
-from ..RESTapiwrap import *
-from ..utils.totp import TOTP
-from ..utils.contextproperties import ContextProperties
 import time
 
+from ..RESTapiwrap import Wrapper
 from ..logger import Logger
+
+from ..utils.totp import TOTP
+from ..utils.contextproperties import ContextProperties
+from ..utils.nonce import calculateNonce
 
 class Login:
 	'''
@@ -15,17 +17,21 @@ class Login:
 		self.log = log
 		self.editedS = Wrapper.editedReqSession(s, {"remove": ["Authorization", "X-Fingerprint"]})
 
-	def getXFingerprint(self):
+	def getXFingerprint(self, generateIfNone):
 		url = self.discord + "experiments"
-		reqxfinger = Wrapper.sendRequest(self.editedS, 'get', url, headerModifications={"update":{"X-Context-Properties":ContextProperties.get("/app")}}, log=self.log)
-		xfingerprint = reqxfinger.json().get('fingerprint')
-		if not xfingerprint:
-			Logger.log('xfingerprint could not be fetched.', None, self.log)
+		headerMods = {"update":{"X-Context-Properties":ContextProperties.get("/app")}}
+		reqxfinger = Wrapper.sendRequest(self.editedS, 'get', url, headerModifications=headerMods, log=self.log)
+		if generateIfNone and not reqxfinger:
+			snowflake = calculateNonce()
+			randomPart = ''.join(random.choice(string.ascii_letters + string.digits) for _ in range(27))
+			xfingerprint = '{}.{}'.format(snowflake, randomPart)
+		else:
+			xfingerprint = reqxfinger.json().get('fingerprint')
 		return xfingerprint
 
 	def login(self, email, password, undelete, captcha, source, gift_code_sku_id, secret, code):
 		url = self.discord + "auth/login"
-		self.xfingerprint = self.getXFingerprint()
+		self.xfingerprint = self.getXFingerprint(True)
 		self.editedS.headers.update({"X-Fingerprint": self.xfingerprint})
 		body = {
 			"email": email,

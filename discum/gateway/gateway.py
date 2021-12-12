@@ -120,6 +120,7 @@ class GatewayServer:
 		self.READY = False #becomes True once READY_SUPPLEMENTAL is received
 		self.session = Session({},{}) #not the same as sessionobj
 
+		#websocket.enableTrace(True) #for debugging
 		self.ws = self._get_ws_app(websocketurl)
 
 		self._after_message_hooks = []
@@ -369,7 +370,6 @@ class GatewayServer:
 								time.sleep(10)
 		else:
 			self._zlib = zlib.decompressobj()
-			print(self.proxy_host, self.proxy_port, self.proxy_auth, self.proxy_type)
 			self.ws.run_forever(
 				ping_interval=10,
 				ping_timeout=5,

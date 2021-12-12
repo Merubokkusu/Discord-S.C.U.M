@@ -80,7 +80,7 @@ class GatewayServer:
 		STREAM_SET_PAUSED =            22 #  ??
 		REQUEST_APPLICATION_COMMANDS = 24 #  Send            request application/bot cmds (user, message, and slash cmds)
 
-	def __init__(self, websocketurl, token, super_properties, sessionobj="", RESTurl="", log={"console":True, "file":False}): #session obj needed for proxies and some combo gateway functions (that also require http api wraps)
+	def __init__(self, websocketurl, token, super_properties, sessionobj=None, RESTurl="", log={"console":True, "file":False}): #session obj needed for proxies and some combo gateway functions (that also require http api wraps)
 		self.token = token
 		self.super_properties = super_properties
 		self.auth = {

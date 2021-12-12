@@ -160,7 +160,7 @@ class Client:
 			return
 
 		#proxy type(s)
-		regex_prox = r'^(http|https|socks4|socks4a|socks5|socks5h)(?::\/\/)(\w+(?::\w+)?@)?((?:\d{1,3})(?:\.\d{1,3}){3})(?::(\d{1,5}))'
+		regex_prox = r'(http|https|socks4|socks4a|socks5|socks5h)?(?::\/\/)?(\w+(?::\w+)?@)?((?:\d{1,3})(?:\.\d{1,3}){3})(?::(\d{1,5}))'
 		search = re.search(regex_prox, newProxy)
 		if search:
 			proxy_type = true_type = search.group(1)

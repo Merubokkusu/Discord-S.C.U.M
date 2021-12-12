@@ -1,4 +1,7 @@
 import time
+import random
+import string
+import base64
 
 from ..RESTapiwrap import Wrapper
 from ..logger import Logger
@@ -11,10 +14,14 @@ class Login:
 	'''
 	Manages HTTP authentication
 	'''
-	__slots__ = ['discord', 'log', 'editedS', 'xfingerprint']
+	__slots__ = ['discord', 'log', 'editedS', 'xfingerprint', 'userID']
 	def __init__(self, s, discordurl, log):
 		self.discord = discordurl
 		self.log = log
+		token = s.headers.get('Authorization', '')
+		self.userID = None
+		if '.' in token:
+			self.userID = base64.b64decode(token.split('.')[0]).decode('utf-8')
 		self.editedS = Wrapper.editedReqSession(s, {"remove": ["Authorization", "X-Fingerprint"]})
 
 	def getXFingerprint(self, generateIfNone):
@@ -22,7 +29,7 @@ class Login:
 		headerMods = {"update":{"X-Context-Properties":ContextProperties.get("/app")}}
 		reqxfinger = Wrapper.sendRequest(self.editedS, 'get', url, headerModifications=headerMods, log=self.log)
 		if generateIfNone and not reqxfinger:
-			snowflake = calculateNonce()
+			snowflake = self.userID if self.userID else calculateNonce()
 			randomPart = ''.join(random.choice(string.ascii_letters + string.digits) for _ in range(27))
 			xfingerprint = '{}.{}'.format(snowflake, randomPart)
 		else:

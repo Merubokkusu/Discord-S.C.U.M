@@ -24,7 +24,8 @@ class SuperProperties:
 			extraMods = {"update":{"Sec-Fetch-Dest": "document", "Sec-Fetch-Mode": "navigate","Sec-Fetch-Site": "none"}}
 			
 			res = Wrapper.sendRequest(self.editedS, 'get', "https://discord.com/login", headerModifications=extraMods, log=False)
-			self.s.cookies.update(res.cookies)
+			if res:
+				self.s.cookies.update(res.cookies)
 			discord_login_page_exploration = res.text
 			
 			#fastest solution I could find since the last js file is huge in comparison to 2nd from last

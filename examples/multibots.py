@@ -16,7 +16,9 @@ for i in range(len(tokenlist)):
 		clients.append(discum.Client(token=tokenlist[0]))
 		build_num = clients[0]._Client__super_properties['client_build_number']
 	else:
-		clients.append(discum.Client(token=tokenlist[i], build_num=build_num))
+		newBot = discum.Client(token=tokenlist[i], build_num=build_num)
+		newBot.s.cookies.update(clients[0].s.cookies)
+		clients.append(newBot)
 	clients[i].gateway.command({"function":closeAfterReadySupp, "params":{"bot":clients[i]}}) #add closeAfterReadySupp to each bot
 
 #now for the fun part

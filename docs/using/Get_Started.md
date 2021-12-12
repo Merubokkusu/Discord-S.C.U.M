@@ -42,6 +42,7 @@ bot = discum.Client(token="user token here")
 -   **user\_agent** (Optional[str]) - defaults to "random", which then randomly generates a user agent
 -   **locale** (Optional[str]) - defaults to "en-US"
 -   **build\_num** (Optional[int]) - defaults to "request", which then requests the discord build number
+-   **x\_fingerprint** (Optional[str]) - defaults to "request"
 -   **log** (Optional[dict]) - defaults to {"console":True, "file":False}. The value of "file" can be set to a filename (which is created if it does not exist)
 
 ### Returns:

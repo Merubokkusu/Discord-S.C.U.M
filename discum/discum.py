@@ -74,7 +74,6 @@ class Client:
 			"X-Debug-Options": "bugReporterEnabled",
 			"X-Discord-Locale": locale,
 			"Origin": "https://discord.com",
-			"Connection": "keep-alive"
 		}
 		self.s = requests.Session()
 		self.s.headers.update(headers)

@@ -5,7 +5,6 @@ Table of Contents
     -   [installing discum](using/Get_Started.md#installing)
     -   [client initialization](using/Get_Started.md#initializing-your-client)
     -   [some examples](using/Get_Started.md#examples)
-    -   [proxies](using/Get_Started.md#proxies)
 -   [General Functions and Variables](using/General.md)
     -   [logging](using/General.md#logging)
     -   [general variables](using/General.md#general-variables)

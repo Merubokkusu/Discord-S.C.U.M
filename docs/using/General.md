@@ -7,6 +7,8 @@
         
 - [Functions](#Functions)
     - [check token](#checkToken)
+    - [switch account(#switchAccount)
+    - [switch proxy](#switchProxy)
     - [convert between snowflake and unixts](#snowflake_to_unixts-and-unixts_to_snowflake)
     - [gateway functions](#gateway-functions)
         - [add functions to gateway command list](#gatewaycommand)
@@ -253,6 +255,29 @@ bot.checkToken('poop')
 ###### Returns:
 a requests.Response object. If the token is valid, the .json() should contain the following keys:        
 \['id', 'username', 'avatar', 'discriminator', 'public_flags', 'flags', 'locale', 'nsfw_allowed', 'mfa_enabled', 'analytics_token', 'email', 'verified', 'phone'\]
+
+##### ```switchProxy```
+```python
+bot.switchProxy('http://username:password123@127.0.0.1:8080')
+#do stuff
+bot.switchProxy('https://192.168.1.18:4444')
+#do other stuff
+```
+###### Parameters:
+- newProxy (str/None) - set to None to not use a proxy
+	examples:       
+		"http://10.10.1.10:3128"       
+		"http://username:password123@10.10.1.10:3128"       
+		"https://10.10.1.10:3126"       
+		"socks4://10.10.1.10:3126"
+- updateGateway (Optional[bool]) - update proxy for gateway. Defaults to True
+
+##### ```switchAccount```
+```python
+bot.switchAccount('token')
+```
+###### Parameters:
+- newToken (str)
 
 ##### ```snowflake_to_unixts``` and ```unixts_to_snowflake```
 ```python

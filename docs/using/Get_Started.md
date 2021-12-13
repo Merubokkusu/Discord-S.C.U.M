@@ -42,7 +42,6 @@ bot = discum.Client(token="user token here")
 -   **user\_agent** (Optional[str]) - defaults to "random", which then randomly generates a user agent
 -   **locale** (Optional[str]) - defaults to "en-US"
 -   **build\_num** (Optional[int]) - defaults to "request", which then requests the discord build number
--   **x\_fingerprint** (Optional[str]) - defaults to "request"
 -   **log** (Optional[dict]) - defaults to {"console":True, "file":False}. The value of "file" can be set to a filename (which is created if it does not exist)
 
 ### Returns:
@@ -99,10 +98,34 @@ bot.gateway.run()
 
 [more examples](https://github.com/Merubokkusu/Discord-S.C.U.M/tree/master/examples)
 
+you can also switch accounts:
+# ```switchAccount```
+```python
+bot.switchAccount('token here')
+```
+### Parameters:
+- newToken (str)
+
 Proxies
 -------
-For more control over proxies:            
-You can edit your bot's requests session.
+you can either input a proxy when initializing your bot (shown above) or switch to a proxy:
+# ```switchProxy```
+```python
+bot.switchProxy('http://username:password123@127.0.0.1:8080')
+#do stuff
+bot.switchProxy('https://192.168.1.18:4444')
+#do other stuff
+```
+### Parameters:
+- newProxy (str/None) - set to None to not use a proxy
+	examples:       
+		"http://10.10.1.10:3128"       
+		"http://username:password123@10.10.1.10:3128"       
+		"https://10.10.1.10:3126"       
+		"socks4://10.10.1.10:3126" 
+
+
+You can also edit your bot's requests session.
 The bot's requests session for REST api wraps is stored in ```bot.s```. Therefore, you can do ```bot.s.proxies = ...```.
 You can also pass in authentication (remember, ```bot.s``` is a requests Session object): https://stackoverflow.com/a/52051665/14776493
 

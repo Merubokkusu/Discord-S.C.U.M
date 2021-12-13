@@ -29,14 +29,14 @@ bot.log = {"console":True, "file":False}
 bot.log = {"console":False, "file":"log.txt"}
 #etc...
 ```
-```bot.gateway.log``` dict, manages logging for gateway actions 
+```bot.gateway.log``` dict, manages logging for gateway actions (live events, websocket)
 ```python
 bot.gateway.log = {"console":True, "file":False}
 #or
 bot.gateway.log = {"console":False, "file":"gatewaylog.txt"}
 #etc...
 ```
-```bot.ra.log``` dict, manages logging for remote authentication gateway actions
+```bot.ra.log``` dict, manages logging for remote authentication gateway actions (login thru qr-code)
 ```python
 bot.ra.log = {"console":True, "file":False}
 #or
@@ -53,14 +53,11 @@ bot._Client__totp_secret
 bot._Client__xfingerprint
 bot._Client__user_agent
 bot._Client__super_properties
-bot._Client__proxy_host
-bot._Client__proxy_port
 bot.api_version
 bot.discord #REST api base url
 bot.websocketurl
 bot.s #requests.Session object
 bot.gateway #GatewayServer object
-bot.Embedder #Embedder object (helps with making embeds)
 bot.Science #placeholder variable for science events
 ```
 
@@ -88,6 +85,13 @@ bot.gateway._last_ack #when last HEARTBEAT_ACK was received
 bot.gateway.latency #seconds between HEARTBEAT and HEARTBEAT_ACK
 bot.gateway._last_err #last detected error
 bot.gateway._last_close_event #last close event
+```
+
+```python
+bot.gateway.proxy_host
+bot.gateway.proxy_port
+bot.gateway.proxy_type
+bot.gateway.proxy_auth
 ```
 
 ```python

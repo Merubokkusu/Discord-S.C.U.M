@@ -159,7 +159,7 @@ bot.gateway.run()
        ['pending', 'deaf', 'hoisted_role', 'presence', 'joined_at', 'public_flags', 'username', 'avatar', 'discriminator', 'premium_since', 'roles', 'is_pending', 'mute', 'nick', 'bot', 'communication_disabled_until']
       ```
     - set keep to the list of all the member properties you want to retain
-    - by default, keep is set to an empty list. This is done to save memory (which really does make a different for massive guilds).
+    - by default, keep is set to an empty list. This is done to save memory (which really does make a difference for massive guilds).
   - "all":
     - keep all member properties
   - None/[]

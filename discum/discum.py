@@ -26,12 +26,13 @@ import base64
 import json
 import requests
 import re
+import random
 import ua_parser.user_agent_parser
 
 #client initialization
 class Client:
 	__slots__ = ['log', 'locale', '__user_token', '__user_email', '__user_password', '__totp_secret', '__xfingerprint', 'userData', 'api_version', 'discord', 'websocketurl', 'remoteauthurl', '__user_agent', 's', '__super_properties', 'gateway', 'Science']
-	def __init__(self, email="", password="", secret="", code="", token="", remote_auth=False, proxy=None, user_agent="random", locale="en-US", build_num="request", x_fingerprint="request", log={"console":True, "file":False}):
+	def __init__(self, email="", password="", secret="", code="", token="", remote_auth=False, proxy=None, user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.110 Safari/537.36", locale="en-US", build_num="request", x_fingerprint="request", log={"console":True, "file":False}):
 		#step 1: vars
 		self.log = log
 		self.locale = locale
@@ -47,12 +48,12 @@ class Client:
 		self.remoteauthurl = 'wss://remote-auth-gateway.discord.gg/?v=1'
 		
 		#step 2: user agent
-		if user_agent != "random":
+		if type(user_agent) in (list, tuple):
+			self.__user_agent = random.choice(user_agent)
+		elif isinstance(user_agent, str):
 			self.__user_agent = user_agent
 		else:
-			import random_user_agent.user_agent #only really want to import this if needed
-			self.__user_agent = random_user_agent.user_agent.UserAgent(limit=100).get_random_user_agent()
-			Logger.log('Randomly generated user agent: '+self.__user_agent, None, log)
+			self.__user_agent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.110 Safari/537.36' #https://discord-user-api.cf/api/v1/properties/web
 		parsed_ua = ua_parser.user_agent_parser.Parse(self.__user_agent)
 
 		#step 3: http request headers
@@ -478,7 +479,6 @@ class Client:
 	def calculateTOTPcode(self, secret="default"): #need to put this function here (instead of in login folder or user folder) because it updates the secret (if and only if secret == "")
 		if secret == "default":
 			if self.__totp_secret == "":
-				import random
 				self.__totp_secret = ''.join(random.choice(list('ABCDEFGHIJKLMNOPQRSTUVWXYZ234567')) for _ in range(16)) #random base32 (len 16)
 			secret = self.__totp_secret
 		if "?secret=" in secret:

@@ -28,7 +28,6 @@ REQUIRED = [
     'filetype',
     'websocket-client==0.59.0',
     'ua-parser',
-    'random_user_agent',
     'colorama'
 ]
 

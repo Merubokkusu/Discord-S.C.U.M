@@ -1366,6 +1366,8 @@ bot.searchMessages(channelID="channelID0000000", textSearch="hello")
 - attachmentFilename (Optional[str/list])
 - mentionsEveryone (Optional[bool]) - return msgs that actually mention everyone (only if said user had perms to mention everyone)
 - includeNsfw (Optional[bool])
+- sortBy (Optional[str]) - 'timestamp' or 'relevance'
+- sortOrder (Optional[str]) - 'asc' (oldest to newest) or 'desc' (newest to oldest)
 - afterDate (Optional[str]) - discord snowflake string (highest msg id)
 - beforeDate (Optional[str]) - discord snowflake string (highest msg id)
 - textSearch (Optional[str]) - content

@@ -157,7 +157,7 @@ class Messages(object):
 		else:
 			self.sendFile(channelID, file, isurl=isurl, message=message, tts=tts, message_reference={"channel_id":channelID,"message_id":messageID}, sticker_ids=sticker_ids)
 
-	def searchMessages(self, guildID, channelID, authorID, authorType, mentionsUserID, has, linkHostname, embedProvider, embedType, attachmentExtension, attachmentFilename, mentionsEveryone, includeNsfw, afterDate, beforeDate, textSearch, afterNumResults, limit): #classic discord search function, results with key "hit" are the results you searched for, afterNumResults (aka offset) is multiples of 25 and indicates after which messages (type int), filterResults defaults to False
+	def searchMessages(self, guildID, channelID, authorID, authorType, mentionsUserID, has, linkHostname, embedProvider, embedType, attachmentExtension, attachmentFilename, mentionsEveryone, includeNsfw, sortBy, sortOrder, afterDate, beforeDate, textSearch, afterNumResults, limit): #classic discord search function, results with key "hit" are the results you searched for, afterNumResults (aka offset) is multiples of 25 and indicates after which messages (type int), filterResults defaults to False
 		if guildID:
 			url = self.discord+"guilds/"+guildID+"/messages/search?"
 		else:
@@ -225,7 +225,11 @@ class Messages(object):
 		if textSearch:
 			allqueryparams.append(("content", str(textSearch)))
 		if includeNsfw:
-			allqueryparams.append(("include_nsfw", True))
+			allqueryparams.append(("include_nsfw", "true"))
+		if sortBy:
+			allqueryparams.append(("sort_by", sortBy))
+		if sortOrder:
+			allqueryparams.append(("sort_order", sortOrder))
 		if afterNumResults:
 			allqueryparams.append(("offset", str(afterNumResults)))
 		if limit!=None:
@@ -234,8 +238,11 @@ class Messages(object):
 		url += querystring
 		return Wrapper.sendRequest(self.s, 'get', url, log=self.log)
 
-	def filterSearchResults(self, searchResponse): #only input is the requests response object outputted from searchMessages, returns type list
-		jsonresponse = searchResponse.json()['messages']
+	def filterSearchResults(self, searchResponse): #only input is the requests response object or the dictionary response
+		if hasattr(searchResponse, 'json'):
+			jsonresponse = searchResponse.json()['messages']
+		else:
+			jsonresponse = searchResponse
 		filteredMessages = []
 		for group in jsonresponse:
 			for result in group:

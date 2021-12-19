@@ -20,6 +20,8 @@ class Login:
 		self.log = log
 		token = s.headers.get('Authorization', '')
 		self.userID = None
+		if token.startswith('mfa.'):
+			token = token[4:]
 		if '.' in token:
 			self.userID = base64.b64decode(token.split('.')[0]).decode('utf-8')
 		self.editedS = Wrapper.editedReqSession(s, {"remove": ["Authorization", "X-Fingerprint"]})

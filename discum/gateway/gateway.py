@@ -531,7 +531,6 @@ class GatewayServer:
 		imports.User(self.RESTurl,self.sessionobj,self.log).setStatusHelper(status)
 		imports.UserCombo(self).setStatus(status)
 
-	#Currently does not work due to discord api changes :/ They seem to be cross checking inputs with connections but not sure yet...
 	def setPlayingStatus(self, game): #can only be run while connected to gateway, will update metadata later
 		if not self.session.userSettings['show_current_game']:
 			imports.User(self.RESTurl,self.sessionobj,self.log).enableActivityDisplay(enable=True)
@@ -540,7 +539,6 @@ class GatewayServer:
 	def removePlayingStatus(self): #can only be run while connected to gateway
 		imports.UserCombo(self).removePlayingStatus()
 
-	#Currently does not work due to discord api changes :/ They seem to be cross checking inputs with connections but not sure yet...
 	def setStreamingStatus(self, stream, url): #can only be run while connected to gateway, will update metadata later
 		if not self.session.userSettings['show_current_game']:
 			imports.User(self.RESTurl,self.sessionobj,self.log).enableActivityDisplay(enable=True)
@@ -549,7 +547,6 @@ class GatewayServer:
 	def removeStreamingStatus(self): #can only be run while connected to gateway
 		imports.UserCombo(self).removeStreamingStatus()
 
-	#Currently does not work due to discord api changes :/ They seem to be cross checking inputs with connections but not sure yet...
 	def setListeningStatus(self, song): #can only be run while connected to gateway, will update metadata later
 		if not self.session.userSettings['show_current_game']:
 			imports.User(self.RESTurl,self.sessionobj,self.log).enableActivityDisplay(enable=True)
@@ -558,7 +555,6 @@ class GatewayServer:
 	def removeListeningStatus(self): #can only be run while connected to gateway
 		imports.UserCombo(self).removeListeningStatus()
 
-	#Currently does not work due to discord api changes :/ They seem to be cross checking inputs with connections but not sure yet...
 	def setWatchingStatus(self, show): #can only be run while connected to gateway, will update metadata later
 		if not self.session.userSettings['show_current_game']:
 			imports.User(self.RESTurl,self.sessionobj,self.log).enableActivityDisplay(enable=True)

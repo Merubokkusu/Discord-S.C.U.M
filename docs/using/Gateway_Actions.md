@@ -44,18 +44,16 @@ def setStatusTest(resp):
 - expires_at (Optional[str]) - unix timestamp
 
 ##### ```gateway.setPlayingStatus```
-__\*currently does not work__
 ```python
 @bot.gateway.command
 def setStatusTest(resp):
     if resp.event.ready_supplemental:
-        bot.gateway.setPlayingStatus("pycraft")
+        bot.gateway.setPlayingStatus("Minecraft")
 ```
 ###### Parameters:
 - game (str)
 
 ##### ```gateway.setStreamingStatus```
-__\*currently does not work__
 ```python
 @bot.gateway.command
 def setStatusTest(resp):
@@ -67,7 +65,6 @@ def setStatusTest(resp):
 - url (str)
 
 ##### ```gateway.setListeningStatus```
-__\*currently does not work__
 ```python
 @bot.gateway.command
 def setStatusTest(resp):
@@ -78,7 +75,6 @@ def setStatusTest(resp):
 - song (str)
 
 ##### ```gateway.setWatchingStatus```
-__\*currently does not work__
 ```python
 @bot.gateway.command
 def setStatusTest(resp):

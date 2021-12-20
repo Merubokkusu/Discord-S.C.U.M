@@ -519,8 +519,8 @@ class Client:
 	def deleteAccount(self, password):
 		return imports.User(self.discord, self.s, self.log).deleteAccount(password)
 
-	def setPhone(self, number):
-		return imports.User(self.discord, self.s, self.log).setPhone(number)
+	def setPhone(self, number, reason="user_settings_update"):
+		return imports.User(self.discord, self.s, self.log).setPhone(number, reason)
 
 	def validatePhone(self, number, code, password):
 		result = imports.User(self.discord, self.s, self.log).validatePhone(number, code, password)

@@ -323,6 +323,7 @@ bot.setPhone("+12222222222")
 ```
 ###### Parameters:
 - number (str) - format: +(country-code)(rest of phone number)
+- reason (str) - defaults to "user_settings_update"
 
 ##### ```validatePhone```
 ```python

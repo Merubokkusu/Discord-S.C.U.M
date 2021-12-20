@@ -204,9 +204,9 @@ class User(object):
 		body = {"password": password}
 		return Wrapper.sendRequest(self.s, 'post', url, body, log=self.log)
 
-	def setPhone(self, number):
+	def setPhone(self, number, reason):
 		url = self.discord+"users/@me/phone"
-		body = {"phone": number}
+		body = {"phone": number, "change_phone_reason": reason}
 		return Wrapper.sendRequest(self.s, 'post', url, body, log=self.log)
 
 	def validatePhone(self, number, code, password):

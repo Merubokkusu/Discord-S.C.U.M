@@ -7,7 +7,7 @@
         
 - [Functions](#Functions)
     - [check token](#checkToken)
-    - [switch account(#switchAccount)
+    - [switch account](#switchAccount)
     - [switch proxy](#switchProxy)
     - [convert between snowflake and unixts](#snowflake_to_unixts-and-unixts_to_snowflake)
     - [gateway functions](#gateway-functions)

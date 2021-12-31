@@ -1303,6 +1303,7 @@ bot.sendMessage("383003333751856129","Hello You :)")
 - message (str)
     * \*\*bold\*\*
     * \*italicized\*
+    * \_\_underlined\_\_
     * \~\~strikethrough\~\~
     * \>quoted
     * \`code\`

@@ -287,7 +287,7 @@ class Messages(object):
 		url = self.discord+"channels/"+channelID+"/messages/"+messageID+"/reactions/"+parsedEmoji+"/%40me"
 		return Wrapper.sendRequest(self.s, 'delete', url, log=self.log)
 
-	def getReactionUsers(self,channelID,messageID,emoji):
+	def getReactionUsers(self,channelID,messageID,emoji,afterUserID,limit):
 		parsedEmoji = quote_plus(emoji)
 		url = self.discord+"channels/"+channelID+"/messages/"+messageID+"/reactions/"+parsedEmoji+"?limit="+str(limit)
 		if afterUserID:

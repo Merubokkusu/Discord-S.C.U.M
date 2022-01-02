@@ -321,8 +321,8 @@ class Client:
 		return imports.Messages(self.discord, self.s, self.log).deleteMessage(channelID, messageID)
 
 	#edit message
-	def editMessage(self, channelID, messageID, newMessage):
-		return imports.Messages(self.discord, self.s, self.log).editMessage(channelID, messageID, newMessage)
+	def editMessage(self, channelID, messageID, newMessage="", newEmbed=None):
+		return imports.Messages(self.discord, self.s, self.log).editMessage(channelID, messageID, newMessage, newEmbed)
 
 	#pin message
 	def pinMessage(self, channelID, messageID):

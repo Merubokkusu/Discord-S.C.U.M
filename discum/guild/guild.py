@@ -101,7 +101,7 @@ class Guild(object):
 		return Wrapper.sendRequest(self.s, 'get', url, headerModifications=headerMods, log=self.log)
 
 	def getGuildRoles(self, guildID):
-		url = self.discord+'guilds/'+guildID+'/channels'
+		url = self.discord+'guilds/'+guildID+'/roles'
 		headerMods = {"update":{"X-Track":self.s.headers.get("X-Super-Properties")}, "remove":["X-Super-Properties"]}
 		return Wrapper.sendRequest(self.s, 'get', url, headerModifications=headerMods, log=self.log)
 

@@ -829,6 +829,13 @@ bot.getGuildChannels('guildID00000000000')
 ###### Parameters:
 - guildID (str)
 
+##### ```getGuildRoles```
+```python
+bot.getGuildRoles('guildID00000000000')
+```
+###### Parameters:
+- guildID (str)
+
 ##### ```getDiscoverableGuilds```
 ```python
 bot.getDiscoverableGuilds()

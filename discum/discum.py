@@ -725,6 +725,10 @@ class Client:
 	def getGuildChannels(self, guildID):
 		return imports.Guild(self.discord, self.s, self.log).getGuildChannels(guildID)
 
+	# get guild roles (as provided by discord, not in order)
+	def getGuildRoles(self, guildID):
+		return imports.Guild(self.discord, self.s, self.log).getGuildRoles(guildID)
+
 	#get discoverable guilds
 	def getDiscoverableGuilds(self, offset=0, limit=24):
 		return imports.Guild(self.discord, self.s, self.log).getDiscoverableGuilds(offset, limit)

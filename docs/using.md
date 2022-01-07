@@ -151,6 +151,7 @@ Table of Contents
     -   [get guild invites](using/REST_Actions.md#getGuildInvites)
     -   [get my guilds (get guilds)](using/REST_Actions.md#getGuilds)
     -   [get channels in a guild](using/REST_Actions.md#getGuildChannels)
+    -   [get roles in a guild](using/REST_Actions.md#getGuildRoles)
     -   [get discoverable guilds](using/REST_Actions.md#getDiscoverableGuilds)
     -   [get guild regions](using/REST_Actions.md#getGuildRegions)
     -   [create guild](using/REST_Actions.md#createGuild)

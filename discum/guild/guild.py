@@ -100,6 +100,11 @@ class Guild(object):
 		headerMods = {"update":{"X-Track":self.s.headers.get("X-Super-Properties")}, "remove":["X-Super-Properties"]}
 		return Wrapper.sendRequest(self.s, 'get', url, headerModifications=headerMods, log=self.log)
 
+	def getGuildRoles(self, guildID):
+		url = self.discord+'guilds/'+guildID+'/roles'
+		headerMods = {"update":{"X-Track":self.s.headers.get("X-Super-Properties")}, "remove":["X-Super-Properties"]}
+		return Wrapper.sendRequest(self.s, 'get', url, headerModifications=headerMods, log=self.log)
+
 	def getDiscoverableGuilds(self, offset, limit):
 		url = self.discord+"discoverable-guilds?offset="+repr(offset)+"&limit="+repr(limit)
 		return Wrapper.sendRequest(self.s, 'get', url, log=self.log)

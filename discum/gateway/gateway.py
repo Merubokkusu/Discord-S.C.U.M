@@ -98,7 +98,8 @@ class GatewayServer:
 					"guild_hashes": {},
 					"highest_last_message_id": "0",
 					"read_state_version": 0,
-					"user_guild_settings_version": -1
+					"user_guild_settings_version": -1,
+					"user_settings_version": -1
 				}
 			}
 		self.RESTurl = RESTurl #for helper http requests

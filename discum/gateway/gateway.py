@@ -185,7 +185,7 @@ class GatewayServer:
 					self.auth["presence"]["status"] = self.session.userSettings.get("status")
 					self.auth["presence"]["activities"] = imports.UserCombo(self).constructActivitiesList()
 			self.send({"op": self.OPCODE.IDENTIFY, "d": self.auth})
-			self.send({"op": self.VOICE_STATE_UPDATE, "d": {"guild_id": None, "channel_id": None, "self_mute": True, "self_deaf": False, "self_video": False}})
+			self.send({"op": self.OPCODE.VOICE_STATE_UPDATE, "d": {"guild_id": None, "channel_id": None, "self_mute": True, "self_deaf": False, "self_video": False}})
 			
 		else:
 			self.resumable = False

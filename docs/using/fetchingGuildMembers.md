@@ -9,6 +9,8 @@ Alright so this really needs a page of its own because it's special. There's no 
     - when to use: if you cannot see any categories/channels in the guild
     - pro: can potentially get the entire member list, can scrape members from multiple guilds at the same time
     - con: slow af (speed is dependent on brute forcer optimizations)
+
+sidenote, here's an example of combining op14 and op8 member fetching: https://pastebin.com/4N8fPipY
 ____________________________________
 # Links/Table of Contents
 - [fetch the member list sidebar (faster, but less members)](#fetch-the-member-list-sidebar)

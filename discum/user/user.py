@@ -137,7 +137,8 @@ class User(object):
 		url = self.discord+"users/@me"
 		with open(imagePath, "rb") as image:
 			encodedImage = base64.b64encode(image.read()).decode('utf-8')
-		body = {"avatar":"data:image/png;base64,"+encodedImage}
+		imageExt = data[-1] if (data:=imagePath.split('.')) and data[-1] in ['png', 'gif'] else 'jpeg'
+		body = {"avatar":f"data:image/{imageExt};base64,"+encodedImage}
 		return Wrapper.sendRequest(self.s, 'patch', url, body, log=self.log)
 
 	def setProfileColor(self, color):

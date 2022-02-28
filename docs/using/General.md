@@ -22,25 +22,25 @@
 ## Variables
 
 ### logging
-```bot.log``` dict, manages logging for REST actions      
+```bot.log``` dict, manages logging for REST actions. "encoding" is optional and defaults to 'utf-8'.
 ```python
 bot.log = {"console":True, "file":False}
 #or
-bot.log = {"console":False, "file":"log.txt"}
+bot.log = {"console":False, "file":"log.txt", "encoding":"utf-8"}
 #etc...
 ```
 ```bot.gateway.log``` dict, manages logging for gateway actions (live events, websocket)
 ```python
 bot.gateway.log = {"console":True, "file":False}
 #or
-bot.gateway.log = {"console":False, "file":"gatewaylog.txt"}
+bot.gateway.log = {"console":False, "file":"gatewaylog.txt", "encoding":"utf-8"}
 #etc...
 ```
 ```bot.ra.log``` dict, manages logging for remote authentication gateway actions (login thru qr-code)
 ```python
 bot.ra.log = {"console":True, "file":False}
 #or
-bot.ra.log = {"console":False, "file":"ralog.txt"}
+bot.ra.log = {"console":False, "file":"ralog.txt", "encoding":"utf-8"}
 #etc...
 ```
 

@@ -1,3 +1,4 @@
+import random, string
 from ..RESTapiwrap import Wrapper
 
 class Buttons(object):
@@ -8,13 +9,18 @@ class Buttons(object):
 		self.log = log
 
 	#click on a button or select menu option(s)
-	def click(self, applicationID, channelID, messageID, messageFlags, guildID, nonce, data):
+	def click(self, applicationID, channelID, messageID, messageFlags, guildID, nonce, data, sessionID):
 		url = self.discord+"interactions"
+		#nonce
 		if nonce == "calculate":
 			from ..utils.nonce import calculateNonce
 			nonce = calculateNonce()
 		else:
 			nonce = str(nonce)
+		#session id
+		if sessionID == "random":
+			sessionID = "".join(random.choices(string.ascii_letters + string.digits, k=32))
+		#body
 		body = {
 			"type": 3,
 			"nonce": nonce,
@@ -24,6 +30,7 @@ class Buttons(object):
 			"message_id": messageID,
 			"application_id": applicationID,
 			"data": data,
+			"session_id": sessionID
 		}
 		if guildID == None:
 			body.pop("guild_id")

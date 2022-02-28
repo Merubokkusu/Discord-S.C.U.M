@@ -100,7 +100,8 @@ class SlashCommander(object):
 					{
 						"version": current_cmd.get("version"),
 						"id": current_cmd["id"],
-						"attachments": [] #only the top layer of cmds has attachments
+						"attachments": [], #only the top layer of cmds has attachments
+						"application_command": dict(current_cmd)
 					}
 				)
 			self._getConstructedSubdict(constructed_slash_cmd, index).update(data)

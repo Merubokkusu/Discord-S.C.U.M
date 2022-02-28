@@ -10,10 +10,10 @@ class LogLevel:
 class Logger:
 	@staticmethod
 	def log(text, color=None, log={"console":True, "file":False, "encoding":"utf-8"}):
-		if "encoding" not in log:
-			log["encoding"] = "utf-8"
 		if isinstance(log, bool):
 			log = {"console":log, "file":False}
+		if "encoding" not in log:
+			log["encoding"] = "utf-8"
 		if log["console"]:
 			if color:
 				string = color + text + '\033[m'
@@ -21,7 +21,7 @@ class Logger:
 				string = text
 			print(string)
 		if log["file"]:
-			with open(log["file"], 'a+', encoding=log["encoding"]) as f:
+			with open(log["file"], 'a+', encoding=log["encoding"], errors="ignore") as f:
 				try:
 					f.write(text + '\n\n')
 				except UnicodeEncodeError:

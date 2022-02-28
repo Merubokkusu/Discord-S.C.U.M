@@ -16,12 +16,17 @@ class SlashCommands(object):
 		url = self.discord+"applications/"+applicationID+"/commands"
 		return Wrapper.sendRequest(self.s, 'get', url, log=self.log)
 
-	def triggerSlashCommand(self, applicationID, channelID, guildID, data, nonce):
+	def triggerSlashCommand(self, applicationID, channelID, guildID, data, nonce, sessionID):
 		url = self.discord+"interactions"
+		#nonce
 		if nonce == "calculate":
 			nonce = calculateNonce("now")
 		else:
 			nonce = str(nonce)
+		#session id
+		if sessionID == "random":
+			sessionID = "".join(random.choices(string.ascii_letters + string.digits, k=32))
+		#body
 		payload = {
 			"type": 2,
 			"application_id": applicationID,
@@ -29,6 +34,7 @@ class SlashCommands(object):
 			"channel_id": channelID,
 			"data": data,
 			"nonce": nonce,
+			"session_id": sessionID
 		}
 		if guildID == None:
 			payload.pop("guild_id")

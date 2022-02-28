@@ -6,10 +6,9 @@ A simple, easy to use, non-restrictive, synchronous Discord API Wrapper for Self
 
 ![https://files.catbox.moe/3ns003.png](https://files.catbox.moe/3ns003.png)
         
-Will have less and less time to work on this project.          
-If you have issues, you can either make an issue, email discordtehe@gmail.com, or ask on https://reddit.com/r/Discord_selfbots.       
+Currently don't really have time to maintain this project.             
 For another python library that's currently better maintained, I'd recommend the following (asynchronous) lib: https://github.com/dolfies/discord.py-self           
-Happy new year & happy coding,         
+Happy coding,         
 \- arandomnewaccount                  
 ##### *** risky actions: [issue #66](https://github.com/Merubokkusu/Discord-S.C.U.M/issues/66#issue-876713938)
 

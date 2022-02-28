@@ -1,3 +1,14 @@
+#https://stackoverflow.com/a/44250949, works in python 2 and 3
+def zip_longest(*lists):
+	def g(l):
+		for item in l:
+			yield item
+		while True:
+			yield None
+	gens = [g(l) for l in lists]    
+	for _ in range(max(map(len, lists))):
+		yield tuple(next(g) for g in gens)
+
 class Buttoner(object):
 	__slots__ = ['components', 'component_types']
 	def __init__(self, components):
@@ -13,7 +24,7 @@ class Buttoner(object):
 			3: "SELECT_MENU"
 		}
 
-	#check stuff, inputs are [a,b,c,d...] and ['a', 'b', 'c', 'd', ...]
+	#check stuff, inputs are [a, b, c, d, ...] and ['a', 'b', 'c', 'd', ...]
 	def _check(self, inputs, stuffToCheck):
 		if all(i is None for i in inputs):
 			return False
@@ -62,10 +73,10 @@ class Buttoner(object):
 			data = self.components
 		#loop
 		for row in data:
-			for index,c in enumerate(row["components"]):
+			for c in row["components"]:
 				#if menu
 				if c["type"] == 3:
-					if self._check([placeholder, customID], [c["custom_id"], c.get("placeholder", "Make a selection")]):
+					if self._check([placeholder, customID], [c.get("placeholder", "Make a selection"), c["custom_id"]]):
 						menus.append(dict(c))
 						if findFirst:
 							return menus
@@ -102,10 +113,10 @@ class Buttoner(object):
 		menu = self.findMenu(placeholder, customID, row, findFirst=True)
 		if len(menu)>0:
 			menuData = {"component_type":3, "custom_id":menu[0]["custom_id"], "values":[]}
-			for l,d,v,eN,eID in zip(labels, descriptions, values, emojiNames, emojiIDs):
+			for l,d,v,eN,eID in zip_longest(labels, descriptions, values, emojiNames, emojiIDs):
 				dropdown = self.findDropdown(menu[0], label=l, description=d, value=v, emojiName=eN, emojiID=eID)
 				if len(dropdown)>0:
-					menuData["values"].append(dropdown["value"])
+					menuData["values"].append(dropdown[0]["value"])
 			return menuData
 		else:
 			raise ValueError("Menu with inputted attributes not found.")

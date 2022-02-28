@@ -13,7 +13,7 @@ def slashCommandTest(resp, guildID, channelID, botID):
 		slashCmds = resp.parsed.auto()['application_commands'] #get the slash cmds
 		s = SlashCommander(slashCmds, application_id=botID) #for easy slash cmd data creation
 		data = s.get(['saved', 'queues', 'create'], inputs={'name':'test'})
-		bot.triggerSlashCommand(botID, channelID=channelID, guildID=guildID, data=data) #and send it off
+		bot.triggerSlashCommand(botID, channelID=channelID, guildID=guildID, data=data, sessionID=bot.gateway.session_id) #and send it off
 		bot.gateway.close() #optional. It's better to remove this line actually.
 
 guildID = ""
@@ -42,7 +42,7 @@ s = SlashCommander(slashCmds) #slashCmds can be either a list of cmds or just 1 
 data = s.get(['saved', 'queues', 'create'], inputs={'name':'test'})
 
 #finally, lets send the slash command
-bot.triggerSlashCommand(botID, channelID, data=data)
+bot.triggerSlashCommand(botID, channelID, data=data) #by default, a random session id is generated
 
 '''
 It technically doesn't matter which one you use. But, if you'd like to mimic the client,

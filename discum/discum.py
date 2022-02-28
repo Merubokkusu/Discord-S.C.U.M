@@ -848,24 +848,24 @@ class Client:
 		return imports.SlashCommands(self.discord, self.s, self.log).getSlashCommands(applicationID)
 
 	#trigger a slash command (running /command blah blah blah whatever)
-	def triggerSlashCommand(self, applicationID, channelID, guildID=None, data={}, nonce="calculate"):
-		return imports.SlashCommands(self.discord, self.s, self.log).triggerSlashCommand(applicationID, channelID, guildID, data, nonce)
+	def triggerSlashCommand(self, applicationID, channelID, guildID=None, data={}, nonce="calculate", sessionID="random"):
+		return imports.SlashCommands(self.discord, self.s, self.log).triggerSlashCommand(applicationID, channelID, guildID, data, nonce, sessionID)
 
 	#trigger a user command (right click on bot username, select a command from Apps)
-	def triggerUserCommand(self, applicationID, channelID, guildID=None, data={}, nonce="calculate"):
+	def triggerUserCommand(self, applicationID, channelID, guildID=None, data={}, nonce="calculate", sessionID="random"):
 		if "target_id" not in data:
 			data["target_id"] = applicationID
-		return imports.SlashCommands(self.discord, self.s, self.log).triggerSlashCommand(applicationID, channelID, guildID, data, nonce)
+		return imports.SlashCommands(self.discord, self.s, self.log).triggerSlashCommand(applicationID, channelID, guildID, data, nonce, sessionID)
 
 	#trigger a message command (right click on message, select a command from Apps)
-	def triggerMessageCommand(self, applicationID, messageID, channelID, guildID=None, data={}, nonce="calculate"):
+	def triggerMessageCommand(self, applicationID, messageID, channelID, guildID=None, data={}, nonce="calculate", sessionID="random"):
 		if "target_id" not in data:
 			data["target_id"] = messageID
-		return imports.SlashCommands(self.discord, self.s, self.log).triggerSlashCommand(applicationID, channelID, guildID, data, nonce)
+		return imports.SlashCommands(self.discord, self.s, self.log).triggerSlashCommand(applicationID, channelID, guildID, data, nonce, sessionID)
 
 	#click on a button or select menu option(s)
-	def click(self, applicationID, channelID, messageID, messageFlags, guildID=None, nonce="calculate", data={}):
-		return imports.Buttons(self.discord, self.s, self.log).click(applicationID, channelID, messageID, messageFlags, guildID, nonce, data)
+	def click(self, applicationID, channelID, messageID, messageFlags, guildID=None, nonce="calculate", data={}, sessionID="random"):
+		return imports.Buttons(self.discord, self.s, self.log).click(applicationID, channelID, messageID, messageFlags, guildID, nonce, data, sessionID)
 
 	'''
 	"Science", aka Discord's tracking endpoint (https://luna.gitlab.io/discord-unofficial-docs/science.html - "Discord argues that they need to collect the data in the case the User allows the usage of the data later on. Which in [luna's] opinion is complete bullshit. Have a good day.")

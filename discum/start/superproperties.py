@@ -32,7 +32,7 @@ class SuperProperties:
 			#fastest solution I could find since the last js file is huge in comparison to 2nd from last
 			file_with_build_num = 'https://discord.com/assets/'+re.compile(r'assets/+([a-z0-9]+)\.js').findall(discord_login_page_exploration)[-2]+'.js'
 			req_file_build = Wrapper.sendRequest(self.editedS, 'get', file_with_build_num, log=False).text #log set to False cause this is a big file
-			index_of_build_num = req_file_build.find('buildNumber')+14
+			index_of_build_num = req_file_build.find('buildNumber')+24
 			discord_build_num = int(req_file_build[index_of_build_num:index_of_build_num+6])
 
 			Logger.log('Discord is currently on build number '+str(discord_build_num), None, self.log)
@@ -59,7 +59,7 @@ class SuperProperties:
 			"referrer_current": "",
 			"referring_domain_current": "",
 			"release_channel": "stable",
-			"client_build_number": 107767,
+			"client_build_number": 117300,
 			"client_event_source": None
 		}
 		if locale == None:

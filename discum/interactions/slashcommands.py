@@ -25,7 +25,7 @@ class SlashCommands(object):
 			nonce = str(nonce)
 		#session id
 		if sessionID == "random":
-			sessionID = "".join(random.choices(string.ascii_letters + string.digits, k=32))
+			sessionID = "".join(random.choice(string.ascii_letters + string.digits) for _ in range(32))
 		#body
 		payload = {
 			"type": 2,

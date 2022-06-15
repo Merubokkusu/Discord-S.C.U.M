@@ -119,7 +119,13 @@ class Guild(object):
 	#create a guild
 	def createGuild(self, name, icon, channels, systemChannelID, template):
 		url = self.discord+"guilds"
-		body = {"name": name, "icon":icon, "channels":channels, "system_channel_id":systemChannelID, "guild_template_code":template}
+		'''
+		This is due to discord changing the API endpoint for guild creation with a template to:
+		POST /guilds/templates/{template_id}
+		'''
+		if (template):
+			url = self.discord+"guilds/templates/"+template
+		body = {"name": name, "icon":icon, "channels":channels, "system_channel_id":systemChannelID}
 		if icon != None:
 			with open(icon, "rb") as image:
 				encodedImage = base64.b64encode(image.read()).decode('utf-8')

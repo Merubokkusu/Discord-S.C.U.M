@@ -6,7 +6,8 @@ A simple, easy to use, non-restrictive, synchronous Discord API Wrapper for Self
 
 ![https://files.catbox.moe/3ns003.png](https://files.catbox.moe/3ns003.png)
         
-Currently don't really have time to maintain this project.             
+### Currently don't have time to maintain this project.      
+I might edit from time to time. Feel free to fork the repo and make your own edits.
 For another python library that's currently better maintained, I'd recommend the following (asynchronous) lib: https://github.com/dolfies/discord.py-self           
 Happy coding,         
 \- arandomnewaccount                  

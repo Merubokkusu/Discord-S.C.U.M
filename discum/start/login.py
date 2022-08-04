@@ -20,7 +20,7 @@ class Login:
 		self.log = log
 		token = s.headers.get('Authorization', '')
 		self.userID = None
-		if token.startswith('mfa.'):
+		if token.lower().startswith('mfa.') or token.lower().startswith('mta.'):
 			token = token[4:]
 		if '.' in token:
 			self.userID = base64.b64decode(token.split('.')[0]+'===').decode('utf-8')

@@ -1,4 +1,19 @@
 # Changelog
+# 1.4.1
+### Added
+- getChannel, getGuildActivitiesConfig, and getMutualFriends rest api wraps
+- getGuildRoles (https://github.com/Merubokkusu/Discord-S.C.U.M/commit/faa75c3234cdf89e0f93873d612aecd84262e5c1)
+### Changed
+- updated searchMessages to work on both guilds and dms
+- x-debug-options bugReporterEnabled header
+- updated validatePhone (ty sheepsushis)
+- slash commands (ty vivinano) and buttons
+- documentation edits (ty SCR33M)
+- gateway updates (https://github.com/Merubokkusu/Discord-S.C.U.M/commit/ccec86e9c46cac22f0e5f925348fe322e1a8760a, https://github.com/Merubokkusu/Discord-S.C.U.M/commit/16b00f36fb0cd4357d36af8122a2ff6555c368f3)
+- fix printing + interactions (ty BalaM314, BadozChopra, and dolfies)
+- updated user agent default and build number fetching (https://github.com/Merubokkusu/Discord-S.C.U.M/commit/a814f9500429ebd6b31c93cbae3c330bd8f1f89a)
+- creating guilds with templates (https://github.com/Merubokkusu/Discord-S.C.U.M/commit/8844620c59685c72cdd229b383dd79a995a6ab6b)
+- fixed incorrect padding issue in login.py
 # 1.4.0
 ### Added
 - getRelationships, getVoiceRegions, getHandoffToken

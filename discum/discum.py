@@ -281,8 +281,8 @@ class Client:
 		return imports.Messages(self.discord, self.s, self.log).setDmGroupIcon(channelID, imagePath)
 
 	#get recent messages
-	def getMessages(self, channelID, num=1, beforeDate=None, aroundMessage=None): # num <= 100, beforeDate is a snowflake
-		return imports.Messages(self.discord, self.s, self.log).getMessages(channelID, num, beforeDate, aroundMessage)
+	def getMessages(self, channelID, num=1, beforeDate=None, aroundMessage=None, afterMessage=None): # num <= 100, beforeDate is a snowflake
+		return imports.Messages(self.discord, self.s, self.log).getMessages(channelID, num, beforeDate, aroundMessage, afterMessage)
 
 	#get message by channel ID and message ID
 	def getMessage(self, channelID, messageID):

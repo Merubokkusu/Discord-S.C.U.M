@@ -76,12 +76,14 @@ class Messages(object):
 		return Wrapper.sendRequest(self.s, 'patch', url, body, log=self.log)
 
 	#get messages
-	def getMessages(self,channelID,num,beforeDate,aroundMessage): # num is between 1 and 100, beforeDate is a snowflake
+	def getMessages(self,channelID,num,beforeDate,aroundMessage,afterMessage): # num is between 1 and 100, beforeDate is a snowflake
 		url = self.discord+"channels/"+channelID+"/messages?limit="+str(num)
 		if beforeDate != None:
 			url += "&before="+str(beforeDate)
 		elif aroundMessage != None:
 			url += "&around="+str(aroundMessage)
+		elif afterMessage != None:
+			url += "&after="+str(afterMessage)
 		return Wrapper.sendRequest(self.s, 'get', url, log=self.log)
 
 	#get message by channel ID and message ID

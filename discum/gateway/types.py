@@ -25,7 +25,8 @@ class Types:
 		20: "application_command",
 		21: "thread_starter_message",
 		22: "guild_invite_reminder",
-		23: "context_menu_command"
+		23: "context_menu_command",
+		24: "auto_moderation_action"
 	}
 
 	channelTypes = {
@@ -39,7 +40,9 @@ class Types:
 		10: "guild_news_thread",
 		11: "guild_public_thread",
 		12: "guild_private_thread",
-		13: "guild_stage_voice"
+		13: "guild_stage_voice",
+		14: "guild_directory",
+		15: "guild_form"
 	}
 
 	relationshipTypes = {

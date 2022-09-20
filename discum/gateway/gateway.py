@@ -85,7 +85,7 @@ class GatewayServer:
 		self.super_properties = super_properties
 		self.auth = {
 				"token": self.token,
-				"capabilities": 509,
+				"capabilities": 1021,
 				"properties": self.super_properties,
 				"presence": {
 					"status": "online",

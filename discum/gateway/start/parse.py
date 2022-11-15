@@ -17,7 +17,7 @@ class StartParse(object): #really hope this doesn't take too long to run...
 				recipient_ids = ready_data["private_channels"][j["id"]].pop("recipient_ids")
 				ready_data["private_channels"][j["id"]]["recipients"] = {q:user_pool.get(q,{}) for q in recipient_ids}
 		#add activities key to user settings
-		ready_data["user_settings"]["activities"] = {}
+		ready_data["user_guild_settings"]["activities"] = {}
 		#parse guilds
 		guilds = response["d"]["guilds"]
 		ready_data["guilds"] = {k["id"]:k for k in guilds}

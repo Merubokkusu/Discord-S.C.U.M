@@ -35,19 +35,21 @@ class Types:
 		2: "guild_voice",
 		3: "group_dm",
 		4: "guild_category",
-		5: "guild_news",
+		5: "guild_announcement",
 		6: "guild_store",
-		10: "guild_news_thread",
-		11: "guild_public_thread",
-		12: "guild_private_thread",
+		10: "announcement_thread",
+		11: "public_thread",
+		12: "private_thread",
 		13: "guild_stage_voice",
 		14: "guild_directory",
-		15: "guild_form"
+		15: "guild_forum"
 	}
 
 	relationshipTypes = {
+		0: "no relationship",
 		1: "friend",
 		2: "blocked",
 		3: "pending_incoming",
-		4: "pending_outgoing"
+		4: "pending_outgoing",
+		5: "implicit"
 	}

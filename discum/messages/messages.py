@@ -38,7 +38,7 @@ class Messages(object):
 	#create a DM
 	def createDM(self, recipients):
 		req = self.createDMraw(recipients)
-		self.getMessages(req.json()["id"], num=50, beforeDate=None, aroundMessage=None)
+		self.getMessages(req.json()["id"], num=50, beforeDate=None, aroundMessage=None, afterMessage=None)
 		return req
 
 	#deleteChannel (also works for deleting dms/dm-groups)

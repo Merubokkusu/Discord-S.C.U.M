@@ -264,7 +264,7 @@ Note: these are all the possible string values:
 
 ##### ```setAccentColor```
 ```python
-bot.setProfileColor('red')
+bot.setAccentColor('red')
 ```
 ###### Parameters:
 - color (Optional[str/tuple/list/int]) - can either input a color name, an rgb tuple/list, or a decimal color. Defaults to None

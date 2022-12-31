@@ -64,6 +64,8 @@ Table of Contents
     -   [change discriminator](using/REST_Actions.md#setdiscriminator)
     -   [{risky action} change avatar](using/REST_Actions.md#setavatar)
     -   [change profile color](using/REST_Actions.md#setProfileColor)
+    -   [change primary color](using/REST_Actions.md#setPrimaryColor)
+    -   [change accent color](using/REST_Actions.md#setAccentColor)
     -   [change "about me" bio](using/REST_Actions.md#setAboutMe)
     -   [change profile banner](using/REST_Actions.md#setBanner)
     -   [get Time-based One Time Password (TOTP) url](using/REST_Actions.md#gettotpurl)

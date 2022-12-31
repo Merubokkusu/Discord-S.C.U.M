@@ -250,6 +250,30 @@ Note: these are all the possible string values:
 ['black', 'default', 'aqua', 'teal', 'dark_aqua', 'dark_teal', 'green', 'dark_green', 'blue', 'dark_blue', 'purple', 'dark_purple', 'magenta', 'luminous_vivid_pink', 'dark_magenta', 'dark_vivid_pink', 'gold', 'dark_gold', 'orange', 'dark_orange', 'red', 'dark_red', 'light_grey', 'grey', 'dark_grey', 'darker_grey', 'og_blurple', 'ruined_blurple', 'blurple', 'greyple', 'dark_theme', 'not_quite_black', 'dark_but_not_black', 'white', 'fuchsia', 'yellow', 'navy', 'dark_navy']
 ```
 
+##### ```setPrimaryColor```
+```python
+bot.setPrimaryColor('red')
+```
+###### Parameters:
+- color (Optional[str/tuple/list/int]) - can either input a color name, an rgb tuple/list, or a decimal color. Defaults to None
+
+Note: these are all the possible string values:
+```
+['black', 'default', 'aqua', 'teal', 'dark_aqua', 'dark_teal', 'green', 'dark_green', 'blue', 'dark_blue', 'purple', 'dark_purple', 'magenta', 'luminous_vivid_pink', 'dark_magenta', 'dark_vivid_pink', 'gold', 'dark_gold', 'orange', 'dark_orange', 'red', 'dark_red', 'light_grey', 'grey', 'dark_grey', 'darker_grey', 'og_blurple', 'ruined_blurple', 'blurple', 'greyple', 'dark_theme', 'not_quite_black', 'dark_but_not_black', 'white', 'fuchsia', 'yellow', 'navy', 'dark_navy']
+```
+
+##### ```setAccentColor```
+```python
+bot.setProfileColor('red')
+```
+###### Parameters:
+- color (Optional[str/tuple/list/int]) - can either input a color name, an rgb tuple/list, or a decimal color. Defaults to None
+
+Note: these are all the possible string values:
+```
+['black', 'default', 'aqua', 'teal', 'dark_aqua', 'dark_teal', 'green', 'dark_green', 'blue', 'dark_blue', 'purple', 'dark_purple', 'magenta', 'luminous_vivid_pink', 'dark_magenta', 'dark_vivid_pink', 'gold', 'dark_gold', 'orange', 'dark_orange', 'red', 'dark_red', 'light_grey', 'grey', 'dark_grey', 'darker_grey', 'og_blurple', 'ruined_blurple', 'blurple', 'greyple', 'dark_theme', 'not_quite_black', 'dark_but_not_black', 'white', 'fuchsia', 'yellow', 'navy', 'dark_navy']
+```
+
 ##### ```setAboutMe```
 currently, you need to be in the beta testing program for this to work
 ```python

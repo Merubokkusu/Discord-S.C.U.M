@@ -447,31 +447,39 @@ class Client:
 	def setAvatar(self,imagePath):
 		return imports.User(self.discord, self.s, self.log).setAvatar(imagePath)
 
-	#set profile color
+	# set profile color
 	def setProfileColor(self, color=None):
 		return imports.User(self.discord, self.s, self.log).setProfileColor(color)
 
-	#set username
+	# set primary color
+	def setPrimaryColor(self, color=None):
+		return imports.User(self.discord, self.s, self.log).setPrimaryColor(color)
+
+	# set accent color (same as setProfileColor)
+	def setAccentColor(self, color=None):
+		return imports.User(self.discord, self.s, self.log).setAccentColor(color)
+
+	# set username
 	def setUsername(self, username): #USER PASSWORD NEEDS TO BE SET BEFORE THIS IS RUN
 		return imports.User(self.discord, self.s, self.log).setUsername(username, password=self.__user_password)
 
-	#set email
+	# set email
 	def setEmail(self, email): #USER PASSWORD NEEDS TO BE SET BEFORE THIS IS RUN
 		return imports.User(self.discord, self.s, self.log).setEmail(email, password=self.__user_password)
 
-	#set password
+	# set password
 	def setPassword(self, new_password): #USER PASSWORD NEEDS TO BE SET BEFORE THIS IS RUN
 		return imports.User(self.discord, self.s, self.log).setPassword(new_password, password=self.__user_password)
 
-	#set discriminator
+	# set discriminator
 	def setDiscriminator(self, discriminator): #USER PASSWORD NEEDS TO BE SET BEFORE THIS IS RUN
 		return imports.User(self.discord, self.s, self.log).setDiscriminator(discriminator, password=self.__user_password)
 
-	#set about me
+	# set about me
 	def setAboutMe(self, bio):
 		return imports.User(self.discord, self.s, self.log).setAboutMe(bio)
 
-	#set banner
+	# set banner
 	def setBanner(self, imagePath):
 		return imports.User(self.discord, self.s, self.log).setBanner(imagePath)
 

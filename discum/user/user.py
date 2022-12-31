@@ -147,6 +147,16 @@ class User(object):
 		body = {"accent_color": Color.get(color)}
 		return Wrapper.sendRequest(self.s, 'patch', url, body, log=self.log)
 
+	def setPrimaryColor(self, color):
+		url = self.discord+"users/@me"
+		body = {"primary_color": Color.get(color)}
+		return Wrapper.sendRequest(self.s, 'patch', url, body, log=self.log)
+
+	def setAccentColor(self, color): # Same as setProfileColor
+		url = self.discord+"users/@me"
+		body = {"accent_color": Color.get(color)}
+		return Wrapper.sendRequest(self.s, 'patch', url, body, log=self.log)
+
 	def setUsername(self, username, password):
 		url = self.discord+"users/@me"
 		body = {"username": username, "password": password}

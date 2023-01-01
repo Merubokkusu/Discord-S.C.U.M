@@ -93,7 +93,7 @@ class RemoteAuth:
 		avatarName = user_data[2]
 		if avatarName == '0':
 			avatar = 'https://cdn.discordapp.com/embed/avatars/{}.png'.format(int(discriminator) % 5)
-		elif avatarName.startwith('a_'):
+		elif avatarName.startswith('a_'):
 			avatar = 'https://cdn.discordapp.com/avatars/{}/{}.gif'.format(userID, avatarName)
 		else:
 			avatar = 'https://cdn.discordapp.com/avatars/{}/{}.png'.format(userID, avatarName)

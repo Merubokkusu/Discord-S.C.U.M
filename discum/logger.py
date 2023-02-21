@@ -1,5 +1,5 @@
 import colorama
-colorama.init()
+colorama.init(wrap=False)
 
 class LogLevel:
 	SEND = colorama.Fore.MAGENTA

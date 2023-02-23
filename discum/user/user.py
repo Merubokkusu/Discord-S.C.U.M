@@ -70,6 +70,10 @@ class User(object):
 	def getGuildAffinities(self):
 		url = self.discord+"users/@me/affinities/guilds"
 		return Wrapper.sendRequest(self.s, 'get', url, log=self.log)
+	
+	def getRoleUserInGuild(self, guildID):
+		url = self.discord+'/users/@me/guilds/'+guildID+'/member'
+		return Wrapper.sendRequest(self.s, 'get', url, log=self.log)
 
 	def getMentions(self, limit, roleMentions, everyoneMentions):
 		roleMentions = str(roleMentions).lower()

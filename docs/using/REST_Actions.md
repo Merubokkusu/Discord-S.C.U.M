@@ -188,6 +188,20 @@ bot.setUserNote('userID0000000000', 'hello')
 - userID (str)
 - note (str)
 
+##### ```Change Global Name```
+```python
+bot.globalname('hello iam selfbot')
+```
+###### Parameters:
+- name (str)
+
+##### ```Change Pronoun```
+```python
+bot.pronoun('selfbot/bot')
+```
+###### Parameters:
+- pronoun (str)
+
 ##### ```getRTCregions```
 ```python
 bot.getRTCregions()

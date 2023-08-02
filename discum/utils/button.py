@@ -17,11 +17,11 @@ def getButtons(message, exculde_disabled=False) :
 				if button["type"]==2 and ("disabled" not in button or not exculde_disabled) :
 					if "label" in button : buttons.append(button["label"])
 					elif "emoji" in button : buttons.append(button["emoji"]["name"])
-			return buttons
+			return buttons #list of strings
 			return [button["label"] for button in component["components"] if button["type"]==2 and ("disabled" not in button or not exculde_disabled)]
 	return []
 #press a button as easy as possible
-def pressButton(bot : discum.Client, message, target, using_emoji=False, refresh_afterwards=False) :
+def pressButton(bot, message, target, using_emoji=False, refresh_afterwards=False) :
 	buts = Buttoner(message["components"])
 	if type(target)==int : target=getButtons(message)[target] #press a button based on where it is
 	if using_emoji : data=buts.getButton(emojiName=target)
@@ -157,12 +157,18 @@ class Buttoner(object):
 			raise ValueError("Menu with inputted attributes not found.")
 
 '''
-from button import Buttoner
+from button import Buttoner, getButtons, pressButton
 b = Buttoner(...)
 but = b.getButton(label="Moose")
 bot.click(but)
 but = b.getMenuSelection(row=3, labels=["car", "bus", "train"])
 bot.click(but)
+
+buttons_list=getButtons(message, exclude_disabled=True)
+if "click me" in buttons_list : pressButton(bot, message, "click me")
+
+message=pressButton(bot, message, "✅", using_emoji=True, refresh_afterwards=True)
+
 
 b.findButton()
 b.findMenu()

@@ -8,7 +8,42 @@ def zip_longest(*lists):
 	gens = [g(l) for l in lists]    
 	for _ in range(max(map(len, lists))):
 		yield tuple(next(g) for g in gens)
-
+# get a list of buttons wether they have labels or they made of emojis, while being able to exclude buttons that are non clickable
+def getButtons(message, exculde_disabled=False) :
+	for component in message["components"] :
+		if component["type"]==1 :
+			buttons=[]
+			for button in component["components"] :
+				if button["type"]==2 and ("disabled" not in button or not exculde_disabled) :
+					if "label" in button : buttons.append(button["label"])
+					elif "emoji" in button : buttons.append(button["emoji"]["name"])
+			return buttons #list of strings
+			return [button["label"] for button in component["components"] if button["type"]==2 and ("disabled" not in button or not exculde_disabled)]
+	return []
+#press a button as easy as possible
+def pressButton(bot, message, target, using_emoji=False, refresh_afterwards=False) :
+	buts = Buttoner(message["components"])
+	if type(target)==int : target=getButtons(message)[target] #press a button based on where it is
+	if using_emoji : data=buts.getButton(emojiName=target)
+	else : data=buts.getButton(target)
+	if "guild_id" in message : guild_id=message["guild_id"]
+	else :
+		try : guild_id=message["message_reference"]["guild_id"] # if there is a referenced message then the guild id will only exist there
+		except : guild_id = None
+	pressresponce=bot.click(
+		message["author"]["id"],
+		channelID=message["channel_id"],
+		guildID=guild_id,
+		messageID=message["id"],
+		messageFlags=message["flags"],
+		data=data,
+	)
+	#most of the time the message gets edited after pressing a butoon so you would want to get the new contents of it
+	if refresh_afterwards :
+		from time import sleep
+		sleep(2) #waiting a while between pressing and getting the message
+		return list(bot.getMessage(message["channel_id"], message["id"]).json())[0]
+	return pressresponce
 class Buttoner(object):
 	__slots__ = ['components', 'component_types']
 	def __init__(self, components):
@@ -122,12 +157,18 @@ class Buttoner(object):
 			raise ValueError("Menu with inputted attributes not found.")
 
 '''
-from button import Buttoner
+from button import Buttoner, getButtons, pressButton
 b = Buttoner(...)
 but = b.getButton(label="Moose")
 bot.click(but)
 but = b.getMenuSelection(row=3, labels=["car", "bus", "train"])
 bot.click(but)
+
+buttons_list=getButtons(message, exclude_disabled=True)
+if "click me" in buttons_list : pressButton(bot, message, "click me")
+
+message=pressButton(bot, message, "✅", using_emoji=True, refresh_afterwards=True)
+
 
 b.findButton()
 b.findMenu()

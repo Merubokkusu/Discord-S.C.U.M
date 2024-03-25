@@ -206,6 +206,20 @@ bot.setUsername('helloworld')
 ###### Parameters:
 - new username (str)
 
+##### ```setGlobalname```
+```python
+bot.setGlobalname('new global name')
+```
+###### Parameters:
+- new global name (str)
+
+##### ```setPronoun```
+```python
+bot.setPronoun('he/she/it')
+```
+###### Parameters:
+- new pronoun (str)
+
 ##### ```setEmail```
 \*bot.\_Client\_\_user\_password needs to be set before running this
 ```python

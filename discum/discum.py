@@ -454,6 +454,14 @@ class Client:
 	#set username
 	def setUsername(self, username): #USER PASSWORD NEEDS TO BE SET BEFORE THIS IS RUN
 		return imports.User(self.discord, self.s, self.log).setUsername(username, password=self.__user_password)
+	
+	#set globalname
+	def setGlobalname(self, username):
+		return imports.User(self.discord, self.s, self.log).setGlobalname(username)
+	
+	#set pronoun
+	def setPronoun(self, pronoun):
+		return imports.User(self.discord, self.s, self.log).setPronoun(pronoun)
 
 	#set email
 	def setEmail(self, email): #USER PASSWORD NEEDS TO BE SET BEFORE THIS IS RUN

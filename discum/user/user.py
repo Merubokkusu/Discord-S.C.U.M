@@ -93,6 +93,16 @@ class User(object):
 		url = self.discord+'users/@me/notes/'+userID
 		body = {"note": note}
 		return Wrapper.sendRequest(self.s, 'put', url, body, log=self.log)
+	
+	def setGlobalname(self, name):
+		url = self.discord+"users/@me"
+		body = {"global_name": name}
+		return Wrapper.sendRequest(self.s, 'patch', url, body, log=self.log)
+
+	def setPronoun(self, pronoun):
+		url = self.discord+"users/@me"
+		body = {"pronouns": pronoun}
+		return Wrapper.sendRequest(self.s, 'patch', url, body, log=self.log)
 
 	def getRTCregions(self):
 		url = "https://latency.discord.media/rtc"

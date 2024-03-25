@@ -59,6 +59,8 @@ Table of Contents
     -   [get RTC regions](using/REST_Actions.md#getrtcregions)
     -   [get voice regions](using/REST_Actions.md#getVoiceRegions)
     -   [change username](using/REST_Actions.md#setusername)
+    -   [change global name](using/REST_Actions.md#setGlobalname)
+    -   [change pronoun](using/REST_Actions.md#setPronoun)
     -   [change email](using/REST_Actions.md#setemail)
     -   [change password](using/REST_Actions.md#setpassword)
     -   [change discriminator](using/REST_Actions.md#setdiscriminator)
